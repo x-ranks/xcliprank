@@ -1,0 +1,14 @@
+node_modules/
+.next/
+.vercel/
+.npm-cache-deploy/
+
+.env*
+!.env.example
+
+data/visual-preference-feature-cache/
+data/teacher-authors.json
+visual-filter-model/group1-shard1of1.bin
+*.log
+.DS_Store
+Thumbs.db

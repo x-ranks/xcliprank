@@ -1,0 +1,8 @@
+{
+  "crons": [
+    {
+      "path": "/api/collect-curated-batch",
+      "schedule": "0 2 * * *"
+    }
+  ]
+}
