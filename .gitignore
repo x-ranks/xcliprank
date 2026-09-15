@@ -12,3 +12,13 @@ visual-filter-model/group1-shard1of1.bin
 *.log
 .DS_Store
 Thumbs.db
+
+# Local training data and generated evaluation artifacts
+data/visual-preference-model.json
+artifacts/visual-preference-poc/
+artifacts/visual-preference-holdout/
+*.tsbuildinfo
+.vscode/
+.idea/
+*.tmp
+*.temp
