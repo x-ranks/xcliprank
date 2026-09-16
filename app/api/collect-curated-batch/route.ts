@@ -8,8 +8,8 @@ export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
 export const maxDuration = 300;
 
-// Cronは1日1回。X APIの利用量を抑えるため、1日あたり最大24投稿者だけ収集する。
-// 最終収集日時が古い投稿者から選ぶため、未処理の投稿者は翌日以降に順番に回る。
+// Cronは1日1回。初回収集が完了した投稿者の新着動画だけを収集する。
+// X APIの利用量を抑えるため、1日あたり最大24投稿者を最終収集日時順に処理する。
 const MAX_AUTHORS_PER_RUN = 24;
 
 export async function GET(request: NextRequest) {
@@ -19,14 +19,14 @@ export async function GET(request: NextRequest) {
       .select(CURATED_AUTHOR_SELECT)
       .eq("is_curated", true)
       .eq("curated_status", "active")
-      .order("curated_backfill_status", { ascending: true, nullsFirst: true })
+      .eq("curated_backfill_status", "completed")
       .order("curated_last_collected_at", { ascending: true, nullsFirst: true })
       .limit(MAX_AUTHORS_PER_RUN);
     if (error) throw error;
     const results = [];
     for (const rawAuthor of data ?? []) {
       const author = rawAuthor as unknown as CuratedAuthor;
-      const mode: CuratedCollectionMode = author.curated_backfill_status === "completed" ? "incremental" : "initial";
+      const mode: CuratedCollectionMode = "incremental";
       try {
         results.push({ ok: true, ...(await collectCuratedAuthor(author, mode)) });
       } catch (caught) {

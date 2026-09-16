@@ -61,6 +61,17 @@ export type XVideoPost = {
   bookmarks: number;
 };
 
+export type XVideoPostSearchResult = {
+  posts: XVideoPost[];
+  rawPostCount: number;
+};
+
+type SearchRecentVideoPostOptions = {
+  sinceId?: string | null;
+  authorFallback?: XUserLookup;
+  includeAuthorExpansion?: boolean;
+};
+
 export type XApiUsageSource =
   | "discovery"
   | "priority"
@@ -281,16 +292,12 @@ export async function lookupXUserByUsername(username: string): Promise<XUserLook
   return user;
 }
 
-export async function searchRecentVideoPosts(
+export async function searchRecentVideoPostBatch(
   customQuery?: string,
   requestedMaxResults: number = DEFAULT_MAX_RESULTS,
-  options?: {
-    sinceId?: string | null;
-    authorFallback?: XUserLookup;
-    includeAuthorExpansion?: boolean;
-  },
+  options?: SearchRecentVideoPostOptions,
   usageSource: XApiUsageSource = "discovery"
-) {
+): Promise<XVideoPostSearchResult> {
   const query = customQuery?.trim() || process.env.X_SEARCH_QUERY?.trim() || DEFAULT_QUERY;
   const totalLimit = normalizeTotalResults(requestedMaxResults);
   const params = new URLSearchParams({ query });
@@ -308,8 +315,24 @@ export async function searchRecentVideoPosts(
     usageSource
   );
   const videoPosts = formatVideoPosts(pages, totalLimit, options?.authorFallback);
-  console.log("X SEARCH VIDEO RESULT:", { query, videoPosts: videoPosts.length });
-  return videoPosts;
+  const rawPostCount = pages.reduce((sum, page) => sum + (page.data?.length ?? 0), 0);
+  console.log("X SEARCH VIDEO RESULT:", { query, rawPostCount, videoPosts: videoPosts.length });
+  return { posts: videoPosts, rawPostCount };
+}
+
+export async function searchRecentVideoPosts(
+  customQuery?: string,
+  requestedMaxResults: number = DEFAULT_MAX_RESULTS,
+  options?: SearchRecentVideoPostOptions,
+  usageSource: XApiUsageSource = "discovery"
+) {
+  const result = await searchRecentVideoPostBatch(
+    customQuery,
+    requestedMaxResults,
+    options,
+    usageSource
+  );
+  return result.posts;
 }
 
 export async function searchAllVideoPostPage(input: {
@@ -375,6 +398,7 @@ export async function searchAllVideoPostPage(input: {
 
   return {
     posts: formatVideoPosts([page], maxResults, input.authorFallback),
+    rawPostCount: page.data?.length ?? 0,
     nextToken: page.meta?.next_token ?? null,
   };
 }

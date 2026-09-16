@@ -10,12 +10,23 @@ import {
 } from "./tier-learning";
 import {
   searchAllVideoPostPage,
-  searchRecentVideoPosts,
+  searchRecentVideoPostBatch,
   type XVideoPost,
 } from "./x";
 
 export type CuratedCollectionMode = "initial" | "incremental";
-export type CuratedInitialLimit = 50 | 100 | 200 | 500;
+export type CuratedInitialPostReadLimit = 50 | 100 | 150;
+
+const DEFAULT_INITIAL_POST_READ_LIMIT: CuratedInitialPostReadLimit = 50;
+const INCREMENTAL_POST_READ_LIMIT = 50;
+
+function normalizeInitialPostReadLimit(
+  value: number | undefined
+): CuratedInitialPostReadLimit {
+  return ([50, 100, 150] as const).includes(value as CuratedInitialPostReadLimit)
+    ? value as CuratedInitialPostReadLimit
+    : DEFAULT_INITIAL_POST_READ_LIMIT;
+}
 
 export type CuratedAuthor = {
   x_author_id: string;
@@ -98,12 +109,6 @@ function newestPostId(ids: string[]) {
   }, null);
 }
 
-function normalizeInitialLimit(value: number | undefined): CuratedInitialLimit {
-  return ([50, 100, 200, 500] as const).includes(value as CuratedInitialLimit)
-    ? value as CuratedInitialLimit
-    : 100;
-}
-
 function isEstimatedHighTier(post: XVideoPost, author: CuratedAuthor) {
   const content = classifyContent(post.text ?? "");
   if (content.category !== "PASS") return false;
@@ -135,15 +140,16 @@ async function getInitialResumeState(authorId: string) {
 
 async function fetchInitialVideoPosts(
   author: CuratedAuthor,
-  requestedLimit: CuratedInitialLimit
+  requestedLimit: CuratedInitialPostReadLimit
 ) {
   const resume = await getInitialResumeState(author.x_author_id);
   const remainingTarget = Math.max(0, requestedLimit - resume.storedCount);
-  if (remainingTarget === 0) {
+  // X検索は1リクエスト最低10件。残りが10件未満なら追加課金を避けて完了扱いにする。
+  if (remainingTarget < 10) {
     return {
       posts: [] as XVideoPost[],
       requestedLimit,
-      adaptiveLimit: 0,
+      rawPostCount: 0,
       highTierRate: 0,
       resumedAfter: resume.storedCount,
       recentSearchFallback: false,
@@ -153,13 +159,14 @@ async function fetchInitialVideoPosts(
   const query = `from:${author.username} has:videos -is:retweet -is:reply`;
   const posts: XVideoPost[] = [];
   let nextToken: string | null = null;
-  let adaptiveLimit = remainingTarget;
+  let rawPostCount = 0;
   let highTierCount = 0;
 
   try {
     do {
-      const pageSize = Math.min(25, adaptiveLimit - posts.length);
-      if (pageSize <= 0) break;
+      const remainingReads = remainingTarget - rawPostCount;
+      const pageSize = Math.min(25, remainingReads);
+      if (pageSize < 10) break;
       const page = await searchAllVideoPostPage({
         query,
         maxResults: pageSize,
@@ -171,34 +178,29 @@ async function fetchInitialVideoPosts(
           name: author.username,
         },
       });
-      const remaining = adaptiveLimit - posts.length;
-      const received = page.posts.slice(0, remaining);
+      const received = page.posts;
       posts.push(...received);
+      rawPostCount += page.rawPostCount;
       highTierCount += received.filter((post) => isEstimatedHighTier(post, author)).length;
       nextToken = page.nextToken;
-
-      // 25件ごとに品質を評価し、低品質な投稿者へ過剰な読取を行わない。
-      const highTierRate = posts.length > 0 ? highTierCount / posts.length : 0;
-      if (posts.length >= 25 && highTierRate < 0.3) adaptiveLimit = Math.min(adaptiveLimit, 25);
-      else if (posts.length >= 25 && highTierRate < 0.6) adaptiveLimit = Math.min(adaptiveLimit, 75);
-    } while (nextToken && posts.length < adaptiveLimit);
+    } while (nextToken && rawPostCount < remainingTarget);
 
     return {
       posts,
       requestedLimit,
-      adaptiveLimit,
+      rawPostCount,
       highTierRate: posts.length > 0 ? highTierCount / posts.length : 0,
       resumedAfter: resume.storedCount,
       recentSearchFallback: false,
     };
   } catch (error) {
     const archiveUnavailable = errorMessage(error, "").includes("X API 403");
-    if (!archiveUnavailable || posts.length > 0 || resume.oldestPostId) throw error;
+    if (!archiveUnavailable || rawPostCount > 0 || resume.oldestPostId) throw error;
 
     // Full Archive Searchを利用できない契約ではRecent Searchへ安全に縮退する。
-    const recentPosts = await searchRecentVideoPosts(
+    const recentResult = await searchRecentVideoPostBatch(
       query,
-      Math.min(remainingTarget, 200),
+      remainingTarget,
       {
         authorFallback: {
           id: author.x_author_id,
@@ -209,12 +211,12 @@ async function fetchInitialVideoPosts(
       },
       "curated_initial"
     );
-    const recentHighTierCount = recentPosts.filter((post) => isEstimatedHighTier(post, author)).length;
+    const recentHighTierCount = recentResult.posts.filter((post) => isEstimatedHighTier(post, author)).length;
     return {
-      posts: recentPosts,
+      posts: recentResult.posts,
       requestedLimit,
-      adaptiveLimit: recentPosts.length,
-      highTierRate: recentPosts.length > 0 ? recentHighTierCount / recentPosts.length : 0,
+      rawPostCount: recentResult.rawPostCount,
+      highTierRate: recentResult.posts.length > 0 ? recentHighTierCount / recentResult.posts.length : 0,
       resumedAfter: 0,
       recentSearchFallback: true,
     };
@@ -232,7 +234,7 @@ async function existingValues(column: "x_post_id" | "media_key" | "video_url", v
 export async function collectCuratedAuthor(
   author: CuratedAuthor,
   mode: CuratedCollectionMode,
-  options?: { initialLimit?: number }
+  options?: { initialPostReadLimit?: number }
 ) {
   const supabase = supabaseAdmin();
   const now = new Date().toISOString();
@@ -253,13 +255,15 @@ export async function collectCuratedAuthor(
   try {
     // 初回も動画検索だけを読み、以後は前回カーソル以降の新着動画だけを取得する。
     const initialResult = mode === "initial"
-      ? await fetchInitialVideoPosts(author, normalizeInitialLimit(options?.initialLimit))
+      ? await fetchInitialVideoPosts(
+          author,
+          normalizeInitialPostReadLimit(options?.initialPostReadLimit)
+        )
       : null;
-    const fetched = initialResult
-      ? initialResult.posts
-      : await searchRecentVideoPosts(
+    const incrementalResult = mode === "incremental"
+      ? await searchRecentVideoPostBatch(
           `from:${author.username} has:videos -is:retweet -is:reply`,
-          200,
+          INCREMENTAL_POST_READ_LIMIT,
           {
             sinceId: author.curated_last_post_id,
             authorFallback: {
@@ -270,7 +274,10 @@ export async function collectCuratedAuthor(
             includeAuthorExpansion: false,
           },
           "curated_incremental"
-        );
+        )
+      : null;
+    const fetched = initialResult?.posts ?? incrementalResult?.posts ?? [];
+    const apiReadPosts = initialResult?.rawPostCount ?? incrementalResult?.rawPostCount ?? 0;
     const postIds = fetched.map((post) => post.x_post_id);
     const mediaKeys = fetched.map((post) => post.media_key).filter((value): value is string => Boolean(value));
     const videoUrls = fetched.map((post) => post.video_url).filter((value): value is string => Boolean(value));
@@ -389,6 +396,7 @@ export async function collectCuratedAuthor(
     return {
       author: author.username,
       mode,
+      apiReadPosts,
       fetched: fetched.length,
       saved: rows.length,
       duplicates,
@@ -401,7 +409,6 @@ export async function collectCuratedAuthor(
       tierLearningRefreshedAt: tierLearningModel?.trainedAt ?? null,
       latestPostId: latestId,
       initialRequestedLimit: initialResult?.requestedLimit ?? null,
-      initialAdaptiveLimit: initialResult?.adaptiveLimit ?? null,
       initialHighTierRate: initialResult
         ? Number(initialResult.highTierRate.toFixed(4))
         : null,

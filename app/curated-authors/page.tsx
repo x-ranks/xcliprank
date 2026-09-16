@@ -24,6 +24,12 @@ type CuratedAuthor = {
 
 const SECRET_KEY = "curated-authors-cron-secret";
 const LOCAL_ADMIN_SECRET = "local-admin-auto-auth";
+const INITIAL_READ_OPTIONS = [
+  { value: 50, label: "50 Post", cost: "約$0.26以内" },
+  { value: 100, label: "100 Post", cost: "約$0.51以内" },
+  { value: 150, label: "150 Post", cost: "約$0.76以内" },
+] as const;
+type InitialReadLimit = typeof INITIAL_READ_OPTIONS[number]["value"];
 
 function isLocalAdminHost(hostname: string) {
   return ["localhost", "127.0.0.1", "::1"].includes(hostname);
@@ -39,7 +45,7 @@ export default function CuratedAuthorsPage() {
   const [authors, setAuthors] = useState<CuratedAuthor[]>([]);
   const [username, setUsername] = useState("");
   const [expectedTier, setExpectedTier] = useState<"S" | "A">("S");
-  const [initialLimit, setInitialLimit] = useState<50 | 100 | 200 | 500>(100);
+  const [initialReadLimit, setInitialReadLimit] = useState<InitialReadLimit>(50);
   const [loading, setLoading] = useState(false);
   const [message, setMessage] = useState("");
   const [error, setError] = useState("");
@@ -112,11 +118,14 @@ export default function CuratedAuthorsPage() {
       });
       const payload = await response.json();
       if (!response.ok || !payload.ok) throw new Error(payload.error ?? "登録に失敗しました");
-      setMessage(`@${payload.author.username} の動画を最大${initialLimit}件、品質を見ながら取得しています...`);
+      setMessage(`@${payload.author.username} の動画Postを最大${initialReadLimit}件取得しています...`);
       const collectResponse = await fetch("/api/collect-curated-author", {
         method: "POST",
         headers: headers(),
-        body: JSON.stringify({ xAuthorId: payload.author.x_author_id, initialLimit }),
+        body: JSON.stringify({
+          xAuthorId: payload.author.x_author_id,
+          initialPostReadLimit: initialReadLimit,
+        }),
       });
       const collectPayload = await collectResponse.json();
       if (!collectResponse.ok || !collectPayload.ok) throw new Error(collectPayload.error ?? "初回収集に失敗しました");
@@ -126,7 +135,7 @@ export default function CuratedAuthorsPage() {
       const fallback = collectPayload.result.recentSearchFallback
         ? "（全期間検索が利用できないため直近検索で取得）"
         : "";
-      setMessage(`登録完了：取得${collectPayload.result.fetched}件、採用${collectPayload.result.accepted}件、重複${collectPayload.result.duplicates}件${rate}${fallback}`);
+      setMessage(`登録完了：API読取Post ${collectPayload.result.apiReadPosts}件、利用可能動画${collectPayload.result.fetched}件、採用${collectPayload.result.accepted}件、重複${collectPayload.result.duplicates}件${rate}${fallback}`);
       setUsername("");
       await loadAuthors();
     } catch (caught) {
@@ -148,7 +157,7 @@ export default function CuratedAuthorsPage() {
       });
       const payload = await response.json();
       if (!response.ok || !payload.ok) throw new Error(payload.error ?? "収集に失敗しました");
-      setMessage(`@${author.username}：新規保存${payload.result.saved}件、重複${payload.result.duplicates}件、採用${payload.result.accepted}件`);
+      setMessage(`@${author.username}：API読取Post ${payload.result.apiReadPosts}件、利用可能動画${payload.result.fetched}件、新規保存${payload.result.saved}件、重複${payload.result.duplicates}件、採用${payload.result.accepted}件`);
       await loadAuthors();
     } catch (caught) {
       setError(caught instanceof Error ? caught.message : "収集に失敗しました");
@@ -208,23 +217,39 @@ export default function CuratedAuthorsPage() {
     <p style={{ padding: 12, background: "#edf8f5", border: "1px solid #b9ddd4" }}>
       localhost専用管理画面です。操作はローカルの.env.localで接続している本番SupabaseとX APIへ反映されます。先に学習・運営管理で「本番データ接続：正常」を確認してください。
     </p>
-    <p>登録時は動画だけを25件ずつ取得し、S〜A率が低ければ自動停止します。次回からは新着動画だけを保存します。モザイクは除外しません。</p>
+    <p>登録時のAPI読取は50・100・150 Postから選択できます。初期値は50です。初回完了後は定時処理で新着動画だけを最大50 Post収集します。モザイクは除外しません。</p>
     {error && <div style={{ padding: 12, background: "#fff0f0", color: "#9b1c1c", marginBottom: 12 }}>{error}</div>}
     {message && <div style={{ padding: 12, background: "#f0f7ff", marginBottom: 12 }}>{message}</div>}
     <section style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit,minmax(140px,1fr))", gap: 10, margin: "18px 0" }}>
       {[["登録", summary.total], ["稼働中", summary.active], ["利用不可", summary.unavailable], ["初回未完了", summary.pending], ["取得動画", summary.fetched], ["採用動画", summary.accepted]].map(([label, value]) => <div key={String(label)} style={{ padding: 14, background: "#f5f5f5" }}><small>{label}</small><div style={{ fontSize: 25, fontWeight: 800 }}>{value}</div></div>)}
     </section>
-    <form onSubmit={addAuthor} style={{ display: "flex", gap: 9, flexWrap: "wrap", marginBottom: 20 }}>
-      <input placeholder="@username またはXプロフィールURL" value={username} onChange={(event) => setUsername(event.target.value)} style={{ minWidth: 290, padding: 11 }} />
-      <select value={expectedTier} onChange={(event) => setExpectedTier(event.target.value as "S" | "A")} style={{ padding: 11 }}><option value="S">S想定</option><option value="A">A想定</option></select>
-      <select value={initialLimit} onChange={(event) => setInitialLimit(Number(event.target.value) as 50 | 100 | 200 | 500)} style={{ padding: 11 }}>
-        <option value={50}>節約：最大50動画（約$0.25）</option>
-        <option value={100}>標準：最大100動画（約$0.50）</option>
-        <option value={200}>多め：最大200動画（約$1.00）</option>
-        <option value={500}>特別：最大500動画（約$2.50）</option>
-      </select>
-      <button disabled={loading} style={{ padding: "11px 17px", fontWeight: 800 }}>登録して動画だけ取得</button>
-      <button type="button" disabled={loading} onClick={collectBatch} style={{ padding: "11px 17px" }}>全投稿者を収集</button>
+    <form onSubmit={addAuthor} style={{ display: "grid", gap: 10, marginBottom: 20 }}>
+      <div style={{ display: "flex", gap: 9, flexWrap: "wrap" }}>
+        <input placeholder="@username またはXプロフィールURL" value={username} onChange={(event) => setUsername(event.target.value)} style={{ minWidth: 290, padding: 11 }} />
+        <select value={expectedTier} onChange={(event) => setExpectedTier(event.target.value as "S" | "A")} style={{ padding: 11 }}><option value="S">S想定</option><option value="A">A想定</option></select>
+      </div>
+      <div style={{ display: "flex", gap: 8, flexWrap: "wrap", alignItems: "center" }}>
+        <strong>初回API読取上限：</strong>
+        {INITIAL_READ_OPTIONS.map((option) => {
+          const selected = initialReadLimit === option.value;
+          return <button
+            key={option.value}
+            type="button"
+            aria-pressed={selected}
+            onClick={() => setInitialReadLimit(option.value)}
+            style={{
+              padding: "9px 13px",
+              border: selected ? "2px solid #126b55" : "1px solid #aaa",
+              background: selected ? "#dff4ed" : "#fff",
+              fontWeight: selected ? 800 : 500,
+            }}
+          >{option.label}<br /><small>{option.cost}</small></button>;
+        })}
+      </div>
+      <div style={{ display: "flex", gap: 9, flexWrap: "wrap" }}>
+        <button disabled={loading} style={{ padding: "11px 17px", fontWeight: 800 }}>登録して動画だけ取得</button>
+        <button type="button" disabled={loading} onClick={collectBatch} style={{ padding: "11px 17px" }}>全投稿者の新着を収集</button>
+      </div>
     </form>
     <div style={{ overflowX: "auto" }}><table style={{ width: "100%", borderCollapse: "collapse" }}>
       <thead><tr>{["投稿者", "状態", "初回", "取得", "採用", "重複", "除外", "採用率", "最終収集", "操作"].map((label) => <th key={label} style={{ textAlign: "left", padding: 9, borderBottom: "2px solid #ccc" }}>{label}</th>)}</tr></thead>
