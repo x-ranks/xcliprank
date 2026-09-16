@@ -23,6 +23,11 @@ type CuratedAuthor = {
 };
 
 const SECRET_KEY = "curated-authors-cron-secret";
+const LOCAL_ADMIN_SECRET = "local-admin-auto-auth";
+
+function isLocalAdminHost(hostname: string) {
+  return ["localhost", "127.0.0.1", "::1"].includes(hostname);
+}
 
 function formatDate(value: string | null) {
   return value ? new Date(value).toLocaleString("ja-JP") : "未実行";
@@ -40,6 +45,13 @@ export default function CuratedAuthorsPage() {
   const [error, setError] = useState("");
 
   useEffect(() => {
+    if (isLocalAdminHost(window.location.hostname)) {
+      // ローカルAPIはcron-auth側でlocalhostを自動認証する。
+      // 実データの接続先はローカル.env.localの本番Supabase/X設定を使用する。
+      setSecret(LOCAL_ADMIN_SECRET);
+      setSecretInput(LOCAL_ADMIN_SECRET);
+      return;
+    }
     const stored = window.sessionStorage.getItem(SECRET_KEY) ?? "";
     if (stored) {
       setSecret(stored);
@@ -193,6 +205,9 @@ export default function CuratedAuthorsPage() {
 
   return <main style={{ maxWidth: 1180, margin: "0 auto", padding: 24, color: "#171717" }}>
     <h1>選別投稿者管理</h1>
+    <p style={{ padding: 12, background: "#edf8f5", border: "1px solid #b9ddd4" }}>
+      localhost専用管理画面です。操作はローカルの.env.localで接続している本番SupabaseとX APIへ反映されます。先に学習・運営管理で「本番データ接続：正常」を確認してください。
+    </p>
     <p>登録時は動画だけを25件ずつ取得し、S〜A率が低ければ自動停止します。次回からは新着動画だけを保存します。モザイクは除外しません。</p>
     {error && <div style={{ padding: 12, background: "#fff0f0", color: "#9b1c1c", marginBottom: 12 }}>{error}</div>}
     {message && <div style={{ padding: 12, background: "#f0f7ff", marginBottom: 12 }}>{message}</div>}
