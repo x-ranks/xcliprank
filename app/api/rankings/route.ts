@@ -72,6 +72,12 @@ const DISPLAY_TIERS = [
   "C"
 ] as const;
 
+const EVERGREEN_TIERS = [
+  "S",
+  "A+",
+  "A"
+] as const;
+
 const MANUAL_TIER_SCORE: Record<string, number> = {
   S: 0.95,
   "A+": 0.86,
@@ -109,8 +115,11 @@ const CONTENT_CATEGORIES = [
 ] as const;
 
 const MAX_RANKING_POSTS = 100;
-const MIN_RANKING_POSTS = 50;
-const FALLBACK_HOURS = [168, 720, 2160] as const;
+const TARGET_POSTS_BY_RANGE: Record<RangeType, number> = {
+  trending: 50,
+  daily: 50,
+  weekly: 100,
+};
 const MAX_CURATED_POSTS = 100;
 const MAX_DISCOVERY_POSTS = 0;
 const MAX_POSTS_PER_AUTHOR = 20;
@@ -318,8 +327,9 @@ function calculateRankingValue(
  */
 
 async function fetchCandidates(
-  since: string,
-  authorIds?: string[]
+  since: string | null,
+  authorIds?: string[],
+  allowedTiers: readonly string[] = DISPLAY_TIERS
 ) {
   if (
     authorIds &&
@@ -375,18 +385,10 @@ async function fetchCandidates(
        * 手動D/Xは、自動Tierが高くてもランキングから除外する。
        */
       .or(
-        `adult_tier.in.(${DISPLAY_TIERS.join(",")}),manual_tier.in.(${DISPLAY_TIERS.join(",")})`
+        `adult_tier.in.(${allowedTiers.join(",")}),manual_tier.in.(${allowedTiers.join(",")})`
       )
       .or(
-        `manual_tier.is.null,manual_tier.in.(${DISPLAY_TIERS.join(",")})`
-      )
-
-      /*
-       * 期間
-       */
-      .gte(
-        "created_at",
-        since
+        `manual_tier.is.null,manual_tier.in.(${allowedTiers.join(",")})`
       )
 
       /*
@@ -405,6 +407,13 @@ async function fetchCandidates(
           ascending: false
         }
       );
+
+  if (since) {
+    query = query.gte(
+      "created_at",
+      since
+    );
+  }
 
   if (authorIds) {
     query = query.in(
@@ -427,49 +436,23 @@ async function fetchCandidates(
   return (data ?? [])
     .map(applyManualTierOverride)
     .filter((post) =>
-      (DISPLAY_TIERS as readonly string[]).includes(
+      allowedTiers.includes(
         String(post.adult_tier ?? "")
       )
     );
 }
 
 async function fetchCandidatePool(
-  since: string,
-  curatedAuthorIds: Set<string>
+  since: string | null,
+  curatedAuthorIds: Set<string>,
+  allowedTiers: readonly string[] = DISPLAY_TIERS
 ) {
-  /*
-   * 全体候補だけを取得すると、
-   * 週間では広域投稿が500件枠を使い、
-   * 選別投稿者の候補が欠ける。
-   * 選別投稿者を別クエリで確保してから
-   * 投稿IDで統合する。
-   */
-  const [general, curated] =
-    await Promise.all([
-      fetchCandidates(since),
-      fetchCandidates(
-        since,
-        [...curatedAuthorIds]
-      )
-    ]);
-
-  const uniquePosts =
-    new Map<string, any>();
-
-  for (const post of [
-    ...general,
-    ...curated
-  ]) {
-    uniquePosts.set(
-      String(
-        post.x_post_id ??
-          post.id
-      ),
-      post
-    );
-  }
-
-  return [...uniquePosts.values()];
+  // ランキング候補も選別投稿者だけをDBから取得する。
+  return fetchCandidates(
+    since,
+    [...curatedAuthorIds],
+    allowedTiers
+  );
 }
 
 async function fetchActiveCuratedAuthorIds() {
@@ -918,18 +901,21 @@ export async function GET(
 
     const newestFirst =
       range === "trending";
+    const targetPostCount =
+      TARGET_POSTS_BY_RANGE[range];
 
     const prepareRanking =
       (
         candidatePosts: any[],
-        maxPostsPerAuthor = MAX_POSTS_PER_AUTHOR
+        maxPostsPerAuthor = MAX_POSTS_PER_AUTHOR,
+        forceTierPriority = false
       ) => {
         const filtered =
           applyContentFilter(
             candidatePosts
           );
         const ranked =
-          newestFirst
+          newestFirst && !forceTierPriority
             ? sortNewestPosts(
                 filtered.posts
               )
@@ -942,7 +928,7 @@ export async function GET(
             ranked,
             curatedAuthorIds,
             useVisualPreference,
-            newestFirst,
+            newestFirst && !forceTierPriority,
             maxPostsPerAuthor
           );
 
@@ -959,57 +945,46 @@ export async function GET(
     let fallbackHoursUsed: number | null = null;
 
     /*
-     * 新着・24時間が50件未満の場合は、
-     * 7日、30日、90日の順に選別投稿者の動画で補う。
+     * 各ランキングが目標件数に満たない場合は、
+     * 期間制限なしのS〜A動画をTier優先で補う。
      * 補充枠も1投稿者最大20件まで許可する。
      */
     if (
-      (newestFirst || range === "daily") &&
-      prepared.rankingMix.posts.length < MIN_RANKING_POSTS
+      prepared.rankingMix.posts.length < targetPostCount
     ) {
-      for (const fallbackHours of FALLBACK_HOURS) {
-        if (
-          prepared.rankingMix.posts.length >= MIN_RANKING_POSTS
-        ) {
-          break;
+      const fallbackPosts =
+        await fetchCandidatePool(
+          null,
+          curatedAuthorIds,
+          EVERGREEN_TIERS
+        );
+      const fallbackPrepared =
+        prepareRanking(
+          fallbackPosts,
+          MAX_FALLBACK_POSTS_PER_AUTHOR,
+          true
+        );
+      const primaryCount =
+        prepared.rankingMix.posts.length;
+      const supplementedPosts =
+        supplementRankingPosts(
+          prepared.rankingMix.posts,
+          fallbackPrepared.rankingMix.posts,
+          curatedAuthorIds,
+          targetPostCount,
+          MAX_FALLBACK_POSTS_PER_AUTHOR
+        );
+
+      prepared = {
+        ...fallbackPrepared,
+        rankingMix: {
+          ...fallbackPrepared.rankingMix,
+          posts: supplementedPosts,
+          curatedSelectedCount: supplementedPosts.length,
+          discoverySelectedCount: 0
         }
-
-        const fallbackSince =
-          new Date(
-            Date.now() -
-              fallbackHours * 60 * 60 * 1000
-          ).toISOString();
-        const fallbackPosts =
-          await fetchCandidatePool(
-            fallbackSince,
-            curatedAuthorIds
-          );
-        const fallbackPrepared =
-          prepareRanking(
-            fallbackPosts,
-            MAX_FALLBACK_POSTS_PER_AUTHOR
-          );
-        const supplementedPosts =
-          supplementRankingPosts(
-            prepared.rankingMix.posts,
-            fallbackPrepared.rankingMix.posts,
-            curatedAuthorIds,
-            MIN_RANKING_POSTS,
-            MAX_FALLBACK_POSTS_PER_AUTHOR
-          );
-
-        prepared = {
-          ...fallbackPrepared,
-          rankingMix: {
-            ...fallbackPrepared.rankingMix,
-            posts: supplementedPosts,
-            curatedSelectedCount: supplementedPosts.length,
-            discoverySelectedCount: 0
-          }
-        };
-        fallbackUsed = true;
-        fallbackHoursUsed = fallbackHours;
-      }
+      };
+      fallbackUsed = supplementedPosts.length > primaryCount;
     }
 
     const contentFiltered =
@@ -1067,6 +1042,11 @@ export async function GET(
       fallbackUsed,
 
       fallbackHoursUsed,
+
+      fallbackStrategy:
+        fallbackUsed ? "evergreen_s_to_a" : null,
+
+      targetPostCount,
 
       /*
        * DBから取得した候補数
