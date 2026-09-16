@@ -34,6 +34,7 @@ export default function CuratedAuthorsPage() {
   const [authors, setAuthors] = useState<CuratedAuthor[]>([]);
   const [username, setUsername] = useState("");
   const [expectedTier, setExpectedTier] = useState<"S" | "A">("S");
+  const [initialLimit, setInitialLimit] = useState<50 | 100 | 200 | 500>(100);
   const [loading, setLoading] = useState(false);
   const [message, setMessage] = useState("");
   const [error, setError] = useState("");
@@ -99,15 +100,21 @@ export default function CuratedAuthorsPage() {
       });
       const payload = await response.json();
       if (!response.ok || !payload.ok) throw new Error(payload.error ?? "登録に失敗しました");
-      setMessage(`@${payload.author.username} の過去動画を確認しています...`);
+      setMessage(`@${payload.author.username} の動画を最大${initialLimit}件、品質を見ながら取得しています...`);
       const collectResponse = await fetch("/api/collect-curated-author", {
         method: "POST",
         headers: headers(),
-        body: JSON.stringify({ xAuthorId: payload.author.x_author_id }),
+        body: JSON.stringify({ xAuthorId: payload.author.x_author_id, initialLimit }),
       });
       const collectPayload = await collectResponse.json();
       if (!collectResponse.ok || !collectPayload.ok) throw new Error(collectPayload.error ?? "初回収集に失敗しました");
-      setMessage(`登録完了：取得${collectPayload.result.fetched}件、採用${collectPayload.result.accepted}件、重複${collectPayload.result.duplicates}件`);
+      const rate = collectPayload.result.initialHighTierRate == null
+        ? ""
+        : `、S〜A推定率${Math.round(collectPayload.result.initialHighTierRate * 100)}%`;
+      const fallback = collectPayload.result.recentSearchFallback
+        ? "（全期間検索が利用できないため直近検索で取得）"
+        : "";
+      setMessage(`登録完了：取得${collectPayload.result.fetched}件、採用${collectPayload.result.accepted}件、重複${collectPayload.result.duplicates}件${rate}${fallback}`);
       setUsername("");
       await loadAuthors();
     } catch (caught) {
@@ -186,7 +193,7 @@ export default function CuratedAuthorsPage() {
 
   return <main style={{ maxWidth: 1180, margin: "0 auto", padding: 24, color: "#171717" }}>
     <h1>選別投稿者管理</h1>
-    <p>登録時に取得可能な過去動画を判定し、次回から新着だけを保存します。モザイクは除外しません。</p>
+    <p>登録時は動画だけを25件ずつ取得し、S〜A率が低ければ自動停止します。次回からは新着動画だけを保存します。モザイクは除外しません。</p>
     {error && <div style={{ padding: 12, background: "#fff0f0", color: "#9b1c1c", marginBottom: 12 }}>{error}</div>}
     {message && <div style={{ padding: 12, background: "#f0f7ff", marginBottom: 12 }}>{message}</div>}
     <section style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit,minmax(140px,1fr))", gap: 10, margin: "18px 0" }}>
@@ -195,7 +202,13 @@ export default function CuratedAuthorsPage() {
     <form onSubmit={addAuthor} style={{ display: "flex", gap: 9, flexWrap: "wrap", marginBottom: 20 }}>
       <input placeholder="@username またはXプロフィールURL" value={username} onChange={(event) => setUsername(event.target.value)} style={{ minWidth: 290, padding: 11 }} />
       <select value={expectedTier} onChange={(event) => setExpectedTier(event.target.value as "S" | "A")} style={{ padding: 11 }}><option value="S">S想定</option><option value="A">A想定</option></select>
-      <button disabled={loading} style={{ padding: "11px 17px", fontWeight: 800 }}>登録して過去動画を判定</button>
+      <select value={initialLimit} onChange={(event) => setInitialLimit(Number(event.target.value) as 50 | 100 | 200 | 500)} style={{ padding: 11 }}>
+        <option value={50}>節約：最大50動画（約$0.25）</option>
+        <option value={100}>標準：最大100動画（約$0.50）</option>
+        <option value={200}>多め：最大200動画（約$1.00）</option>
+        <option value={500}>特別：最大500動画（約$2.50）</option>
+      </select>
+      <button disabled={loading} style={{ padding: "11px 17px", fontWeight: 800 }}>登録して動画だけ取得</button>
       <button type="button" disabled={loading} onClick={collectBatch} style={{ padding: "11px 17px" }}>全投稿者を収集</button>
     </form>
     <div style={{ overflowX: "auto" }}><table style={{ width: "100%", borderCollapse: "collapse" }}>
