@@ -39,6 +39,28 @@ type XApiPage = {
   meta?: { next_token?: string };
 };
 
+export type XVideoPost = {
+  x_post_id: string;
+  author_id: string | null;
+  author_username: string | null;
+  author_name: string | null;
+  text: string;
+  possibly_sensitive: boolean;
+  created_at: string;
+  x_url: string;
+  media_key: string | null;
+  media_type: string | null;
+  preview_image_url: string | null;
+  video_url: string | null;
+  video_bitrate: number | null;
+  views: number;
+  likes: number;
+  reposts: number;
+  replies: number;
+  quotes: number;
+  bookmarks: number;
+};
+
 export type XApiUsageSource =
   | "discovery"
   | "priority"
@@ -91,10 +113,14 @@ function normalizeTotalResults(value: number) {
   return Math.max(10, Math.min(Math.floor(value), MAX_TOTAL_RESULTS));
 }
 
-function addResponseFields(params: URLSearchParams) {
+function addResponseFields(params: URLSearchParams, includeAuthorExpansion = true) {
   params.set("tweet.fields", TWEET_FIELDS);
-  params.set("expansions", "author_id,attachments.media_keys");
-  params.set("user.fields", "id,username,name");
+  params.set(
+    "expansions",
+    includeAuthorExpansion ? "author_id,attachments.media_keys" : "attachments.media_keys"
+  );
+  if (includeAuthorExpansion) params.set("user.fields", "id,username,name");
+  else params.delete("user.fields");
   params.set("media.fields", MEDIA_FIELDS);
 }
 
@@ -159,7 +185,11 @@ async function fetchXPages(
   return pages;
 }
 
-function formatVideoPosts(pages: XApiPage[], rawPostLimit: number) {
+function formatVideoPosts(
+  pages: XApiPage[],
+  rawPostLimit: number,
+  fallbackAuthor?: XUser
+): XVideoPost[] {
   const usersById = new Map<string, XUser>();
   const mediaByKey = new Map<string, XMedia>();
 
@@ -172,7 +202,7 @@ function formatVideoPosts(pages: XApiPage[], rawPostLimit: number) {
     .flatMap((page) => page.data ?? [])
     .slice(0, rawPostLimit)
     .map((post) => {
-      const author = post.author_id ? usersById.get(post.author_id) : undefined;
+      const author = post.author_id ? usersById.get(post.author_id) ?? fallbackAuthor : fallbackAuthor;
       const attachedMedia = (post.attachments?.media_keys ?? [])
         .map((key) => mediaByKey.get(key))
         .filter((item): item is XMedia => Boolean(item));
@@ -254,13 +284,17 @@ export async function lookupXUserByUsername(username: string): Promise<XUserLook
 export async function searchRecentVideoPosts(
   customQuery?: string,
   requestedMaxResults: number = DEFAULT_MAX_RESULTS,
-  options?: { sinceId?: string | null },
+  options?: {
+    sinceId?: string | null;
+    authorFallback?: XUserLookup;
+    includeAuthorExpansion?: boolean;
+  },
   usageSource: XApiUsageSource = "discovery"
 ) {
   const query = customQuery?.trim() || process.env.X_SEARCH_QUERY?.trim() || DEFAULT_QUERY;
   const totalLimit = normalizeTotalResults(requestedMaxResults);
   const params = new URLSearchParams({ query });
-  addResponseFields(params);
+  addResponseFields(params, options?.includeAuthorExpansion ?? true);
   if (options?.sinceId && /^\d+$/.test(options.sinceId)) {
     params.set("since_id", options.sinceId);
   }
@@ -273,9 +307,76 @@ export async function searchRecentVideoPosts(
     "X SEARCH RESULT",
     usageSource
   );
-  const videoPosts = formatVideoPosts(pages, totalLimit);
+  const videoPosts = formatVideoPosts(pages, totalLimit, options?.authorFallback);
   console.log("X SEARCH VIDEO RESULT:", { query, videoPosts: videoPosts.length });
   return videoPosts;
+}
+
+export async function searchAllVideoPostPage(input: {
+  query: string;
+  maxResults?: number;
+  nextToken?: string | null;
+  untilId?: string | null;
+  authorFallback: XUserLookup;
+}) {
+  const token = process.env.X_BEARER_TOKEN;
+  if (!token) throw new Error("Missing X_BEARER_TOKEN.");
+
+  const endpoint = "https://api.x.com/2/tweets/search/all";
+  const maxResults = Math.max(10, Math.min(100, Math.floor(input.maxResults ?? 25)));
+  const params = new URLSearchParams({
+    query: input.query.trim(),
+    max_results: String(maxResults),
+  });
+  addResponseFields(params, false);
+  if (input.nextToken) params.set("next_token", input.nextToken);
+  if (input.untilId && /^\d+$/.test(input.untilId)) params.set("until_id", input.untilId);
+
+  const startedAt = Date.now();
+  let response: Response;
+  try {
+    response = await fetch(`${endpoint}?${params.toString()}`, {
+      method: "GET",
+      headers: { Authorization: `Bearer ${token}` },
+      cache: "no-store",
+    });
+  } catch (error) {
+    await recordXApiUsage({
+      source: "curated_initial",
+      endpoint,
+      status: 0,
+      durationMs: Date.now() - startedAt,
+      error: String(error),
+    });
+    throw error;
+  }
+
+  if (!response.ok) {
+    const body = await response.text();
+    await recordXApiUsage({
+      source: "curated_initial",
+      endpoint,
+      status: response.status,
+      durationMs: Date.now() - startedAt,
+      error: body,
+    });
+    throw new Error(`X API ${response.status}: ${body}`);
+  }
+
+  const page = (await response.json()) as XApiPage;
+  await recordXApiUsage({
+    source: "curated_initial",
+    endpoint,
+    status: response.status,
+    posts: page.data?.length ?? 0,
+    users: 0,
+    durationMs: Date.now() - startedAt,
+  });
+
+  return {
+    posts: formatVideoPosts([page], maxResults, input.authorFallback),
+    nextToken: page.meta?.next_token ?? null,
+  };
 }
 
 export async function fetchUserTimelineVideoPosts(
