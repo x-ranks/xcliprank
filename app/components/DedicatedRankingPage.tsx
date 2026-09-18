@@ -1,5 +1,6 @@
 import Link from "next/link";
 import RankingClient, { type RankPost } from "./RankingClient";
+import SiteFooter from "./SiteFooter";
 import StructuredData from "./StructuredData";
 import { rankingBreadcrumb, rankingItemList } from "../../lib/seo";
 
@@ -93,16 +94,7 @@ export default function DedicatedRankingPage({
         </p>
       </section>
 
-      <footer>
-        <p>
-          動画ファイル自体はすべてXのサービス上にあり、当サイトでは動画ファイルの保存・収集・再アップロードを行っていません。
-        </p>
-        <p>
-          違法または権利侵害と思われる投稿は、
-          <Link href="/removal-request">削除要請フォーム</Link>
-          からお知らせください。
-        </p>
-      </footer>
+      <SiteFooter />
     </main>
   );
 }

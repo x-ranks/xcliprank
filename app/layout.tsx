@@ -1,6 +1,7 @@
 import { Analytics } from "@vercel/analytics/next";
 import type { Metadata } from "next";
 import { SITE_NAME, SITE_URL } from "../lib/seo";
+import AgeGate from "./components/AgeGate";
 import EngagementVisitTracker from "./components/EngagementVisitTracker";
 import "./globals.css";
 
@@ -42,6 +43,7 @@ export default function RootLayout({
     <html lang="ja">
       <body>
         {children}
+        <AgeGate />
         <EngagementVisitTracker />
         <Analytics />
       </body>

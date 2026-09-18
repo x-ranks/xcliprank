@@ -17,6 +17,11 @@ const PUBLIC_EXACT_PATHS = new Set([
   "/api/engagement",
   "/api/engagement-stats",
   "/removal-request",
+  "/privacy",
+  "/terms",
+  "/contact",
+  "/copyright",
+  "/advertising-disclosure",
   "/api/removal-requests",
   "/api/collect",
   "/api/curated-authors",
@@ -30,7 +35,12 @@ const PUBLIC_EXACT_PATHS = new Set([
 ]);
 
 const NOINDEX_PATHS = new Set([
-  "/removal-request"
+  "/removal-request",
+  "/privacy",
+  "/terms",
+  "/contact",
+  "/copyright",
+  "/advertising-disclosure"
 ]);
 
 function isPublicPath(pathname: string) {
