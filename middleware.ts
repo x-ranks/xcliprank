@@ -23,6 +23,7 @@ const PUBLIC_EXACT_PATHS = new Set([
   "/copyright",
   "/advertising-disclosure",
   "/api/removal-requests",
+  "/api/contact-requests",
   "/api/collect",
   "/api/curated-authors",
   "/api/collect-curated-author",
