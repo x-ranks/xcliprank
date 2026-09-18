@@ -1171,3 +1171,92 @@ footer a { color: #d8dee6; font-weight: 750; }
   .engagement-insights, .engagement-two-columns { grid-template-columns: 1fr; }
   .engagement-panel { padding: 17px 14px; }
 }
+
+
+/* Trust, legal, and age confirmation */
+body.age-gate-open { overflow: hidden; }
+.site-footer-links {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 8px 16px;
+  margin: 14px 0 8px;
+}
+.site-footer-age {
+  color: #ff8793;
+  font-weight: 850;
+}
+.legal-shell { max-width: 860px; }
+.legal-header { padding: 18px 0 28px; }
+.legal-back {
+  color: #a9b4c0;
+  text-decoration: none;
+  font-size: 13px;
+  font-weight: 750;
+}
+.legal-header h1 { margin: 28px 0 12px; font-size: clamp(30px, 5vw, 48px); }
+.legal-lead { max-width: 720px; color: #a8b2bd; line-height: 1.8; }
+.legal-updated { color: #6f7c89; font-size: 12px; }
+.legal-content {
+  display: grid;
+  gap: 16px;
+}
+.legal-section {
+  padding: 20px 22px;
+  border: 1px solid #29323d;
+  border-radius: 16px;
+  background: #11161d;
+  color: #b7c0ca;
+  line-height: 1.8;
+}
+.legal-section h2 { margin: 0 0 9px; color: #f4f6f8; font-size: 18px; }
+.legal-section p { margin: 8px 0; }
+.legal-section ul { margin: 8px 0; padding-left: 1.25rem; }
+.legal-section a { color: #fff; font-weight: 800; }
+.legal-callout {
+  border-color: #62313a;
+  background: #251217;
+}
+.age-gate {
+  position: fixed;
+  inset: 0;
+  z-index: 1000;
+  display: grid;
+  place-items: center;
+  padding: 18px;
+  background: #07090d;
+}
+.age-gate-panel {
+  width: min(520px, 100%);
+  padding: 28px;
+  border: 1px solid #313b48;
+  border-radius: 20px;
+  background: #11161d;
+  box-shadow: 0 28px 90px rgba(0,0,0,.65);
+  text-align: center;
+}
+.age-gate-brand {
+  margin: 0 0 18px;
+  color: #fff;
+  font-size: 18px;
+  font-weight: 950;
+  letter-spacing: -.03em;
+}
+.age-gate-brand span { color: #ff3347; font-size: 1.18em; }
+.age-gate h2 { margin: 0 0 12px; font-size: clamp(26px, 7vw, 38px); }
+.age-gate p { color: #aab4bf; line-height: 1.7; }
+.age-gate-actions { display: grid; gap: 10px; margin-top: 22px; }
+.age-gate-actions button {
+  min-height: 48px;
+  border-radius: 999px;
+  cursor: pointer;
+  font-weight: 900;
+}
+.age-gate-enter { border: 0; background: #ff3347; color: #fff; }
+.age-gate-exit { border: 1px solid #3a4552; background: #171d25; color: #c9d1da; }
+.age-gate-links { margin-top: 18px; font-size: 12px; }
+.age-gate-links a { color: #c9d1da; }
+@media (max-width: 600px) {
+  .legal-section { padding: 17px 16px; }
+  .age-gate-panel { padding: 24px 18px; }
+}

@@ -86,6 +86,13 @@ const operationTools: ToolCard[] = [
     badge: "要確認",
     tone: "amber",
   },
+  {
+    href: "/contact-requests-admin",
+    title: "問い合わせ管理",
+    description: "広告・提携・技術的な問題など、公開フォームから届いた問い合わせを確認します。",
+    badge: "要確認",
+    tone: "amber",
+  },
 ];
 
 const reviewTools: ToolCard[] = [

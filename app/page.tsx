@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import RankingClient from "./components/RankingClient";
+import SiteFooter from "./components/SiteFooter";
 import StructuredData from "./components/StructuredData";
 import { loadInitialRanking } from "../lib/initial-ranking";
 import { rankingItemList, SITE_NAME, SITE_URL } from "../lib/seo";
@@ -84,10 +85,7 @@ export default async function Home() {
           <Link href="/ranking/weekly">週間ランキング</Link>から確認できます。
         </p>
       </section>
-      <footer>
-        <p>動画ファイル自体はすべてXのサービス上にあり、当サイトでは動画ファイルの保存・収集・再アップロードを行っていません。X上の元投稿を参照して表示しています。</p>
-        <p>削除・非公開化された投稿は表示されなくなります。違法または権利侵害と思われる投稿は、<Link href="/removal-request">削除要請フォーム</Link>からお知らせください。</p>
-      </footer>
+      <SiteFooter />
     </main>
   );
 }
