@@ -16,7 +16,7 @@ const MAX_AUTHORS_PER_RUN = 24;
 const RESERVED_PER_GROUP = MAX_AUTHORS_PER_RUN / 2;
 const MAX_CURATED_AUTHORS = 50;
 
-export function selectCuratedAuthors(authors: CuratedAuthor[]) {
+function selectCuratedAuthors(authors: CuratedAuthor[]) {
   const recent: CuratedAuthor[] = [];
   const dormant: CuratedAuthor[] = [];
   for (const author of authors) {
