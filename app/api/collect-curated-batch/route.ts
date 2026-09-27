@@ -33,7 +33,11 @@ export async function GET(request: NextRequest) {
         results.push({ ok: false, author: author.username, mode, error: errorMessage(caught, "収集失敗") });
       }
     }
-    return NextResponse.json({ ok: true, processed: results.length, results });
+    const failed = results.filter((result) => !result.ok).length;
+    return NextResponse.json(
+      { ok: failed === 0, processed: results.length, failed, results },
+      { status: failed > 0 ? 502 : 200 }
+    );
   } catch (error) {
     return NextResponse.json({ ok: false, error: errorMessage(error, "一括収集に失敗しました") }, { status: 500 });
   }
