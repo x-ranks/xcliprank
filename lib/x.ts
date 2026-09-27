@@ -64,13 +64,47 @@ export type XVideoPost = {
 export type XVideoPostSearchResult = {
   posts: XVideoPost[];
   rawPostCount: number;
+  hasMore: boolean;
 };
 
 type SearchRecentVideoPostOptions = {
   sinceId?: string | null;
+  lastSuccessfulSearchAt?: string | null;
   authorFallback?: XUserLookup;
   includeAuthorExpansion?: boolean;
 };
+
+// Recent Search only accepts a since_id from its seven-day window.
+// Leave one day of margin so a delayed cron never sends a stale cursor.
+export function validRecentSearchSinceId(
+  sinceId: string | null | undefined,
+  now = Date.now()
+): string | null {
+  if (!sinceId || !/^\d+$/.test(sinceId)) return null;
+  try {
+    const createdAt = Number((BigInt(sinceId) >> 22n) + 1288834974657n);
+    return createdAt >= now - 6 * 24 * 60 * 60 * 1000 &&
+      createdAt <= now ? sinceId : null;
+  } catch {
+    return null;
+  }
+}
+
+// A stale Post ID cannot be sent as since_id. Search only since the last
+// completed check, with a short overlap for indexing delays. Clamp to the
+// Recent Search window after outages and leave one day of API margin.
+export function recentSearchStartTime(
+  lastSuccessfulSearchAt: string | null | undefined,
+  now = Date.now()
+): string {
+  const last = lastSuccessfulSearchAt ? Date.parse(lastSuccessfulSearchAt) : NaN;
+  const earliest = now - 6 * 24 * 60 * 60 * 1000;
+  const overlap = 15 * 60 * 1000;
+  const start = Number.isFinite(last) && last <= now
+    ? Math.max(earliest, last - overlap)
+    : earliest;
+  return new Date(start).toISOString();
+}
 
 export type XApiUsageSource =
   | "discovery"
@@ -301,9 +335,13 @@ export async function searchRecentVideoPostBatch(
   const query = customQuery?.trim() || process.env.X_SEARCH_QUERY?.trim() || DEFAULT_QUERY;
   const totalLimit = normalizeTotalResults(requestedMaxResults);
   const params = new URLSearchParams({ query });
+  if (options?.lastSuccessfulSearchAt !== undefined) params.set("sort_order", "recency");
   addResponseFields(params, options?.includeAuthorExpansion ?? true);
-  if (options?.sinceId && /^\d+$/.test(options.sinceId)) {
-    params.set("since_id", options.sinceId);
+  const sinceId = validRecentSearchSinceId(options?.sinceId);
+  if (sinceId) {
+    params.set("since_id", sinceId);
+  } else if (options?.lastSuccessfulSearchAt !== undefined) {
+    params.set("start_time", recentSearchStartTime(options.lastSuccessfulSearchAt));
   }
 
   const pages = await fetchXPages(
@@ -317,7 +355,7 @@ export async function searchRecentVideoPostBatch(
   const videoPosts = formatVideoPosts(pages, totalLimit, options?.authorFallback);
   const rawPostCount = pages.reduce((sum, page) => sum + (page.data?.length ?? 0), 0);
   console.log("X SEARCH VIDEO RESULT:", { query, rawPostCount, videoPosts: videoPosts.length });
-  return { posts: videoPosts, rawPostCount };
+  return { posts: videoPosts, rawPostCount, hasMore: Boolean(pages[pages.length - 1]?.meta?.next_token) };
 }
 
 export async function searchRecentVideoPosts(
