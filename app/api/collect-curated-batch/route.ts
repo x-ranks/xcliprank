@@ -14,7 +14,7 @@ export const maxDuration = 300;
 // dormant authors. The remaining slots fill from the oldest completed checks.
 const MAX_AUTHORS_PER_RUN = 24;
 const RESERVED_PER_GROUP = MAX_AUTHORS_PER_RUN / 2;
-const MAX_CURATED_AUTHORS = 50;
+const MAX_CURATED_AUTHORS = 1000;
 
 function selectCuratedAuthors(authors: CuratedAuthor[]) {
   const recent: CuratedAuthor[] = [];
