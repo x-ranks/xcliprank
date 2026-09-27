@@ -335,6 +335,7 @@ export async function searchRecentVideoPostBatch(
   const query = customQuery?.trim() || process.env.X_SEARCH_QUERY?.trim() || DEFAULT_QUERY;
   const totalLimit = normalizeTotalResults(requestedMaxResults);
   const params = new URLSearchParams({ query });
+  if (options?.lastSuccessfulSearchAt !== undefined) params.set("sort_order", "recency");
   addResponseFields(params, options?.includeAuthorExpansion ?? true);
   const sinceId = validRecentSearchSinceId(options?.sinceId);
   if (sinceId) {
