@@ -72,6 +72,22 @@ type SearchRecentVideoPostOptions = {
   includeAuthorExpansion?: boolean;
 };
 
+// Recent Search only accepts a since_id from its seven-day window.
+// Leave one day of margin so a delayed cron never sends a stale cursor.
+export function validRecentSearchSinceId(
+  sinceId: string | null | undefined,
+  now = Date.now()
+): string | null {
+  if (!sinceId || !/^\d+$/.test(sinceId)) return null;
+  try {
+    const createdAt = Number((BigInt(sinceId) >> 22n) + 1288834974657n);
+    return createdAt >= now - 6 * 24 * 60 * 60 * 1000 &&
+      createdAt <= now ? sinceId : null;
+  } catch {
+    return null;
+  }
+}
+
 export type XApiUsageSource =
   | "discovery"
   | "priority"
@@ -302,8 +318,9 @@ export async function searchRecentVideoPostBatch(
   const totalLimit = normalizeTotalResults(requestedMaxResults);
   const params = new URLSearchParams({ query });
   addResponseFields(params, options?.includeAuthorExpansion ?? true);
-  if (options?.sinceId && /^\d+$/.test(options.sinceId)) {
-    params.set("since_id", options.sinceId);
+  const sinceId = validRecentSearchSinceId(options?.sinceId);
+  if (sinceId) {
+    params.set("since_id", sinceId);
   }
 
   const pages = await fetchXPages(
