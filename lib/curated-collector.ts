@@ -41,6 +41,7 @@ export type CuratedAuthor = {
   curated_backfill_status: string | null;
   curated_expected_tier: "S" | "A" | null;
   curated_last_post_id: string | null;
+  curated_last_collected_at: string | null;
   curated_total_fetched: number | null;
   curated_total_saved: number | null;
   curated_total_duplicates: number | null;
@@ -266,6 +267,7 @@ export async function collectCuratedAuthor(
           INCREMENTAL_POST_READ_LIMIT,
           {
             sinceId: author.curated_last_post_id,
+            lastSuccessfulSearchAt: author.curated_last_collected_at,
             authorFallback: {
               id: author.x_author_id,
               username: author.username,
@@ -277,6 +279,9 @@ export async function collectCuratedAuthor(
         )
       : null;
     const fetched = initialResult?.posts ?? incrementalResult?.posts ?? [];
+    // A capped search has unprocessed older pages. Save the fetched posts,
+    // but keep both cursors unchanged so the gap cannot be silently skipped.
+    const incomplete = incrementalResult?.hasMore ?? false;
     const apiReadPosts = initialResult?.rawPostCount ?? incrementalResult?.rawPostCount ?? 0;
     const postIds = fetched.map((post) => post.x_post_id);
     const mediaKeys = fetched.map((post) => post.media_key).filter((value): value is string => Boolean(value));
@@ -375,9 +380,9 @@ export async function collectCuratedAuthor(
     const { error: authorError } = await supabase.from("authors").update({
       curated_backfill_status: mode === "initial" ? "completed" : author.curated_backfill_status,
       curated_backfill_completed_at: mode === "initial" ? now : undefined,
-      curated_last_collected_at: now,
-      // 0件の日や、再開時に古い動画だけ取得した場合も最新カーソルを後退させない。
-      curated_last_post_id: newestPostId(
+      curated_last_collected_at: incomplete ? author.curated_last_collected_at : now,
+      // Do not advance either cursor when the 50-post budget hides older pages.
+      curated_last_post_id: incomplete ? author.curated_last_post_id : newestPostId(
         [author.curated_last_post_id, latestId].filter((value): value is string => Boolean(value))
       ),
       curated_total_fetched: Number(author.curated_total_fetched || 0) + fetched.length,
@@ -388,8 +393,8 @@ export async function collectCuratedAuthor(
       curated_total_accepted: Number(author.curated_total_accepted || 0) + accepted,
       curated_unavailable_failure_count: 0,
       curated_unavailable_since: null,
-      curated_last_error: null,
-      last_checked_at: now,
+      curated_last_error: incomplete ? "Recent Search exceeded the 50-post daily limit; older pages remain." : null,
+      last_checked_at: incomplete ? undefined : now,
     }).eq("x_author_id", author.x_author_id);
     if (authorError) throw authorError;
 
@@ -397,6 +402,7 @@ export async function collectCuratedAuthor(
       author: author.username,
       mode,
       apiReadPosts,
+      incomplete,
       fetched: fetched.length,
       saved: rows.length,
       duplicates,
