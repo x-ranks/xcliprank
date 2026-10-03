@@ -3,6 +3,7 @@ import { classifyContent } from "./content-filter";
 import { errorMessage } from "./error-message";
 import { rankingScore } from "./ranking";
 import { supabaseAdmin } from "./supabase-admin";
+import { nextCuratedSearchState, type CuratedPendingSearch } from "./curated-search-state";
 import {
   blendRuleAndLearnedTier,
   loadTierLearningModel,
@@ -11,6 +12,7 @@ import {
 import {
   searchAllVideoPostPage,
   searchRecentVideoPostBatch,
+  recentSearchStartTime,
   type XVideoPost,
 } from "./x";
 
@@ -42,6 +44,8 @@ export type CuratedAuthor = {
   curated_expected_tier: "S" | "A" | null;
   curated_last_post_id: string | null;
   curated_last_collected_at: string | null;
+  curated_last_attempt_at: string | null;
+  curated_pending_search: CuratedPendingSearch | null;
   curated_total_fetched: number | null;
   curated_total_saved: number | null;
   curated_total_duplicates: number | null;
@@ -227,15 +231,36 @@ async function fetchInitialVideoPosts(
 async function existingValues(column: "x_post_id" | "media_key" | "video_url", values: string[]) {
   if (values.length === 0) return new Set<string>();
   const supabase = supabaseAdmin();
-  const { data, error } = await supabase.from("posts").select(column).in(column, values);
-  if (error) throw error;
-  return new Set((data ?? []).map((row) => String((row as Record<string, unknown>)[column] ?? "")).filter(Boolean));
+  const existing = new Set<string>();
+  // PostgREST encodes IN values in the URL. Hundreds of full video URLs can
+  // exceed upstream URI limits; bound encoded size as well as item count.
+  const batches: string[][] = [];
+  let batch: string[] = [];
+  let encodedSize = 0;
+  for (const value of new Set(values)) {
+    const size = encodeURIComponent(value).length + 12;
+    if (size > 4000) throw new Error("Duplicate-check value exceeds safe URI length.");
+    if (batch.length && (batch.length >= 20 || encodedSize + size > 4000)) {
+      batches.push(batch); batch = []; encodedSize = 0;
+    }
+    batch.push(value); encodedSize += size;
+  }
+  if (batch.length) batches.push(batch);
+  for (const items of batches) {
+    const { data, error } = await supabase.from("posts").select(column).in(column, items);
+    if (error) throw new Error(`Duplicate check (${column}) failed: ${error.message}`);
+    for (const row of data ?? []) {
+      const value = String((row as Record<string, unknown>)[column] ?? "");
+      if (value) existing.add(value);
+    }
+  }
+  return existing;
 }
 
 export async function collectCuratedAuthor(
   author: CuratedAuthor,
   mode: CuratedCollectionMode,
-  options?: { initialPostReadLimit?: number }
+  options?: { initialPostReadLimit?: number; incrementalPostReadLimit?: number; readBudget?: { remaining: number } }
 ) {
   const supabase = supabaseAdmin();
   const now = new Date().toISOString();
@@ -248,12 +273,21 @@ export async function collectCuratedAuthor(
     return null;
   });
 
-  await supabase.from("authors").update({
+  const { error: attemptError } = await supabase.from("authors").update({
     curated_backfill_status: mode === "initial" ? "running" : author.curated_backfill_status,
     curated_last_error: null,
+    curated_last_attempt_at: now,
   }).eq("x_author_id", author.x_author_id);
+  if (attemptError) throw attemptError;
 
   try {
+    const pending = mode === "incremental" ? author.curated_pending_search ?? null : null;
+    const startTime = pending?.startTime ?? recentSearchStartTime(author.curated_last_collected_at);
+    const endTime = pending?.endTime ?? new Date(Date.parse(now) - 10_000).toISOString();
+    // Never silently drop expired pending pages or jump the successful cursor.
+    if (pending && Date.parse(startTime) < Date.now() - 7 * 24 * 60 * 60 * 1000 + 60_000) {
+      throw new Error("Pending Recent Search window expired; manual recovery review required.");
+    }
     // 初回も動画検索だけを読み、以後は前回カーソル以降の新着動画だけを取得する。
     const initialResult = mode === "initial"
       ? await fetchInitialVideoPosts(
@@ -264,7 +298,7 @@ export async function collectCuratedAuthor(
     const incrementalResult = mode === "incremental"
       ? await searchRecentVideoPostBatch(
           `from:${author.username} has:videos -is:retweet -is:reply`,
-          INCREMENTAL_POST_READ_LIMIT,
+          options?.incrementalPostReadLimit ?? INCREMENTAL_POST_READ_LIMIT,
           {
             sinceId: author.curated_last_post_id,
             lastSuccessfulSearchAt: author.curated_last_collected_at,
@@ -274,6 +308,11 @@ export async function collectCuratedAuthor(
               name: author.username,
             },
             includeAuthorExpansion: false,
+            startTime,
+            endTime,
+            untilId: pending?.untilId,
+            readBudget: options?.readBudget,
+            firstPageLimit: INCREMENTAL_POST_READ_LIMIT,
           },
           "curated_incremental"
         )
@@ -377,14 +416,21 @@ export async function collectCuratedAuthor(
     const contentExcluded = rows.filter((post) => !["PASS", "SAFETY_REVIEW"].includes(post.content_category)).length;
     const accepted = rows.filter((post) => post.content_category === "PASS" && ["S", "A+", "A", "B+", "B", "C"].includes(post.adult_tier)).length;
     const latestId = newestPostId(postIds);
+    const searchState = mode === "incremental" ? nextCuratedSearchState({
+      pending, startTime, endTime, incomplete,
+      oldestPostId: incrementalResult?.oldestPostId ?? null,
+      newestPostId: incrementalResult?.newestPostId ?? null,
+      previousPostId: author.curated_last_post_id,
+    }) : null;
     const { error: authorError } = await supabase.from("authors").update({
       curated_backfill_status: mode === "initial" ? "completed" : author.curated_backfill_status,
       curated_backfill_completed_at: mode === "initial" ? now : undefined,
-      curated_last_collected_at: incomplete ? author.curated_last_collected_at : now,
+      curated_last_collected_at: incomplete ? author.curated_last_collected_at : searchState?.completedAt ?? now,
       // Do not advance either cursor when the 50-post budget hides older pages.
-      curated_last_post_id: incomplete ? author.curated_last_post_id : newestPostId(
+      curated_last_post_id: searchState ? searchState.lastPostId : newestPostId(
         [author.curated_last_post_id, latestId].filter((value): value is string => Boolean(value))
       ),
+      curated_pending_search: searchState?.pending ?? null,
       curated_total_fetched: Number(author.curated_total_fetched || 0) + fetched.length,
       curated_total_saved: Number(author.curated_total_saved || 0) + rows.length,
       curated_total_duplicates: Number(author.curated_total_duplicates || 0) + duplicates,
@@ -393,7 +439,7 @@ export async function collectCuratedAuthor(
       curated_total_accepted: Number(author.curated_total_accepted || 0) + accepted,
       curated_unavailable_failure_count: 0,
       curated_unavailable_since: null,
-      curated_last_error: incomplete ? "Recent Search exceeded the 50-post daily limit; older pages remain." : null,
+      curated_last_error: incomplete ? "Recent Search read budget reached; older pages queued for resume." : null,
       last_checked_at: incomplete ? undefined : now,
     }).eq("x_author_id", author.x_author_id);
     if (authorError) throw authorError;
@@ -421,6 +467,8 @@ export async function collectCuratedAuthor(
       initialResumedAfter: initialResult?.resumedAfter ?? null,
       recentSearchFallback: initialResult?.recentSearchFallback ?? false,
       completedAt: now,
+      resumed: Boolean(pending),
+      pendingUntilId: searchState?.pending?.untilId ?? null,
     };
   } catch (error) {
     const message = errorMessage(error, "Collection failed");
@@ -457,6 +505,7 @@ export const CURATED_AUTHOR_SELECT = [
   "cumulative_posts", "cumulative_video_posts", "video_ratio", "review_required",
   "is_curated", "curated_status", "curated_expected_tier", "curated_added_at",
   "curated_backfill_status", "curated_backfill_completed_at", "curated_last_collected_at",
+  "curated_last_attempt_at", "curated_pending_search",
   "curated_last_post_id", "curated_total_fetched", "curated_total_saved",
   "curated_total_duplicates", "curated_total_safety_excluded", "curated_total_content_excluded",
   "curated_total_accepted", "curated_last_error", "curated_unavailable_failure_count",
