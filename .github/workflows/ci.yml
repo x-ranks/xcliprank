@@ -41,3 +41,9 @@ jobs:
 
       - name: Offline ranking API integration test
         run: node scripts/test-ranking-liquidity-route.cjs
+
+      - name: Offline curated expiry tests
+        run: node scripts/test-curated-expiry.cjs
+
+      - name: Offline free expiry cleanup test
+        run: node scripts/test-curated-expiry-cleanup.cjs

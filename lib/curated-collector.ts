@@ -1,3 +1,4 @@
+import { planCuratedSearchExpiry, persistCuratedSearchExpiry, type CuratedExpiryAudit } from "./curated-search-expiry";
 import { calculateAdultScore, calculateCreatorScore, requiresSafetyReview } from "./adult-score";
 import { classifyContent } from "./content-filter";
 import { errorMessage } from "./error-message";
@@ -46,6 +47,7 @@ export type CuratedAuthor = {
   curated_last_collected_at: string | null;
   curated_last_attempt_at: string | null;
   curated_pending_search: CuratedPendingSearch | null;
+  curated_search_expiry?: CuratedExpiryAudit | null;
   curated_total_fetched: number | null;
   curated_total_saved: number | null;
   curated_total_duplicates: number | null;
@@ -281,13 +283,11 @@ export async function collectCuratedAuthor(
   if (attemptError) throw attemptError;
 
   try {
-    const pending = mode === "incremental" ? author.curated_pending_search ?? null : null;
+    const expiry = planCuratedSearchExpiry(mode === "incremental" ? author.curated_pending_search ?? null : null, author.curated_search_expiry, Date.parse(now));
+    await persistCuratedSearchExpiry(supabase, author, expiry);
+    const pending = expiry.pending;
     const startTime = pending?.startTime ?? recentSearchStartTime(author.curated_last_collected_at);
     const endTime = pending?.endTime ?? new Date(Date.parse(now) - 10_000).toISOString();
-    // Never silently drop expired pending pages or jump the successful cursor.
-    if (pending && Date.parse(startTime) < Date.now() - 7 * 24 * 60 * 60 * 1000 + 60_000) {
-      throw new Error("Pending Recent Search window expired; manual recovery review required.");
-    }
     // 初回も動画検索だけを読み、以後は前回カーソル以降の新着動画だけを取得する。
     const initialResult = mode === "initial"
       ? await fetchInitialVideoPosts(
@@ -468,6 +468,8 @@ export async function collectCuratedAuthor(
       recentSearchFallback: initialResult?.recentSearchFallback ?? false,
       completedAt: now,
       resumed: Boolean(pending),
+      expiryAction: expiry.event?.action ?? null,
+      expirySkippedRange: expiry.event ? { from: expiry.event.skippedFrom, until: expiry.event.skippedUntil } : null,
       pendingUntilId: searchState?.pending?.untilId ?? null,
     };
   } catch (error) {
@@ -505,7 +507,7 @@ export const CURATED_AUTHOR_SELECT = [
   "cumulative_posts", "cumulative_video_posts", "video_ratio", "review_required",
   "is_curated", "curated_status", "curated_expected_tier", "curated_added_at",
   "curated_backfill_status", "curated_backfill_completed_at", "curated_last_collected_at",
-  "curated_last_attempt_at", "curated_pending_search",
+  "curated_last_attempt_at", "curated_pending_search", "curated_search_expiry",
   "curated_last_post_id", "curated_total_fetched", "curated_total_saved",
   "curated_total_duplicates", "curated_total_safety_excluded", "curated_total_content_excluded",
   "curated_total_accepted", "curated_last_error", "curated_unavailable_failure_count",
