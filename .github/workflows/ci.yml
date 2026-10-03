@@ -35,3 +35,9 @@ jobs:
 
       - name: Offline video metadata tests
         run: node scripts/test-video-duration.cjs
+
+      - name: Offline ranking liquidity tests
+        run: node scripts/test-ranking-liquidity.cjs
+
+      - name: Offline ranking API integration test
+        run: node scripts/test-ranking-liquidity-route.cjs
