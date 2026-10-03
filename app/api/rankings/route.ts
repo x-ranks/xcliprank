@@ -1,4 +1,3 @@
-import { unstable_cache } from "next/cache";
 import { buildLiquidRankings, liquidityClock } from "../../../lib/ranking-liquidity";
 import {
   NextRequest,
@@ -815,8 +814,8 @@ function supplementRankingPosts(
   return selected;
 }
 
-// Cache the candidate snapshot for both tabs; the bucket key prevents independent draws.
-const loadLiquidRankingPlan = unstable_cache(async (snapshot: number, since: string, seed: string) => {
+// Both tabs share a bounded in-flight/cache plan; no persistent cache entry per five-minute bucket.
+async function createLiquidRankingPlan(snapshot: number, since: string, seed: string) {
   const authorIds = await fetchActiveCuratedAuthorIds();
   const [recentRaw, archiveRaw] = await Promise.all([
     fetchCandidatePool(since, authorIds, DISPLAY_TIERS, { newestFirst: true, poolLimit: 1000 }),
@@ -830,8 +829,21 @@ const loadLiquidRankingPlan = unstable_cache(async (snapshot: number, since: str
   // The unclaimed recent slots in 24h are ranked by the existing quality/popularity method.
   const recentDaily = sortPosts(plan.daily.filter(p => p.ranking_slot === 'recent'), true);
   plan.daily = [...recentDaily, ...plan.daily.filter(p => p.ranking_slot !== 'recent')];
-  return { ...plan, filtered, authorCount: authorIds.size };
-}, ['liquid-ranking-plan-v1'], { revalidate: 300 });
+  const { posts: eligiblePosts, ...filterMetrics } = filtered;
+  return { ...plan, filtered: { ...filterMetrics, candidateCount: eligiblePosts.length }, authorCount: authorIds.size };
+}
+const liquidPlans = new Map<number, Promise<Awaited<ReturnType<typeof createLiquidRankingPlan>>>>();
+function loadLiquidRankingPlan(snapshot: number, since: string, seed: string) {
+  let promise = liquidPlans.get(snapshot);
+  if (!promise) {
+    promise = createLiquidRankingPlan(snapshot, since, seed).catch(error => {
+      liquidPlans.delete(snapshot); throw error;
+    });
+    liquidPlans.set(snapshot, promise);
+    while (liquidPlans.size > 2) liquidPlans.delete(liquidPlans.keys().next().value!);
+  }
+  return promise;
+}
 
 async function liquidRankingResponse(range: 'trending' | 'daily', visual: boolean) {
   const clock = liquidityClock();
@@ -844,12 +856,12 @@ async function liquidRankingResponse(range: 'trending' | 'daily', visual: boolea
     ok: true, range, count: data.length, targetPostCount: 100,
     fallbackUsed: data.some(p => p.ranking_supplemented), fallbackHoursUsed: null,
     fallbackStrategy: range === 'trending' ? 'daily_random_a_or_higher' : '85_quality_archive_disjoint',
-    candidateCount: plan.filtered.posts.length,
+    candidateCount: plan.filtered.candidateCount,
     candidateCountBeforeContentFilter: plan.filtered.candidateCountBeforeContentFilter,
     contentFilterExcludedCount: plan.filtered.contentFilterExcludedCount,
     contentFilterCategoryCounts: plan.filtered.contentFilterCategoryCounts,
     contentFilterManualOverrides: plan.filtered.contentFilterManualOverrides,
-    rankingMix: { activeCuratedAuthorCount: plan.authorCount, curatedCandidateCount: plan.filtered.posts.length, discoveryCandidateCount: 0, curatedSelectedCount: data.length, discoverySelectedCount: 0, maxPostsPerAuthor: MAX_POSTS_PER_AUTHOR, maxCuratedPosts: range === 'trending' ? 200 : 100, maxDiscoveryPosts: 0 },
+    rankingMix: { activeCuratedAuthorCount: plan.authorCount, curatedCandidateCount: plan.filtered.candidateCount, discoveryCandidateCount: 0, curatedSelectedCount: data.length, discoverySelectedCount: 0, maxPostsPerAuthor: MAX_POSTS_PER_AUTHOR, maxCuratedPosts: range === 'trending' ? 150 : 100, maxDiscoveryPosts: 0 },
     liquidity: { ...plan.metrics, snapshotAt: new Date(clock.snapshot).toISOString(), pastBefore: clock.since },
     tierCounts, tierPriority: DISPLAY_TIERS,
     rankingMethod: range === 'trending' ? 'newest first + daily random A-or-higher archive; disjoint from daily' : '85 quality-ranked archive slots + 15 unclaimed videos; disjoint from trending',

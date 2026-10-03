@@ -38,3 +38,6 @@ jobs:
 
       - name: Offline ranking liquidity tests
         run: node scripts/test-ranking-liquidity.cjs
+
+      - name: Offline ranking API integration test
+        run: node scripts/test-ranking-liquidity-route.cjs
