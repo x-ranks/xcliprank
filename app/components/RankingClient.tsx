@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useMemo, useRef, useState } from "react";
+import VideoDurationBadge from "./VideoDurationBadge";
 import { trackEngagement } from "../../lib/engagement-client";
 
 export type RankPost = {
@@ -218,18 +219,7 @@ export default function RankingClient({
                 #{index + 1}
               </span>
 
-              <span className="score-badge">
-                {p.adult_tier ?? "-"} {p.score}
-              </span>
-
-              {p.video_url && (
-                <span
-                  className="video-ready-badge"
-                  title="サイト内再生可能"
-                >
-                  ▶
-                </span>
-              )}
+              {p.video_url && <VideoDurationBadge url={p.video_url} />}
 
               <div
                 className="play-button"
@@ -455,3 +445,4 @@ function compact(value: number) {
     }
   ).format(value || 0);
 }
+

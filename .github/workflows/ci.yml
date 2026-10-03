@@ -32,3 +32,6 @@ jobs:
 
       - name: Offline curated recovery tests
         run: node scripts/test-curated-recovery.cjs
+
+      - name: Offline video metadata tests
+        run: node scripts/test-video-duration.cjs
