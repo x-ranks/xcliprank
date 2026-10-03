@@ -89,7 +89,11 @@ function load(id) {
     localRequire, m, m.exports, { env: { X_BEARER_TOKEN: "offline-test-only" } },
     { log() {}, error() {} },
     async url => {
-      requests.push(new URL(url)); const item = queue.shift();
+      const request = new URL(url);
+      const hasId = request.searchParams.has("since_id") || request.searchParams.has("until_id");
+      const hasTime = request.searchParams.has("start_time") || request.searchParams.has("end_time");
+      assert.ok(!(hasId && hasTime), "X rejects mixed ID and time bounds");
+      requests.push(request); const item = queue.shift();
       assert.ok(item, "unexpected paid request");
       if (item.status) return { ok: false, status: item.status, text: async () => "test error" };
       return { ok: true, status: 200, json: async () => item };
@@ -108,15 +112,21 @@ async function run() {
   assert.equal(a.curated_last_post_id, null);
   assert.equal(a.curated_pending_search.untilId, "951");
   const fixedEnd = a.curated_pending_search.endTime;
+  const fixedStart = a.curated_pending_search.startTime;
   queue.push(page(950, 50, true));
   await collectCuratedAuthor({ ...a }, "incremental");
   assert.equal(requests[1].searchParams.get("until_id"), "951");
   assert.equal(requests[1].searchParams.has("end_time"), false);
+  assert.equal(requests[1].searchParams.has("start_time"), false);
+  const expectedLower = ((BigInt(Date.parse(fixedStart)) - 1288834974657n) << 22n) - 1n;
+  assert.equal(requests[1].searchParams.get("since_id"), expectedLower.toString());
   assert.equal(requests[0].searchParams.has("end_time"), true);
   assert.equal(a.curated_pending_search.untilId, "901");
   assert.equal(a.curated_pending_search.endTime, fixedEnd);
   queue.push(page(900, 20, false));
   await collectCuratedAuthor({ ...a }, "incremental");
+  assert.equal(requests[2].searchParams.get("since_id"), expectedLower.toString());
+  assert.equal(requests[2].searchParams.get("until_id"), "901");
   assert.equal(a.curated_pending_search, null);
   assert.equal(a.curated_last_post_id, "1000");
   assert.equal(a.curated_last_collected_at, fixedEnd);
@@ -172,6 +182,15 @@ async function run() {
   assert.equal(recovery.data.errors, 0);
   assert.equal(recovery.data.halted, "read_budget");
   console.log("PASS: recovery stops at 400 reads; unfinished work persists; error/incomplete counts differ");
+  reset(); queue.push(page(500, 10, false));
+  const recentId = (((BigInt(Date.now() - 1000) - 1288834974657n) << 22n) + 10n).toString();
+  const upperTime = new Date(Date.now() - 500).toISOString();
+  await searchRecentVideoPostBatch("from:example has:videos", 10,
+    { sinceId: recentId, endTime: upperTime }, "curated_incremental");
+  assert.equal(requests[0].searchParams.get("since_id"), recentId);
+  assert.equal(requests[0].searchParams.get("until_id"),
+    ((BigInt(Date.parse(upperTime)) - 1288834974657n) << 22n).toString());
+  console.log("PASS: resume uses only ID bounds; pinned lower bound and exclusive millisecond edges preserved");
   const noTarget = await GET({ authorized: true, nextUrl: new URL("https://test/api?recovery=1") });
   assert.equal(noTarget.status, 400);
   console.log("PASS: recovery requires explicit targets; cannot re-collect all 24 authors");

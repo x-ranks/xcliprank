@@ -345,6 +345,16 @@ export async function lookupXUserByUsername(username: string): Promise<XUserLook
   return user;
 }
 
+function snowflakeTimeBoundary(time: string, inclusiveLower: boolean): string {
+  const timestamp = Date.parse(time);
+  if (!Number.isFinite(timestamp) || timestamp <= 1288834974657) {
+    throw new Error("Invalid Recent Search time boundary.");
+  }
+  const boundary = (BigInt(timestamp) - 1288834974657n) << 22n;
+  // since_id is exclusive: include every ID from the first millisecond.
+  return (inclusiveLower ? boundary - 1n : boundary).toString();
+}
+
 export async function searchRecentVideoPostBatch(
   customQuery?: string,
   requestedMaxResults: number = DEFAULT_MAX_RESULTS,
@@ -357,17 +367,23 @@ export async function searchRecentVideoPostBatch(
   if (options?.lastSuccessfulSearchAt !== undefined) params.set("sort_order", "recency");
   addResponseFields(params, options?.includeAuthorExpansion ?? true);
   const sinceId = validRecentSearchSinceId(options?.sinceId);
-  if (options?.startTime) {
-    params.set("start_time", options.startTime);
-  } else if (sinceId) {
+  const startTime = options?.startTime ??
+    (options?.lastSuccessfulSearchAt !== undefined
+      ? recentSearchStartTime(options.lastSuccessfulSearchAt) : undefined);
+  // The live API rejects mixing either ID bound with either time bound.
+  // Convert the pinned lower time to its Snowflake boundary when resuming,
+  // retaining the original window without resetting to the newest page.
+  if (options?.untilId) {
+    params.set("until_id", options.untilId);
+    if (startTime) params.set("since_id", snowflakeTimeBoundary(startTime, true));
+    else if (sinceId) params.set("since_id", sinceId);
+  } else if (options?.startTime || !sinceId) {
+    if (startTime) params.set("start_time", startTime);
+    if (options?.endTime) params.set("end_time", options.endTime);
+  } else {
     params.set("since_id", sinceId);
-  } else if (options?.lastSuccessfulSearchAt !== undefined) {
-    params.set("start_time", recentSearchStartTime(options.lastSuccessfulSearchAt));
+    if (options?.endTime) params.set("until_id", snowflakeTimeBoundary(options.endTime, false));
   }
-  // X forbids end_time + until_id together. The saved oldest ID already
-  // lies below the original end_time and becomes the exclusive upper bound.
-  if (options?.untilId) params.set("until_id", options.untilId);
-  else if (options?.endTime) params.set("end_time", options.endTime);
 
   const pages = await fetchXPages(
     "https://api.x.com/2/tweets/search/recent",
