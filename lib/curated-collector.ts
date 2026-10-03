@@ -231,9 +231,30 @@ async function fetchInitialVideoPosts(
 async function existingValues(column: "x_post_id" | "media_key" | "video_url", values: string[]) {
   if (values.length === 0) return new Set<string>();
   const supabase = supabaseAdmin();
-  const { data, error } = await supabase.from("posts").select(column).in(column, values);
-  if (error) throw error;
-  return new Set((data ?? []).map((row) => String((row as Record<string, unknown>)[column] ?? "")).filter(Boolean));
+  const existing = new Set<string>();
+  // PostgREST encodes IN values in the URL. Hundreds of full video URLs can
+  // exceed upstream URI limits; bound encoded size as well as item count.
+  const batches: string[][] = [];
+  let batch: string[] = [];
+  let encodedSize = 0;
+  for (const value of new Set(values)) {
+    const size = encodeURIComponent(value).length + 12;
+    if (size > 4000) throw new Error("Duplicate-check value exceeds safe URI length.");
+    if (batch.length && (batch.length >= 20 || encodedSize + size > 4000)) {
+      batches.push(batch); batch = []; encodedSize = 0;
+    }
+    batch.push(value); encodedSize += size;
+  }
+  if (batch.length) batches.push(batch);
+  for (const items of batches) {
+    const { data, error } = await supabase.from("posts").select(column).in(column, items);
+    if (error) throw new Error(`Duplicate check (${column}) failed: ${error.message}`);
+    for (const row of data ?? []) {
+      const value = String((row as Record<string, unknown>)[column] ?? "");
+      if (value) existing.add(value);
+    }
+  }
+  return existing;
 }
 
 export async function collectCuratedAuthor(

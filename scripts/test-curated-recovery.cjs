@@ -6,7 +6,7 @@ const ts = require("typescript");
 const root = path.resolve(__dirname, "..");
 let state, queue, requests;
 function reset(authors = []) {
-  state = { authors, posts: [], snapshots: [], failSnapshots: false };
+  state = { authors, posts: [], snapshots: [], failSnapshots: false, lookups: [] };
   queue = []; requests = [];
 }
 function author(username = "example") {
@@ -29,7 +29,14 @@ function db() {
     const b = {
       select(c) { column = c; return b; },
       eq(k, v) { filters.push(row => row[k] === v); return b; },
-      in(k, v) { filters.push(row => v.includes(row[k])); return b; },
+      in(k, v) {
+        if (table === "posts") {
+          state.lookups.push({ column: k, values: v });
+          if (v.length > 20 || v.reduce((n, x) => n + encodeURIComponent(x).length + 12, 0) > 4000)
+            throw new TypeError("fetch failed: oversized duplicate lookup");
+        }
+        filters.push(row => v.includes(row[k])); return b;
+      },
       order() { return b; }, limit() { return b; },
       update(v) { op = "update"; values = v; return b; },
       upsert(v) { op = "upsert"; values = v; return b; },
@@ -115,6 +122,21 @@ async function run() {
   assert.equal(a.curated_last_collected_at, fixedEnd);
   assert.equal(new Set(state.posts.map(p => p.x_post_id)).size, 120);
   console.log("PASS: 120 posts over three runs; no duplicate/missing IDs; fixed bounds; high-water cursor");
+
+  const longAuthor = author(); reset([longAuthor]);
+  const longPages = [page(1000, 50, true), page(950, 100, true), page(850, 50, true)];
+  for (const response of longPages) for (const media of response.includes.media)
+    media.variants = [{ content_type: "video/mp4", bit_rate: 1000,
+      url: "https://video.twimg.com/" + "a".repeat(250) + media.media_key + ".mp4" }];
+  const duplicateUrl = longPages[2].includes.media[49].variants[0].url;
+  state.posts.push({ x_post_id: "old", video_url: duplicateUrl, video_content_hash: null });
+  queue.push(...longPages);
+  const longResult = await collectCuratedAuthor({ ...longAuthor }, "incremental", { incrementalPostReadLimit: 200 });
+  assert.equal(longResult.saved, 199);
+  assert.equal(longResult.duplicates, 1);
+  assert.equal(longAuthor.curated_pending_search.untilId, "801");
+  assert.ok(state.lookups.filter(x => x.column === "video_url").length > 10);
+  console.log("PASS: 200 long video URLs use bounded DB lookups; cross-chunk duplicate skipped; cursor saved");
 
   const failing = author(); reset([failing]); state.failSnapshots = true;
   queue.push(page(500, 50, true));
