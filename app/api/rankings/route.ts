@@ -1,3 +1,5 @@
+import { unstable_cache } from "next/cache";
+import { buildLiquidRankings, liquidityClock } from "../../../lib/ranking-liquidity";
 import {
   NextRequest,
   NextResponse
@@ -116,8 +118,8 @@ const CONTENT_CATEGORIES = [
 
 const MAX_RANKING_POSTS = 100;
 const TARGET_POSTS_BY_RANGE: Record<RangeType, number> = {
-  trending: 50,
-  daily: 50,
+  trending: 100,
+  daily: 100,
   weekly: 100,
 };
 const MAX_CURATED_POSTS = 100;
@@ -329,7 +331,8 @@ function calculateRankingValue(
 async function fetchCandidates(
   since: string | null,
   authorIds?: string[],
-  allowedTiers: readonly string[] = DISPLAY_TIERS
+  allowedTiers: readonly string[] = DISPLAY_TIERS,
+  options: { before?: string; newestFirst?: boolean; poolLimit?: number } = {}
 ) {
   if (
     authorIds &&
@@ -396,7 +399,7 @@ async function fetchCandidates(
        * 多めに取得
        */
       .order(
-        "effective_adult_score",
+        options.newestFirst ? "created_at" : "effective_adult_score",
         {
           ascending: false
         }
@@ -407,6 +410,11 @@ async function fetchCandidates(
           ascending: false
         }
       );
+
+  if (options.newestFirst) {
+    query = query.order("created_at", { ascending: false, nullsFirst: false });
+  }
+  if (options.before) query = query.lt("created_at", options.before);
 
   if (since) {
     query = query.gte(
@@ -422,15 +430,14 @@ async function fetchCandidates(
     );
   }
 
-  const {
-    data,
-    error
-  } = await query
-
-      .limit(500);
-
-  if (error) {
-    throw error;
+  const data: any[] = [];
+  const poolLimit = options.poolLimit ?? 500;
+  for (let offset = 0; offset < poolLimit; offset += 500) {
+    const pageSize = Math.min(500, poolLimit - offset);
+    const page = await query.range(offset, offset + pageSize - 1);
+    if (page.error) throw page.error;
+    data.push(...(page.data ?? []));
+    if ((page.data?.length ?? 0) < pageSize) break;
   }
 
   return (data ?? [])
@@ -445,13 +452,15 @@ async function fetchCandidates(
 async function fetchCandidatePool(
   since: string | null,
   curatedAuthorIds: Set<string>,
-  allowedTiers: readonly string[] = DISPLAY_TIERS
+  allowedTiers: readonly string[] = DISPLAY_TIERS,
+  options: { before?: string; newestFirst?: boolean; poolLimit?: number } = {}
 ) {
   // ランキング候補も選別投稿者だけをDBから取得する。
   return fetchCandidates(
     since,
     [...curatedAuthorIds],
-    allowedTiers
+    allowedTiers,
+    options
   );
 }
 
@@ -806,6 +815,49 @@ function supplementRankingPosts(
   return selected;
 }
 
+// Cache the candidate snapshot for both tabs; the bucket key prevents independent draws.
+const loadLiquidRankingPlan = unstable_cache(async (snapshot: number, since: string, seed: string) => {
+  const authorIds = await fetchActiveCuratedAuthorIds();
+  const [recentRaw, archiveRaw] = await Promise.all([
+    fetchCandidatePool(since, authorIds, DISPLAY_TIERS, { newestFirst: true, poolLimit: 1000 }),
+    fetchCandidatePool(null, authorIds, EVERGREEN_TIERS, { before: since, poolLimit: 3000 })
+  ]);
+  const eligibleRaw = [...new Map([...recentRaw, ...archiveRaw].map(p => [String(p.x_post_id ?? p.id), p])).values()];
+  const filtered = applyContentFilter(eligibleRaw);
+  const recent = sortNewestPosts(filtered.posts.filter(p => Date.parse(p.created_at) >= Date.parse(since) && Date.parse(p.created_at) <= snapshot));
+  const archive = sortPosts(filtered.posts.filter(p => Date.parse(p.created_at) < Date.parse(since)), true);
+  const plan = buildLiquidRankings(recent, archive, since, seed);
+  // The unclaimed recent slots in 24h are ranked by the existing quality/popularity method.
+  const recentDaily = sortPosts(plan.daily.filter(p => p.ranking_slot === 'recent'), true);
+  plan.daily = [...recentDaily, ...plan.daily.filter(p => p.ranking_slot !== 'recent')];
+  return { ...plan, filtered, authorCount: authorIds.size };
+}, ['liquid-ranking-plan-v1'], { revalidate: 300 });
+
+async function liquidRankingResponse(range: 'trending' | 'daily', visual: boolean) {
+  const clock = liquidityClock();
+  const plan = await loadLiquidRankingPlan(clock.snapshot, clock.since, clock.seed);
+  const data = plan[range];
+  const tierCounts = data.reduce<Record<string, number>>((counts, post) => {
+    const tier = String(post.adult_tier); counts[tier] = (counts[tier] ?? 0) + 1; return counts;
+  }, {});
+  return NextResponse.json({
+    ok: true, range, count: data.length, targetPostCount: 100,
+    fallbackUsed: data.some(p => p.ranking_supplemented), fallbackHoursUsed: null,
+    fallbackStrategy: range === 'trending' ? 'daily_random_a_or_higher' : '85_quality_archive_disjoint',
+    candidateCount: plan.filtered.posts.length,
+    candidateCountBeforeContentFilter: plan.filtered.candidateCountBeforeContentFilter,
+    contentFilterExcludedCount: plan.filtered.contentFilterExcludedCount,
+    contentFilterCategoryCounts: plan.filtered.contentFilterCategoryCounts,
+    contentFilterManualOverrides: plan.filtered.contentFilterManualOverrides,
+    rankingMix: { activeCuratedAuthorCount: plan.authorCount, curatedCandidateCount: plan.filtered.posts.length, discoveryCandidateCount: 0, curatedSelectedCount: data.length, discoverySelectedCount: 0, maxPostsPerAuthor: MAX_POSTS_PER_AUTHOR, maxCuratedPosts: range === 'trending' ? 200 : 100, maxDiscoveryPosts: 0 },
+    liquidity: { ...plan.metrics, snapshotAt: new Date(clock.snapshot).toISOString(), pastBefore: clock.since },
+    tierCounts, tierPriority: DISPLAY_TIERS,
+    rankingMethod: range === 'trending' ? 'newest first + daily random A-or-higher archive; disjoint from daily' : '85 quality-ranked archive slots + 15 unclaimed videos; disjoint from trending',
+    visualPreference: { enabled: range === 'daily' && visual, weight: range === 'daily' && visual ? VISUAL_PREFERENCE_WEIGHT : 0, scoredCount: data.filter(p => p.visual_preference_applied).length },
+    data
+  }, { headers: { 'Cache-Control': 'no-store' } });
+}
+
 /*
  * =========================
  * GET
@@ -860,6 +912,10 @@ export async function GET(
     const useVisualPreference =
       req.nextUrl.searchParams.get("visual") !== "0";
 
+    if (range === 'trending' || range === 'daily') {
+      return await liquidRankingResponse(range, useVisualPreference);
+    }
+
     const hours =
       getHours(range);
 
@@ -899,8 +955,7 @@ export async function GET(
      * =========================
      */
 
-    const newestFirst =
-      range === "trending";
+    const newestFirst = false;
     const targetPostCount =
       TARGET_POSTS_BY_RANGE[range];
 
@@ -1145,3 +1200,4 @@ export async function GET(
     );
   }
 }
+

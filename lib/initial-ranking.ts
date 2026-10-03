@@ -30,8 +30,8 @@ const loadCachedInitialRanking = unstable_cache(async (
     console.error("INITIAL RANKING ERROR:", error);
     return [];
   }
-}, ["initial-ranking-v1"], {
-  revalidate: 300
+}, ["initial-ranking-liquidity-v2"], {
+  revalidate: 1
 });
 
 export async function loadInitialRanking(
@@ -39,3 +39,4 @@ export async function loadInitialRanking(
 ) {
   return loadCachedInitialRanking(range);
 }
+

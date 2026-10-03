@@ -32,8 +32,8 @@ type RankingClientProps = {
 };
 
 const INITIAL_COUNTS: Record<Range, number> = {
-  trending: 50,
-  daily: 50,
+  trending: 150,
+  daily: 100,
   weekly: 24
 };
 
