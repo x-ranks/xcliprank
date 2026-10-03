@@ -65,6 +65,8 @@ export type XVideoPostSearchResult = {
   posts: XVideoPost[];
   rawPostCount: number;
   hasMore: boolean;
+  newestPostId: string | null;
+  oldestPostId: string | null;
 };
 
 type SearchRecentVideoPostOptions = {
@@ -72,6 +74,12 @@ type SearchRecentVideoPostOptions = {
   lastSuccessfulSearchAt?: string | null;
   authorFallback?: XUserLookup;
   includeAuthorExpansion?: boolean;
+  // Fixed bounds and an exclusive older-page cursor for curated recovery.
+  startTime?: string;
+  endTime?: string;
+  untilId?: string | null;
+  readBudget?: { remaining: number };
+  firstPageLimit?: number;
 };
 
 // Recent Search only accepts a since_id from its seven-day window.
@@ -175,7 +183,9 @@ async function fetchXPages(
   totalLimit: number,
   paginationParameter: "next_token" | "pagination_token",
   logLabel: string,
-  usageSource: XApiUsageSource
+  usageSource: XApiUsageSource,
+  readBudget?: { remaining: number },
+  firstPageLimit?: number
 ) {
   const token = process.env.X_BEARER_TOKEN;
   if (!token) throw new Error("Missing X_BEARER_TOKEN.");
@@ -186,7 +196,16 @@ async function fetchXPages(
 
   do {
     const remaining = totalLimit - fetchedCount;
-    params.set("max_results", String(Math.min(100, Math.max(10, remaining))));
+    const pageLimit = Math.min(
+      100, remaining,
+      pages.length === 0 ? firstPageLimit ?? 100 : 100,
+      readBudget?.remaining ?? 100
+    );
+    // Never round a remaining budget below the API minimum up to ten.
+    if (pageLimit < 10) break;
+    params.set("max_results", String(pageLimit));
+    // Reserve before issuing a paid request, including requests that fail.
+    if (readBudget) readBudget.remaining -= pageLimit;
     if (nextToken) params.set(paginationParameter, nextToken);
     else params.delete(paginationParameter);
 
@@ -338,11 +357,17 @@ export async function searchRecentVideoPostBatch(
   if (options?.lastSuccessfulSearchAt !== undefined) params.set("sort_order", "recency");
   addResponseFields(params, options?.includeAuthorExpansion ?? true);
   const sinceId = validRecentSearchSinceId(options?.sinceId);
-  if (sinceId) {
+  if (options?.startTime) {
+    params.set("start_time", options.startTime);
+  } else if (sinceId) {
     params.set("since_id", sinceId);
   } else if (options?.lastSuccessfulSearchAt !== undefined) {
     params.set("start_time", recentSearchStartTime(options.lastSuccessfulSearchAt));
   }
+  // X forbids end_time + until_id together. The saved oldest ID already
+  // lies below the original end_time and becomes the exclusive upper bound.
+  if (options?.untilId) params.set("until_id", options.untilId);
+  else if (options?.endTime) params.set("end_time", options.endTime);
 
   const pages = await fetchXPages(
     "https://api.x.com/2/tweets/search/recent",
@@ -350,12 +375,21 @@ export async function searchRecentVideoPostBatch(
     totalLimit,
     "next_token",
     "X SEARCH RESULT",
-    usageSource
+    usageSource,
+    options?.readBudget,
+    options?.firstPageLimit
   );
   const videoPosts = formatVideoPosts(pages, totalLimit, options?.authorFallback);
   const rawPostCount = pages.reduce((sum, page) => sum + (page.data?.length ?? 0), 0);
   console.log("X SEARCH VIDEO RESULT:", { query, rawPostCount, videoPosts: videoPosts.length });
-  return { posts: videoPosts, rawPostCount, hasMore: Boolean(pages[pages.length - 1]?.meta?.next_token) };
+  const rawIds = pages.flatMap(page => (page.data ?? []).map(post => post.id));
+  const sortedIds = [...rawIds].sort((a, b) => BigInt(a) < BigInt(b) ? -1 : BigInt(a) > BigInt(b) ? 1 : 0);
+  return {
+    posts: videoPosts, rawPostCount,
+    hasMore: Boolean(pages[pages.length - 1]?.meta?.next_token),
+    newestPostId: sortedIds.at(-1) ?? null,
+    oldestPostId: sortedIds[0] ?? null,
+  };
 }
 
 export async function searchRecentVideoPosts(
