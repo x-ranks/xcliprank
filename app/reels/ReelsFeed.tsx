@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import { formatVideoDuration } from "../../lib/video-duration-format";
 import { useCallback, useEffect, useRef, useState } from "react";
 
 type ReelPost = {
@@ -35,6 +36,7 @@ function makeSeed() {
 }
 
 export default function ReelsFeed() {
+  const [durations, setDurations] = useState<Record<string, number>>({});
   const [posts, setPosts] = useState<ReelPost[]>([]);
   const [activeIndex, setActiveIndex] = useState(0);
   const [muted, setMuted] = useState(true);
@@ -254,6 +256,12 @@ export default function ReelsFeed() {
                         videoRefs.current.get(index)?.play().catch(() => setPlaying(false));
                       }
                     }}
+                    onLoadedMetadata={event => {
+                      const duration = event.currentTarget.duration;
+                      if (Number.isFinite(duration) && duration > 0) {
+                        setDurations(values => ({ ...values, [post.x_post_id]: duration }));
+                      }
+                    }}
                     onError={() => markFailed(post.x_post_id, index)}
                   />
                 ) : (
@@ -286,7 +294,11 @@ export default function ReelsFeed() {
                 <div className="reel-gradient" aria-hidden="true" />
 
                 <div className="reel-details">
-                  <div className="reel-tier">TIER {post.adult_tier}</div>
+                  {formatVideoDuration(durations[post.x_post_id]) && (
+                    <div className="reel-duration" aria-label="再生時間">
+                      {formatVideoDuration(durations[post.x_post_id])}
+                    </div>
+                  )}
                   <strong className="reel-author">
                     {post.author_name ?? post.author_username ?? "X user"}
                   </strong>
@@ -337,3 +349,4 @@ export default function ReelsFeed() {
     </main>
   );
 }
+
