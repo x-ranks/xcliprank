@@ -28,7 +28,8 @@ function db() {
     let op = "select", values, filters = [], column;
     const b = {
       select(c) { column = c; return b; },
-      eq(k, v) { filters.push(row => row[k] === v); return b; },
+      eq(k, v) { filters.push(row => typeof row[k] === "object" && typeof v === "string" && v.startsWith("{") ? JSON.stringify(row[k]) === v : row[k] === v); return b; },
+      is(k, v) { filters.push(row => (row[k] ?? null) === v); return b; },
       in(k, v) {
         if (table === "posts") {
           state.lookups.push({ column: k, values: v });
@@ -47,6 +48,8 @@ function db() {
           const selected = rows.filter(row => filters.every(f => f(row)));
           if (table === "metric_snapshots" && state.failSnapshots)
             return { error: new Error("snapshot write failed") };
+          if (op === "update" && values.curated_search_expiry && state.failExpiryWrites) return { error: new Error("expiry write failed") };
+          if (op === "update" && values.curated_search_expiry && state.expiryConflict) return { data: [], error: null };
           if (op === "update") selected.forEach(row => Object.assign(row,
             Object.fromEntries(Object.entries(values).filter(([,v]) => v !== undefined))));
           if (op === "upsert") state.posts.push(...values);
@@ -194,5 +197,28 @@ async function run() {
   const noTarget = await GET({ authorized: true, nextUrl: new URL("https://test/api?recovery=1") });
   assert.equal(noTarget.status, 400);
   console.log("PASS: recovery requires explicit targets; cannot re-collect all 24 authors");
+  const day=86400000, epoch=1288834974657n;
+  const idAt=ms=>((BigInt(ms)-epoch)<<22n).toString();
+  const expiredAuthor=()=>({...author(),curated_last_collected_at:new Date(Date.now()-10*day).toISOString(),curated_last_post_id:idAt(Date.now()-10*day),curated_search_expiry:null,curated_pending_search:{startTime:new Date(Date.now()-8*day).toISOString(),endTime:new Date(Date.now()-2*3600000).toISOString(),untilId:idAt(Date.now()-day),latestPostId:idAt(Date.now()-3*3600000)}});
+  const blocked=expiredAuthor();reset([blocked]);state.failExpiryWrites=true;
+  await assert.rejects(collectCuratedAuthor({...blocked},"incremental"),/Expiry state write failed/);
+  assert.equal(requests.length,0);assert.equal(blocked.curated_search_expiry,null);
+  const conflict=expiredAuthor();reset([conflict]);state.expiryConflict=true;
+  await assert.rejects(collectCuratedAuthor({...conflict},"incremental"),/changed concurrently/);assert.equal(requests.length,0);
+  const partial=expiredAuthor();reset([partial]);queue.push({status:429});
+  const oldPending={...partial.curated_pending_search},oldSuccess=partial.curated_last_collected_at,oldCursor=partial.curated_last_post_id;
+  await assert.rejects(collectCuratedAuthor({...partial},"incremental"),/429/);
+  assert.equal(requests.length,1);assert.equal(requests[0].searchParams.get('until_id'),oldPending.untilId);
+  assert.equal(requests[0].searchParams.has('start_time'),false);assert.equal(partial.curated_search_expiry.totalEvents,1);
+  assert.equal(partial.curated_last_post_id,oldCursor);assert.equal(partial.curated_last_collected_at,oldSuccess);
+  assert.ok(Date.parse(partial.curated_pending_search.startTime)>Date.parse(oldPending.startTime));
+  const full=expiredAuthor();full.curated_pending_search={...full.curated_pending_search,startTime:new Date(Date.now()-10*day).toISOString(),untilId:idAt(Date.now()-8*day),endTime:new Date(Date.now()-2*day).toISOString()};reset([full]);const fullLatest=full.curated_pending_search.latestPostId;
+  const kept={x_post_id:'already-saved',author_id:'example'};state.posts.push(kept);queue.push({data:[],meta:{}});
+  const result=await collectCuratedAuthor({...full},"incremental");
+  assert.equal(result.expiryAction,'restart');assert.equal(result.apiReadPosts,0);assert.equal(full.curated_pending_search,null);
+  assert.equal(full.curated_search_expiry.totalEvents,1);assert.equal(full.curated_last_post_id,fullLatest);
+  assert.equal(state.posts[0],kept);assert.equal(requests.length,1);
+  console.log('PASS: expiry audit durable before X; DB failure/conflict make zero X calls; 429 retains valid cursor; completion preserves saved posts');
+
 }
 run().catch(error => { console.error(error); process.exitCode = 1; });
