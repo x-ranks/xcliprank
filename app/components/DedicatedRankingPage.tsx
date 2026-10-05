@@ -11,10 +11,10 @@ const PAGE_COPY = {
     eyebrow: "DAILY RANKING",
     title: "24時間ランキング",
     description:
-      "直近24時間の人気動画をランキング形式で表示します。",
+      "直近24時間の動画と過去の選別動画を紹介します。",
     seoTitle: "X動画の24時間ランキング",
     seoDescription:
-      "直近24時間の人気動画をランキング形式で表示しています。"
+      "直近24時間の動画に過去の選別動画を加え、新着ランキングとは異なる動画を紹介しています。"
   },
   weekly: {
     eyebrow: "WEEKLY RANKING",
