@@ -7,7 +7,7 @@ export const dynamic = "force-dynamic";
 export const metadata: Metadata = {
   title: "X動画 週間ランキング",
   description:
-    "直近1週間の人気動画をランキング形式で紹介。毎週更新のX動画ランキングです。",
+    "直近1週間のX動画をランキング形式で紹介。新着・24時間ランキングとあわせて、今週の人気動画を探せます。",
   alternates: {
     canonical: "/ranking/weekly"
   },
@@ -25,7 +25,7 @@ export const metadata: Metadata = {
     card: "summary_large_image",
     title: "X動画 週間ランキング | X CLIP RANK",
     description:
-      "毎週更新のX動画週間ランキングです。"
+      "直近1週間のX動画を紹介する週間ランキングです。"
   },
   other: {
     rating: "adult"

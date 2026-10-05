@@ -7,7 +7,7 @@ export const dynamic = "force-dynamic";
 export const metadata: Metadata = {
   title: "X動画 24時間ランキング",
   description:
-    "直近24時間の人気動画をランキング形式で紹介。毎日更新のX動画ランキングです。",
+    "直近24時間のX動画と過去の選別動画を紹介。新着ランキングとは異なる動画を探せる、X CLIP RANKの24時間ランキングです。",
   alternates: {
     canonical: "/ranking/daily"
   },
@@ -18,7 +18,7 @@ export const metadata: Metadata = {
   openGraph: {
     title: "X動画 24時間ランキング | X CLIP RANK",
     description:
-      "直近24時間の人気動画をランキング形式で紹介します。",
+      "直近24時間のX動画と過去の選別動画を、新着ランキングとは異なる一覧で紹介します。",
     url: "/ranking/daily"
   },
   twitter: {
