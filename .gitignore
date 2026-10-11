@@ -22,3 +22,9 @@ artifacts/visual-preference-holdout/
 .idea/
 *.tmp
 *.temp
+
+.local-admin/
+
+# FxTwitter local registry and installation backups
+.local-admin/fxtwitter-curated-*/
+.local-admin/fxtwitter-install-*/

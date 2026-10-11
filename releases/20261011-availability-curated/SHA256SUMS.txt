@@ -1,0 +1,3 @@
+a69af93b9bced2026cacce5c105d040c4e925c71fcd60af8f1e5c5556f647deb  releases/20261011-availability-curated/xclip-availability-curated-fix-deploy-20261011.sh
+3cad8fce341d700dc21ef51ba4e944f5d31a9fe85bf665a67d155ae283c0a920  releases/20261011-availability-curated/xclip-availability-curated-fix-local-20261011.ps1
+1394b738a6dc937623b98afb48ed4a5e435b30e860dd104425a05c35d62e3935  releases/20261011-availability-curated/xclip-availability-curated-fix-source-20261011.zip
