@@ -1,0 +1,12 @@
+﻿2026-10-12 DB隔離復元チェック v5
+
+根拠：ユーザーの復元ログで cross-database references are not implemented: pg_catalog.pg_catalog.simple。default_text_search_config設定時に失敗し、public.postsの主キー追加が停止。
+原因：v2でこちらがinitdbの--text-search-configにpg_catalog.simpleを指定した。PostgreSQL 17のinitdb実装はこの値へpg_catalog.を付けて設定を書き込むため、二重修飾の無効な値になった。主キーやバックアップデータの破損を示すものではない。
+修正：initdbの指定を--text-search-config=simpleへ変更。生成されたpostgresql.confの有効設定が単一の'pg_catalog.simple'であることを、DB起動前に検査する。v3の待機修正、v4のpublic再作成、対象クラスタ照合・localhost限定・最後の停止は維持。
+検証：PostgreSQL 17公式ソースの設定生成処理を照合。Windows PowerShell 5.1で構文、生成設定ガードの正常値受理と二重修飾等の拒否、ネイティブ警告/終了コード/引数処理、子プロセス稼働中の親コマンド待機を模擬検証成功。
+未検証：こちらでは実PostgreSQLクラスタとユーザーのdumpの復元を実行していない。ユーザーの再実行結果待ち。
+対象：xclip-db-restore-check-20261012-v5.ps1。旧配布・取得済みdump・暗号化バックアップは変更しない。毎回新しい試験フォルダを作る。前回失敗フォルダの削除・再利用、バックアップ再取得、DBパスワード再変更は不要。
+状態：DB取得成功と2026-10-12のパスワード変更を引き継ぐ。public復元成功とG01/O01の最終完了は未確認。本番・実プロジェクトへの操作、Git操作はなし。
+復旧範囲：publicのみ。所有者・権限・管理スキーマ・Storage実体・本番照合順序の同等性は対象外。失敗時もテスト用DB停止を実行する。
+成功表示：XCLIP_PUBLIC_SCHEMA_RESTORE_CHECK_OK。
+公式ソース：https://github.com/postgres/postgres/blob/REL_17_STABLE/src/bin/initdb/initdb.c

@@ -1,0 +1,1 @@
+配布済み本番更新ZIPから得た既知の対象ファイルを時系列で重ねています。sourceArtifactとSHAは../../docs/production-known-files-20261013.jsonを参照。完全な実稼働本番のコピーではありません。既存runtime/source/BUILD_IDと対象hashを照合する配布shから適用し、これらのファイルを丸ごとローカルへ上書きしないでください。

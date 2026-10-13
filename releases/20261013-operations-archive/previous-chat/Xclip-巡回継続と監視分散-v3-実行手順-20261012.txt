@@ -1,0 +1,4 @@
+﻿本番はv3.shを/home/rbxfxmfdへアップロードし、bash /home/rbxfxmfd/xclip-patrol-continue-jitter-deploy-20261012-v3.sh を実行。成功表示 XCLIP_PATROL_CONTINUE_JITTER_V3_DEPLOYMENT_COMPLETE。
+v2は本番切替前のテストで停止したため、復旧操作は不要。既存監視・削除記録の削除や手編集をしない。
+本番成功後に管理画面・開発サーバーを終了し、展開先で powershell -NoProfile -ExecutionPolicy Bypass -File .\xclip-patrol-continue-jitter-local-20261012-v3.ps1 を実行。成功表示 XCLIP_PATROL_CONTINUE_JITTER_LOCAL_INSTALLED または ALREADY_INSTALLED。
+巡回予約・取得位置・手動削除を保持。通常Cronから動作。全体ビルド/公開確認の成功は実行ログで確認。

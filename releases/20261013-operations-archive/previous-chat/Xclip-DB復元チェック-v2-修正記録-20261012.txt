@@ -1,0 +1,17 @@
+﻿2026-10-12 DB隔離復元チェック v2
+
+ユーザーの実行ログ：initdbがJapanese_Japan.932に対応するテキスト検索設定を見つけられない旨を出力し、PowerShellのNativeCommandErrorで停止。
+判断：このメッセージだけではinitdbの終了コードは確定できない。旧スクリプトはネイティブ標準エラーの出力をPowerShellのStop設定で終了扱いにしており、警告で止まる問題があった。
+修正対象：xclip-db-restore-check-20261012-v2.ps1。旧版と既存のバックアップ・配布ZIPは変更しない。
+変更：initdbをUTF8、locale=C、text-search-config=pg_catalog.simpleで初期化。Start-Process Hiddenの標準出力・標準エラーを非公開ログへ分離し、ExitCodeで判定。Windows引数の引用とバックスラッシュを適切に処理。テスト用DB停止後にだけ成功表示・SAFE-REPORTを保存。
+保護：毎回新規のテスト用フォルダを作成。新しいローカルPostgreSQLクラスタのdata_directoryを照合してから復元。接続先は127.0.0.1の専用ポート。本番DBへの接続・書き戻し、既存クラスタへの復元、DBパスワード変更はしない。前回の失敗フォルダは削除・再利用しない。
+検証：Windows PowerShell 5.1で構文検査とダミーのネイティブプログラムを実行。stderr警告+exit0で継続、exit7で停止、スペース・引用符・末尾バックスラッシュ・日本語・空引数の受け渡し、非公開ログ分離を確認。
+未検証：今回こちらでは実PostgreSQLのinitdb・pg_restoreを実行していない。ユーザーのDB復元結果待ち。
+復旧範囲：publicスキーマの内容を別DBへ復元する試験。所有者・権限・管理スキーマ・Storage実体は対象外。テスト用locale=Cは本番とのソート順の同等性を保証しない。
+DB取得成功の記録と2026-10-12のDBパスワード変更履歴は維持。バックアップ再取得やパスワード再設定は不要。
+G01/O01の完了状態は引き続き保留。アプリ本体・実環境の設定・Gitへの変更は行っていない。
+
+実行：v2.ps1を以前の展開フォルダに置き、チャットに記載した -Dump と -PgBin を指定して実行する。
+成功表示：XCLIP_PUBLIC_SCHEMA_RESTORE_CHECK_OK
+失敗時：エラーコードとexit番号を共有する。privateログは未編集でチャットへ貼らない。
+公式仕様：https://www.postgresql.org/docs/17/app-initdb.html

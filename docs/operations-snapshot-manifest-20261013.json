@@ -1,0 +1,2570 @@
+{
+  "files": [
+    {
+      "path": "docs/local-source-inventory-20261013.json",
+      "sha256": "bfd492511fe1e6fd379e23289e8ef5ba2b81854bbfce0c34b9c6cad39cf27a49",
+      "bytes": 35768
+    },
+    {
+      "path": "docs/operations-artifact-index-20261013.json",
+      "sha256": "ee04e2729f30d355fda0f865e88a1296376e1d7fca9e04b723c792b81eecee73",
+      "bytes": 78144
+    },
+    {
+      "path": "docs/operations-completion-20261013.json",
+      "sha256": "dc68362ea75fc00a229c33200e4e3025892dc38684860484e45c304731801bdc",
+      "bytes": 3828
+    },
+    {
+      "path": "docs/production-known-files-20261013.json",
+      "sha256": "a6bf1c1eb99252bd0ef594c5352d7155b5142f904a60e01763e0b7a10232c1d4",
+      "bytes": 19489
+    },
+    {
+      "path": "docs/xclip-update-artifacts.json",
+      "sha256": "69768c2cf55ecea37ce9b6d078c310c967057781f322ac3cae54cd3b52a7a0e2",
+      "bytes": 276434
+    },
+    {
+      "path": "docs/XCLIP_CURRENT_STATUS.md",
+      "sha256": "0b3eb5721057046c9625f57f97bb81742740e1a73a6933707632be5f01fec7df",
+      "bytes": 4199
+    },
+    {
+      "path": "docs/XCLIP_UPDATE_HISTORY.md",
+      "sha256": "f59cf3c62466612475d01e2d3048e0cc8e8c1dd7a3f41c494feec37b6f3e6fc0",
+      "bytes": 141097
+    },
+    {
+      "path": "snapshots/README.md",
+      "sha256": "0b3eb5721057046c9625f57f97bb81742740e1a73a6933707632be5f01fec7df",
+      "bytes": 4199
+    },
+    {
+      "path": "snapshots/local-20261013/.env.example",
+      "sha256": "7c8aee6c299692160070694d38acec4e5271a507464c43b3c58d09539f485400",
+      "bytes": 1084
+    },
+    {
+      "path": "snapshots/local-20261013/.gitattributes",
+      "sha256": "8847b8f33296859c0aa5e4322f64a47a5f03cc3d81ec126f01d5cf24c7fd6b01",
+      "bytes": 314
+    },
+    {
+      "path": "snapshots/local-20261013/.gitignore",
+      "sha256": "7e3e93b953c824a7785bb37edf1e1258a2d18fea4906477c11fee146fbd6ffc2",
+      "bytes": 621
+    },
+    {
+      "path": "snapshots/local-20261013/.vercelignore",
+      "sha256": "0a826d3ac44b25bc2a9b4d7df6d7709e796d96e232c2db7c350472dfa60b5e91",
+      "bytes": 411
+    },
+    {
+      "path": "snapshots/local-20261013/AGENTS.md",
+      "sha256": "9d41f0e5461c22f401827f9318efd58bfece7915ab0ebfa4b7a32260d9411e06",
+      "bytes": 2027
+    },
+    {
+      "path": "snapshots/local-20261013/middleware.ts",
+      "sha256": "360364e47d0a338af98be50646d0a1ddaf2f01efaedd78c49fd9642daa65eb24",
+      "bytes": 1930
+    },
+    {
+      "path": "snapshots/local-20261013/next-env.d.ts",
+      "sha256": "85ae5aee75f011967cf2d25cbc342f62d69314e9d925f7f4aa3456fc2cffcca6",
+      "bytes": 262
+    },
+    {
+      "path": "snapshots/local-20261013/next.config.ts",
+      "sha256": "444ee3efe5873db0968931de2732caeb52906e02382902408ab7941f0f34a285",
+      "bytes": 212
+    },
+    {
+      "path": "snapshots/local-20261013/package-lock.json",
+      "sha256": "b20d20a42302e04e9bd0f1c2080e66953012f62314b690665d4967d9b8e86540",
+      "bytes": 66003
+    },
+    {
+      "path": "snapshots/local-20261013/package.json",
+      "sha256": "02cdf17b8dbba5943f9b77cc1d65312583dddf769a123ce35e8520dddd2fa394",
+      "bytes": 629
+    },
+    {
+      "path": "snapshots/local-20261013/README.md",
+      "sha256": "0b2406c0f75bbea1e88b57353c33849343f239dc5d3111ade91c4591ebf71a6d",
+      "bytes": 3236
+    },
+    {
+      "path": "snapshots/local-20261013/SNAPSHOT_SCOPE.md",
+      "sha256": "421ab2174fc7f71c49bb741b20633848bd7e63895010d48eb7b67e2c2e5075ca",
+      "bytes": 617
+    },
+    {
+      "path": "snapshots/local-20261013/tsconfig.json",
+      "sha256": "8dffcf67c19c5daaedc99a7a4745421a44ea1f98385cf098ebea875d6c8b1498",
+      "bytes": 529
+    },
+    {
+      "path": "snapshots/local-20261013/vercel.json",
+      "sha256": "7eb262ccbf1c683cba711d4c5a24a09d4fc5d14decc11beea128e4513080c8fb",
+      "bytes": 107
+    },
+    {
+      "path": "snapshots/local-20261013/app/globals.css",
+      "sha256": "c41ee4c1f97a1b21fc9983faeacc2e6696811c6da6d265087504482da2ac3bfa",
+      "bytes": 30957
+    },
+    {
+      "path": "snapshots/local-20261013/app/layout.tsx",
+      "sha256": "ae1059af74fc7eedc0aed9e5a335069faf3d1d3cc9eada95992a32f4222ba116",
+      "bytes": 1384
+    },
+    {
+      "path": "snapshots/local-20261013/app/page.tsx",
+      "sha256": "157482b15120b9a65374149c6fadb8fbf09459669ad75cbd46fe9c873186e53c",
+      "bytes": 5194
+    },
+    {
+      "path": "snapshots/local-20261013/app/robots.ts",
+      "sha256": "023caf86a21cc3fbc27008f3d51ffbde025388bc4a855f409e67173926ff8b06",
+      "bytes": 722
+    },
+    {
+      "path": "snapshots/local-20261013/app/sitemap.ts",
+      "sha256": "08eba6ab67795523ab18a55fc7c3cc79954641816890b2ba4f7382ad13420bfc",
+      "bytes": 551
+    },
+    {
+      "path": "snapshots/local-20261013/app/api/adult-authors/route.ts",
+      "sha256": "8967e7f174741f5fb73b366d28c82266af387447762f1f64cb641ac1f198de4f",
+      "bytes": 3426
+    },
+    {
+      "path": "snapshots/local-20261013/app/api/collect/route.ts",
+      "sha256": "e30230dd80f442ac7e3dad1bc25fde2309df1456411dd40aa4c2f1eedfc10c89",
+      "bytes": 31080
+    },
+    {
+      "path": "snapshots/local-20261013/app/api/collect-curated-author/route.ts",
+      "sha256": "c241570710ef209fe4eed5747ccdb07b97591e66174c7dc6f3751f14390fb1fa",
+      "bytes": 1792
+    },
+    {
+      "path": "snapshots/local-20261013/app/api/collect-curated-batch/route.ts",
+      "sha256": "68e25d2c92a53f32e91312beb3337d0788f41cc815d67bbc3af1c052d8d2412f",
+      "bytes": 2027
+    },
+    {
+      "path": "snapshots/local-20261013/app/api/collect-priority/route.ts",
+      "sha256": "784fb3330687ceef9d70f2ee806b6b535c16ca23a06a49330ea2e859d8309219",
+      "bytes": 14993
+    },
+    {
+      "path": "snapshots/local-20261013/app/api/collect-priority-batch/route.ts",
+      "sha256": "bdb0459878dd24f9868a0478ce7a5a317bc3e61d977e95ff9c877a8bbbcff48c",
+      "bytes": 16050
+    },
+    {
+      "path": "snapshots/local-20261013/app/api/collect-test/route.ts",
+      "sha256": "0a057eb2179df30bcadffb09b76f5a76996935e539c5fa663747e2783470a95c",
+      "bytes": 12012
+    },
+    {
+      "path": "snapshots/local-20261013/app/api/content-filter-backfill/route.ts",
+      "sha256": "0b93b995d695a0413011429b810c6cee0da34fe623e3b16525962ffcec9b073b",
+      "bytes": 7033
+    },
+    {
+      "path": "snapshots/local-20261013/app/api/content-filter-preview/route.ts",
+      "sha256": "1e98e7c2245ae3b6dd13b3b71613514ab2d29c4fc60f6d3583faa73878dd910d",
+      "bytes": 5038
+    },
+    {
+      "path": "snapshots/local-20261013/app/api/content-filter-review/route.ts",
+      "sha256": "4959b48aeea10b9811e21407b9d120bfd0de2acc08d25b6f54f3028ec73af570",
+      "bytes": 9346
+    },
+    {
+      "path": "snapshots/local-20261013/app/api/curated-authors/route.ts",
+      "sha256": "cc9374296de44849535c5e31e627e74c2c574b1b6f83da22585af2deb2d3a5a1",
+      "bytes": 4055
+    },
+    {
+      "path": "snapshots/local-20261013/app/api/curated-manager/route.ts",
+      "sha256": "4287130d91f5ba2f00d8e64c783e9480d69317dd0039057812365ec00f3a0c70",
+      "bytes": 2203
+    },
+    {
+      "path": "snapshots/local-20261013/app/api/engagement/route.ts",
+      "sha256": "e178333c158e12e02323de8ba8872aa10df0e52dafcfd05a49e186a4a908d516",
+      "bytes": 3440
+    },
+    {
+      "path": "snapshots/local-20261013/app/api/engagement-stats/route.ts",
+      "sha256": "c054b932f8ac491250150bcfc3913051989a76e74191f86627cb90ccf1506397",
+      "bytes": 7544
+    },
+    {
+      "path": "snapshots/local-20261013/app/api/fxtwitter-authors/route.ts",
+      "sha256": "5ad03827347bac7253d3159e744781a53b67a72586e111cfa3ed38513e930816",
+      "bytes": 10060
+    },
+    {
+      "path": "snapshots/local-20261013/app/api/local-admin-status/route.ts",
+      "sha256": "a90ca731cb59b7f1a49f771f0bc7e5bb6ecb0a685e0386ea63cec837ee48a5f6",
+      "bytes": 4072
+    },
+    {
+      "path": "snapshots/local-20261013/app/api/preference-feature-cache/route.ts",
+      "sha256": "b01a91546deda18669134ad0cded97dfc5be51ba64d8611f3ee9fd434df93ec6",
+      "bytes": 5509
+    },
+    {
+      "path": "snapshots/local-20261013/app/api/preference-model/route.ts",
+      "sha256": "8a96bc2b03b62a74dcd7b2a40f35e926da07a809b65209311722ab6cd2897825",
+      "bytes": 2452
+    },
+    {
+      "path": "snapshots/local-20261013/app/api/ranking-admin/route.ts",
+      "sha256": "64703f59d7174e39768f084a2a49ee19e4a4df75d3055d0b8b704edace8d95e7",
+      "bytes": 4489
+    },
+    {
+      "path": "snapshots/local-20261013/app/api/rankings/route.ts",
+      "sha256": "148dbe4fb13ea4e212f998c9b0b100db45ae00a516e187a6fe31f65db63351a6",
+      "bytes": 1958
+    },
+    {
+      "path": "snapshots/local-20261013/app/api/rebuild-author-signals/route.ts",
+      "sha256": "549612ec3b7706264913b608ed4fac31c4a3bf6cf237c8a0f2e2429263858423",
+      "bytes": 11170
+    },
+    {
+      "path": "snapshots/local-20261013/app/api/recount-authors/route.ts",
+      "sha256": "f14cbdf08e729179e31bf84fbcf3cb74d7f6b68eff35357575582f2c4ebe489c",
+      "bytes": 18716
+    },
+    {
+      "path": "snapshots/local-20261013/app/api/recount-effective-adult/route.ts",
+      "sha256": "ecf8b3886b353409aff1e7bed0c1822294fa8351d0a6bd6bae16bd1f7c45febf",
+      "bytes": 13863
+    },
+    {
+      "path": "snapshots/local-20261013/app/api/recount-posts/route.ts",
+      "sha256": "0256d185c2e073c605c7c1d9c6c8b41543add97bff54f417727f8a09cdae8ea7",
+      "bytes": 9061
+    },
+    {
+      "path": "snapshots/local-20261013/app/api/reels/route.ts",
+      "sha256": "465c70bbe9a8395d8cde48f18d00112cd9d33319db670b1b69b85f4862d6eed4",
+      "bytes": 7888
+    },
+    {
+      "path": "snapshots/local-20261013/app/api/removal-requests/route.ts",
+      "sha256": "45bb8b897cfd53108202e080aed37a869af8c957c24857a2259788ac5647af0c",
+      "bytes": 6412
+    },
+    {
+      "path": "snapshots/local-20261013/app/api/review/route.ts",
+      "sha256": "e49373d4311acc6f0377fa6f1e6bde2e733550a11ce491d33b6f02c6b5de9bc1",
+      "bytes": 6749
+    },
+    {
+      "path": "snapshots/local-20261013/app/api/run-cycle/route.ts",
+      "sha256": "01e563629aa7fcdfa94e5b6093dcf2ef0cf844f52dad24d700522a38383123bf",
+      "bytes": 3359
+    },
+    {
+      "path": "snapshots/local-20261013/app/api/teacher-authors/route.ts",
+      "sha256": "4d6be89869ff9fb45283aeee8485367f5ecf7b77707231cec4b0159ee46254cc",
+      "bytes": 11876
+    },
+    {
+      "path": "snapshots/local-20261013/app/api/tier-personal-model/route.ts",
+      "sha256": "00a0f25bb408075cfd72f5ecc437f11bc1a8ee9ce21ecfc3a3c1e03feb8e1e4c",
+      "bytes": 5791
+    },
+    {
+      "path": "snapshots/local-20261013/app/api/tier-preview-playback/route.ts",
+      "sha256": "7e8dd7fa6ec88ea9fedeb1b1c5009bff5679d038373031574f12a05dc023c668",
+      "bytes": 1512
+    },
+    {
+      "path": "snapshots/local-20261013/app/api/tier-reevaluation/route.ts",
+      "sha256": "2b5064bdbf4296f43be3c63c60c66de1ea76eb305806455ef0283bc348ed72f2",
+      "bytes": 2053
+    },
+    {
+      "path": "snapshots/local-20261013/app/api/tier-teacher-analysis/route.ts",
+      "sha256": "e85e12347c03d9c67d0d16354ee8c3d63088b825b796fdb30998e74beec69357",
+      "bytes": 946
+    },
+    {
+      "path": "snapshots/local-20261013/app/api/tier-video-preview/route.ts",
+      "sha256": "a75bba92d947c37c0ec91e1dbbaebc997c09835faf31252244ed74812de00567",
+      "bytes": 1757
+    },
+    {
+      "path": "snapshots/local-20261013/app/api/video/route.ts",
+      "sha256": "ca9636659d7faaec116ee7ecf39ebeaa7c59a7052e6b2254196dbffd573517b2",
+      "bytes": 3011
+    },
+    {
+      "path": "snapshots/local-20261013/app/api/video-download/route.ts",
+      "sha256": "18101fe4685cb21f5647c71b95beee044b1b17f738964f9e7777f8da724ef67e",
+      "bytes": 916
+    },
+    {
+      "path": "snapshots/local-20261013/app/api/video-playback-url/route.ts",
+      "sha256": "3d63709513975c1415156e6e617cfa96784afef73ea63947d92f58760e4ffc90",
+      "bytes": 2531
+    },
+    {
+      "path": "snapshots/local-20261013/app/api/video-resolve/route.ts",
+      "sha256": "68b72f70630345e15b25d629cd3ec2a23aa33d3f2fe1e039802751e593fa8e20",
+      "bytes": 3409
+    },
+    {
+      "path": "snapshots/local-20261013/app/api/visual-filter-image/route.ts",
+      "sha256": "6b3cf40a5bf2d3b0698c93cea6cec6ef32854c43212d4d512818fd4c4497bbf4",
+      "bytes": 2384
+    },
+    {
+      "path": "snapshots/local-20261013/app/api/visual-filter-model/[file]/route.ts",
+      "sha256": "53c5396149c40dc329c04eb7b753f53307d7c2f21249eeae844933bfb8b32088",
+      "bytes": 1248
+    },
+    {
+      "path": "snapshots/local-20261013/app/api/visual-filter-preview/route.ts",
+      "sha256": "005d30d858816d3738055b92be85b0fc37bbb20c9e293a6dc4f19c371b24829b",
+      "bytes": 5624
+    },
+    {
+      "path": "snapshots/local-20261013/app/api/visual-preference-scores/route.ts",
+      "sha256": "b46b7a984e9b7b501dc28f2304181b8e45dc9bc38a7709f859518a1a101be3af",
+      "bytes": 2661
+    },
+    {
+      "path": "snapshots/local-20261013/app/api/x-api-usage/route.ts",
+      "sha256": "baf4811d5d382217c987d25bb98ba9624e168c39221b91b44736ec2bccae1d45",
+      "bytes": 2489
+    },
+    {
+      "path": "snapshots/local-20261013/app/api/x-promotion/route.ts",
+      "sha256": "6fd409e4acf58796c1467214164a2d7ab3e68d524fec473dfef75352e7a081a1",
+      "bytes": 12438
+    },
+    {
+      "path": "snapshots/local-20261013/app/availability-monitor/page.tsx",
+      "sha256": "adf7de382a9cf4063d5d86db1e7dacc98827807ab139886765715c7a6c031f89",
+      "bytes": 313
+    },
+    {
+      "path": "snapshots/local-20261013/app/availability-monitor/Panel.tsx",
+      "sha256": "e7f27ae6ea072a080a7b60e160007bc2b48407a9dc303a06b416546bf81199c1",
+      "bytes": 5257
+    },
+    {
+      "path": "snapshots/local-20261013/app/combined-ranking-preview/page.tsx",
+      "sha256": "a9314149643bad8aab16ef02caae97e6e4e94a8b18840c1b9656df05811a302b",
+      "bytes": 15749
+    },
+    {
+      "path": "snapshots/local-20261013/app/components/DedicatedRankingPage.tsx",
+      "sha256": "331d13d4882040d0cb58e701fc37ae33ca1fa760f18e76d83c3f63b34d9b26f4",
+      "bytes": 3804
+    },
+    {
+      "path": "snapshots/local-20261013/app/components/DirectPlaybackVideo.tsx",
+      "sha256": "c329d61e69861baddab9859abf7402523960a46af10c8eda8e2fc003770017a6",
+      "bytes": 5711
+    },
+    {
+      "path": "snapshots/local-20261013/app/components/EngagementVisitTracker.tsx",
+      "sha256": "f9fc3709bfaa17dfcd809a2e3eaf9f1fe5b01c29c26afcb4e8acc24a4af897de",
+      "bytes": 528
+    },
+    {
+      "path": "snapshots/local-20261013/app/components/PersonalLearningWorker.tsx",
+      "sha256": "8575a2230469cc049f25511dc4571ee7a5734d39c1424e696501cbf138b6a4c5",
+      "bytes": 1958
+    },
+    {
+      "path": "snapshots/local-20261013/app/components/RankingClient.tsx",
+      "sha256": "e52b8cfbcf197b46ccbf1af75a73db3e44ab77630098976b8260a1bfc360f2eb",
+      "bytes": 14108
+    },
+    {
+      "path": "snapshots/local-20261013/app/components/StructuredData.tsx",
+      "sha256": "420c48544efe5274f6242bf0401a085d72366aefca88c11ec771f306bbc27c48",
+      "bytes": 249
+    },
+    {
+      "path": "snapshots/local-20261013/app/components/TierPreviewVideo.tsx",
+      "sha256": "cbfd99870726d6e9f03a8dd598d6b32f61c39c444fda0ce3401929a67b99dbbf",
+      "bytes": 3168
+    },
+    {
+      "path": "snapshots/local-20261013/app/components/TweetEmbed.tsx",
+      "sha256": "1b27d2ea2dea1cfb3d7ce19660c8d4f50f6f5243572de206f80b8546ace03b4b",
+      "bytes": 1602
+    },
+    {
+      "path": "snapshots/local-20261013/app/components/VideoDownloadButton.tsx",
+      "sha256": "abdae15d9cb939991432287c95c3c085ddcd994cd608fc4e60281c5bf3ec3c21",
+      "bytes": 9377
+    },
+    {
+      "path": "snapshots/local-20261013/app/content-filter-review/page.tsx",
+      "sha256": "57e20a4a28c15bec5b61672338de0d7a7f1ef343e65c78faa12e52575db56135",
+      "bytes": 21512
+    },
+    {
+      "path": "snapshots/local-20261013/app/curated-authors/page.tsx",
+      "sha256": "a0e046586a10ed39c6c2b0734e9bddc83547f449e3b2393c4dc6c06af3f3a9f3",
+      "bytes": 204
+    },
+    {
+      "path": "snapshots/local-20261013/app/curated-manager/page.tsx",
+      "sha256": "c827df52db15ea27901997388784c3a9775e8b140768b83f5dbcbe2b967bedd8",
+      "bytes": 316
+    },
+    {
+      "path": "snapshots/local-20261013/app/curated-manager/Panel.tsx",
+      "sha256": "25863de46a79bca7161cc2bb01f47c7d08e084e415adc002cba323a012152d1c",
+      "bytes": 5069
+    },
+    {
+      "path": "snapshots/local-20261013/app/download/DownloadForm.tsx",
+      "sha256": "6212d4eb5104ef4a778db30463f8df5525e2a9872e0c5fe57950f684f629297a",
+      "bytes": 5484
+    },
+    {
+      "path": "snapshots/local-20261013/app/download/page.tsx",
+      "sha256": "1e843ecc29d994f8e10a19f096efdc55b8c69ff8c6f24fef87cdf7e82d8610be",
+      "bytes": 475
+    },
+    {
+      "path": "snapshots/local-20261013/app/download-policy/page.tsx",
+      "sha256": "6e5e9fe04ea9cd34baa5ecf6f5a27af00a708c8cfcb8157cabc2fdab310d5189",
+      "bytes": 3537
+    },
+    {
+      "path": "snapshots/local-20261013/app/engagement-admin/page.tsx",
+      "sha256": "bf2404836292b33234d463074821dae686d8ad57f42e1580fa33d17268088cde",
+      "bytes": 12750
+    },
+    {
+      "path": "snapshots/local-20261013/app/fxtwitter-authors/FreeAuthorsPanel.tsx",
+      "sha256": "889bca97400e1f6d313141415b27634bfe116389a961f2e5681783016b33df3a",
+      "bytes": 14266
+    },
+    {
+      "path": "snapshots/local-20261013/app/fxtwitter-authors/page.tsx",
+      "sha256": "442f8385c749345bbe3ce12dbb987443d680c7cb18032879bf138c93df52c8f9",
+      "bytes": 388
+    },
+    {
+      "path": "snapshots/local-20261013/app/fxtwitter-monitor/MonitorPanel.tsx",
+      "sha256": "0ba0bdc85e5627ea18419d66c47f04cad74e69c158cc118da30bfab7b71af559",
+      "bytes": 15306
+    },
+    {
+      "path": "snapshots/local-20261013/app/fxtwitter-monitor/page.tsx",
+      "sha256": "204bf735f3cc9f4513207226e211492efd43190c27f5ee7dab20ecf0050ca6d2",
+      "bytes": 337
+    },
+    {
+      "path": "snapshots/local-20261013/app/learning-tools/page.tsx",
+      "sha256": "546846ba48a4907f8554f160adf942a40b23dca23a81bc47d87c690252ded1d4",
+      "bytes": 20117
+    },
+    {
+      "path": "snapshots/local-20261013/app/preference-model/page.tsx",
+      "sha256": "9937b065031dd25eb64d896d146a9bb8438b2a13cc5207cab63757544d90a1ee",
+      "bytes": 28975
+    },
+    {
+      "path": "snapshots/local-20261013/app/ranking/daily/page.tsx",
+      "sha256": "d546d0c0fd025de1962e07bc191c92a94e54963e56b627fbc2a1a2030c087fbf",
+      "bytes": 1702
+    },
+    {
+      "path": "snapshots/local-20261013/app/ranking/weekly/page.tsx",
+      "sha256": "9acd66480697fc6829d742687596727ca4ca1906a5d5dba36b0389c371749461",
+      "bytes": 1698
+    },
+    {
+      "path": "snapshots/local-20261013/app/ranking-admin/page.tsx",
+      "sha256": "8e652992a02666815e8c4b54797412fe1f9f6c12ec79b64b64b39fa2e40c7dca",
+      "bytes": 8790
+    },
+    {
+      "path": "snapshots/local-20261013/app/reels/page.tsx",
+      "sha256": "4fd7711dee2552e460e7bec78fe1db8510772bf24cce663ea1bee3d72862979c",
+      "bytes": 909
+    },
+    {
+      "path": "snapshots/local-20261013/app/reels/ReelsFeed.tsx",
+      "sha256": "0262e8b1c6a054d3b31250732bbf95a577a1fce7d6c2d1e45fa4b9b18a12a937",
+      "bytes": 11653
+    },
+    {
+      "path": "snapshots/local-20261013/app/removal-request/page.tsx",
+      "sha256": "10413567821b9b805fcf172c1b46bf4fc1dd2a16aab493d98137e0be1a4008db",
+      "bytes": 4609
+    },
+    {
+      "path": "snapshots/local-20261013/app/removal-requests-admin/page.tsx",
+      "sha256": "33852bcc7e00279c291a01e7ba4b77c121990c01219be699d843b0808dd3c551",
+      "bytes": 8634
+    },
+    {
+      "path": "snapshots/local-20261013/app/review/page.tsx",
+      "sha256": "93ae3eac0caddf9c8fbfde75950fd685e195c80cb5fb621172f016fc2a48b907",
+      "bytes": 19180
+    },
+    {
+      "path": "snapshots/local-20261013/app/site-visual-preference-review/page.tsx",
+      "sha256": "f7f526f15e49d5c24dd45362c6934cd67e3c616039d012e9bd292d3646e35fd7",
+      "bytes": 16009
+    },
+    {
+      "path": "snapshots/local-20261013/app/site-visual-preference-review-2/page.tsx",
+      "sha256": "df85baf7c3b4796cd2995e452cc4f4d15328f86c942f78dc9b22306c20a633c6",
+      "bytes": 16482
+    },
+    {
+      "path": "snapshots/local-20261013/app/site-visual-preference-review-3/page.tsx",
+      "sha256": "9a224786515cf75da0d20e03ef12d8c2aa74b49dd738cce1934d26179927a498",
+      "bytes": 35442
+    },
+    {
+      "path": "snapshots/local-20261013/app/teacher-authors/page.tsx",
+      "sha256": "d3758c652313176b469bcceb00c0118da56d761d5636fa90ac41b297d67b62ee",
+      "bytes": 20481
+    },
+    {
+      "path": "snapshots/local-20261013/app/tier-personal-model/layout.tsx",
+      "sha256": "869c07996f51857775a90b2baeaea2375ea19c2101ab4ba0307d0b5a2085dac4",
+      "bytes": 192
+    },
+    {
+      "path": "snapshots/local-20261013/app/tier-personal-model/page.tsx",
+      "sha256": "d28b148b4961d77a2cee0731d4e6c4dd8fb3cb71f0432056d64756d5850890f4",
+      "bytes": 10387
+    },
+    {
+      "path": "snapshots/local-20261013/app/tier-reevaluation/layout.tsx",
+      "sha256": "935c6af81bd3d9a0fab0476e9c266eafafab94ab5fff5ad2563be18d07d53076",
+      "bytes": 243
+    },
+    {
+      "path": "snapshots/local-20261013/app/tier-reevaluation/page.tsx",
+      "sha256": "567981340abe5c52eb6999bd5f185dd227b9f8a0bf504adf1221bdf49ffbc3aa",
+      "bytes": 7382
+    },
+    {
+      "path": "snapshots/local-20261013/app/tier-teacher-analysis/layout.tsx",
+      "sha256": "fb348e2665225e7410d65e47e5f457230640658dd96298adf48e07e6c6630192",
+      "bytes": 235
+    },
+    {
+      "path": "snapshots/local-20261013/app/tier-teacher-analysis/page.tsx",
+      "sha256": "4ec929216e827be546dcab0bb55c65f5bd67bb99b5ff0fffed2fae980e8ea3cb",
+      "bytes": 5222
+    },
+    {
+      "path": "snapshots/local-20261013/app/tier-video-preview/layout.tsx",
+      "sha256": "5f1f7b593815cda9cd8d751bb7e4b2c16240385beaec154d28ebf832629acdab",
+      "bytes": 235
+    },
+    {
+      "path": "snapshots/local-20261013/app/tier-video-preview/page.tsx",
+      "sha256": "a9888df66689e6a26049df62801d805118cd527d51b0f7a281893250580474ea",
+      "bytes": 9334
+    },
+    {
+      "path": "snapshots/local-20261013/app/visual-filter-preview/page.tsx",
+      "sha256": "521d0e55712657e5fc89eebae409f86427934050d3182f2ea8122f1b2fa780d1",
+      "bytes": 20276
+    },
+    {
+      "path": "snapshots/local-20261013/app/visual-reference-review/page.tsx",
+      "sha256": "b94c005b476c8a4a2576b8b77e26123b8d3f3899275f804f95a1c4a8abf7d50c",
+      "bytes": 24198
+    },
+    {
+      "path": "snapshots/local-20261013/app/x-api-usage/page.tsx",
+      "sha256": "c0927b02f7a2a515630bf19d2e34380678d578eff1550569d316af351e6caf29",
+      "bytes": 3549
+    },
+    {
+      "path": "snapshots/local-20261013/app/x-promotion/page.tsx",
+      "sha256": "c1395b41936396f557e225eed8724f929c5287814147f0c1d20c038be5d0e939",
+      "bytes": 14895
+    },
+    {
+      "path": "snapshots/local-20261013/docs/20261006-parallel-roadmap.md",
+      "sha256": "3a18651cd8d2100637e14f298a95c9360848b4fbb5344b88ff6d3921dc98a7cb",
+      "bytes": 3251
+    },
+    {
+      "path": "snapshots/local-20261013/docs/development-workflow.md",
+      "sha256": "5989a9435645ca100a8affb96709b4d521502c65885711a478b242445b3b8fbc",
+      "bytes": 3225
+    },
+    {
+      "path": "snapshots/local-20261013/docs/tier-compatible-playback-20261008.md",
+      "sha256": "0a808230c1659b8cfeac45678720297a3c26c4651aa0a9a21ab5394c77650406",
+      "bytes": 3181
+    },
+    {
+      "path": "snapshots/local-20261013/docs/tier-four-frames-20261007.md",
+      "sha256": "10b1f25884dc519bee3d3d6b7bfdf0d398131bff54b8bff3cbb8b2051fb277dd",
+      "bytes": 4656
+    },
+    {
+      "path": "snapshots/local-20261013/docs/tier-high-recall-20261008.md",
+      "sha256": "d868a2782f52e07d37a4e0ed56714b10cbc463de33dd77a1325a34e02360e890",
+      "bytes": 4034
+    },
+    {
+      "path": "snapshots/local-20261013/docs/tier-ordinal-adjustment-20261008.md",
+      "sha256": "a2090e6f6cc5200098bc7f58d55e7907712f32d00b72fd87fa5f75fbeace19c6",
+      "bytes": 4985
+    },
+    {
+      "path": "snapshots/local-20261013/docs/tier-personal-model-20261006.md",
+      "sha256": "14a4591d8fff16ec4738e1d040437ea6fa99b2d41cae3127118755a66ee76c78",
+      "bytes": 5951
+    },
+    {
+      "path": "snapshots/local-20261013/docs/tier-teacher-improvements-20261008.md",
+      "sha256": "a7835ac2bd13a8bc20eeedc8fe09e7c6407751b3ffcf0cbd729f85f9bb4a07e6",
+      "bytes": 4122
+    },
+    {
+      "path": "snapshots/local-20261013/docs/tier-video-preview-20261008.md",
+      "sha256": "ee312220c1fbbff4264c761e12b6244d7a89bd3899a703d3fa9319acb4001a1d",
+      "bytes": 5091
+    },
+    {
+      "path": "snapshots/local-20261013/docs/xclip-update-artifacts.json",
+      "sha256": "69768c2cf55ecea37ce9b6d078c310c967057781f322ac3cae54cd3b52a7a0e2",
+      "bytes": 276434
+    },
+    {
+      "path": "snapshots/local-20261013/docs/XCLIP_UPDATE_HISTORY.md",
+      "sha256": "f59cf3c62466612475d01e2d3048e0cc8e8c1dd7a3f41c494feec37b6f3e6fc0",
+      "bytes": 141097
+    },
+    {
+      "path": "snapshots/local-20261013/lib/adult-score.ts",
+      "sha256": "f3945af35340fd5aef7086a45d5980d0c1754ff661bdde4c120d9107847f4e09",
+      "bytes": 5767
+    },
+    {
+      "path": "snapshots/local-20261013/lib/browser-direct-download.ts",
+      "sha256": "b7f89e71f1af94f9cb4e170a11a52b68b31dc3e13a1e641944f46bb3ea6c5ed5",
+      "bytes": 3316
+    },
+    {
+      "path": "snapshots/local-20261013/lib/browser-direct-playback.ts",
+      "sha256": "32e3c27abbf62b180edb0f6a03665e71274640c94db8909b38dd9e8a259f2793",
+      "bytes": 1632
+    },
+    {
+      "path": "snapshots/local-20261013/lib/browser-playback-recovery.ts",
+      "sha256": "ceb1f9e136b58b64f87d4d967b3b1f2cbfb0a5fa578aaf1bd7d694365fd259ba",
+      "bytes": 1459
+    },
+    {
+      "path": "snapshots/local-20261013/lib/browser-stream-playback.ts",
+      "sha256": "eb1c8426b8a1f7503bf71e2881a07273eab3b31c1e5077fb8298f3e7599c0233",
+      "bytes": 4501
+    },
+    {
+      "path": "snapshots/local-20261013/lib/content-filter.ts",
+      "sha256": "32702b77ed751395ef311dbf2402b708dea7f01341235c02c84c7eff7730bff5",
+      "bytes": 5327
+    },
+    {
+      "path": "snapshots/local-20261013/lib/cron-auth.ts",
+      "sha256": "8a9e85861e294fc1e5338407039735663f7b60f0250389a5b10882f5d0954ac2",
+      "bytes": 611
+    },
+    {
+      "path": "snapshots/local-20261013/lib/curated-collector.ts",
+      "sha256": "02e5526538a760b604d0a4131319638da1e7b124c1d12c44753d62768b2d6c3e",
+      "bytes": 13732
+    },
+    {
+      "path": "snapshots/local-20261013/lib/download-free.ts",
+      "sha256": "78116a42bd94f796fc6c97766ef4e2d7f6bca4bd0026a6ef53146e1f0b5d9866",
+      "bytes": 7921
+    },
+    {
+      "path": "snapshots/local-20261013/lib/download-url-store.ts",
+      "sha256": "324ef6eab6a1b1c35ba00c10d5212160ae06d8cdd686e43a1f1e05676ecabada",
+      "bytes": 5669
+    },
+    {
+      "path": "snapshots/local-20261013/lib/download-url.ts",
+      "sha256": "70c8c2dd4906742f8a0a6fc7a3dd030605c9894b853c7d17cdb298afe9b20c9c",
+      "bytes": 4684
+    },
+    {
+      "path": "snapshots/local-20261013/lib/engagement-client.ts",
+      "sha256": "44863379f1e6989e5158873daee0cd1d7b4deef90b9e566957b51458d3278422",
+      "bytes": 3071
+    },
+    {
+      "path": "snapshots/local-20261013/lib/error-message.ts",
+      "sha256": "77c79aa9b0fd4a760c627fd0c98c2c724793048121eb2ac1dbc63c542b7b30cb",
+      "bytes": 351
+    },
+    {
+      "path": "snapshots/local-20261013/lib/free-curated-client.ts",
+      "sha256": "37c93e21642640f61e07882b3be42a9bc8f295f7245d5f7e6b9dd0e3ea14ef7a",
+      "bytes": 1999
+    },
+    {
+      "path": "snapshots/local-20261013/lib/free-curated-metrics.ts",
+      "sha256": "54d94177f281bdc4f5676128581a116f0eb52fe3b8758c15cce98ae51a2ceb29",
+      "bytes": 2336
+    },
+    {
+      "path": "snapshots/local-20261013/lib/free-curated-registration.ts",
+      "sha256": "34e5e9554d86a2445b25abe66db0ebdd2688a728ec17b40ebd92b5aeddd14d26",
+      "bytes": 9335
+    },
+    {
+      "path": "snapshots/local-20261013/lib/fxtwitter-curated-save.ts",
+      "sha256": "f64c8942cc81f6932492dc1b39bc1666224538c63b42c28747f0da4bce7c376e",
+      "bytes": 5504
+    },
+    {
+      "path": "snapshots/local-20261013/lib/fxtwitter-curated-store.ts",
+      "sha256": "655034dbd06926d5515a82276409e576476f5a258e8b2be774209eaadaa6f305",
+      "bytes": 4986
+    },
+    {
+      "path": "snapshots/local-20261013/lib/fxtwitter-curated-tier.ts",
+      "sha256": "7d71a34ecdaba52971125669e71c637b2aebb5f1a8519cc16c155d9327d7548d",
+      "bytes": 2837
+    },
+    {
+      "path": "snapshots/local-20261013/lib/fxtwitter-curated.ts",
+      "sha256": "112e8bead9108d0d90566cb274f415862943e191c1caa745b547b7a3463f84df",
+      "bytes": 15551
+    },
+    {
+      "path": "snapshots/local-20261013/lib/fxtwitter-local-access.ts",
+      "sha256": "5728717bae5c27b20123c6afd39e743fa9f1a0ce16c0bda9b4bf7abf5651bdf5",
+      "bytes": 1139
+    },
+    {
+      "path": "snapshots/local-20261013/lib/initial-ranking.ts",
+      "sha256": "7e13e0a74fa0dcab2a4bece4eaf694e65925742e541d81e8826f700b13c08584",
+      "bytes": 1233
+    },
+    {
+      "path": "snapshots/local-20261013/lib/playback-refresh.ts",
+      "sha256": "09fb063c7e61e2a2e79a6f7a205e8031f7057fded9406a4d88d113896aaa00f7",
+      "bytes": 1715
+    },
+    {
+      "path": "snapshots/local-20261013/lib/ranking-pagination.ts",
+      "sha256": "e0e1660b972ab262581ad687656eb8defe52a898f3b9c5987b7f569d00a0df9b",
+      "bytes": 906
+    },
+    {
+      "path": "snapshots/local-20261013/lib/ranking.ts",
+      "sha256": "3eef807645941acdc114f6b9a12432ed9058b4f060b421eed5b9fc8d87b71c07",
+      "bytes": 627
+    },
+    {
+      "path": "snapshots/local-20261013/lib/seo.ts",
+      "sha256": "cea942eecabda17a886e646d8833dccf9f1632c86721939806b6ff254e50ba15",
+      "bytes": 1197
+    },
+    {
+      "path": "snapshots/local-20261013/lib/supabase-admin.ts",
+      "sha256": "f8b8ce736e78bc7ce0ded8dee0861921e6eeb90ffe93b070f9ba2c618fb502fe",
+      "bytes": 492
+    },
+    {
+      "path": "snapshots/local-20261013/lib/tier-learning.ts",
+      "sha256": "d454f243a4cd80af6fbeb0095281542812e23488707af6b3c5294ea8759531f8",
+      "bytes": 5778
+    },
+    {
+      "path": "snapshots/local-20261013/lib/tier-model-release.ts",
+      "sha256": "8b28b80cd2885e12afff9b2d73834f13c39aaa70c314dd08ccad145627bd1a65",
+      "bytes": 5655
+    },
+    {
+      "path": "snapshots/local-20261013/lib/tier-new-video-worker.ts",
+      "sha256": "4f8b98c267fec2b42ce2afc59b495c634e31a7001cdee5538d40851f87f654e3",
+      "bytes": 3083
+    },
+    {
+      "path": "snapshots/local-20261013/lib/tier-personal-core.ts",
+      "sha256": "c57710c4fb870a9cb416d1cc12e0abd8e7ce9ed0815447331bd515aba900689b",
+      "bytes": 9747
+    },
+    {
+      "path": "snapshots/local-20261013/lib/tier-personal-engine.ts",
+      "sha256": "0058206e4bd21524c8db8d6701d7bb1a19c7f56a72340310a80ced73fef30301",
+      "bytes": 15587
+    },
+    {
+      "path": "snapshots/local-20261013/lib/tier-personal-evaluation.ts",
+      "sha256": "e81c5cc08ad0f07aa8aa497c227abbb785a245e41c8eef0db91543a7a8c2cc3a",
+      "bytes": 12958
+    },
+    {
+      "path": "snapshots/local-20261013/lib/tier-personal-image.ts",
+      "sha256": "832843380b391ae1068cdb37808f8e67abcc67eb4ed67652cb5aebecdba1b1ff",
+      "bytes": 2223
+    },
+    {
+      "path": "snapshots/local-20261013/lib/tier-personal-store.ts",
+      "sha256": "1d924043e933f703bd2210e9ceb3131c8c95c3a9fe4a0e9a393bddc5d037fc01",
+      "bytes": 3909
+    },
+    {
+      "path": "snapshots/local-20261013/lib/tier-personal-video.ts",
+      "sha256": "a6db1ba177d611f5fc3ff5c4895fbf9edc339e0807da13f9724a470a38623963",
+      "bytes": 4789
+    },
+    {
+      "path": "snapshots/local-20261013/lib/tier-preview-playback.ts",
+      "sha256": "d401b0de1ea0367cd80f1ad1f3dc94d3d5e90cf9f2d7fdf984f0af425c8a81ee",
+      "bytes": 5211
+    },
+    {
+      "path": "snapshots/local-20261013/lib/tier-reevaluation.ts",
+      "sha256": "d0ed57dbb77d58b224d0bec4955be7cff67b18133bf99296bef18bfd3ecfe481",
+      "bytes": 12149
+    },
+    {
+      "path": "snapshots/local-20261013/lib/tier-teacher-analysis.ts",
+      "sha256": "e1ff7659f163c774b6cc8ab42febf048c0a2047adc1bbfe4a2ff8ea7a7f8812d",
+      "bytes": 8552
+    },
+    {
+      "path": "snapshots/local-20261013/lib/tier-video-preview.ts",
+      "sha256": "9e2570c7e36ce1887a127be40134b8fb7269fd47be2cfee9840599f3143c2a66",
+      "bytes": 12551
+    },
+    {
+      "path": "snapshots/local-20261013/lib/tier-visual-comparison.ts",
+      "sha256": "89e76c2d6f3511e810bc52efb4c82f512d658ba2978a507c51d56b3ee147bf8d",
+      "bytes": 5005
+    },
+    {
+      "path": "snapshots/local-20261013/lib/video-download.ts",
+      "sha256": "9e0ae9501b50f32f5b84561c179af40db62f5c9f992eb5fecfe89efe35fba37c",
+      "bytes": 2980
+    },
+    {
+      "path": "snapshots/local-20261013/lib/x-image-safety.ts",
+      "sha256": "bf98a41b248cf70246aa1453f6e92de8a70b11e1bcdcfc11ecdca1eb4926511c",
+      "bytes": 1068
+    },
+    {
+      "path": "snapshots/local-20261013/lib/x-publish.ts",
+      "sha256": "c54b31fdadd84a7b92323345880b534b6854171be25c2d4d4c86f60b50587e93",
+      "bytes": 5084
+    },
+    {
+      "path": "snapshots/local-20261013/lib/x.ts",
+      "sha256": "59dee9613ff5d392f963ebd7159dc91a2019fa00b6682b400699ef947cc4a58b",
+      "bytes": 9800
+    },
+    {
+      "path": "snapshots/local-20261013/lib/vendor/hls.d.mts",
+      "sha256": "d2838b7e1d3da9ef999652736a78582b0d20d19480ef79d4b8c3141a49cf82cc",
+      "bytes": 202548
+    },
+    {
+      "path": "snapshots/local-20261013/lib/vendor/hls.mjs",
+      "sha256": "11e668e41247b44b5807a10264f36e2edd9eaaa681167c46c9a681bd3757059b",
+      "bytes": 1484971
+    },
+    {
+      "path": "snapshots/local-20261013/lib/vendor/LICENSE.txt",
+      "sha256": "ca8773cf798c7ed997d4dd7c8e23c348699f8d5b7462636694cc14de6cda12db",
+      "bytes": 1338
+    },
+    {
+      "path": "snapshots/local-20261013/scripts/test-curated-manager-local.cjs",
+      "sha256": "f9f662618761a10e43d88a277763475cabdba42f025e340a3af3baeb0ee460a7",
+      "bytes": 3602
+    },
+    {
+      "path": "snapshots/local-20261013/scripts/test-direct-download.cjs",
+      "sha256": "4f028284612febf771dd05ea56f6c7489bc49a5c94ec43ffde3a832b77e79da2",
+      "bytes": 5328
+    },
+    {
+      "path": "snapshots/local-20261013/scripts/test-direct-playback.cjs",
+      "sha256": "70b0dbc259df734213c7cffaae7819adf3e393e727e11d4f9f66eed1b5264c86",
+      "bytes": 2493
+    },
+    {
+      "path": "snapshots/local-20261013/scripts/test-download-free.cjs",
+      "sha256": "47801f744491f22154a77d3dc61893d416b8bb3a495751f945feaf746836091d",
+      "bytes": 10067
+    },
+    {
+      "path": "snapshots/local-20261013/scripts/test-download-url.cjs",
+      "sha256": "80d7e3c8555a4378062c9fedf7ba9f06c02fe2683748048d1891deb8cab81e3f",
+      "bytes": 7144
+    },
+    {
+      "path": "snapshots/local-20261013/scripts/test-free-curated-cursors.cjs",
+      "sha256": "1e0c2315e28bf7d2ee7455987e2bae4d9692beed5ca2eb7b8415d952e040eaba",
+      "bytes": 1270
+    },
+    {
+      "path": "snapshots/local-20261013/scripts/test-free-curated-registration.cjs",
+      "sha256": "83334bb39d95a93da09abab6d89e44270437d3b1f1ac477a662618878a9a32f5",
+      "bytes": 11301
+    },
+    {
+      "path": "snapshots/local-20261013/scripts/test-free-curated-timeline.cjs",
+      "sha256": "c446448b8229a450c8ba0d1473dfef353a482712a71b4be7452809b3c2cf5ba5",
+      "bytes": 5703
+    },
+    {
+      "path": "snapshots/local-20261013/scripts/test-fxtwitter-curated.cjs",
+      "sha256": "fb743132909881337b8511e03418befc2bfd6fd154f7f9376ea9079a6099ab90",
+      "bytes": 10573
+    },
+    {
+      "path": "snapshots/local-20261013/scripts/test-hls-loader.cjs",
+      "sha256": "fefca727f4120ec0ffc6eaf9b8e6381c28aebabfebf0c1cd0547ab5e752827c2",
+      "bytes": 2336
+    },
+    {
+      "path": "snapshots/local-20261013/scripts/test-newest500-local.cjs",
+      "sha256": "89bd722ad54bd4f5ad5d2beefc006f33781bb2329953204cc2612dae7f21e558",
+      "bytes": 2601
+    },
+    {
+      "path": "snapshots/local-20261013/scripts/test-newest500-pages.cjs",
+      "sha256": "a683cf54e116275dffbcce6a7be9664249cd4e5b3ca36bf7d398f89f7033ca69",
+      "bytes": 5835
+    },
+    {
+      "path": "snapshots/local-20261013/scripts/test-playback-component.cjs",
+      "sha256": "ce0b8b07dee810e586a7a8566fd484f425ccd7db6be6265df904d30ecbc1d6c8",
+      "bytes": 3715
+    },
+    {
+      "path": "snapshots/local-20261013/scripts/test-playback-recovery.cjs",
+      "sha256": "203c30a5003d28b1503f02d84825690782c2a63f050e4d3b1edec090c36af174",
+      "bytes": 3636
+    },
+    {
+      "path": "snapshots/local-20261013/scripts/test-registration-recovery.cjs",
+      "sha256": "fc045c2e909948ef48f7143257313321d4c901bdad55155e53fcc242bfaa875e",
+      "bytes": 3267
+    },
+    {
+      "path": "snapshots/local-20261013/scripts/test-stream-component.cjs",
+      "sha256": "2043cd39f55ab3e09429e11308803b1f709d0348f5c4095f479682691f6c4d6f",
+      "bytes": 5220
+    },
+    {
+      "path": "snapshots/local-20261013/scripts/test-stream-playback.cjs",
+      "sha256": "b24e52726cb6ef219c8cf988d16912b3e5fc569918bc13423047fe6e16c579a0",
+      "bytes": 6406
+    },
+    {
+      "path": "snapshots/local-20261013/scripts/test-tier-compatible-playback.cjs",
+      "sha256": "638bfaf5869f574285b91dbfd6b90387defa72b73d8537d96b65772fca1fb439",
+      "bytes": 3236
+    },
+    {
+      "path": "snapshots/local-20261013/scripts/test-tier-four-frames.cjs",
+      "sha256": "df0b34a1672b4756ea6be08a42fee601e2851c9fdf2112017dd3f2b9b6179c84",
+      "bytes": 3665
+    },
+    {
+      "path": "snapshots/local-20261013/scripts/test-tier-high-recall.cjs",
+      "sha256": "4fc21bb498f5f435c190bb06c7bd314595af5ce02ac22051ed096629151034ca",
+      "bytes": 2816
+    },
+    {
+      "path": "snapshots/local-20261013/scripts/test-tier-model-release.cjs",
+      "sha256": "b7aeec8506b7e050d83b03408e113f277458e8b88ad06a386e9623afbec19732",
+      "bytes": 3779
+    },
+    {
+      "path": "snapshots/local-20261013/scripts/test-tier-new-video-worker.cjs",
+      "sha256": "122eea4e319434381d2b175e9ff092405fd6ecc91f0a90ae83709f2aca8c7a00",
+      "bytes": 2979
+    },
+    {
+      "path": "snapshots/local-20261013/scripts/test-tier-ordinal-adjustment.cjs",
+      "sha256": "b15fb979028fbd4a1be53138053b4a209c01bb08bcd54c8dae5521edc5bf0db6",
+      "bytes": 3287
+    },
+    {
+      "path": "snapshots/local-20261013/scripts/test-tier-personal-engine.cjs",
+      "sha256": "77dbef676c6e72c00ce949d6ab6460f4221d282644d7114c2524d31147b25d8b",
+      "bytes": 6693
+    },
+    {
+      "path": "snapshots/local-20261013/scripts/test-tier-personal.cjs",
+      "sha256": "5a99b37cacb95a88474d2fd39f1575f8df63d347054deffc0102893a0cedf4bf",
+      "bytes": 3124
+    },
+    {
+      "path": "snapshots/local-20261013/scripts/test-tier-preview-playback.cjs",
+      "sha256": "4d09b1e509edd722b17425344c4c27e28d15f97e4ea0305363a021351e729700",
+      "bytes": 1962
+    },
+    {
+      "path": "snapshots/local-20261013/scripts/test-tier-reevaluation-auth.cjs",
+      "sha256": "706e2c84778e707032c100788d6387332fb758ae1f8e5d37117b75bdc3c11045",
+      "bytes": 1842
+    },
+    {
+      "path": "snapshots/local-20261013/scripts/test-tier-reevaluation.cjs",
+      "sha256": "fd4ab95605b0f6da4428c7d8631a5d3ff35a9426ce0a2cf279e50ea0ee434426",
+      "bytes": 5242
+    },
+    {
+      "path": "snapshots/local-20261013/scripts/test-tier-teacher-analysis.cjs",
+      "sha256": "03bc246e3044bd929d061aad023623c5bb3f8886b53e1380e9ae6ff216e60093",
+      "bytes": 3069
+    },
+    {
+      "path": "snapshots/local-20261013/scripts/test-tier-teacher-improvements.cjs",
+      "sha256": "8e391a0f1730debd66fb12f494d91c90e0c050c40c19179653608c79180e04d9",
+      "bytes": 3626
+    },
+    {
+      "path": "snapshots/local-20261013/scripts/test-tier-video-preview.cjs",
+      "sha256": "b480f961ae540e43ea2987bbabe489109ff3288252762164d97c9bfa656fc99a",
+      "bytes": 5927
+    },
+    {
+      "path": "snapshots/local-20261013/scripts/test-tier-visual-comparison.cjs",
+      "sha256": "d14e92d001554e885c35bbf90091041880d29719c53d7b82b19f5261f1e2f0f1",
+      "bytes": 2159
+    },
+    {
+      "path": "snapshots/local-20261013/scripts/test-url-resolve-fix.cjs",
+      "sha256": "0bc35b9a3fd8028e9c64a1ed48019fda613e83e85e67a9073a21ef7111e07c5a",
+      "bytes": 3513
+    },
+    {
+      "path": "snapshots/local-20261013/scripts/test-video-download.cjs",
+      "sha256": "4f028284612febf771dd05ea56f6c7489bc49a5c94ec43ffde3a832b77e79da2",
+      "bytes": 5328
+    },
+    {
+      "path": "snapshots/local-20261013/scripts/visual-preference-holdout-eval.py",
+      "sha256": "c11bfbad7b76536c582d3c63018e37f867525047f8c4879afb18228e791361f4",
+      "bytes": 10137
+    },
+    {
+      "path": "snapshots/local-20261013/scripts/visual-preference-poc.py",
+      "sha256": "3deae12a4af1238eb3cc4f284ebbc0336b03f11f247654609d7ddfed5b32773c",
+      "bytes": 13746
+    },
+    {
+      "path": "snapshots/local-20261013/sql/tier-personal-model.sql",
+      "sha256": "e922a7c1b6fc4b8d9451f8c0c0f0577fb732cbeb94801126008ca389f982d19e",
+      "bytes": 3059
+    },
+    {
+      "path": "snapshots/local-20261013/supabase/curated-authors.sql",
+      "sha256": "ad335704bb44382c5dce70d28cd15b9a251781d3fb0561367c9d769b92cab968",
+      "bytes": 2510
+    },
+    {
+      "path": "snapshots/local-20261013/supabase/engagement-events.sql",
+      "sha256": "152b098f2bc3fd539d6646c0ab8571968ebe0df77eb07bcad1ae72647c2b3d23",
+      "bytes": 1134
+    },
+    {
+      "path": "snapshots/local-20261013/supabase/engagement-page-view-20260913.sql",
+      "sha256": "33ef51a7074be53991285804de4cc18021957090b7f6cea218b04dc12ea4bf6b",
+      "bytes": 549
+    },
+    {
+      "path": "snapshots/local-20261013/supabase/ranking-moderation.sql",
+      "sha256": "721b8b329045e554f096aea1f4d774489d0cc03a1036104fbf8ca67a4fd908f0",
+      "bytes": 804
+    },
+    {
+      "path": "snapshots/local-20261013/supabase/removal-requests.sql",
+      "sha256": "61ca781198e4fae614d5a97415f7ef2d11ce0d8e9190c86e4cef706cb852f8af",
+      "bytes": 1033
+    },
+    {
+      "path": "snapshots/local-20261013/supabase/schema.sql",
+      "sha256": "7a38a8cf634ca39c85dd5467fdbed81ce015e46ece2d1daf375c50fb805ed6d5",
+      "bytes": 1693
+    },
+    {
+      "path": "snapshots/local-20261013/supabase/x-api-usage.sql",
+      "sha256": "8382cacde5da0fb19613f3cdae90a75944cc7891cca0123f874e50366e5e0b02",
+      "bytes": 842
+    },
+    {
+      "path": "snapshots/local-20261013/supabase/x-promotion-logs-20260913.sql",
+      "sha256": "c25ab5f39c902464b1749a9ca75bb0d4c55b8743135c54cdec0d5291b1b8159e",
+      "bytes": 1583
+    },
+    {
+      "path": "snapshots/production-known-files-20261013/SNAPSHOT_SCOPE.md",
+      "sha256": "f149b972f59ad5503fbf71515d59e8a4fef7c01018a22a88607ac0c30621d48e",
+      "bytes": 415
+    },
+    {
+      "path": "snapshots/production-known-files-20261013/app/globals.css",
+      "sha256": "5b3f3b71f301557899f981ee3b0b0440d46d55734d7c2832502ae7f02b2203cd",
+      "bytes": 33195
+    },
+    {
+      "path": "snapshots/production-known-files-20261013/app/page.tsx",
+      "sha256": "397e19b4baed6b35d86c397a2dc7667b5358b119e405895fcee3bb4a4af85012",
+      "bytes": 4755
+    },
+    {
+      "path": "snapshots/production-known-files-20261013/app/api/collect-curated-batch/route.ts",
+      "sha256": "cc4bf7d344933c04f017bcf8ba47eae152e5bc7563d34f486e1b566035ce2450",
+      "bytes": 5702
+    },
+    {
+      "path": "snapshots/production-known-files-20261013/app/api/free-curated-sync/route.ts",
+      "sha256": "9297554c9d9b5a14039eb4e7c8ea1be40d91546afc2b38e14a67719f1a1e7192",
+      "bytes": 2476
+    },
+    {
+      "path": "snapshots/production-known-files-20261013/app/api/rankings/route.ts",
+      "sha256": "1c744b5358dd3abd9508c58884f1fd727cc11b9586351b53a14b9f5e3b659114",
+      "bytes": 33229
+    },
+    {
+      "path": "snapshots/production-known-files-20261013/app/components/DedicatedRankingPage.tsx",
+      "sha256": "b77112dc1ed36b0606330c949166894b378fb972f14b4efb45a38b280d99b94c",
+      "bytes": 3461
+    },
+    {
+      "path": "snapshots/production-known-files-20261013/app/components/RankingClient.tsx",
+      "sha256": "e0d5146ad8308b696fafdbcd2c7d9bcb190da24836770156b601136c8a97e366",
+      "bytes": 14369
+    },
+    {
+      "path": "snapshots/production-known-files-20261013/app/ranking/daily/page.tsx",
+      "sha256": "6a1261f28a7267b8476560d2d08136e1d6f5caad7ee8e87afd2707a7c1ddfac7",
+      "bytes": 1853
+    },
+    {
+      "path": "snapshots/production-known-files-20261013/app/ranking/weekly/page.tsx",
+      "sha256": "aa85e4a5507c3db09aa02f5f9395205c17a2ac922c7c6d3cc34ebb0c5fd22a58",
+      "bytes": 1752
+    },
+    {
+      "path": "snapshots/production-known-files-20261013/docs/releases/xclip-newest500-v2-20261013.json",
+      "sha256": "201bda9dee67469de4e28d154f68546d1a0852ece2e58f1881e3eb7175984a3e",
+      "bytes": 272282
+    },
+    {
+      "path": "snapshots/production-known-files-20261013/docs/releases/XCLIP_FX_CONTEXT_PUBLICATION_20261013.md",
+      "sha256": "e3a9f69f5bf1cfe974a7538b49641731e3afbaaf632e8365dc646ca743160f04",
+      "bytes": 122142
+    },
+    {
+      "path": "snapshots/production-known-files-20261013/docs/releases/XCLIP_FX_TEMPORARY_PATROL_20261012.md",
+      "sha256": "641ac7eb4d48ee2d71c93e0a589b7816aa5a35e2c676647cc40c8f17291f8843",
+      "bytes": 91899
+    },
+    {
+      "path": "snapshots/production-known-files-20261013/docs/releases/XCLIP_FX_TIMELINE_FIX_20261013.md",
+      "sha256": "08f79a91ac8849c30df8b6d5456fa46f1791cb1ca01afaa9d9ce5c4f1b14170e",
+      "bytes": 104262
+    },
+    {
+      "path": "snapshots/production-known-files-20261013/docs/releases/XCLIP_NEWEST500_V2_20261013.md",
+      "sha256": "85ac42c017e76dae0681f9b918276cd3175a448777732f348a831ef9d46047f4",
+      "bytes": 138612
+    },
+    {
+      "path": "snapshots/production-known-files-20261013/docs/releases/XCLIP_PATROL_CONTINUE_JITTER_20261012_V3.md",
+      "sha256": "f783427d5310b36f614b2e49d5fbba0200394f87842337dad4ec439add584f21",
+      "bytes": 69551
+    },
+    {
+      "path": "snapshots/production-known-files-20261013/docs/releases/XCLIP_UNIFIED_AUTHORS_20261011.md",
+      "sha256": "7c222a6b2f6d5cd777f8523b9c3e0b7d9d489d059433c44760828b001f0c6d5d",
+      "bytes": 28496
+    },
+    {
+      "path": "snapshots/production-known-files-20261013/lib/author-status-scan.ts",
+      "sha256": "38dafa495a2c7f13a12fbcff08657cf73643a568f028da780a5b7ad6893450bc",
+      "bytes": 3402
+    },
+    {
+      "path": "snapshots/production-known-files-20261013/lib/availability-dashboard.ts",
+      "sha256": "d8718daf1b48b094b924ea1176509164e1f77fe3057ce5a720828b8632f0a37e",
+      "bytes": 1402
+    },
+    {
+      "path": "snapshots/production-known-files-20261013/lib/availability-policy.ts",
+      "sha256": "fc4add1950a5c8207131e3f266e8b1c68827d254b4509b8903acaf53ae1b5fbd",
+      "bytes": 2890
+    },
+    {
+      "path": "snapshots/production-known-files-20261013/lib/availability-scan.ts",
+      "sha256": "6cae8e8564f67bf81fa37c40c423118704370f93f6990db41c9db1a73243ab22",
+      "bytes": 6798
+    },
+    {
+      "path": "snapshots/production-known-files-20261013/lib/curated-common.ts",
+      "sha256": "13fc29b481944ba14bf37cd50514569a5d2d5b21d2ac2053b841cca20ab8963a",
+      "bytes": 6155
+    },
+    {
+      "path": "snapshots/production-known-files-20261013/lib/curated-removals.ts",
+      "sha256": "146091b0fbb71f74d81315253637245de5279e593a0fe661f18c395929774959",
+      "bytes": 1531
+    },
+    {
+      "path": "snapshots/production-known-files-20261013/lib/free-curated-dashboard.ts",
+      "sha256": "b85501b83ed96cdb61c2c69765ac6ee9908f5bf87629a187c3e7bb98aacefe36",
+      "bytes": 3725
+    },
+    {
+      "path": "snapshots/production-known-files-20261013/lib/free-curated-metrics.ts",
+      "sha256": "54d94177f281bdc4f5676128581a116f0eb52fe3b8758c15cce98ae51a2ceb29",
+      "bytes": 2336
+    },
+    {
+      "path": "snapshots/production-known-files-20261013/lib/free-curated-publish.ts",
+      "sha256": "37a569784e25d1db8dc0cba0fb0838322178a69514d83cd4452c710d1b6244b8",
+      "bytes": 8096
+    },
+    {
+      "path": "snapshots/production-known-files-20261013/lib/free-curated-scan.ts",
+      "sha256": "53dbf8d867f93da2276af3dc33cda7a615f15bbba2dfb1ded1f1c07b6d4c57e3",
+      "bytes": 2952
+    },
+    {
+      "path": "snapshots/production-known-files-20261013/lib/free-curated-server-store.ts",
+      "sha256": "66c4649ea7eba584a54199ef9bceb69e52c93619cae56394bcd51b0339840696",
+      "bytes": 4612
+    },
+    {
+      "path": "snapshots/production-known-files-20261013/lib/free-curated-sync.ts",
+      "sha256": "bde1aacd03fe7c741e8202ed7f0d66ccf7a7b075caf46aa80da0c21202c0b357",
+      "bytes": 8982
+    },
+    {
+      "path": "snapshots/production-known-files-20261013/lib/fx-curated-scan.ts",
+      "sha256": "bcce2bc98243540a67bde97972af7f880a299d03122b8ac9359f796741f4305e",
+      "bytes": 10786
+    },
+    {
+      "path": "snapshots/production-known-files-20261013/lib/fx-curated-state.ts",
+      "sha256": "a969d227e69596700a5b9660f5a7b38c32fde575593ae2c07efe74e9c7f95d00",
+      "bytes": 2793
+    },
+    {
+      "path": "snapshots/production-known-files-20261013/lib/fxtwitter-curated.ts",
+      "sha256": "112e8bead9108d0d90566cb274f415862943e191c1caa745b547b7a3463f84df",
+      "bytes": 15551
+    },
+    {
+      "path": "snapshots/production-known-files-20261013/lib/initial-ranking.ts",
+      "sha256": "7e13e0a74fa0dcab2a4bece4eaf694e65925742e541d81e8826f700b13c08584",
+      "bytes": 1233
+    },
+    {
+      "path": "snapshots/production-known-files-20261013/lib/newest-feed.ts",
+      "sha256": "906cf083902725cf2f932456a5f1e97bd98ade43a347c43e6761899cc462e195",
+      "bytes": 3758
+    },
+    {
+      "path": "snapshots/production-known-files-20261013/lib/post-status-store.ts",
+      "sha256": "78b6c548039702d14fccf898493c8f8c2c5340739662f214187dbc8473542176",
+      "bytes": 3967
+    },
+    {
+      "path": "snapshots/production-known-files-20261013/lib/post-status.ts",
+      "sha256": "cefbc7955dfd9101edad3f8a7e1f5cfbbb09301350319c4f7717f9cafba43c81",
+      "bytes": 3014
+    },
+    {
+      "path": "snapshots/production-known-files-20261013/lib/ranking-editions.ts",
+      "sha256": "7902790835a68930000133c838075e81a88d3726b41fd9a2ed9c1cf3eaa3a295",
+      "bytes": 5915
+    },
+    {
+      "path": "snapshots/production-known-files-20261013/lib/ranking-pagination.ts",
+      "sha256": "e0e1660b972ab262581ad687656eb8defe52a898f3b9c5987b7f569d00a0df9b",
+      "bytes": 906
+    },
+    {
+      "path": "snapshots/production-known-files-20261013/lib/seo.ts",
+      "sha256": "cea942eecabda17a886e646d8833dccf9f1632c86721939806b6ff254e50ba15",
+      "bytes": 1197
+    },
+    {
+      "path": "snapshots/production-known-files-20261013/lib/x-curated-scan.ts",
+      "sha256": "6e9d4e962810cb3a7fecf66bd1aa2ef5e4a9a9edec52ed6625aa8e1f6a8bbaca",
+      "bytes": 8418
+    },
+    {
+      "path": "snapshots/production-known-files-20261013/lib/x-curated-search.ts",
+      "sha256": "90d41fadb981e46ea33bf7abee1aacc4c5422dadae9ac9f28055956d32465daf",
+      "bytes": 6627
+    },
+    {
+      "path": "snapshots/production-known-files-20261013/lib/x-curated-state.ts",
+      "sha256": "a44eb46949f1f21f83d63847b04046a3a76a99c34ac6e065ffca9e3e95e1ad74",
+      "bytes": 2947
+    },
+    {
+      "path": "snapshots/production-known-files-20261013/scripts/migrate-curated-common.cjs",
+      "sha256": "a5ec5cb29d43904fb39e102cf33680e06921a672887a3be10a0a22b7eed5a0b2",
+      "bytes": 758
+    },
+    {
+      "path": "snapshots/production-known-files-20261013/scripts/scan-free-curated.cjs",
+      "sha256": "00e9c212ab5059dd95f39988289c1fd9c4e2d3c38f4b189ab9f99a44090ede85",
+      "bytes": 1299
+    },
+    {
+      "path": "snapshots/production-known-files-20261013/scripts/test-author-status.cjs",
+      "sha256": "915c4b5babc1dccc3382499c0579e7c5b0a438d27c9c40b4bd53f7dcf965a73a",
+      "bytes": 5192
+    },
+    {
+      "path": "snapshots/production-known-files-20261013/scripts/test-availability-curated-regression.cjs",
+      "sha256": "31fe3b6c037a14a2d0f5da10e2b1da868e5e58776a28219a195735dd8f0016c0",
+      "bytes": 5939
+    },
+    {
+      "path": "snapshots/production-known-files-20261013/scripts/test-availability-monitor.cjs",
+      "sha256": "d761ea9a3d93bcf3aebe52b6d008a51ce910b4acdf6543580ae331e7cd588719",
+      "bytes": 8343
+    },
+    {
+      "path": "snapshots/production-known-files-20261013/scripts/test-curated-common.cjs",
+      "sha256": "8ae83e059e4d863d77eec2601288b2e29cdd6073d79df3419ee7375e9117e1d7",
+      "bytes": 10032
+    },
+    {
+      "path": "snapshots/production-known-files-20261013/scripts/test-free-curated-cursors.cjs",
+      "sha256": "1e0c2315e28bf7d2ee7455987e2bae4d9692beed5ca2eb7b8415d952e040eaba",
+      "bytes": 1270
+    },
+    {
+      "path": "snapshots/production-known-files-20261013/scripts/test-free-curated-dashboard.cjs",
+      "sha256": "a6a96e9baef03c55c16a417e6a5fd9a36a79aa159b9927cf3bde3f54bb9a6bdb",
+      "bytes": 7362
+    },
+    {
+      "path": "snapshots/production-known-files-20261013/scripts/test-free-curated-production.cjs",
+      "sha256": "31f8317c1fbf68e184dfd14ca939ce3eeb59c5a8ecc454c99d6c32b4bd7fa75b",
+      "bytes": 9682
+    },
+    {
+      "path": "snapshots/production-known-files-20261013/scripts/test-free-curated-timeline.cjs",
+      "sha256": "c446448b8229a450c8ba0d1473dfef353a482712a71b4be7452809b3c2cf5ba5",
+      "bytes": 5703
+    },
+    {
+      "path": "snapshots/production-known-files-20261013/scripts/test-fx-curated-patrol.cjs",
+      "sha256": "63a6a541e7e875cfcfbff17a0094033ae12f872a02d53edcc54ede40070fd5f2",
+      "bytes": 19301
+    },
+    {
+      "path": "snapshots/production-known-files-20261013/scripts/test-monitor-jitter.cjs",
+      "sha256": "74a56a5ad7761260b95d431e89b5b8a7565d1428c193c11e5849d9d17aea4028",
+      "bytes": 899
+    },
+    {
+      "path": "snapshots/production-known-files-20261013/scripts/test-monitor-state-isolation.cjs",
+      "sha256": "8b88c817f6ad86767aa0c0980d0f75efba6012b9aaa0088a42210516b29376f9",
+      "bytes": 1424
+    },
+    {
+      "path": "snapshots/production-known-files-20261013/scripts/test-newest500-pages.cjs",
+      "sha256": "a683cf54e116275dffbcce6a7be9664249cd4e5b3ca36bf7d398f89f7033ca69",
+      "bytes": 5835
+    },
+    {
+      "path": "snapshots/production-known-files-20261013/scripts/test-newest500.cjs",
+      "sha256": "79d6b8ef807e6f903d3057870fd064c0e32a39aae77c469d41d62951e5d569ba",
+      "bytes": 8732
+    },
+    {
+      "path": "snapshots/production-known-files-20261013/scripts/test-patrol-continuation.cjs",
+      "sha256": "153c1f3bbd977aa88d58dca3f99da526008cdd04b0696876e540555257d92808",
+      "bytes": 6438
+    },
+    {
+      "path": "snapshots/production-known-files-20261013/scripts/test-ranking-liquidity-route.cjs",
+      "sha256": "546756c9638647e914c6b2213df6beba004f05bca0d40b8df13b2a5b30c7509f",
+      "bytes": 7392
+    },
+    {
+      "path": "snapshots/production-known-files-20261013/scripts/test-x-curated-hybrid.cjs",
+      "sha256": "a073190a11e4704fc85299cfcaf8c3f1cdcb20c44343a5e260467a433d57831d",
+      "bytes": 11538
+    },
+    {
+      "path": "releases/20261013-operations-archive/README.md",
+      "sha256": "4e482b3b65d79d9c5da4d5caf6edf9d72bd04440a7fd24b9f3d0e5da111b091e",
+      "bytes": 296
+    },
+    {
+      "path": "releases/20261013-operations-archive/current-chat/xclip-fx-context-deploy-20261013.sh",
+      "sha256": "5e3e3f078bd9a0bdf778ec846788e5b0625699d71e318aa754048360afc396cc",
+      "bytes": 251496
+    },
+    {
+      "path": "releases/20261013-operations-archive/current-chat/xclip-fx-context-local-20261013.ps1",
+      "sha256": "fd1bcdec9a8833bd72622b9ddc84fec86d025064405294cb1482041894ecefa9",
+      "bytes": 665758
+    },
+    {
+      "path": "releases/20261013-operations-archive/current-chat/xclip-fx-context-source-20261013.zip",
+      "sha256": "b15d77ce07248d6260e08011666304c7826c42b277c0a2546b3edede69d6070e",
+      "bytes": 334427
+    },
+    {
+      "path": "releases/20261013-operations-archive/current-chat/xclip-fx-five-now-20261013-v2.sh",
+      "sha256": "e8d681b647a57251951df7375b7e9aa1eb67981fc9cfb16d5c28a14f66ebdb54",
+      "bytes": 23077
+    },
+    {
+      "path": "releases/20261013-operations-archive/current-chat/xclip-fx-five-now-20261013.sh",
+      "sha256": "64d0de665a12d3cd6a4521e02a3d5f9e4b369706d3fc6fb336d46dde2472a65a",
+      "bytes": 21841
+    },
+    {
+      "path": "releases/20261013-operations-archive/current-chat/xclip-fx-five-now-source-20261013.zip",
+      "sha256": "21bc14a92a7c7ac45d1f522fbe21af3565bc3aa70682002eb427d93404bb0347",
+      "bytes": 10024
+    },
+    {
+      "path": "releases/20261013-operations-archive/current-chat/xclip-fx-five-result-diagnose-20261013-v2.sh",
+      "sha256": "b0cd6d72392170a86a130ff58edd397478da1491e3f97960a9c4c89255a7fbb8",
+      "bytes": 11764
+    },
+    {
+      "path": "releases/20261013-operations-archive/current-chat/xclip-fx-five-result-diagnose-20261013.sh",
+      "sha256": "4762df652ffc93ca77df6ba7a0c9dd3a6dcd5648528fc170124e74fcb935c602",
+      "bytes": 8844
+    },
+    {
+      "path": "releases/20261013-operations-archive/current-chat/xclip-fx-patrol-diagnose-20261013.sh",
+      "sha256": "7d314fa33d52be064361376c27455c06735c98704b8c1263da94fca426e085cf",
+      "bytes": 7640
+    },
+    {
+      "path": "releases/20261013-operations-archive/current-chat/xclip-fx-patrol-verify-five-20261013.sh",
+      "sha256": "ecd5a0d86fbaf2c5c311be758b50c31b3e4fb53f9cf0993271a73187a932bb49",
+      "bytes": 3150
+    },
+    {
+      "path": "releases/20261013-operations-archive/current-chat/xclip-fx-timeline-fix-deploy-20261013.sh",
+      "sha256": "f42fee73dad14f48239675f5a21d875ffdf05cffc7c3bce7192d0ee4630f0bd8",
+      "bytes": 195160
+    },
+    {
+      "path": "releases/20261013-operations-archive/current-chat/xclip-fx-timeline-fix-local-20261013.ps1",
+      "sha256": "bbf10b51b101baad81c8dc70741e952ce6ce85820cf605bd9150a0ee65124241",
+      "bytes": 568952
+    },
+    {
+      "path": "releases/20261013-operations-archive/current-chat/xclip-fx-timeline-fix-source-20261013.zip",
+      "sha256": "ef6df2dead92a3165b9b79b4f10ea8f560c43e60ffd8c3bc28bb158d0f3805aa",
+      "bytes": 274818
+    },
+    {
+      "path": "releases/20261013-operations-archive/current-chat/Xclip-FxTwitter巡回失敗調査-SHA256-20261013.txt",
+      "sha256": "602081c64c345155b56c54b02ad4cc085a183cbf5bdf25d1918d2787c685be59",
+      "bytes": 502
+    },
+    {
+      "path": "releases/20261013-operations-archive/current-chat/Xclip-FxTwitter投稿一覧修正と5件検証-SHA256-20261013.txt",
+      "sha256": "ba8b59b873eb386e88e6fbb6072f38ac6321e93bbbc2016308924f4b8605b2dc",
+      "bytes": 996
+    },
+    {
+      "path": "releases/20261013-operations-archive/current-chat/Xclip-FxTwitter投稿一覧修正と5件検証-実行手順-20261013.txt",
+      "sha256": "19087e70c18533ad668f9fe1c9b9a945d8a64ecf003ea3331340e50b0d335b37",
+      "bytes": 1399
+    },
+    {
+      "path": "releases/20261013-operations-archive/current-chat/Xclip-FxTwitter投稿一覧修正と5件検証-更新一式-20261013.zip",
+      "sha256": "7d7e8b0f96d6142c96ed00ade3855760a500472d8952c859e2bc11e9e3415adc",
+      "bytes": 661635
+    },
+    {
+      "path": "releases/20261013-operations-archive/current-chat/xclip-newest500-deploy-20261013-v2.sh",
+      "sha256": "60385a28519c3f009ec5332b102285507bf401f8f13f659eb2bfdec65c5fe7a1",
+      "bytes": 190588
+    },
+    {
+      "path": "releases/20261013-operations-archive/current-chat/xclip-newest500-deploy-20261013.sh",
+      "sha256": "0879b529815bcae2196340a5111db5eeb3dabb0843185bb5cf8b5227f16c7494",
+      "bytes": 183470
+    },
+    {
+      "path": "releases/20261013-operations-archive/current-chat/xclip-newest500-local-20261013-v2.ps1",
+      "sha256": "c7d1752fd1c002c3c82a4b9631df1483edc8a672467d18a11334b369c8213b9a",
+      "bytes": 685414
+    },
+    {
+      "path": "releases/20261013-operations-archive/current-chat/xclip-newest500-local-20261013.ps1",
+      "sha256": "a3f43071026f337f2660c9a2e0719607b29e43acfc0832992d1f6e6a97c1d5e5",
+      "bytes": 645692
+    },
+    {
+      "path": "releases/20261013-operations-archive/current-chat/xclip-newest500-source-20261013-v2.zip",
+      "sha256": "c626bee9d5c1c4ec7d2662c1911d51d238dff4f658ee5411c8954d7f91542577",
+      "bytes": 246130
+    },
+    {
+      "path": "releases/20261013-operations-archive/current-chat/xclip-newest500-source-20261013.zip",
+      "sha256": "9d0dd916d79f06566f94522ab461a51d6a85b73779d4a438da098f91ed1d2677",
+      "bytes": 236656
+    },
+    {
+      "path": "releases/20261013-operations-archive/current-chat/xclip-newest500-source-audit-20261013.sh",
+      "sha256": "cd1e6a6a6943f75c6c7754c4cfe013f94ba3fa307a1334cb468ad824a444da6e",
+      "bytes": 5183
+    },
+    {
+      "path": "releases/20261013-operations-archive/current-chat/Xclip-会話投稿対応と掲載内訳-SHA256-20261013.txt",
+      "sha256": "50e386d3f257d0a8dbf0034e40f9ad2f6aad6fccf29be42a9b198a90c54bd3a8",
+      "bytes": 948
+    },
+    {
+      "path": "releases/20261013-operations-archive/current-chat/Xclip-会話投稿対応と掲載内訳-実行手順-20261013.txt",
+      "sha256": "7d7013b70a28a8df52c4fdb2a88a230fac261818cb44d579f06545215d6d9a52",
+      "bytes": 1362
+    },
+    {
+      "path": "releases/20261013-operations-archive/current-chat/Xclip-会話投稿対応と掲載内訳-更新一式-20261013.zip",
+      "sha256": "52ca6dc4926af3fc5e60af125c163f165d9a933929c88a3d1458dcc6d3e24e6a",
+      "bytes": 806939
+    },
+    {
+      "path": "releases/20261013-operations-archive/current-chat/Xclip-即時5件v2成功-SHA256-20261013.txt",
+      "sha256": "e96171e12e9b9eb5f93a35cf4ecdf706e587a09066923352898396100931600a",
+      "bytes": 417
+    },
+    {
+      "path": "releases/20261013-operations-archive/current-chat/Xclip-即時5件結果と掲載0件調査-SHA256-20261013.txt",
+      "sha256": "df69f8a88734198ec0bb9721a8f2b16d984ed02b972eb029032e8db8a4d11beb",
+      "bytes": 520
+    },
+    {
+      "path": "releases/20261013-operations-archive/current-chat/Xclip-引き継ぎ-会話投稿対応と掲載内訳-20261013.txt",
+      "sha256": "70abfddcff7f23306815ba7875c9b53c1be2e3b334f461301b9d1df18344ae2b",
+      "bytes": 11730
+    },
+    {
+      "path": "releases/20261013-operations-archive/current-chat/Xclip-引き継ぎ-即時5件v2成功と4件保存確認-20261013.txt",
+      "sha256": "f1aeda318c233ce5b1c91e6eadf493b53384aa8e73a7d0f6ff75778407566613",
+      "bytes": 2875
+    },
+    {
+      "path": "releases/20261013-operations-archive/current-chat/Xclip-引き継ぎ-即時5件結果と掲載0件調査-20261013.txt",
+      "sha256": "6baef87c686f259ad193e362fe88b564352f4642c9463ab656633545d79739a9",
+      "bytes": 10138
+    },
+    {
+      "path": "releases/20261013-operations-archive/current-chat/Xclip-引き継ぎ-手動5件即時検証-20261013.txt",
+      "sha256": "553f846d324577076bf0e25650a86440479f2e6cc6043f2a3ca222a2a41bed67",
+      "bytes": 9420
+    },
+    {
+      "path": "releases/20261013-operations-archive/current-chat/Xclip-引き継ぎ-新着500件canonical修正-v2-20261013.txt",
+      "sha256": "4684da9a45e9761ee4e2c535b289462172bfa8730ba8fe24d2257be0ca3ce778",
+      "bytes": 4716
+    },
+    {
+      "path": "releases/20261013-operations-archive/current-chat/Xclip-引き継ぎ-新着500件と投稿者分散-20261013.txt",
+      "sha256": "de180093dc5f537cd4ba6680e4b50ed7fbdf189e4ff58e8076fa2ac1c1a12254",
+      "bytes": 6139
+    },
+    {
+      "path": "releases/20261013-operations-archive/current-chat/Xclip-引き継ぎ-新着500件更新前調査-20261013.txt",
+      "sha256": "52868d00b86c414f69436fa9f03ea1c6ab9c765d811b2665a091f99e1ecf0157",
+      "bytes": 3998
+    },
+    {
+      "path": "releases/20261013-operations-archive/current-chat/Xclip-引き継ぎ-結果診断の照合修正-v2-20261013.txt",
+      "sha256": "ff07e476bcdf45d059add85204e1f50bc96f9696c63d1d79413ed58bf6f303fc",
+      "bytes": 10775
+    },
+    {
+      "path": "releases/20261013-operations-archive/current-chat/Xclip-手動5件即時検証-SHA256-20261013.txt",
+      "sha256": "e2f2436bcaa81501da2fbca4786e84081fcf4cf30cf4c460308c18d0f8ef9bdd",
+      "bytes": 696
+    },
+    {
+      "path": "releases/20261013-operations-archive/current-chat/Xclip-手動5件即時検証-実行手順-20261013.txt",
+      "sha256": "d2ef96654356590f50f54e8f75fffe92dce0c83eeababe78e744faeaa05df9fc",
+      "bytes": 633
+    },
+    {
+      "path": "releases/20261013-operations-archive/current-chat/Xclip-手動5件即時検証-更新一式-20261013.zip",
+      "sha256": "0ff01748545c1ca011e2c52917b058e9ca84e645073baa147f7b52b750dcd67c",
+      "bytes": 91329
+    },
+    {
+      "path": "releases/20261013-operations-archive/current-chat/Xclip-新着500件canonical修正-v2-SHA256-20261013.txt",
+      "sha256": "9c84a2486f1ab0bd2b010215cdeff9c1fadf8871efaf16dd5b15ba7623d10537",
+      "bytes": 842
+    },
+    {
+      "path": "releases/20261013-operations-archive/current-chat/Xclip-新着500件canonical修正-v2-実行手順-20261013.txt",
+      "sha256": "cf55fab7f30d99d7e71635cf72ac74f2d1edf4e530df060e9954a5258cb33978",
+      "bytes": 2652
+    },
+    {
+      "path": "releases/20261013-operations-archive/current-chat/Xclip-新着500件canonical修正-v2-更新一式-20261013.zip",
+      "sha256": "f44f03ca6a8ca0c08e3a7d296d5b088a90e6253b3bbc02948da22af4ed9ced78",
+      "bytes": 674005
+    },
+    {
+      "path": "releases/20261013-operations-archive/current-chat/Xclip-新着500件canonical修正-v2-更新一式-20261013.zip.sha256",
+      "sha256": "03cde3d0de96b1d2454c4f160fddfd9dfca8c6fea0002bb94bdd6a4570cc7e0e",
+      "bytes": 130
+    },
+    {
+      "path": "releases/20261013-operations-archive/current-chat/Xclip-新着500件と投稿者分散-SHA256-20261013.txt",
+      "sha256": "35c501c7585d808911f1556529c31ff795f602f075c7580dc758fd941e41fddd",
+      "bytes": 833
+    },
+    {
+      "path": "releases/20261013-operations-archive/current-chat/Xclip-新着500件と投稿者分散-実行手順-20261013.txt",
+      "sha256": "909e81d49af4056f05767507d5ef7a07b395a84739fc0f3a48e9396b33c09f6b",
+      "bytes": 2482
+    },
+    {
+      "path": "releases/20261013-operations-archive/current-chat/Xclip-新着500件と投稿者分散-更新一式-20261013.zip",
+      "sha256": "daa785c5389144c7aad8120905d00e67b0282a908d58d904579277e3a85b549c",
+      "bytes": 646333
+    },
+    {
+      "path": "releases/20261013-operations-archive/current-chat/Xclip-新着500件と投稿者分散-更新一式-20261013.zip.sha256",
+      "sha256": "a036088e18c62e325da7022080b028e2d3b6d72dc0294ce64f80a113b573a193",
+      "bytes": 130
+    },
+    {
+      "path": "releases/20261013-operations-archive/current-chat/Xclip-新着500件更新前調査-SHA256-20261013.txt",
+      "sha256": "0159d9830c1b985ca1a1ea1a0a6f3b58919d9d7679cd4af03a7f34892c71c32b",
+      "bytes": 495
+    },
+    {
+      "path": "releases/20261013-operations-archive/current-chat/Xclip-更新前精査とチャット引き継ぎルール-20261013.txt",
+      "sha256": "acedac60f85b18c51ec8320a5a722cf47f4773f7037f841c8b4b3d36fd114dbf",
+      "bytes": 8722
+    },
+    {
+      "path": "releases/20261013-operations-archive/current-chat/Xclip-更新履歴-FxTwitter巡回失敗調査-20261013.md",
+      "sha256": "96228f4a8b5be573798e23e4d62f7cd9d916441aa378a7a394d235bb2cdbe52c",
+      "bytes": 98762
+    },
+    {
+      "path": "releases/20261013-operations-archive/current-chat/Xclip-更新履歴-FxTwitter投稿一覧修正と5件検証-20261013.md",
+      "sha256": "beb52ac06b246729c6383a4864dccd450cd043b067225b3d01f4ee285f913984",
+      "bytes": 104894
+    },
+    {
+      "path": "releases/20261013-operations-archive/current-chat/Xclip-更新履歴-会話投稿対応と掲載内訳-20261013.md",
+      "sha256": "aedb61ebdf1c2f0440b1e9dc43c469dfbd7279d53e8ea2442db1a09b7ccaab99",
+      "bytes": 122833
+    },
+    {
+      "path": "releases/20261013-operations-archive/current-chat/Xclip-更新履歴-即時5件v2成功と4件保存確認-20261013.md",
+      "sha256": "da6f7e9e6d67659f634e075c3eacad5b4e71850e9ac34886f8c29139a59b23fb",
+      "bytes": 125478
+    },
+    {
+      "path": "releases/20261013-operations-archive/current-chat/Xclip-更新履歴-即時5件結果と掲載0件調査-20261013.md",
+      "sha256": "7dd314bcfcc4e4f98426dfca724c1430fca240e767f5343e52e7a0967b214d0f",
+      "bytes": 114189
+    },
+    {
+      "path": "releases/20261013-operations-archive/current-chat/Xclip-更新履歴-手動5件即時検証-20261013.md",
+      "sha256": "81ef25198305763c0f150988b7d7d5f91b7a94a58143924e279908633e4a5b2e",
+      "bytes": 109980
+    },
+    {
+      "path": "releases/20261013-operations-archive/current-chat/Xclip-更新履歴-新着500件canonical修正-v2-20261013.md",
+      "sha256": "4a9cc74ae16f287ed0d80e1a7f4a3344a10bd81e1743665a15af4801c456e000",
+      "bytes": 139352
+    },
+    {
+      "path": "releases/20261013-operations-archive/current-chat/Xclip-更新履歴-新着500件と投稿者分散-20261013.md",
+      "sha256": "d524873806e793d3c95cf6ec0c352cd81312bfcba2a0ee9583de665f371cd724",
+      "bytes": 134929
+    },
+    {
+      "path": "releases/20261013-operations-archive/current-chat/Xclip-更新履歴-新着500件更新前調査-20261013.md",
+      "sha256": "5a4fdcbf4405e61fb1a8c0622301934d323aea7d79a8a23e2a1e5babd658840a",
+      "bytes": 129177
+    },
+    {
+      "path": "releases/20261013-operations-archive/current-chat/Xclip-更新履歴-結果診断の照合修正-v2-20261013.md",
+      "sha256": "34dc7fbdfe3fa84551c5b213834da7496c803d9581e535c9279f031c4141199f",
+      "bytes": 117678
+    },
+    {
+      "path": "releases/20261013-operations-archive/current-chat/Xclip-更新照合台帳-FxTwitter巡回失敗調査-20261013.json",
+      "sha256": "e8b7d0332e2eb2d011441c00f4d9b1d96da3526e1cbe7bfb3b961ec12f95a102",
+      "bytes": 136078
+    },
+    {
+      "path": "releases/20261013-operations-archive/current-chat/Xclip-更新照合台帳-FxTwitter投稿一覧修正と5件検証-20261013.json",
+      "sha256": "e2f171a757a220aaf006aa2ab33cdee6a4681cae46008d1c1337869f00768520",
+      "bytes": 161820
+    },
+    {
+      "path": "releases/20261013-operations-archive/current-chat/Xclip-更新照合台帳-会話投稿対応と掲載内訳-20261013.json",
+      "sha256": "b7c2e5d702207dec3e72f6525a8fdb1b66cf5fc9419bc92cbd37def5a20791d7",
+      "bytes": 210825
+    },
+    {
+      "path": "releases/20261013-operations-archive/current-chat/Xclip-更新照合台帳-即時5件v2成功と4件保存確認-20261013.json",
+      "sha256": "9c4fcb4b8d4f0ee8ce12595bb788ac33de85bb2622706a2ce53336467c459c04",
+      "bytes": 219692
+    },
+    {
+      "path": "releases/20261013-operations-archive/current-chat/Xclip-更新照合台帳-即時5件結果と掲載0件調査-20261013.json",
+      "sha256": "4b48a395648056e7337daf8e338a5a99c14916b62c24379d6a31623a94b642b1",
+      "bytes": 176419
+    },
+    {
+      "path": "releases/20261013-operations-archive/current-chat/Xclip-更新照合台帳-手動5件即時検証-20261013.json",
+      "sha256": "5376a34f8177992f6ddda0ffd6d5e574eb6af95464ccbd9355e3102fd07830d7",
+      "bytes": 169252
+    },
+    {
+      "path": "releases/20261013-operations-archive/current-chat/Xclip-更新照合台帳-新着500件canonical修正-v2-20261013.json",
+      "sha256": "772c0de905f5697eecf53830592a34f17193e2d1035042e0bab5f41bc10f2149",
+      "bytes": 276526
+    },
+    {
+      "path": "releases/20261013-operations-archive/current-chat/Xclip-更新照合台帳-新着500件と投稿者分散-20261013.json",
+      "sha256": "b698641f1350e67d9952b8d48db4d398a366d3ca2cdae6f9a13716a2c2793922",
+      "bytes": 253572
+    },
+    {
+      "path": "releases/20261013-operations-archive/current-chat/Xclip-更新照合台帳-新着500件更新前調査-20261013.json",
+      "sha256": "17064e3f852e04386f8c6eb99ffc2e76ef45cc92464a5a1877b303196173fa21",
+      "bytes": 231589
+    },
+    {
+      "path": "releases/20261013-operations-archive/current-chat/Xclip-更新照合台帳-結果診断の照合修正-v2-20261013.json",
+      "sha256": "e0bc12bbb0feb16f51e9dd5cc4b8eee6e3ebe2649eb10d9d868b48f2deef8175",
+      "bytes": 183338
+    },
+    {
+      "path": "releases/20261013-operations-archive/current-chat/Xclip-結果診断v2-SHA256-20261013.txt",
+      "sha256": "1da2a6acd3118e2d80224d1109b0895639803115794020c054cecd41b9cc6c99",
+      "bytes": 508
+    },
+    {
+      "path": "releases/20261013-operations-archive/current-chat/Xclip-結果診断v2-更新一式-20261013.zip",
+      "sha256": "df52e1264ea652c9de619a1bf082a3676a29b0d8431212bfcc6e0848bc7aaffa",
+      "bytes": 79484
+    },
+    {
+      "path": "releases/20261013-operations-archive/previous-chat/xclip-availability-curated-fix-deploy-20261011.sh",
+      "sha256": "a69af93b9bced2026cacce5c105d040c4e925c71fcd60af8f1e5c5556f647deb",
+      "bytes": 52364
+    },
+    {
+      "path": "releases/20261013-operations-archive/previous-chat/xclip-availability-curated-fix-local-20261011.ps1",
+      "sha256": "3cad8fce341d700dc21ef51ba4e944f5d31a9fe85bf665a67d155ae283c0a920",
+      "bytes": 155373
+    },
+    {
+      "path": "releases/20261013-operations-archive/previous-chat/xclip-availability-curated-fix-source-20261011.zip",
+      "sha256": "1394b738a6dc937623b98afb48ed4a5e435b30e860dd104425a05c35d62e3935",
+      "bytes": 65278
+    },
+    {
+      "path": "releases/20261013-operations-archive/previous-chat/xclip-baseline-20261012.json",
+      "sha256": "7cceac3a6d011238fdaecca7ff9b733ca81486b875c6efe9c0e226680a7288c4",
+      "bytes": 8273
+    },
+    {
+      "path": "releases/20261013-operations-archive/previous-chat/xclip-db-restore-check-20261012-v2.ps1",
+      "sha256": "0ad376e3d477b1e514ca5413e090f9b6c9fe53e3a557dd63bf3622e65cafbc61",
+      "bytes": 5125
+    },
+    {
+      "path": "releases/20261013-operations-archive/previous-chat/xclip-db-restore-check-20261012-v3.ps1",
+      "sha256": "676f6bf533683b709d16f79f0a939e9c758a7d503f42cdd3874ee7637d4cac8d",
+      "bytes": 5745
+    },
+    {
+      "path": "releases/20261013-operations-archive/previous-chat/xclip-db-restore-check-20261012-v4.ps1",
+      "sha256": "f7de2d0341022e784e3e6b501e827879291a30542d69be9f1e519a737e82f1f0",
+      "bytes": 5777
+    },
+    {
+      "path": "releases/20261013-operations-archive/previous-chat/xclip-db-restore-check-20261012-v5.ps1",
+      "sha256": "3619dbbbe1dc01523b62f94e668d9ddb749eb8f552a8e1abbecae15dd1633cff",
+      "bytes": 6290
+    },
+    {
+      "path": "releases/20261013-operations-archive/previous-chat/xclip-db-restore-check-20261012.ps1",
+      "sha256": "e18e38ef331b8f6f66a5ce7874bb24a98b23eefce11b151d446539259fbf3c6b",
+      "bytes": 3771
+    },
+    {
+      "path": "releases/20261013-operations-archive/previous-chat/xclip-db-snapshot-20261012.ps1",
+      "sha256": "3d83b164a19ab1516802b9bc7f74e5c84ea577b4af5aff38925987ca1e123628",
+      "bytes": 4185
+    },
+    {
+      "path": "releases/20261013-operations-archive/previous-chat/Xclip-DBバックアップ取得記録-20261012.txt",
+      "sha256": "9445d3294681a9b0f9f737ab16acc2d28411928f28795c5bdc880ce5c88e2788",
+      "bytes": 1739
+    },
+    {
+      "path": "releases/20261013-operations-archive/previous-chat/Xclip-DBパスワード変更記録-20261012.txt",
+      "sha256": "661bc0b6b99fefbf153839e8d128f178213f230301a54c06fc3d3c889ca6d100",
+      "bytes": 1256
+    },
+    {
+      "path": "releases/20261013-operations-archive/previous-chat/Xclip-DB復元チェック-v2-修正記録-20261012.txt",
+      "sha256": "e77a139760d106ffef2f9c697c13704dd4e3b64bc94462e832e77b1829247c84",
+      "bytes": 2601
+    },
+    {
+      "path": "releases/20261013-operations-archive/previous-chat/Xclip-DB復元チェック-v3-修正記録-20261012.txt",
+      "sha256": "27b40ef4e6a0a929f0305322f2e73fa1621b66c0b96435b76026ff403ab53c8a",
+      "bytes": 2623
+    },
+    {
+      "path": "releases/20261013-operations-archive/previous-chat/Xclip-DB復元チェック-v4-修正記録-20261012.txt",
+      "sha256": "fedde01eca79cc2cc2191c3c9c2da96627a1e81544adf7a6ff3e3453e645d870",
+      "bytes": 1846
+    },
+    {
+      "path": "releases/20261013-operations-archive/previous-chat/Xclip-DB復元チェック-v5-修正記録-20261012.txt",
+      "sha256": "e09e405ab86cca2f46f602dd9c155398b72e669366b49de51a4aab25b2ebe0aa",
+      "bytes": 2166
+    },
+    {
+      "path": "releases/20261013-operations-archive/previous-chat/Xclip-DB復元チェックv2-SHA256-20261012.txt",
+      "sha256": "6550543772c0c43c4ca4d0641e5963d10baa69f4a0d67596ba47a4d7ae86fe37",
+      "bytes": 482
+    },
+    {
+      "path": "releases/20261013-operations-archive/previous-chat/Xclip-DB復元チェックv3-SHA256-20261012.txt",
+      "sha256": "80edaa9ab6b701cd61b6c6ebc23b3422b1eba31c937885e699be882ccd982f45",
+      "bytes": 482
+    },
+    {
+      "path": "releases/20261013-operations-archive/previous-chat/Xclip-DB復元チェックv4-SHA256-20261012.txt",
+      "sha256": "b9bf6603cd6e46aa97e16e84013cf436d9a012141ccf72e217d18e040775b059",
+      "bytes": 482
+    },
+    {
+      "path": "releases/20261013-operations-archive/previous-chat/Xclip-DB復元チェックv5-SHA256-20261012.txt",
+      "sha256": "f4b974ecab4cc404a4f17287c3c983c01718b26a1fe77b00226974c999b45ff1",
+      "bytes": 482
+    },
+    {
+      "path": "releases/20261013-operations-archive/previous-chat/Xclip-DB復元チェック修正版-v2-20261012.zip",
+      "sha256": "8f48a1fc24353975c4b3095eba912479551de6be413a9650f2cab60735bfb9c5",
+      "bytes": 22966
+    },
+    {
+      "path": "releases/20261013-operations-archive/previous-chat/Xclip-DB復元チェック修正版-v3-20261012.zip",
+      "sha256": "cb7002218a8d0726b0ecf2015c792f2f36f2906fc04d8e8a55561f5061a3f0f6",
+      "bytes": 24339
+    },
+    {
+      "path": "releases/20261013-operations-archive/previous-chat/Xclip-DB復元チェック修正版-v4-20261012.zip",
+      "sha256": "57039c2f54dba6afefb973125960399de671b202b5b534ab565cafdedd72e673",
+      "bytes": 24566
+    },
+    {
+      "path": "releases/20261013-operations-archive/previous-chat/Xclip-DB復元チェック修正版-v5-20261012.zip",
+      "sha256": "005209da0711089120764c04a0d25b00da9b1c753dd9cf7e578a9ee8054d8077",
+      "bytes": 25666
+    },
+    {
+      "path": "releases/20261013-operations-archive/previous-chat/Xclip-DB隔離復元成功確認-SHA256-20261012.txt",
+      "sha256": "1363cec56902021872497362ed7d423199c72dd0eaaca77ff7ac9e1d2e30261c",
+      "bytes": 509
+    },
+    {
+      "path": "releases/20261013-operations-archive/previous-chat/Xclip-DB隔離復元成功記録-20261012.txt",
+      "sha256": "f7aeb3dad22752404f36a122b9ae0e3de700d4dabf482cef46aa54c8633a7a83",
+      "bytes": 2420
+    },
+    {
+      "path": "releases/20261013-operations-archive/previous-chat/Xclip-DB隔離復元成功記録-20261012.zip",
+      "sha256": "2579841e4ff1479986f7a768575539ef26a84daa82d1ea47990fdba2d0a7f2db",
+      "bytes": 29490
+    },
+    {
+      "path": "releases/20261013-operations-archive/previous-chat/xclip-fx-patrol-deploy-20261012.sh",
+      "sha256": "6e262a7905a71bae9a09a9aacb99bc5a630e3b825799bea925014f6189433d08",
+      "bytes": 143348
+    },
+    {
+      "path": "releases/20261013-operations-archive/previous-chat/xclip-fx-patrol-local-20261012.ps1",
+      "sha256": "bc0b10d6c2b64663ba8dfd27b0d9fa8fc9bbc20eb42b142ca5e726bdbdff889c",
+      "bytes": 492740
+    },
+    {
+      "path": "releases/20261013-operations-archive/previous-chat/xclip-fx-patrol-source-20261012.zip",
+      "sha256": "ed5ef4f603ce8096ddf25658120eecd14c61eb46676835697de6cc065bd43969",
+      "bytes": 221654
+    },
+    {
+      "path": "releases/20261013-operations-archive/previous-chat/Xclip-FxTwitter切替適用報告と巡回確認待ち-SHA256-20261012.txt",
+      "sha256": "5f99f3eaac0260c70df7ff3a6e02bcf63b83580a49a9678778295c06f9923b98",
+      "bytes": 440
+    },
+    {
+      "path": "releases/20261013-operations-archive/previous-chat/Xclip-FxTwitter新着巡回へ一時切替-SHA256-20261012.txt",
+      "sha256": "a8f2b577603ea5070e3854ea4bbf978c0cbe409fe5724b9b594f42240011c54e",
+      "bytes": 859
+    },
+    {
+      "path": "releases/20261013-operations-archive/previous-chat/Xclip-FxTwitter新着巡回へ一時切替-実行手順-20261012.txt",
+      "sha256": "b1e811a05c5ed8f67a223f27d93747ad1a24cdbe31248a8a21d7d4dc099da3b4",
+      "bytes": 1204
+    },
+    {
+      "path": "releases/20261013-operations-archive/previous-chat/Xclip-FxTwitter新着巡回へ一時切替-更新一式-20261012.zip",
+      "sha256": "5b4dcac6d982b481e9719c71259c0dea61c555f12b6576a9754856657a6642a4",
+      "bytes": 536788
+    },
+    {
+      "path": "releases/20261013-operations-archive/previous-chat/Xclip-Git記録とXAPI検証-20261011.zip",
+      "sha256": "4f9d06e450a1193521edf5e2a92720df82bf74c3a02f0a96ebe2e6a01a7ab110",
+      "bytes": 27228
+    },
+    {
+      "path": "releases/20261013-operations-archive/previous-chat/Xclip-Git記録結果-20261011.txt",
+      "sha256": "83c5dbdd8a370d9cdb3a5331b87f654ec6a9a0882e75bca8565f153d5d2fd082",
+      "bytes": 2542
+    },
+    {
+      "path": "releases/20261013-operations-archive/previous-chat/xclip-hybrid-xapi24-deploy-20261011.sh",
+      "sha256": "03755ddd5c2e4220d385662e69de90bc66f6f38a1e9b7b80a194d1f1787a59bf",
+      "bytes": 78822
+    },
+    {
+      "path": "releases/20261013-operations-archive/previous-chat/xclip-hybrid-xapi24-local-20261011.ps1",
+      "sha256": "cf7e23b7e9df40f232fc696cbf79342db6129316ef7e3d2150e44aa9b2f3ea0e",
+      "bytes": 313814
+    },
+    {
+      "path": "releases/20261013-operations-archive/previous-chat/xclip-hybrid-xapi24-source-20261011.zip",
+      "sha256": "30aa888afb775153ad53a451e06d62afccb66c54f2a1717ff84422421919fb72",
+      "bytes": 125394
+    },
+    {
+      "path": "releases/20261013-operations-archive/previous-chat/xclip-local-snapshot-20261012.ps1",
+      "sha256": "5a16c41f54186e7f4efeec562916bde36f372cd4de40b1f95545784c1ab6c252",
+      "bytes": 1425
+    },
+    {
+      "path": "releases/20261013-operations-archive/previous-chat/xclip-patrol-continue-jitter-deploy-20261012-v2.sh",
+      "sha256": "680f8e32020816b685a4a968978a04651bce1ac91566a7acb778d5bee415b762",
+      "bytes": 121958
+    },
+    {
+      "path": "releases/20261013-operations-archive/previous-chat/xclip-patrol-continue-jitter-deploy-20261012-v3.sh",
+      "sha256": "848d61d97b09aa498ec580979e1ad37c7ba8a1c3ae971173e406b6d84b19d5b9",
+      "bytes": 124305
+    },
+    {
+      "path": "releases/20261013-operations-archive/previous-chat/xclip-patrol-continue-jitter-deploy-20261012.sh",
+      "sha256": "4fa8d3dcf000068a49a49e800ac91835fd2549f4e33bef96714d037e4bbb3b2d",
+      "bytes": 119978
+    },
+    {
+      "path": "releases/20261013-operations-archive/previous-chat/xclip-patrol-continue-jitter-local-20261012-v2.ps1",
+      "sha256": "fe2546bb2667151acaf3f81232f68d24d2ba0523e07a82468500f664caab2831",
+      "bytes": 357614
+    },
+    {
+      "path": "releases/20261013-operations-archive/previous-chat/xclip-patrol-continue-jitter-local-20261012-v3.ps1",
+      "sha256": "77d3b3175221602e3c58c0f6d01655c2cec6375f46441ea16e617239138cd3d6",
+      "bytes": 389386
+    },
+    {
+      "path": "releases/20261013-operations-archive/previous-chat/xclip-patrol-continue-jitter-local-20261012.ps1",
+      "sha256": "e81aa538a9eacaf4e5c2355f67304f2972a36cbbd23a58b0c45d0417e252f21f",
+      "bytes": 327286
+    },
+    {
+      "path": "releases/20261013-operations-archive/previous-chat/xclip-patrol-continue-jitter-source-20261012-v2.zip",
+      "sha256": "fff9e6c49688de491439e7aef4683559a535c807e14d6ba02e6657c7089c4ac9",
+      "bytes": 181210
+    },
+    {
+      "path": "releases/20261013-operations-archive/previous-chat/xclip-patrol-continue-jitter-source-20261012-v3.zip",
+      "sha256": "d0c5eab0ed7a6d6a1e8d4dd5543fe498e6d049101a71e06ec7b773a39dfb528c",
+      "bytes": 185967
+    },
+    {
+      "path": "releases/20261013-operations-archive/previous-chat/xclip-patrol-continue-jitter-source-20261012.zip",
+      "sha256": "ba0df0adf0df55dacb55ac60a01645ffbd5fa819dacb0461309d066b0e5c1f10",
+      "bytes": 177167
+    },
+    {
+      "path": "releases/20261013-operations-archive/previous-chat/xclip-server-snapshot-20261012.sh",
+      "sha256": "68039f5276c1f5f762989121d02dd4194cf80acc839ef27b536cf318b6fe4189",
+      "bytes": 1903
+    },
+    {
+      "path": "releases/20261013-operations-archive/previous-chat/xclip-unified-authors-deploy-20261011.sh",
+      "sha256": "de32812668dba8c51897208a2bce766858bd4ac1a1681a6c9694a05506d21967",
+      "bytes": 101785
+    },
+    {
+      "path": "releases/20261013-operations-archive/previous-chat/xclip-unified-authors-local-20261011.ps1",
+      "sha256": "f1aab333260f8b9a31275ce4bab7ee2c9e2474343a8336e97bb145fff520be2f",
+      "bytes": 401076
+    },
+    {
+      "path": "releases/20261013-operations-archive/previous-chat/xclip-unified-authors-source-20261011.zip",
+      "sha256": "db23be95312024cdb716eed0d5ac530179e6d2dc7b399fc7e2410e62b2327b3e",
+      "bytes": 160916
+    },
+    {
+      "path": "releases/20261013-operations-archive/previous-chat/xclip-xapi-auth-diagnose-20261012.sh",
+      "sha256": "d55e0c45f686bdc96c423d83a264eb038090c4d0c9cea6ee68faf18ee5fd20f5",
+      "bytes": 6299
+    },
+    {
+      "path": "releases/20261013-operations-archive/previous-chat/xclip-xapi-token-update-20261012.sh",
+      "sha256": "1f3dcd7e3f4b2d0700ecb6f76bc9feb0f0dc1a112fd078c6315d3264b38c7bf0",
+      "bytes": 13801
+    },
+    {
+      "path": "releases/20261013-operations-archive/previous-chat/Xclip-XAPI401診断-SHA256-20261012.txt",
+      "sha256": "178ec54ff406af3f71da5a7102eb3f09e156e838c74b1bb60a58466ce32a736d",
+      "bytes": 449
+    },
+    {
+      "path": "releases/20261013-operations-archive/previous-chat/Xclip-XAPI401診断-実行手順-20261012.txt",
+      "sha256": "b7f6e87aefff48f03a648349f2c1aa8208fee86df2295b747d56a1b29ed1689f",
+      "bytes": 576
+    },
+    {
+      "path": "releases/20261013-operations-archive/previous-chat/Xclip-XAPI401診断一式-20261012.zip",
+      "sha256": "0b1963610b80b31528e8cfb278b1c6a7aff700e38dc1971259f42ef93b3905aa",
+      "bytes": 47013
+    },
+    {
+      "path": "releases/20261013-operations-archive/previous-chat/Xclip-XAPIトークン更新-SHA256-20261012.txt",
+      "sha256": "6942d08dd4884434ce028f55555ba293972a50bfa77d1d21367c424ed30c6676",
+      "bytes": 529
+    },
+    {
+      "path": "releases/20261013-operations-archive/previous-chat/Xclip-XAPIトークン更新-実行手順-20261012.txt",
+      "sha256": "044b996113a5f9cbb393e3d805c0c27e71984ada9d8d37290b10fc337116d5e9",
+      "bytes": 1059
+    },
+    {
+      "path": "releases/20261013-operations-archive/previous-chat/Xclip-XAPIトークン更新一式-20261012.zip",
+      "sha256": "f2f9ce35f371077121b382a0cda190a0b6a3100eb1d75c6c21a1c503d714923a",
+      "bytes": 52963
+    },
+    {
+      "path": "releases/20261013-operations-archive/previous-chat/Xclip-XAPI巡回切替の検証-20261011.txt",
+      "sha256": "4496786a33a002215739d5fa1a6bf5372eb2f0ddd0f8fac4af81559e4ec6dea1",
+      "bytes": 6765
+    },
+    {
+      "path": "releases/20261013-operations-archive/previous-chat/Xclip-ハイブリッド巡回-SHA256-20261011.txt",
+      "sha256": "7e66d3295c1783961ddc3736a15162b17b2a5322d31e70b2a041271bbdbee972",
+      "bytes": 697
+    },
+    {
+      "path": "releases/20261013-operations-archive/previous-chat/Xclip-ハイブリッド巡回-実行手順-20261011.txt",
+      "sha256": "6f8a839509794b2a0cc321b31f6f236f3e251735cb333762919fb8321b2cfe4c",
+      "bytes": 4601
+    },
+    {
+      "path": "releases/20261013-operations-archive/previous-chat/Xclip-ハイブリッド巡回-更新一式-20261011.zip",
+      "sha256": "8c441e8c4368fd305b013b636989ca05bfb17837e8f94bd845f0d4acd054647a",
+      "bytes": 309784
+    },
+    {
+      "path": "releases/20261013-operations-archive/previous-chat/Xclip-ハイブリッド巡回-本番反映記録-20261011.zip",
+      "sha256": "b6383308208a48b129e878599acc7c9618e11778461eb8c71b4d1538e3de4d30",
+      "bytes": 32790
+    },
+    {
+      "path": "releases/20261013-operations-archive/previous-chat/Xclip-バックアップ準備-SHA256-20261012.txt",
+      "sha256": "75472bcbd32a495fbf317a53d8b02a2d5dee9d74fd7e0d32b8df0366d3528b80",
+      "bytes": 1219
+    },
+    {
+      "path": "releases/20261013-operations-archive/previous-chat/Xclip-ファイルバックアップ確認記録-20261012.txt",
+      "sha256": "cbbf2a647804a8c619383044eef882d8db7a86bfccab8953aa60e61ef3a10519",
+      "bytes": 2159
+    },
+    {
+      "path": "releases/20261013-operations-archive/previous-chat/Xclip-ファイルバックアップ確認記録-20261012.zip",
+      "sha256": "605b06c94be498f46cc233b37ad44fa7b52bf1acc0dd8925d039a50556ec5ec3",
+      "bytes": 30208
+    },
+    {
+      "path": "releases/20261013-operations-archive/previous-chat/Xclip-共通管理-SHA256-20261011.txt",
+      "sha256": "778b5874799809fc9f9a4133289454efb706a221b40a3db0491a7b333b2536b2",
+      "bytes": 667
+    },
+    {
+      "path": "releases/20261013-operations-archive/previous-chat/Xclip-共通管理-実行手順-20261011.txt",
+      "sha256": "31fb15bf1443f09b6bcbb8763abedc97c707f50871fe58b4f10ccaccb0f2e292",
+      "bytes": 4879
+    },
+    {
+      "path": "releases/20261013-operations-archive/previous-chat/Xclip-共通管理-更新一式-20261011.zip",
+      "sha256": "0d6e3345a843e8b53db06c7337d047b83ab93db4e68be4bfd9c7d9164152391c",
+      "bytes": 396754
+    },
+    {
+      "path": "releases/20261013-operations-archive/previous-chat/Xclip-巡回継続と監視分散-SHA256-20261012.txt",
+      "sha256": "47ea7b11415b54cccde84bb63e01e3a5548f76b4984f3bdec07b511761f5a6a7",
+      "bytes": 733
+    },
+    {
+      "path": "releases/20261013-operations-archive/previous-chat/Xclip-巡回継続と監視分散-v2-SHA256-20261012.txt",
+      "sha256": "b9e6bbadbd13d0952ffe19f765dfbc7e3b1968cfaa9b89788412284f66c0b3b4",
+      "bytes": 751
+    },
+    {
+      "path": "releases/20261013-operations-archive/previous-chat/Xclip-巡回継続と監視分散-v2-実行手順-20261012.txt",
+      "sha256": "0fdbf9735f99826d321eac2952e4c6a5043b99547efd4cdfbe1e7914886eafa4",
+      "bytes": 807
+    },
+    {
+      "path": "releases/20261013-operations-archive/previous-chat/Xclip-巡回継続と監視分散-v2-更新一式-20261012.zip",
+      "sha256": "19e72af671a689f6bb2ae63de059e90b6c30efd4fa22946b5434dd4a15247060",
+      "bytes": 426107
+    },
+    {
+      "path": "releases/20261013-operations-archive/previous-chat/Xclip-巡回継続と監視分散-v3-SHA256-20261012.txt",
+      "sha256": "ecb6b6ab1e13907fe3fb31c9644b7550d5b36a909b800a211cb216e9641ef94e",
+      "bytes": 751
+    },
+    {
+      "path": "releases/20261013-operations-archive/previous-chat/Xclip-巡回継続と監視分散-v3-実行手順-20261012.txt",
+      "sha256": "4c81a54c5957937e9654a5f1ff47594c56b4c20f8bccc024fee5f5d307e0cf90",
+      "bytes": 789
+    },
+    {
+      "path": "releases/20261013-operations-archive/previous-chat/Xclip-巡回継続と監視分散-v3-更新一式-20261012.zip",
+      "sha256": "d57e8f302b1d48cf4b97acf73f6afb2d96e82e40b4552a75e8f25fd7e6e5c3e9",
+      "bytes": 441733
+    },
+    {
+      "path": "releases/20261013-operations-archive/previous-chat/Xclip-巡回継続と監視分散-実行手順-20261012.txt",
+      "sha256": "f379395db2803c70ccebf2e14cfaf08e34da2a0012dec35d079475eedb8cb56c",
+      "bytes": 1246
+    },
+    {
+      "path": "releases/20261013-operations-archive/previous-chat/Xclip-巡回継続と監視分散-更新一式-20261012.zip",
+      "sha256": "2ab801e5fbf919e8d8404c558290bb8054b5168a45bf1410d8bd88bd6b558d6c",
+      "bytes": 409576
+    },
+    {
+      "path": "releases/20261013-operations-archive/previous-chat/Xclip-新着掲載条件の調査記録-20261011.txt",
+      "sha256": "3c9a05c3564c7f55796f0d4937ba1c92707f2197af92c9669800c338c6e07f99",
+      "bytes": 2133
+    },
+    {
+      "path": "releases/20261013-operations-archive/previous-chat/Xclip-更新一式-20261011.zip",
+      "sha256": "8a49f5277e27d1135151e2ff941f9d40d8f91e97d93ca938824ac85cae271100",
+      "bytes": 181140
+    },
+    {
+      "path": "releases/20261013-operations-archive/previous-chat/Xclip-更新前精査とチャット引き継ぎルール-20261012.txt",
+      "sha256": "d850ec699b084607c4d75ecd96ddb7e36b1648b561dc5d6adf70fb8585e16c79",
+      "bytes": 7144
+    },
+    {
+      "path": "releases/20261013-operations-archive/previous-chat/Xclip-更新履歴-DBバックアップ取得確認-20261012.md",
+      "sha256": "f67eed034a787d5cfa47980ba9736794b2b58008e05b9529df05563424642b0d",
+      "bytes": 40121
+    },
+    {
+      "path": "releases/20261013-operations-archive/previous-chat/Xclip-更新履歴-DBパスワード変更記録-20261012.md",
+      "sha256": "330d39057e8cc30f1dcaaf18a6501faa73a83c9cf176808ffbcb2deec344114d",
+      "bytes": 38327
+    },
+    {
+      "path": "releases/20261013-operations-archive/previous-chat/Xclip-更新履歴-DB復元チェックv2-20261012.md",
+      "sha256": "a14954821fb7ed37f0ae6dd85baab5f09aade221ac553780366756053a7a9291",
+      "bytes": 42773
+    },
+    {
+      "path": "releases/20261013-operations-archive/previous-chat/Xclip-更新履歴-DB復元チェックv3-20261012.md",
+      "sha256": "f6078fe1544d452acf1a9b7324c18b0eb515715491e00a369542fa803f93f0f8",
+      "bytes": 45447
+    },
+    {
+      "path": "releases/20261013-operations-archive/previous-chat/Xclip-更新履歴-DB復元チェックv4-20261012.md",
+      "sha256": "b9f81bea42fc94d1ff2b07f3f97f41aa3f141a03b7d76fc52ce7e93c4c551f22",
+      "bytes": 47344
+    },
+    {
+      "path": "releases/20261013-operations-archive/previous-chat/Xclip-更新履歴-DB復元チェックv5-20261012.md",
+      "sha256": "62bf00ecfd0cbf73b8dc07ec48f1c1c93dfecd7210858e50e1bcedc98c7c1ac1",
+      "bytes": 49561
+    },
+    {
+      "path": "releases/20261013-operations-archive/previous-chat/Xclip-更新履歴-DB隔離復元成功確認-20261012.md",
+      "sha256": "660b1722c86872782088717fd43979549145bde39b974ccbaf4528948a732533",
+      "bytes": 52101
+    },
+    {
+      "path": "releases/20261013-operations-archive/previous-chat/Xclip-更新履歴-FxTwitter切替適用報告と巡回確認待ち-20261012.md",
+      "sha256": "47a77cd0615543a8dbf710ba5ee4bfc590a3212c72a1f873aa0e653c82b0a9ca",
+      "bytes": 94370
+    },
+    {
+      "path": "releases/20261013-operations-archive/previous-chat/Xclip-更新履歴-FxTwitter新着巡回へ一時切替-20261012.md",
+      "sha256": "50460328a27fe12e187d5409db896b985ec93dcf797142337b12a546b29be2b1",
+      "bytes": 92486
+    },
+    {
+      "path": "releases/20261013-operations-archive/previous-chat/Xclip-更新履歴-Git記録版-20261011.md",
+      "sha256": "e60dc8177a19517648c0e0d0e79a179aec502707ee36db9203494986642b3ac3",
+      "bytes": 13367
+    },
+    {
+      "path": "releases/20261013-operations-archive/previous-chat/Xclip-更新履歴-XAPI401本番設定照合確認-20261012.md",
+      "sha256": "28a9ec8e43f2b268b1d26207bf741895ecd742813230c731921f27dddc62abdc",
+      "bytes": 81016
+    },
+    {
+      "path": "releases/20261013-operations-archive/previous-chat/Xclip-更新履歴-XAPI401調査-20261012.md",
+      "sha256": "13f73791287948baa6229fe3eaf3e7a47baf21d76c8c6c3a55d93a886b4cfcb2",
+      "bytes": 79062
+    },
+    {
+      "path": "releases/20261013-operations-archive/previous-chat/Xclip-更新履歴-XAPI認証拒否確認とトークン更新準備-20261012.md",
+      "sha256": "a9a065a12223b8b703aca3ed34672483ce024e4ace34fa26dd330f96fbf88d07",
+      "bytes": 85081
+    },
+    {
+      "path": "releases/20261013-operations-archive/previous-chat/Xclip-更新履歴-ハイブリッド巡回-20261011.md",
+      "sha256": "6e5d91df7a299be463fae837f31cebdff47036d431f81f0f770e23f95412a6d0",
+      "bytes": 19149
+    },
+    {
+      "path": "releases/20261013-operations-archive/previous-chat/Xclip-更新履歴-ハイブリッド巡回-本番反映確認版-20261011.md",
+      "sha256": "0f72b6a7c86b5b590ccfa45d78e06be2e4ee69c1c498c78de44f16b350fbda4c",
+      "bytes": 20996
+    },
+    {
+      "path": "releases/20261013-operations-archive/previous-chat/Xclip-更新履歴-バックアップ準備-20261012.md",
+      "sha256": "62f4cbbde669d9b793a658dec352e144c88e2dfa9a72f7b3595ca4b33eaf72c4",
+      "bytes": 37016
+    },
+    {
+      "path": "releases/20261013-operations-archive/previous-chat/Xclip-更新履歴-ファイルバックアップ確認-20261012.md",
+      "sha256": "656ad815c3c464d8838bf3760c20e2becda062ef133ccd1f2f50fade5a4a0f72",
+      "bytes": 54383
+    },
+    {
+      "path": "releases/20261013-operations-archive/previous-chat/Xclip-更新履歴-共通管理-20261011.md",
+      "sha256": "c862f60202203f71fa07efeb8ee95e04d6518e9bee028bf9b58509ed1559ece9",
+      "bytes": 28658
+    },
+    {
+      "path": "releases/20261013-operations-archive/previous-chat/Xclip-更新履歴-巡回v3ローカル適用確認-20261012.md",
+      "sha256": "738e37b57851551c996e04dd4c099d989c823316c079b40821f45e39af79fbce",
+      "bytes": 73177
+    },
+    {
+      "path": "releases/20261013-operations-archive/previous-chat/Xclip-更新履歴-巡回v3本番ローカル適用確認-20261012.md",
+      "sha256": "e30d98349c48404a8ad9de16a673e23e7aaa706b123aba1b3034687c4c9b2f78",
+      "bytes": 75429
+    },
+    {
+      "path": "releases/20261013-operations-archive/previous-chat/Xclip-更新履歴-巡回継続と監視分散-20261012.md",
+      "sha256": "d910902b82492b97f58eebfe4f0811ec5141ed79de457a8b1240dfa0e63c6233",
+      "bytes": 63490
+    },
+    {
+      "path": "releases/20261013-operations-archive/previous-chat/Xclip-更新履歴-巡回継続と監視分散-v2-20261012.md",
+      "sha256": "2811f8d15f247371bf41ceb571a644a5fad733005e01b178696d677cbe8d4a06",
+      "bytes": 66651
+    },
+    {
+      "path": "releases/20261013-operations-archive/previous-chat/Xclip-更新履歴-巡回継続と監視分散-v3-20261012.md",
+      "sha256": "78b630dec4d409e23425ec42c99cf6d1d327e05abc19515337df1ac904dbbebb",
+      "bytes": 70026
+    },
+    {
+      "path": "releases/20261013-operations-archive/previous-chat/Xclip-更新履歴-更新前精査ルール追加-20261012.md",
+      "sha256": "d2cd51c46c5df9f25a16835bbaf1aad60d2463b48892236ed41b170c19453385",
+      "bytes": 71303
+    },
+    {
+      "path": "releases/20261013-operations-archive/previous-chat/Xclip-更新履歴-現行版保護完了-20261012.md",
+      "sha256": "01a975b5892f3b4de0657678ac8378d364c8ef4389172bc928b718dcf4e021b8",
+      "bytes": 56936
+    },
+    {
+      "path": "releases/20261013-operations-archive/previous-chat/Xclip-更新履歴-運営計画版-20261011.md",
+      "sha256": "7e5f3d75cbedaf46fb1879578a7ccb59b77847f3a5a0940048bcec5ee8baff77",
+      "bytes": 29886
+    },
+    {
+      "path": "releases/20261013-operations-archive/previous-chat/Xclip-更新履歴-運営計画版-20261012.md",
+      "sha256": "3b4dd508fb5658f8abd6b8049a233242b45b36d48cd2b784d6d63ad93b04c911",
+      "bytes": 30547
+    },
+    {
+      "path": "releases/20261013-operations-archive/previous-chat/Xclip-更新履歴.md",
+      "sha256": "ce69a4fe247758fe3fa221461ce964fdf0d9b4365ccdb7a4b1eb369e546fe056",
+      "bytes": 11221
+    },
+    {
+      "path": "releases/20261013-operations-archive/previous-chat/Xclip-更新手順-20261011.md",
+      "sha256": "c76fe8dc5c08473ad2ed531777bf203f510382c7c92f71c837ac82c24c9cef16",
+      "bytes": 7137
+    },
+    {
+      "path": "releases/20261013-operations-archive/previous-chat/Xclip-更新照合台帳-DBバックアップ取得確認-20261012.json",
+      "sha256": "36be4e9ec718c2d198f1639c37ece468a8e783f1e88c37b59bec57695b54a539",
+      "bytes": 4405
+    },
+    {
+      "path": "releases/20261013-operations-archive/previous-chat/Xclip-更新照合台帳-DBパスワード変更記録-20261012.json",
+      "sha256": "b72c141385275949d4bf8070a45e9425243b0ca5ae818ab71f3b529499dc2ff8",
+      "bytes": 3558
+    },
+    {
+      "path": "releases/20261013-operations-archive/previous-chat/Xclip-更新照合台帳-DB復元チェックv2-20261012.json",
+      "sha256": "d57fb9b2c19509ca0e5cfcbc41ce21f0eec21e0827c03f31780d7c8448f302a3",
+      "bytes": 4973
+    },
+    {
+      "path": "releases/20261013-operations-archive/previous-chat/Xclip-更新照合台帳-DB復元チェックv3-20261012.json",
+      "sha256": "100a419aa4b0e63ab4e3b3ef2cf40fbe7237b5c4b814f2cab14ad462b3be1926",
+      "bytes": 5656
+    },
+    {
+      "path": "releases/20261013-operations-archive/previous-chat/Xclip-更新照合台帳-DB復元チェックv4-20261012.json",
+      "sha256": "a746ecf14e5a315420d7e6418a8055c9e3ed1d545c96aa114a8f44209e83a7e2",
+      "bytes": 6305
+    },
+    {
+      "path": "releases/20261013-operations-archive/previous-chat/Xclip-更新照合台帳-DB復元チェックv5-20261012.json",
+      "sha256": "43c7311bdc49beb0784afa6d9071feef346d065e9e749888204046959d57b4a0",
+      "bytes": 6867
+    },
+    {
+      "path": "releases/20261013-operations-archive/previous-chat/Xclip-更新照合台帳-DB隔離復元成功確認-20261012.json",
+      "sha256": "548afdc02e6f0b1d50c4e2cc6d7fab8101e59270d97b664c3a3f5ef8efa551a7",
+      "bytes": 7455
+    },
+    {
+      "path": "releases/20261013-operations-archive/previous-chat/Xclip-更新照合台帳-FxTwitter切替適用報告と巡回確認待ち-20261012.json",
+      "sha256": "3ebfd88a4f33b5ea2a3913e45debd311c84183c4aa3502e0775b7c2d49383e64",
+      "bytes": 129989
+    },
+    {
+      "path": "releases/20261013-operations-archive/previous-chat/Xclip-更新照合台帳-FxTwitter新着巡回へ一時切替-20261012.json",
+      "sha256": "a5ba1c6db018ff4b933240a1979fb26fbaedef45b04c9faffa594631a251319d",
+      "bytes": 124307
+    },
+    {
+      "path": "releases/20261013-operations-archive/previous-chat/Xclip-更新照合台帳-Git記録版-20261011.json",
+      "sha256": "6fa4f3bcd09befb9bd04817027f15b23c7bf0f48240abf78897913f659b74c77",
+      "bytes": 65836
+    },
+    {
+      "path": "releases/20261013-operations-archive/previous-chat/Xclip-更新照合台帳-XAPI401本番設定照合確認-20261012.json",
+      "sha256": "3e42edf9906302478f3f6ea24b858438f4c8ca04a1a3239b11f14fca826ed1b6",
+      "bytes": 94709
+    },
+    {
+      "path": "releases/20261013-operations-archive/previous-chat/Xclip-更新照合台帳-XAPI401調査-20261012.json",
+      "sha256": "1caa6eb583c9703895ca6f079477246d3439d86a3288984437ab0c569fbcdf21",
+      "bytes": 89485
+    },
+    {
+      "path": "releases/20261013-operations-archive/previous-chat/Xclip-更新照合台帳-XAPI認証拒否確認とトークン更新準備-20261012.json",
+      "sha256": "80dac28a6d8c34bf8abb35375337d5bbca4d4aa271d23a433a56f100ba370eac",
+      "bytes": 99515
+    },
+    {
+      "path": "releases/20261013-operations-archive/previous-chat/Xclip-更新照合台帳-ハイブリッド巡回-20261011.json",
+      "sha256": "3f4e77f7312f6408f6c5ab2e14a80fa1390901743a4df60ea5e967a51195575f",
+      "bytes": 85730
+    },
+    {
+      "path": "releases/20261013-operations-archive/previous-chat/Xclip-更新照合台帳-ハイブリッド巡回-本番反映確認版-20261011.json",
+      "sha256": "c79651865bac663c3c18bbf193a8a9e60ac58c900df67e519780bde0804a1745",
+      "bytes": 87039
+    },
+    {
+      "path": "releases/20261013-operations-archive/previous-chat/Xclip-更新照合台帳-バックアップ準備-20261012.json",
+      "sha256": "a7434ead80d1c608948af076756fd3be5347e5c1a150f8cce5b1d51e1ae17cd2",
+      "bytes": 2698
+    },
+    {
+      "path": "releases/20261013-operations-archive/previous-chat/Xclip-更新照合台帳-ファイルバックアップ確認-20261012.json",
+      "sha256": "8887ae3e8d536014253566acf99cf7839b2407cb57d1f46df65280781fab6f88",
+      "bytes": 8859
+    },
+    {
+      "path": "releases/20261013-operations-archive/previous-chat/Xclip-更新照合台帳-共通管理-20261011.json",
+      "sha256": "a803ab96f3bc4206f95f1eab64b566ad080f147c1e0990047a2a3df9aa151476",
+      "bytes": 117418
+    },
+    {
+      "path": "releases/20261013-operations-archive/previous-chat/Xclip-更新照合台帳-巡回v3ローカル適用確認-20261012.json",
+      "sha256": "7dd510ad8fb8dc6deac4c725af22534314cf0150ad6cfabf84f5db77e773152a",
+      "bytes": 79689
+    },
+    {
+      "path": "releases/20261013-operations-archive/previous-chat/Xclip-更新照合台帳-巡回v3本番ローカル適用確認-20261012.json",
+      "sha256": "d001513d7164050e370479174a6522ba87bc2e4302cbf30e3db3f43a12937056",
+      "bytes": 84163
+    },
+    {
+      "path": "releases/20261013-operations-archive/previous-chat/Xclip-更新照合台帳-巡回継続と監視分散-20261012.json",
+      "sha256": "9e0db0aa79c185bf37f81364daa81f3efaf3df218ae1537e7eec59c840fa4bf8",
+      "bytes": 33284
+    },
+    {
+      "path": "releases/20261013-operations-archive/previous-chat/Xclip-更新照合台帳-巡回継続と監視分散-v2-20261012.json",
+      "sha256": "e8b14065d3af2e51035efecb0c113f5f4decb05d219d3e59594dde7244123423",
+      "bytes": 51965
+    },
+    {
+      "path": "releases/20261013-operations-archive/previous-chat/Xclip-更新照合台帳-巡回継続と監視分散-v3-20261012.json",
+      "sha256": "9afb06991ddbaa0f11b401d271bc0e8878b74fddd32973e7de5a1c79032817bb",
+      "bytes": 71514
+    },
+    {
+      "path": "releases/20261013-operations-archive/previous-chat/Xclip-更新照合台帳-更新前精査ルール追加-20261012.json",
+      "sha256": "4b08e3b3970137369bab1f479e9673b4a8eccd9f789770663daba31c3e9f98e9",
+      "bytes": 75445
+    },
+    {
+      "path": "releases/20261013-operations-archive/previous-chat/Xclip-更新照合台帳-現行版保護完了-20261012.json",
+      "sha256": "627f36fdaca7fb70e568ff859397899097d9400808a13df6d9f2cece5570d981",
+      "bytes": 10102
+    },
+    {
+      "path": "releases/20261013-operations-archive/previous-chat/Xclip-更新照合台帳-運営計画版-20261011.json",
+      "sha256": "f267ddf43858fdfb6f14c793e6ef52b3f446421401984a74a46c492c99f18996",
+      "bytes": 129500
+    },
+    {
+      "path": "releases/20261013-operations-archive/previous-chat/Xclip-更新照合台帳-運営計画版-20261012.json",
+      "sha256": "a21fd061545aa7d5f2f3133cea1f7e679bda6677df001a6d07946c6effbcf2fb",
+      "bytes": 129925
+    },
+    {
+      "path": "releases/20261013-operations-archive/previous-chat/Xclip-更新照合台帳.json",
+      "sha256": "96a2a430750bac39bd738699e8519ef15c18dbb7dc908859848d22c28a35a15c",
+      "bytes": 62009
+    },
+    {
+      "path": "releases/20261013-operations-archive/previous-chat/Xclip-本番反映記録-ハイブリッド巡回-20261011.txt",
+      "sha256": "e004eb1135d5fef446cd545b962e27c798f86a744c62e4f9364631e65e9a68e1",
+      "bytes": 1642
+    },
+    {
+      "path": "releases/20261013-operations-archive/previous-chat/Xclip-現行版保護とバックアップ-20261012.zip",
+      "sha256": "f5c3ade278e13bfc16927072fa323de207e4a173b1da842f6f7908c6f4c97a07",
+      "bytes": 40334
+    },
+    {
+      "path": "releases/20261013-operations-archive/previous-chat/Xclip-現行版保護とバックアップ-実行手順-20261012.txt",
+      "sha256": "b3b4cecc9b2484eaa2438153717c972f7ffb8d19ec3bce834515d70c02167cab",
+      "bytes": 6337
+    },
+    {
+      "path": "releases/20261013-operations-archive/previous-chat/Xclip-現行版保護完了記録-20261012.txt",
+      "sha256": "35b5cac94329438b9ebd73dc7c44f20377b2738ba127f904eed4b3fa8f150404",
+      "bytes": 2445
+    },
+    {
+      "path": "releases/20261013-operations-archive/previous-chat/Xclip-現行版保護完了記録-20261012.zip",
+      "sha256": "56cd3a46540e994ae82b501958d86083f9e98c865c82bf1c0211e2459a5aacfa",
+      "bytes": 31252
+    },
+    {
+      "path": "releases/20261013-operations-archive/previous-chat/Xclip-運営タスク一覧-20261011.md",
+      "sha256": "b93e2438369797c11f8086fec120f3abb6e92978d5af6e81512c4f7a4914ecfe",
+      "bytes": 21672
+    },
+    {
+      "path": "releases/20261013-operations-archive/previous-chat/Xclip-運営タスク一覧-20261011.txt",
+      "sha256": "f42613a4aa04a0f28cb950085ced71bcdd34dbd22a7d2f84d90cf0edd2c75051",
+      "bytes": 14738
+    },
+    {
+      "path": "releases/20261013-operations-archive/previous-chat/Xclip-運営タスク一覧-20261012.md",
+      "sha256": "86b5520a67f9e6cc9576d34bca7e37bfb9c504b9b7a69ac656e7fd7f8141a789",
+      "bytes": 21649
+    },
+    {
+      "path": "releases/20261013-operations-archive/previous-chat/Xclip-運営タスク一覧-20261012.txt",
+      "sha256": "1130538c4c6545f1d0853a0ee5b7df7c94fd2182493f2f8f02efd5bcfcdfe69e",
+      "bytes": 15416
+    },
+    {
+      "path": "releases/20261013-operations-archive/previous-chat/Xclip-運営計画-SHA256-20261011.txt",
+      "sha256": "15d15912d555acf1f4b31af692e0cf86afe8d8872a1a39db9ca8809b8430c43f",
+      "bytes": 562
+    },
+    {
+      "path": "releases/20261013-operations-archive/previous-chat/Xclip-運営計画-SHA256-20261012.txt",
+      "sha256": "9ad0be6cbbea1b8a453176f8be263b54fa6a529b4677ff81bf98960f023808c0",
+      "bytes": 562
+    },
+    {
+      "path": "releases/20261013-operations-archive/previous-chat/Xclip-運営計画一式-20261011.zip",
+      "sha256": "c0ab22fe03726e46b782f086ef9a2b4c3a1c2a9decdd67a9bc049ba47583b075",
+      "bytes": 59672
+    },
+    {
+      "path": "releases/20261013-operations-archive/previous-chat/Xclip-運営計画一式-20261012.zip",
+      "sha256": "2149bae16e779c179603bfb559cbc6bd5a25fc29ab9befbcf6298cc00e5bd6e0",
+      "bytes": 60405
+    },
+    {
+      "path": "releases/20261013-operations-archive/previous-chat/Xclip-配布ファイル-SHA256.txt",
+      "sha256": "d0860cca94a41b26b1bda6cbab25e396b361691ec1741f9d7a4ddbbc921bb26c",
+      "bytes": 636
+    }
+  ],
+  "note": "Self excluded; includes historical base docs as well as newly archived files. No secrets or operational state."
+}

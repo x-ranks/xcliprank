@@ -16,3 +16,7 @@
 *.npz binary
 *.png binary
 *.webp binary
+
+# Preserve archived update payload bytes and source checksums.
+/snapshots/** -text
+/releases/20261013-operations-archive/** -text

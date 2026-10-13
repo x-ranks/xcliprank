@@ -1,0 +1,17 @@
+﻿2026-10-12（日本時間）DBバックアップ取得成功
+
+根拠：ユーザー提供の実行ログ。
+確認表示：XCLIP_FILE_SNAPSHOT_AND_RESTORE_OK、XCLIP_DB_DUMP_AND_ARCHIVE_CHECK_OK。
+保存先：C:\Users\USER\Documents\XclipBackups\database-20261012-182101-7956ad
+暗号化版：上記の encrypted\snapshot.xclipbk。
+使用ツール：ユーザー指定のPostgreSQL 17.11-5 Windowsバイナリ。
+今回の認証は成功。2026-10-12のDBパスワードリセット後の再実行で取得成功の報告を受領した。リセットが以前の失敗の唯一の原因だったと断定はしない。
+パスワード・APIキー・DB内容は記録しない。
+
+検証範囲：pg_dump取得、pg_restore一覧検査、暗号化ファイルから別フォルダへの復元と内容照合が成功したというスクリプト完了ログを確認。
+未確認：実DBとしての隔離復元、別媒体保存、Supabase Storage利用有無と必要な実体保存、ローカル・本番ファイルのバックアップ報告と現行版照合。
+SAFE-REPORT.jsonとバックアップ本体の内容は今回未受領・未照合。
+O01は進行中。DB取得の工程のみ完了し、復旧全体を完了扱いにしない。G01も今回のDBログだけでは完了としない。
+こちらによる実環境操作・DB接続・Git操作・アプリコード更新はなし。
+
+次：xclip-db-restore-check-20261012.ps1に保存先のdatabase.dumpと同じPgBinを指定して実行。新しいローカルPostgreSQLクラスタだけにpublicスキーマを復元し、本番DBには接続しない。成功後も所有者・権限・管理スキーマ等の復旧範囲を区別する。

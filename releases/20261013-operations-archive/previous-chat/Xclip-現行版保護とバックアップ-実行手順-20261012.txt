@@ -1,0 +1,49 @@
+﻿2026-10-12 最優先2件：現行版の保護とバックアップ
+
+今回の状態：準備・隔離検証済み／実環境でのユーザー実行待ち。
+G01「現行版を確定・保護」とO01「DB・巡回状態・ローカルデータをバックアップ」に着手。
+既存の正常動作確認は引き継ぐが、バックアップ取得とDB復元確認はまだ受領していない。完了とは記録しない。
+
+配布内容：
+- xclip-local-snapshot-20261012.ps1：ローカルの未コミット変更・Git履歴・環境設定・.local-admin・教師データ・モデル等を暗号化保存。node_modules/.next/.turboは再生成可能なものとして除外。
+- xclip-server-snapshot-20261012.sh：ColorfulBoxの現行runtime/source/BUILD_ID、設定、Cron、永続巡回状態、手動削除記録、監視・ダウンロード状態を保存。Cronの設定は変更しない。作業中は既存ワーカーとデプロイのロックを取得し、同期の共通operation.lockを使う。
+- xclip-db-snapshot-20261012.ps1：画面で入力した接続情報で、pg_dumpによるDB全体の論理バックアップ、pg_restore一覧検査、暗号化保存を行う。秘密をチャットやコマンド履歴に入力しない。
+- xclip-db-restore-check-20261012.ps1：新しいローカルPostgreSQLクラスタだけにpublicスキーマを復元して確認。新クラスタのデータフォルダを照合してから接続し、最後に停止。本番への復元機能は持たない。
+- xclip-db-inventory-20261012.sql：Supabase SQL Editor用の読み取り専用メタデータ・主要件数確認。
+- 共通cjsと基準JSON：AES-256-GCM+scryptによる暗号化、全ファイルのSHA-256、復元先での内容照合、最新配布パッチとの比較。アプリ本体の更新ではない。
+
+使い方：同梱ファイルを同じフォルダへ展開。ローカル管理画面・開発サーバー・学習・編集を終了してから実行。
+Windows：powershell -NoProfile -ExecutionPolicy Bypass -File .\xclip-local-snapshot-20261012.ps1
+ColorfulBox：shとcjsと基準JSONを /home/rbxfxmfd/ に配置して bash /home/rbxfxmfd/xclip-server-snapshot-20261012.sh
+DB：powershell -NoProfile -ExecutionPolicy Bypass -File .\xclip-db-snapshot-20261012.ps1
+DB用ツールがない場合はPOSTGRES_CLIENT_MISSINGで停止する。PostgreSQLのコマンドラインツールを準備し、必要なら -PgBin 'C:\Program Files\PostgreSQL\18\bin' のように実際の場所を指定。サーバーのPostgreSQL以上の対応バージョンを使う。バージョンはSupabase SQL EditorのSELECT version();で確認できる。
+接続欄はSupabaseのConnect画面にあるDirectまたはSession poolerを使用。Transaction poolerは使用しない。DBパスワードとバックアップ用パスフレーズは実行時に非表示入力。
+DB復元：DB取得成功後に実際のdumpとPgBinを指定して xclip-db-restore-check-20261012.ps1 を実行。例はチャットにも記載。
+
+成功表示：
+ファイル：XCLIP_FILE_SNAPSHOT_AND_RESTORE_OK
+DB取得：XCLIP_DB_DUMP_AND_ARCHIVE_CHECK_OK
+DB public復元：XCLIP_PUBLIC_SCHEMA_RESTORE_CHECK_OK
+
+共有するもの：各バックアップのSAFE-REPORT.json、成功表示、エラーコードのみ。
+共有しないもの：環境ファイル、パスワード、dump、snapshot.xclipbk、restore-test、privateと付くログ・一覧。SAFE-REPORTに差分があっても上書きはしない。差分を次に確認する。
+保存先：Windowsは既定でDocuments\XclipBackups、ColorfulBoxは/home/rbxfxmfd/xclip-backups。バックアップ用パスフレーズを別途保管し、暗号化版を別端末・別媒体にもコピーする。バックアップに加えて復元先分の空き容量が必要。
+
+復旧時の原則：
+- restore-testは非公開の復元確認先。本番や現行ローカルへ自動コピーしない。
+- 実際の障害復旧では書き込み元を停止し、バックアップ後の手動削除・予約枠・取得位置も照合する。古い削除記録だけを復元して再掲載したり、利用予約をリセットして二重巡回することを避ける。
+- ファイルとDBは別時点のスナップショット。単一時点で一致した復元点と主張しない。復旧計画では両方の時刻と差分を扱う。
+- DB dumpはDBスキーマ・データ用。DBロールのパスワード、外部サービスの設定、Supabase Storageのファイル実体は別途保護する。Storage利用有無は管理画面で確認し、利用があれば別バックアップを追加する。
+- public復元試験では所有者・権限を適用しない。Supabase固有拡張や別スキーマへの依存で失敗した場合、成功扱いにせずログを非公開のまま原因を確認する。Supabaseの管理スキーマやサービス全体の復元を証明する試験ではない。
+
+完了条件：G01はローカル・本番の保存と照合報告を確認し、差分を解決または説明できること。O01はDB取得、必要データの保存、隔離復元、必要な別媒体保存と復旧範囲の確認まで。今回の準備だけで完了にしない。
+
+検証：Windows上のダミーデータで、隠しファイル・Git・巡回状態・日本語名・バイナリの暗号化と復元、内容ハッシュ、誤パスワード、改ざん拒否、既存復元先拒否、パストラバーサル拒否、ソース内保存拒否、整合性ガード失敗時の成功記録抑止、local/fileのCLIを確認。Node構文、PowerShell3ファイル構文、Bash構文に合格。
+未検証：実ColorfulBox実行、実DBのdump・復元、PostgreSQLネイティブ復元ツールの実行、実環境の保存容量・外部シンボリックリンク。実プロジェクト・本番の変更やGit操作は行っていない。
+
+公式資料：
+https://supabase.com/docs/guides/platform/backups
+https://supabase.com/docs/guides/database/connecting-to-postgres
+https://www.postgresql.org/docs/current/app-pgdump.html
+https://www.postgresql.org/docs/current/app-pgrestore.html
+https://www.postgresql.org/download/windows/

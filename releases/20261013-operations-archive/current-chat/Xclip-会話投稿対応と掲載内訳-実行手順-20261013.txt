@@ -1,0 +1,13 @@
+﻿本番用shと即時5件v2 shを/home/rbxfxmfdへアップロード。
+1. bash /home/rbxfxmfd/xclip-fx-context-deploy-20261013.sh
+成功 XCLIP_FX_CONTEXT_DEPLOYMENT_COMPLETE。
+2. 管理画面/開発サーバーを終了し、ZIP展開先でローカル更新。
+powershell -NoProfile -ExecutionPolicy Bypass -File .\xclip-fx-context-local-20261013.ps1
+成功 XCLIP_FX_CONTEXT_LOCAL_INSTALLED。または ALREADY_INSTALLED。従来の手順で再起動。
+3. 本番更新成功後、新しい即時5件v2を1回実行。
+bash /home/rbxfxmfd/xclip-fx-five-now-20261013-v2.sh
+全5名ランダム、追加手動5件の例外枠。通常予約は保持。旧--waitが残っていればCtrl+Cで終了。
+PASSED/FAILEDとJSONを共有。各投稿者のpublicationで candidates/saved/promoted/unavailable/contentOrReview/tier/knownPostOrMedia/batchDuplicate/insertRace を確認。
+新着0は正常、要レビューによる掲載0も判定結果として表示。レビューを自動解除しない。削除したhamezon_jpは復活させない。
+旧即時shの記録は残す。新v2も同じ版の再実行で別の5名を開始しない。本文/動画データや秘密は手動記録へ保存しない。
+ローカル復元は同ps1へ -RestoreBackup "表示されたBACKUP"。後編集保護あり。DB/状態/予約は巻き戻さない。

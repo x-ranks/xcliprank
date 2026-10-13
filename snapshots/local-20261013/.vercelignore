@@ -1,0 +1,19 @@
+data/visual-preference-feature-cache/
+.npm-cache-deploy/
+.vercel-local/.next/
+node_modules/
+.next/
+.git/
+.env.local
+.env*.local
+production.env
+*.log
+
+# Local credentials and private learning artifacts
+.env*
+visual-filter-model/group1-shard1of1.bin
+data/teacher-authors.json
+data/visual-preference-model.json
+artifacts/visual-preference-poc/
+artifacts/visual-preference-holdout/
+*.tsbuildinfo

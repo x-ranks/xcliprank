@@ -1,0 +1,612 @@
+﻿# 2026-10-13 JST：FxTwitter新着巡回の実行失敗を確認／本番照合待ち
+
+- ユーザー画像：2026-10-13 03:47台の複数投稿者で取得失敗。@60nightmare09（21件）、@Alpha_L_Lucky（20件）、@osiofuku（21件）、@DLjingxiang（20件）、@ranru666（20件）は「同一投稿者の投稿一覧を確認できません」。新規掲載は数値未表示、最終成功は未記録。これらのDB累計は以前からの保存件数で、今回の掲載成功を示さない。@oyohayoは別件「取得基準がありません」、初回0件・取得未確認、DB累計0件。
+- 前日の「適用成功」報告を維持するが、通常巡回の成功という完了条件は未達成。巡回の起動・Fx応答件数の計上は確認できる。画像だけで全登録投稿者の成否は断定しない。
+- 配布済みfx-temporary-patrol-20261012の実装確認：page.timelineIds.length !== page.rawCountをページ全体の失敗とする。timelineIdsは同一投稿者の有効IDを重複除去した件数、rawCountは全応答要素数。対象本人のネイティブ動画20件＋対象本人がリポストした別投稿者の投稿1件という合成応答でraw=21、timelineIds=20、動画候補20となり、掲載前の同じ失敗判定を再現。重複固定投稿の混入でも再現した。これは配布コードの動作確認であり、本番の実応答がどの理由に当たったかは未確認。
+- 前版テストにはforeign/duplicateを異常応答として拒否する検証があったが、正常なタイムライン内の本人によるリポスト等の混在を正常ケースとして扱っていなかった。修正時は全件一致を単純に削除せず、正常なリポスト・固定投稿重複・不明要素・無関係な別投稿者・途中ページを分離し、取得位置の早過ぎる更新や取りこぼしを防ぐ。
+- 公式FxEmbed OpenAPIも参照した。投稿にreposted_byが存在し、statusesエンドポイントは投稿一覧を返す。これだけで本番混在を確定しない。参照：https://github.com/FxEmbed/FxEmbed/blob/main/docs/specs/fxtwitter-openapi.json
+- 読み取り監査：現行C:\Projects\xcliprankのlib/fxtwitter-curated.tsとローカル2画面は、前日のFx切替配布コードと改行差を除き一致。Git statusは既存の変更・未追跡を確認しただけで変更していない。本番の新しいruntime/source/BUILD_ID/hashは未取得。古いv3のBUILD_IDを現在のものとして使わない。
+- 診断配布：xclip-fx-patrol-diagnose-20261013.sh。現在公開中の.htaccess→runtime→DEPLOY_SOURCE→sourceとBUILD_ID一致、今回に関係する5対象のSHA256を照合。未知コードなら状態の読み取りを進めない。既知版では最新巡回集計・直近12投稿者の取得/掲載/成功時刻・エラー分類・取得基準有無・予約数だけを表示する。認証情報、カーソル、投稿ID、応答本文を表示しない。外部通信・DB・Cron・状態ファイル・アプリコードを書き換えない。実応答構成は診断できないことを明記する。
+- 検証：実ダウンロードshから抽出したNodeコードを隔離fixtureで確認。runtime/source/BUILD_ID、改行、未知コード、秘密非出力、不正JSONの秘匿、既存X/Fxカーソル/状態の不変を確認。模擬応答で前述の失敗再現を確認。bash構文確認。PC/UI操作、実Fx/X/DB通信、本番/実ローカルへの適用、Git記録/GitHub反映は未実施。
+- 次の作業：ユーザーが本番で読み取り専用診断を実行し出力を共有。稼働版を照合して修正基準を確定し、必要なら通常巡回内の安全な分類記録も含めて修正・検証する。診断未実行、修正版は未作成・未適用。直近24時間最大24投稿者、失敗1枠、同一投稿者24時間、3時間8投稿者、5秒間隔、前回位置・予約を保持。再試行時刻を解除しない。
+- sources/XCLIP_PROJECT_MASTER.mdは2026-09-16の読み取り専用参考資料。Vercel/ZIP終了などの古い運用は、現行ColorfulBox/ユーザー実行/配布物リンクという今回までの明示指示で更新されている。同期資料は変更していない。
+
+---
+
+# 2026-10-12：FxTwitter切替の適用成功報告／次回巡回の確認待ち
+
+ユーザー報告：「OK!適用成功した。次の巡回が成功しているかどうかで今回の変更が成功していかの確認としよう。」
+
+- FxTwitter切替更新の適用成功がユーザーから報告された。実行先別の本番/ローカルログ、切替後のBUILD_ID、適用時刻は今回未受領のため推定しない。こちらから本番・実ローカルへ接続/適用/PC操作は行っていない。
+- 今回の変更全体の運用確認は未完了。次の通常Cronで、現在provider=fxtwitter、巡回の最終起動/完了、処理投稿者数、失敗数、Fx試行/リクエスト/応答投稿数の増加、掲載結果と取得位置の更新を確認する。
+- 新規掲載0件だけでは失敗と判断しない。既存基準より新しい対象動画がない場合は正常。失敗0件と正常な応答/新着なし、または候補の掲載成功を照合する。Fxの空応答は取得完了扱いにせず失敗として位置を保持する。
+- 切替前X APIの予約と失敗した投稿者の24時間待機を保持。interval/daily_author_limitや当該投稿者の待機中は外部リクエストが増えなくても正常で、枠が空いた通常Cronを確認する。X API累計は過去記録として保持し、今回新着巡回で増える対象はFxの実績。
+- 巡回を強制実行、予約リセット、有料X API診断、環境設定変更、DB変更はしない。自動監視/通知は明示依頼されておらず作成していない。
+- 更新コード・配布済みZIP/sh/ps1は変更しない。累積履歴・台帳のみ追記。Git/GitHub反映なし。今回のコード更新の運用成功は、次の巡回結果が届くまで未確認として引き継ぐ。
+
+---
+
+# 2026-10-12：fx-temporary-patrol-20261012（新着巡回をFxTwitterへ一時切替／作成・隔離検証済み、実適用待ち）
+
+この追記を過去のX API専用巡回の説明より優先する。配布済みv3と認証診断/更新ツールは変更しない。
+
+- 背景：ユーザー画像でX APIアプリのsuspended表示を確認。開発者登録と凍結された@activeandtowerが同一であるとユーザーが確認。Usage APIの401も確認済み。アカウント凍結に伴うアプリ停止が有力だが因果は公式回答未確認。トークン生成ダイアログは空白、token更新は未実施。解除依頼を送信済み、追加問い合わせは同内容がキューにあると返答されたため数日待つ方針。自動通知は依頼されていないため設定しない。
+- 依頼：待機中の新着動画取得をFxTwitterへ一時切替。3時間ごと最大8投稿者、同一投稿者24時間以上、直近24時間最大24投稿者、5秒間隔、失敗も1枠、次の投稿者へ継続、登録一覧/取得位置/停止/削除/二重巡回防止を保持。
+- 基準：実配布v3の埋込本番パッチとローカルパッチ。ユーザー診断で本番runtime /home/rbxfxmfd/xclip-video-card-20261004.DJKKID/runtime、source /home/rbxfxmfd/xclip-patrol-continue-jitter-20261012-v3.QaEslT/source、BUILD_ID mIrPiGvq1pdQAmP8cypM4、主要5ハッシュ一致を確認済み。今回ローカルv3対象26ファイルを秘密なしの読み取りSHA256で照合し26/26一致。Git statusを読み取り確認し、既存の変更済み/未追跡ファイルを確認。Git HEADだけで判定せず対象の実内容を照合し、未コミット変更を保持する。配布の実行時には公開runtime/source/BUILD_IDと全対象ハッシュを再照合し、未知版を上書きしない。
+- 新着処理：既存scan-free-curated CLIと同じCron/flock/operation.lockからFxTwitterの既存公開statuses取得処理を使用。X APIへの自動フォールバック、profileの追加取得、CDNの取得はなし。1投稿者1回最大100投稿/1ページ。投稿者IDとネイティブ動画条件を照合し、前回IDより新しい動画だけ共通DB掲載処理へ渡す。画像/GIF/リポスト/外部埋込等は既存Fx候補条件に従う。X検索時のhas:videos -is:retweetと揃えるため、投稿者本人が返信に添付した動画は新着巡回のみ対象にする。既存Fx一括取得の返信除外はデフォルト引数で維持する。
+- 引き継ぎ：x-api-v1.jsonの予約を共用して上限を維持。既存X失敗の24時間待機を解除せず、切替時のquota/cursorリセットなし。Xのpositions/token/検索窓/累計は保持。Fx取得位置は新規fx-patrol-v1.jsonへ分離し、Xまたは旧Fxの下側境界から開始、異なるproviderのcursorを混用しない。Xの途中ページで既に掲載された投稿は再確認されることがあるが既存DB重複処理を使用する。
+- 途中ページ：最初のページの最大IDを上限として保持。以降のページに入ったさらに新しい投稿は次の巡回へ残す。全IDが保存基準以下のページ、または続きのない正常ページで完了。固定投稿が混じるページでは古い投稿1件だけで完了しない。DB掲載成功後だけ位置を進める。取得失敗/空応答/同一投稿者を確認できない応答/繰り返しcursorは位置を保持して次へ進む。HTTP429の長いRetry-Afterは当該投稿者の最短再試行時刻に反映する。状態ファイル破損・予約の永続化失敗・共通一覧DB照合失敗は安全のため収集しない。
+- 表示：/fxtwitter-monitorは取得元に応じてFxTwitter/X APIを表示。Fx試行/リクエスト/応答投稿数と過去のX API累計を分離。直近24時間枠は両provider合算。既存の最終失敗表示は当該投稿者を正常に再巡回するまで残る。監視画面の更新はproviderにアクセスしない。追加画面・同期完了メッセージもFxTwitterへ統一。React確認スキルで既存のAbortController/二重実行ガード/型/読み込み・エラー・アクセシビリティを確認し、新しい通信やeffectを追加していない。
+- 維持：選別投稿者の追加・一括取得、共通DB登録・掲載条件、停止/削除/自動復旧防止、再生不可監視の0〜240秒起動分散/8〜20秒通信間隔/2回確認/healthy-control/実障害時待機、手動X APIの明示経路、CRON_SECRET/その他env/DBを変更しない。既存監視スクリプトは保持。DB移行なし。古い有料バッチの通常入口は引き続きNOOP。
+- 検証：固定Fx endpoint/認証情報なし/X APIなし、共用24枠・失敗枠・8件・公平ローテーション・再起動・旧X予約、X位置保持・旧Fx下側境界、ページ窓・固定投稿・空/異常/循環応答・DB失敗再試行、共通lock/停止/初回未完了/削除、破損と永続化失敗を模擬検証。旧X専用2テストは呼出先をscanXCuratedへ明示し期待値を維持し、新着Fxテストを追加。共通管理・掲載・監視・削除データ混入回帰を含む14群と対象型検査が成功。実配布payloadの適用/再適用/未知変更保護/ローカル復元/既存状態保持、埋込hash・sh/ps1構文・ZIP整合をダウンロード実ファイルから抽出したpayloadで確認済み。
+- 限界：実FxTwitter応答、実DB掲載、通常Cronでの成功、全体Next本番ビルド/公開切替は未確認。ランキング全体の隔離テストは、前版からの本番固有ranking-liquidity.ts不足のためこちらでは未実行。サーバー更新は実稼働ソースの全体テスト/型検査/ビルド/公開確認に成功してから完了する。FxTwitterが取得制限・空応答となる投稿者は収集できない。1日24投稿者・1回100投稿のため多数投稿者/大量未取得の追跡には日数が必要。ページ内容をX検索のようにサーバー側で日時固定できないためIDの上限で保護する。
+- 配布/復旧：本番sh・ローカルps1・本番/ローカル別ソースZIP・累積履歴・台帳・SHA256。公開切替前の失敗は旧本番維持、切替後失敗は従来runtime/Cron設定へ復旧。ローカルはBACKUPへ変更前ファイルを保存し、後から編集がある場合は上書き復元を拒否。実運用state/DBはインストーラーの復元対象外。旧v3専用の認証診断/token更新ツールも今回の切替後は版照合で拒否するため、無確認で使わない。X APIへの将来の再切替は別更新としてFxの最新完了位置・未完了下側境界を再照合する。古いv3を無確認で再実行して戻さない。
+- 状態：作成・隔離検証・配布準備。こちらから実プロジェクト・本番・DB・Cron・envへの適用、PC/UI操作、provider実通信、Git記録/GitHub反映は行っていない。v3本体は以前のユーザーログで適用済みだが、このFx切替は別の未適用更新として扱う。以前の全更新・DBパスワード変更・バックアップ/未確認タスクの記録を累積継承する。
+
+---
+
+# 2026-10-12：X API token拒否の確認・安全な更新ファイルの準備（更新未実施）
+
+- ユーザーが既存診断 --probe-usage を実行。GET /2/usage/tweets?days=1のHTTP401、TOKEN_REJECTED_BY_X、providerRequests=1、stateChanges=falseを確認。codeChecks5項目/BUILD_ID/source/runtime/token形式の正常結果も同じ。
+- 結論：本番で現在参照しているX_BEARER_TOKENが、投稿検索とは別の利用状況APIでもXに拒否される。無効化・失効・資格情報取り違え等の具体的な由来までは未確定。ローカルCRON_SECRETや動画選別・取得位置だけではこの独立した認証401を説明できない。
+- 対応準備：xclip-xapi-token-update-20261012.shを新規配布。ユーザーがX Developer Consoleの対象AppのKeys and Tokensから現在のApp-only Bearer Tokenを取得して非表示入力する。こちらからtoken再生成や設定変更はしない。再生成は同じAppの他の利用先にも影響するので、現在の有効tokenを確認することを優先する。
+- 更新条件：v3検索/巡回/橋渡し/CLI/collectorとruntime/sourceのBUILD_IDを再照合。新tokenの形式・既存API Key/CRON_SECRETとの取り違え・同じ無効tokenの再入力を拒否。GET /2/usage/tweets?days=1を1回だけ送信し200の場合のみ反映。401/403/429/通信失敗では設定を変更しない。Usage成功でもRecent Search権限は未検証。
+- 対象：公開runtime/.env.productionと同じDEPLOY_SOURCE/.env.productionのX_BEARER_TOKEN行のみ。改行形式と他の全環境変数を保持し、重複/複数行のtoken定義は上書きせず拒否。自動URLデコード/空白除去で未知の資格情報を改変しない。ローカル.envは対象外で、新着巡回の本番tokenのみ更新する。
+- 保護：配備ロックと既存collector flockを取得。本番が変わった場合やenvの並行編集を検知した場合は拒否。変更前2ファイルを .xclip-credential-backups/xapi-bearer-20261012-<uuid> へprivate保存（ディレクトリ700/ファイル600）。秘密の値は画面・履歴・台帳・配布物へ出さず、入力は非表示かつ引数/環境変数に渡さずfd3で送る。バックアップenv本文も共有しない。
+- 反映：各envファイルを個別にatomic置換し、通常の途中失敗なら変更済みファイルを内容一致確認の上で復旧。並行変更は保持して要確認とする。2ファイルの同時atomic処理ではないため強制終了等はprivateバックアップと差分を調べて復旧する。最後に既存runtime/tmp/restart.txtを更新してPassenger再起動を要求し、成否をJSONへ出す。restart要求失敗でもtoken反映済み状態を明示する。
+- 保持：巡回予約、前回取得位置、途中ページ、失敗した投稿者の24時間待機、手動削除、DB、CRON_SECRET、API Key、その他設定はリセットしない。投稿検索・動画取得・DB移行はしない。次の通常Cronから使用し、既に失敗した投稿者は元の待機時刻を維持する。
+- 検証：合成env/コード/状態と模擬APIで200の前置検査、2ファイル反映、CRLF/コメント/他設定保持、privateバックアップ、再入力/形式/重複/複数行拒否、401/403/429で書込なし、並行変更保持、途中書込失敗時復旧、巡回予約/除外状態保持、秘密非表示を確認。sh/埋込JS構文と配布ZIP/hashも照合。実tokenの再生成・検査・反映、ローカル変更、本番適用、こちらからのAPI通信は未実施。
+- 更新履歴・台帳は累積継承。v3本体は本番/ローカル適用済みで、追加コード更新は不要。認証修復・Recent Search成功・実新着掲載はユーザー実行結果待ち。Git/GitHub未反映とDBパスワード変更記録も維持。
+
+公式資料： https://docs.x.com/fundamentals/authentication/oauth-2-0/bearer-tokens
+
+---
+
+# 2026-10-12：X API HTTP401・本番設定と現行コードの読み取り照合結果
+
+ユーザーが診断shを実行し、XCLIP_AUTH_DIAGNOSTIC_COMPLETEとJSONを提供。外部通信0回・状態変更なし。
+
+- 公開runtime：/home/rbxfxmfd/xclip-video-card-20261004.DJKKID/runtime。
+- 公開source：/home/rbxfxmfd/xclip-patrol-continue-jitter-20261012-v3.QaEslT/source。
+- BUILD_ID：mIrPiGvq1pdQAmP8cypM4。runtime/source一致。
+- 検索、X巡回、既存CLIへの橋渡し、CLI、collectorの5項目がv3配布物のSHA256と一致。現行版の取り違えは今回の照合では認められない。
+- runtimeにX_BEARER_TOKENあり。外側空白、Bearer接頭辞、改行、余計な引用符、placeholder、CRON_SECRETとの一致、診断対象API Key等との一致はすべてfalse。sourceのtokenとruntimeのtokenも一致。
+- 対話環境にX_BEARER_TOKEN定義なし。対話環境からの上書きなし。ただしCron継承環境は未確認で同一とは断定しない。
+- tokenの有効性は未検査。形式が正しくても無効化/失効/別のtoken種別は判定できない。過去の401応答本文も未取得。詳細原因は確定せず、次は既存診断の --probe-usage で利用状況APIの認証を1回だけ切り分ける。投稿検索、DB/巡回状態更新は行わない。200でもRecent Search利用権限は未確認、403等はtokenの有効性を断定しない。
+- 成功取得・新着掲載は未確認。本番とローカルのv3適用済み状態を維持。コード、設定、tokenの変更・デプロイ・PC/UI操作・こちらからの外部API通信はしていない。新しい診断ファイルの再配布も不要。Git/GitHub未反映等の過去履歴を継承。
+
+この記録を以前の本番ステージ/BUILD_ID未確認の記載より優先する。受領結果は秘密値を含まないものだけ台帳に記録。
+
+---
+
+# 2026-10-12：X API新着巡回HTTP401の調査（原因の詳細は確認待ち）
+
+- ユーザー画像で、新着巡回の2026-10-12 21:47:25のHTTP401、取得位置保持、次回可能2026-10-13 21:47:25、応答投稿数0を確認。v3適用成功とAPI認証成功は別。401で応答投稿数0でも未起動とは限らず、配布コード上この文言はfetchのHTTP応答から出る。認証未設定時は別の文言になる。
+- 配布済みv3の実埋込パッチとschedulerを調査。既存Cronはactive runtimeの.env.productionをNode --env-fileで読み、active DEPLOY_SOURCEのCLI -> scanFreeCurated -> scanXCurated -> searchXCuratedを実行。参照はX_BEARER_TOKENで、Authorization: Bearer <token>をapi.x.com/2/tweets/search/recentへ送る。CRON_SECRETはこの直接CLI通信では使わない。ローカルCRON_SECRET変更だけではこの経路の401を説明できない。
+- 401はX公式の認証情報不正/不足、無効・失効トークンの案内と整合。再生成後の古いtoken、API Key等との取り違え、Bearer接頭辞/空白などの混入、runtimeとsource/ローカルの設定先の違い、継承環境変数の上書きを候補とする。どれかは未確定。Node --env-fileでは既存process.envが優先される。対話環境とCron環境は同一と断定しない。
+- 配布元v3コードには401の応答本文を保存しない実装があるため、過去の401の詳細理由は現在の画面だけでは確定できない。未知の既存設定・トークンを変更せず読み取り診断を作成した。
+- 診断sh：稼働runtime/source/BUILD_ID、v3のCLI/巡回/検索/schedulerハッシュ一致、runtimeトークンの有無・形式・CRON_SECRET/API Keyとの一致、sourceとの一致、対話環境による上書きの有無を判定。秘密値・tokenのhash・例外本文は出さない。デフォルト外部通信なし、DB・Cron・環境ファイル・取得位置・予約・除外状態への書込なし。
+- オプション --probe-usage はユーザーが明示して実行した場合だけGET /2/usage/tweets?days=1を1回呼ぶ。投稿検索はしない。timeout15秒/redirect拒否/再試行なし、応答本文は破棄。200でもRecent Searchの権限は未検証、403/429等ではtoken有効性を断定しない。料金ゼロとは保証しない。今回こちらでは実APIを呼んでいない。
+- 診断検証：合成ファイルでactive source/build照合、秘密非表示、token形式、継承環境、未知コード検知、read-onlyバイト保持、usageの模擬200/401/403/429/通信失敗/不正token時通信なしを確認。shellと埋込JS構文検査、成果物のhash/ZIP照合も実施。実本番診断結果はユーザー実行待ち。
+- ローカルはユーザー適用済みv3の既知パッチ対象だけを読み取りhash照合した。結果は新台帳へ記載。.env/私的レジストリの本文はこのローカル照合で参照しない。本番は今回の診断結果で独立したhash一致を確認する。v3の本番・ローカル適用成功記録、更新前精査ルール、Git/GitHub未反映、DBパスワード変更履歴は継承。
+- 今回の変更は読み取り診断・履歴のみ。本体コードの追加更新・デプロイ・token再生成・実環境設定変更はしていない。
+
+公式資料：
+https://docs.x.com/x-api/fundamentals/response-codes-and-errors
+https://docs.x.com/fundamentals/authentication/oauth-2-0/application-only
+https://docs.x.com/x-api/usage/get-usage
+
+---
+
+# 2026-10-12：巡回継続と監視分散v3・本番/ローカル適用成功確認
+
+ユーザー提供の本番ログで XCLIP_PATROL_CONTINUE_JITTER_V3_DEPLOYMENT_COMPLETE を確認。直前のローカル成功ログと合わせ、本番・ローカルともv3適用済みと記録する。以下の過去の未確認記載より本記録を優先する。
+
+- 公開確認：PUBLIC_FREE_CURATED_DASHBOARD_OK、PUBLIC_COMMON_MANAGEMENT_AND_AVAILABILITY_OK、PUBLIC_FREE_CURATED_SYNC_OK。状態/DB読み取り確認で、provider/CDN通信はなし。
+- 本番新着巡回：X API専用、3時間Cron、1回最大8投稿者、同一投稿者24時間以上、直近24時間最大24投稿者。失敗も1枠として次の投稿者へ継続。既存の予約・取得位置を保持。無料一括取得はFxTwitter、従来のscheduled paid entryはNOOP。
+- 再生不可監視：既存監視スクリプト保持、起動0〜240秒/通信8〜20秒のランダム間隔。削除/非表示の分離した2回確認と正常応答の対照確認、不明応答時の保持、実障害時の待機を維持。
+- インストール時に収集API呼出しとDB移行は未実行。手動X API取得・明示的なrecoveryは引き続き有料。通常Cronでの実際のX API認証・取得・新着掲載、および監視による実際の除外結果は、この成功ログだけでは確認していない。
+- ローカル適用とバックアップは前節のユーザー提供ログどおり。管理画面は開発サーバー再起動後 /fxtwitter-monitor（新着）、/curated-manager（共通管理）、/availability-monitor（再生不可監視）を使用。画面操作確認は未実施。
+- 適用者はユーザー。こちらは実環境へ適用・PC操作・巡回・DB変更をしていない。根拠はユーザー提供ログであり、独立した実ファイルhash再照合は今回未実施。ログにないBUILD_ID、v3ステージパス、正確な適用時刻は推測しない。
+- Git記録・GitHub反映は今回未実施。v3配布物を変更せず累積履歴と台帳を追記。更新前精査・既存データありの条件・配布物検証の引き継ぎルールを継続する。
+
+---
+
+# 2026-10-12：巡回継続と監視分散v3・ローカル適用成功確認
+
+ユーザー提供ログで、Downloadsのv3一式から xclip-patrol-continue-jitter-local-20261012-v3.ps1 を実行し、XCLIP_PATROL_CONTINUE_JITTER_LOCAL_INSTALLED が表示されたことを確認した。ローカルv3は適用済みとして記録する。本番v3の成功ログは未受領のため本番適用は未確認のまま。
+
+- インストーラー内の模擬テスト：FREE CURATED、actual local API、SIMPLE REGISTRATION、CURSORS、REGISTRATION RECOVERY、LOCAL COMMON MANAGERがPASS。
+- 型検査：STAGED_FREE_CURATED_TYPES_OK。
+- 変更前バックアップ：C:\Projects\xcliprank\.local-admin\fxtwitter-curated-backups\20261012124122107-f9ef6a
+- 管理画面案内：http://localhost:3004/fxtwitter-monitor 。画面の実動作・本番との記録同期・実際の新着取得は、このインストールログだけでは確認していない。
+- ログに既存有料collector保持、env/DB/Cron変更なし、インストール時の外部通信なしと記載。こちらから追加の適用・PC/UI操作・巡回・DB変更は行っていない。独立した実ファイルhash再照合は今回未実施。成功の根拠はユーザー提供のインストーラー実行ログ。
+- 正確な適用時刻はログにないため未確定。バックアップ名の数値をタイムゾーン不明のまま実行時刻へ変換しない。
+- Git記録/GitHub反映は今回未実施。過去分を含む更新前精査・引き継ぎルールを継続する。配布済みv3コードやZIPを変更せず、今回の確認記録を追記する。追加インストールは不要。
+
+以下の過去の「ローカル適用未確認」記載は当時の状態であり、この確認を最新状態として優先する。
+
+---
+
+# 2026-10-12：更新前精査と別チャット引き継ぎルールの追加
+
+ユーザーから「本番・ローカルをしっかり精査してコード作成し、別チャットにも引き継ぐ」と明示指示を受領。今回のv1現行監視版の相違とv2テストの手動削除状態混入を記録し、現行版照合、実データありの条件、テストの全参照先分離、配布物適用検証、既存記録保持、検証と適用の区別を継続ルールとした。
+
+出力した引き継ぎルール本文を参照。Documents/Codex/AGENTS.mdへXclip限定の参照を追加し、この配下の別チャットから確認できるよう保存した。別ディレクトリのチャットへの自動共有は保証せず、引き継ぎファイルを指定する。実プロジェクトのAGENTS.md、コード、既存配布物、Git/GitHub、本番、DBは変更していない。
+
+巡回継続v3は配布・隔離検証済みだが、ユーザーのローカル/本番適用成功ログは未受領。適用済みとは扱わない。本変更は運用ルールと履歴のみで、新しいデプロイは不要。PC/UI操作を行わず、実環境への反映はユーザーが実行する方針を維持する。
+
+---
+
+# 2026-10-12：patrol-continue-jitter-20261012-v3（テスト用データ分離の修正、未適用）
+
+この追記を過去記録より優先する。更新元は配布済みv2の埋込パッチ。v1/v2の配布物は変更せず保持する。
+
+- 受領ログ：v2の稼働sourceは /home/rbxfxmfd/xclip-unified-authors-20261011.EUK9ml/source、ステージは /home/rbxfxmfd/xclip-patrol-continue-jitter-20261012-v2.GQvnu7。scheduler/htaccess準備と隔離パッチ適用、common/author/continuation/jitter/hybrid/dashboard/publicationテスト成功後、test-availability-monitor.cjs:46で6 !== 0となった。本番切替・Cron変更・ビルド前の停止であり、適用成功とは記録しない。予約・取得位置をリセットしない。
+- 原因：監視テストはauthor/post状態を一時ディレクトリへ分離したが、manualCuratedKeysが参照するXCLIP_FREE_CURATED_STATE_DIRを分離していなかった。unavailableKeysは自動除外に手動削除キーも加える正しい仕様なので、本番の既存手動削除記録が「除外0件」のテストに混入した。実データの本文は未取得。合成の手動削除3件（ID/名前の6キー）を継承させ、旧v2テストの6 !== 0を再現。
+- 修正：test-availability-monitor.cjsとtest-availability-curated-regression.cjsで手動削除記録専用の空の一時ディレクトリを使用し、終了時に環境変数を元へ戻す。除外判定の期待値を緩めず、テストを省略しない。本番の削除記録を削除・編集しない。業務処理、取得条件、24枠上限、既存監視保持、Cron切替方式はv2のまま。
+- 回帰テスト：test-monitor-state-isolation.cjsを追加。合成の既存削除3件/6キーを継承した子プロセスで両監視テストを実行し、成功と継承ファイルのバイト一致・追加ファイルなしを確認。テスト自身が呼び出し元の本番状態を参照しない。本番インストーラーにもこの検査を追加。
+- 検証：旧v2失敗の再現、新v3の継承状態あり/なしでの監視テスト、巡回・掲載・共通管理の既存模擬回帰、パッチ適用/再適用/未知版保護/復旧/型検査、Cron模擬、埋込hash/ZIP/SHA256/sh/ps1構文を確認。本番実API・DB書込・全体ビルド・公開切替は未実施。前記録のranking-liquidity.ts不足による隔離環境でのランキング全体テスト未完了は継続し、本番では従来どおり全体テストとビルドを実行してから公開する。
+- 配布：v3一式（本番sh、ローカルps1、版別ソース、累積履歴、台帳、SHA256）。本番はv3を実行。v1/v2ローカル適用済みでもv3へ更新可能。ローカルの画面コードはv2と同一で履歴・台帳を更新する。Git/GitHub・実プロジェクト・本番・DBへのこちらからの適用は未実施。
+- 復旧：v2と同じ。公開切替前のテスト失敗なら本番を切り替えない。切替後の失敗は旧runtimeと管理対象Cron/スクリプトを復旧する。既存の不明版監視スクリプト、巡回予約、取得位置、手動削除、DBを巻き戻さない。2026-10-12のDBパスワード変更記録とバックアップ/O01未確認事項を継承する。
+
+---
+
+# 2026-10-12：patrol-continue-jitter-20261012-v2（配布修正、未適用）
+
+この追記を以下の過去記録より優先する。巡回処理とローカル画面の仕様はv1を維持し、本番の監視起動スクリプト更新方法を修正。
+
+- v1本番実行：ユーザー提供ログで、稼働sourceがunified-authors-20261011.EUK9ml/source、ステージがpatrol-continue-jitter-20261012.Qa7iJAであること、scheduler prepare中にUNKNOWN_SCHEDULER_SCRIPTとなったことを確認。公開切替、Cron変更、DB移行、追加巡回の前で停止。v1を本番適用成功と扱わない。
+- 対象判明：ユーザーのsha256sum結果から新着collectorはe764170b661d83cbb2cadc288fffea83738954eada512af8c75b7f740a0023d2で配布版と一致。再生不可監視xclip-author-monitor.shは4751ef024feb238642e9544df78c45841cb3b398e985148b28b6aba220ce072fで、こちらの元テンプレートとは相違。ファイル本文は未取得で差分の由来は未確定。このhashを根拠なく上書き許可へ追加しない。
+- v2：既存xclip-author-monitor.shを更新対象から外し、その前段にxclip-author-monitor-jitter.shを新設。監視の既存Cron1行を新しい起動スクリプトへ変更する。既存スクリプトの処理・ロック・ログを保持し、0〜240秒待機後に従来処理へ渡す。v1適用済みの既知スクリプトには二重の起動遅延を追加しない。
+- 所有者/通常ファイルの確認と、準備時の既存監視hashをapply/verify時に再照合。並行変更時は公開切替を復旧し、新しい他者変更を保持する。未知の新設ラッパー/collectorは引き続き拒否し、今後のエラーにはファイル名とSHA256を表示。重複・独自Cronは無断上書きしない。
+- --check-runtimeは新ラッパー自身で稼働source/BUILD_ID/CLIの存在を読み取り確認し、既存の不明版スクリプトを実行しない。通常の監視だけが従来スクリプトを呼ぶ。本番CLI内のFx通信8〜20秒ランダム間隔と誤除外防止、Xの失敗時継続/24時間24枠/取得位置保持はv1から変更なし。
+- 復旧：変更したCronと今回管理する2本のみ復旧。元の監視スクリプトは適用・復旧どちらでも書き換えない。巡回履歴・利用予約・取得位置・DB・秘密設定は巻き戻さない。
+- 検証：Cron/ファイルを模擬し、未確認の既存監視本文をそのまま保持、旧Cronから新Cronへの1行切替、再適用、復旧、並行変更拒否、未知collector/新ラッパー拒否、他Cron維持を確認。v1のアプリ模擬テスト/型検査結果を継承。v2のパッチ・埋込hash・ZIP整合とsh/ps1構文を確認。本番ビルド/公開/実APIは未実施、ユーザー実行時に確認する。
+- 配布：v2の本番sh・ローカルps1・版別ソース・累積履歴・台帳・SHA256。一式はv1を置き換える。v1をローカル適用済みならv2は同じアプリコードを保ち履歴を更新する。Git/GitHub反映は未実施。
+
+---
+
+# 2026-10-12：patrol-continue-jitter-20261012（作成・隔離検証、未適用）
+
+この追記を過去の当時の状態より優先する。基準は正常動作をユーザーが確認し、本日のSAFE-REPORTで対象ファイル一致を確認したunified-authors-20261011。実プロジェクト、本番、DB、Gitへの適用・pushは今回行っていない。
+
+- 依頼：新着X API巡回はエラーで全体を休止せず次の投稿者へ進む。失敗も1投稿者として24時間の最大24投稿者に数える。FxTwitterの再生不可監視はアクセス時刻・間隔をランダムに分散する。
+- 事実：ユーザー提供の巡回記録は登録95、稼働92、停止3。2026/10/12 18:47:03の起動で1投稿者失敗し6時間休止。Cronは起動している。ローカルCRON_SECRETの変更は直接起動する本番新着CLIのX認証ではない。失敗HTTP番号は未受領のため認証・権限・残高等の根本原因は未確定。
+- X巡回：3時間ごと最大8投稿者、直近24時間最大24投稿者、同一投稿者24時間以上を維持。対象投稿者の処理前に予約・次回時刻を保存する。401/402/403/429、通信・応答・基準取得・DB掲載エラーを投稿者単位で記録し、同じバッチ内で次へ進む。同一投稿者の即時再試行なし。失敗・基準不足・未来の取得基準も1枠。停止中・手動削除・初回取得待ちは自動巡回しない。
+- 引き継ぎ：登録一覧、次回バッチ時刻、既存24時間予約、取得位置、途中ページ、手動除外を維持。旧版のX全体休止は新着巡回で適用せず、次の通常Cronから新方式で処理する。予約・次回時刻は更新時にリセットしない。Fx監視側の休止は別系統で維持。
+- 取得：保存済みの前回IDから差分取得し、DB保存が成功するまで取得境界を進めない。Recent Searchの7日制限は維持。7日より前の不足分を有料の全履歴取得で自動補完しない。必要時は無料一括取得で補完する。失敗時もAPI側の課金が生じ得るため、消費ゼロを保証しない。
+- 安全上の例外：状態ファイル破損、利用予約を保存できない、対象一覧DBを読めない等で安全に次の投稿者を選べない場合は処理失敗とする。利用枠を記録できないまま外部取得しない。
+- Fx監視：既存3時間Cronの起動を暗号学的乱数で0〜240秒遅延、外部通信を逐次8〜20秒のランダム間隔へ。起動遅延はworker lockの取得前、--check-runtimeでは遅延なし。既存5分の起動許容範囲内。12投稿者/20投稿のバッチ上限、同一対象24時間以上、429 Retry-After・実障害の待機を維持。ランダム化はアクセス分散のためで、制限回避を保証する機能ではない。
+- 除外：凍結の明示確認、削除・非表示の24時間離した2回確認と同一バッチ正常投稿の確認を維持。不明・障害だけで除外しない。既存の公開経路で掲載対象から除外し、DBを物理削除しない。手動削除の自動復活を禁止。
+- 画面：新着巡回にエラー継続・エラーも1枠と明示。予約累計と実際の成功数を混同しない。旧X全体休止を次回可能時刻へ加算しない。再生不可監視にランダム間隔を表示。画面更新は記録を読むだけ。
+- 検証：すべてHTTP/DBを模擬。95投稿者の全件401でも1回8件×3回で24枠・上限保持、モジュール再読込/24時間後の公平な次対象、401/402/403/429・通信障害・基準DB失敗・認証未設定・未来基準の継続、失敗境界保持、失敗後の成功掲載、既存cursor・同期・手動削除・誤除外防止、乱数8〜20秒の両端を確認。変更範囲のTypeScript検査成功。React確認スキルで画面の状態・読み取り処理・既存のアンマウント対策・エラー表示を確認。画面操作は未実施。
+- 配布検証：隔離コピーでステージ必須・本番/ローカルの未知版拒否・適用・再適用・対象hash一致・ローカル型検査・更新後編集の復元拒否・元のファイルへの復元・登録データ保持を確認。Cronとファイルを模擬し2本を各1行で更新、無関係なCron維持、準備中の設定維持、検証、復旧、未知スクリプト/重複・独自Cron拒否、並行変更保護を確認。sh/ps1構文検査成功。成果物内のpayload・hash・版別ソース・ZIPの照合も実施。
+- 配布：本番sh、ローカルps1、版別ソースZIP、累積履歴、照合台帳、SHA256を添付。本番は稼働DEPLOY_SOURCE/BUILD_IDを照合し、隔離テスト・型検査・ビルド・公開確認後に同じ2本のCronを更新。未知のCron・スクリプトは上書きしない。別の巡回Cronを追加重複させない。本番全体ビルド・実API認証・実新着掲載はユーザー実行後に確認する。補足：こちらの隔離コピーには本番専用ranking-liquidity.tsがないため、無関係なランキング全体テストはこのコピーでは完了していない。本番インストーラーは稼働ソースを複製して既存のランキング等のテストも実行し、失敗時は切り替えない。
+- 適用/復旧：ユーザーが実行。本番切替失敗時は直前runtimeとCron/監視スクリプトを復旧する。ローカルは変更前ファイルを内容照合付きで復元可能。予約・取得履歴・手動削除は復旧でも巻き戻さない。既存の.env、DB接続・X認証の秘密値は変更・配布しない。DBパスワードを2026-10-12に変更した記録を保持し、将来のDB認証不良時は古い接続設定の可能性を案内する。
+- GitHub：x-ranks/xcliprank（非公開）mainは2026-10-05の2bf1a1f。最新ローカルGit 84bd6f4と今回を含む後続配布物の全統合/pushは未実施。ローカルGitとGitHub反映を区別する。
+- バックアップ：local/server/DB取得・復元確認は前記録どおり。本日3種を別ストレージへ保存するとのユーザー予定を受領、保存完了は未確認。全Storage bucketが空ならファイル実体の保存は不要という条件を確認したが、全bucket空の実調査は未実施。G01完了/O01最終確認待ちを維持。
+
+---
+
+# 2026-10-12 現行版保護完了
+
+この追記を過去の当時の状態より優先する。
+
+2026-10-12 ColorfulBox SAFE-REPORT確認・G01完了
+
+ユーザー添付の本番側SAFE-REPORT.jsonを読み取り確認。
+作成時刻：2026-10-12 18:01:53 JST。保存・復元照合：2,616ファイル、PASS。
+最新unified-authorsパッチ対象：30ファイル一致、差分0。missingOptionalは空。
+runtime：/home/rbxfxmfd/xclip-video-card-20261004.DJKKID/runtime
+source：/home/rbxfxmfd/xclip-unified-authors-20261011.EUK9ml/source
+BUILD_ID：NBTFhCLivYLdIgsCJt9_a
+暗号化版保存先：/home/rbxfxmfd/xclip-backups/server-20261012T090140Z-177639/snapshot.xclipbk
+報告ハッシュ：bb46c2d4308a9b9d615a2d07c3a8ca72d1e4716c191c37ce6f7660f3066d40a1。実アーカイブをこちらで再ハッシュした値ではない。
+
+既に確認済みのローカル1,286ファイル・対象25ファイル一致・Git HEADと合わせて、ローカル/本番それぞれの基準版と復元可能なファイル保存を確認。G01「現行版を確定・保護」は完了と記録。
+照合の範囲は最新パッチの対象。ローカルと本番の全コードが同一という意味ではなく、それぞれの版と保存記録を対応付けたもの。Gitへの最新コード統合やpushは未実施でG04に残す。
+本番JSONのdbRestore=PENDINGはファイル保存時点の表示。後続のDB public隔離復元（動画9959件・投稿者2406件）成功を別記録で確認済み。再実行不要。
+
+O01「DB・巡回状態・ローカルデータのバックアップ」は保存と復元試験まで確認済み。ただし最終完了は保留。
+残りの確認：暗号化バックアップ3種（local/server/database）が元のPC・サーバーとは別の場所にも保存されたこと、Supabase Storageにファイル実体があるか（ある場合は別保存も必要）を確認する。SAFE-REPORTのコピーだけではバックアップ本体の別媒体保存とはしない。
+復旧方針：ファイルとDBは別時点のため、障害復旧時は書き込み元を停止し、バックアップ後の手動削除・利用予約・取得位置を照合する。自動の本番復元・再巡回・削除解除は行わない。public復元試験の所有者・権限・管理スキーマ等の制限は維持。
+今回の作業は添付報告の照合と履歴・タスク更新のみ。実プロジェクト・本番・DB・Gitへの操作なし。
+
+---
+
+# 2026-10-12 ファイルバックアップ確認
+
+この追記を過去の当時の状態より優先する。
+
+2026-10-12 ローカル・ColorfulBoxファイルバックアップ確認
+
+ローカル：ユーザー添付SAFE-REPORT.jsonを読取確認。2026-10-12 17:59:33 JST、1,286ファイル、fileRestore=PASS。最新unified-authorsパッチ対象25ファイル一致、差分0。Git HEAD=84bd6f49cbeed2372b07408104e5d0348ffc0ac7。Git HEADだけを全コードの現行版とは扱わず、未コミット変更も含む保存記録として保持する。
+報告された暗号化アーカイブSHA-256：527cdd0362f4facf03447bbc075db4544e350cc5e6b9119b4601eae96b1fbb74。こちらから実アーカイブを再ハッシュした値ではない。
+ローカルJSONのdbRestore=PENDINGはファイルバックアップ作成時点の表示。後続のv5 DB public隔離復元成功（動画9959件・投稿者2406件）を最新状態として別途記録済み。ローカルバックアップの再実行は不要。
+
+ColorfulBox：ユーザー実行ログのXCLIP_FILE_SNAPSHOT_AND_RESTORE_OKを確認。保存先 /home/rbxfxmfd/xclip-backups/server-20261012T090140Z-177639 。JSONは同フォルダのSAFE-REPORT.json。ファイル保存・隔離復元照合の成功報告として受領。JSON本体はまだ未受領なので、BUILD_ID・DEPLOY_SOURCE・基準版との照合結果・状態保存範囲・暗号化ハッシュは未確認。
+ログ末尾のclient_loop: send disconnect: Connection resetは成功表示後のSSH接続切断を示す。これだけで完了済みバックアップが失敗・削除されたとは判断しない。接続し直してJSONを確認する。
+
+現状：ローカルファイル保存とパッチ対象の照合、ColorfulBoxファイル保存の成功ログ、DB取得とpublic隔離復元を確認済み。
+残り：ColorfulBox SAFE-REPORT.jsonの照合、暗号化バックアップの別端末・別媒体保存、Storage利用有無と必要な実体保存、復旧範囲の最終確認。G01/O01の完了はこの確認後に判断する。
+こちらで実プロジェクト・本番・DB・Gitの操作は行っていない。秘密情報やバックアップ本体は取得しない。
+
+---
+
+# 2026-10-12 DB public隔離復元成功確認
+
+この追記を過去の当時の状態より優先する。
+
+2026-10-12（日本時間）DB publicスキーマ隔離復元成功
+
+根拠：ユーザー提供のv5実行ログ。全6工程とXCLIP_PUBLIC_SCHEMA_RESTORE_CHECK_OKを確認。
+動画（public.posts）：9,959件。投稿者（public.authors）：2,406件。
+確認対象のdump：C:/Users/USER/Documents/XclipBackups/database-20261012-182101-7956ad/database.dump
+隔離復元先：C:/Users/USER/Documents/XclipBackups/db-restore-test-598d8fc6f352413cb5dc5736a6c9d2c7
+検証版：xclip-db-restore-check-20261012-v5.ps1。
+確認範囲：新規ローカルPostgreSQLクラスタの識別、publicスキーマの復元処理、主要2テーブルの件数確認、試験クラスタ停止。成功ログを根拠とし、こちらから実DBの読み取り・操作はしていない。
+DBの取得・暗号化・ファイル復元照合は以前のユーザーログで成功確認済み。今回、DBとしてのpublic復元も成功確認。
+
+制限：この件数は復元したバックアップ時点の件数で、現在の本番と再照合した件数ではない。個別データ全件の一致を別途検証した意味ではない。所有者・権限を省略したpublic復元試験であり、Supabase管理スキーマ・サービス設定・Storageファイル実体・本番と同等の照合順序の復旧を保証しない。SAFE-REPORT.jsonとdump本体のSHA-256は今回未受領。
+パスワードの値は記録しない。2026-10-12のDBパスワード変更履歴は今後の認証不具合の切り分けに維持。
+
+タスク状態：O01のうちDB取得・暗号化・ファイル復元照合・public隔離復元を確認済みに更新。O01全体とG01を最終完了にはしない。
+残り：ローカルとColorfulBoxのファイルバックアップ・現行版照合報告の確認、暗号化バックアップの別媒体保存、Storage利用有無と必要な別保存の確認、復旧範囲の最終整理。local/server実行結果は今回のDBログから推測しない。
+次に共有するもの：ローカルとColorfulBoxのSAFE-REPORT.json、および今回の隔離復元先のSAFE-REPORT.json。パスワード・dump・restore-test・秘密のログは共有しない。
+本番アプリ・実プロジェクト・DB設定・Gitへの変更は今回行っていない。既存の配布コード・バックアップはそのまま保持。
+
+---
+
+# 2026-10-12 DB隔離復元チェックv5
+
+2026-10-12 DB隔離復元チェック v5
+
+根拠：ユーザーの復元ログで cross-database references are not implemented: pg_catalog.pg_catalog.simple。default_text_search_config設定時に失敗し、public.postsの主キー追加が停止。
+原因：v2でこちらがinitdbの--text-search-configにpg_catalog.simpleを指定した。PostgreSQL 17のinitdb実装はこの値へpg_catalog.を付けて設定を書き込むため、二重修飾の無効な値になった。主キーやバックアップデータの破損を示すものではない。
+修正：initdbの指定を--text-search-config=simpleへ変更。生成されたpostgresql.confの有効設定が単一の'pg_catalog.simple'であることを、DB起動前に検査する。v3の待機修正、v4のpublic再作成、対象クラスタ照合・localhost限定・最後の停止は維持。
+検証：PostgreSQL 17公式ソースの設定生成処理を照合。Windows PowerShell 5.1で構文、生成設定ガードの正常値受理と二重修飾等の拒否、ネイティブ警告/終了コード/引数処理、子プロセス稼働中の親コマンド待機を模擬検証成功。
+未検証：こちらでは実PostgreSQLクラスタとユーザーのdumpの復元を実行していない。ユーザーの再実行結果待ち。
+対象：xclip-db-restore-check-20261012-v5.ps1。旧配布・取得済みdump・暗号化バックアップは変更しない。毎回新しい試験フォルダを作る。前回失敗フォルダの削除・再利用、バックアップ再取得、DBパスワード再変更は不要。
+状態：DB取得成功と2026-10-12のパスワード変更を引き継ぐ。public復元成功とG01/O01の最終完了は未確認。本番・実プロジェクトへの操作、Git操作はなし。
+復旧範囲：publicのみ。所有者・権限・管理スキーマ・Storage実体・本番照合順序の同等性は対象外。失敗時もテスト用DB停止を実行する。
+成功表示：XCLIP_PUBLIC_SCHEMA_RESTORE_CHECK_OK。
+公式ソース：https://github.com/postgres/postgres/blob/REL_17_STABLE/src/bin/initdb/initdb.c
+
+---
+
+# 2026-10-12 DB隔離復元チェックv4
+
+2026-10-12 DB隔離復元チェック v4
+
+根拠：ユーザーの復元ログで ERROR: schema "public" does not exist。最初のpublic.xclip_claim_tier_worker関数の作成に失敗。
+原因：こちらの復元準備SQLはpublicを削除し、再作成しないままpublicに絞ったpg_restoreを開始していた。今回の復元経路ではスキーマの器が作られず、最初の関数定義で失敗。DBパスワード変更による認証不良ではない。
+修正：新規ローカル試験クラスタのdata_directory照合後、DROP SCHEMA publicの直後にCREATE SCHEMA publicを実行。エラー時の停止、localhost限定、終了コード判定、子孫を待たない待機、工程表示、最後の停止を維持。
+対象：xclip-db-restore-check-20261012-v4.ps1のみ。旧v1/v2/v3と取得済みDBバックアップは上書きしない。毎回新規試験クラスタを作るため、前回失敗フォルダの削除・再利用は不要。
+検証：準備SQLの変更箇所と順序を照合。Windows PowerShell 5.1の構文とネイティブ警告・終了コード・引数・子プロセス待機の模擬テスト成功。子が5秒稼働する試験で親コマンド待機は約0.21秒で返った。実PostgreSQLの復元はユーザー実行待ち。
+復元成功は未確認。DBバックアップ取得成功と2026-10-12のパスワード変更履歴は維持。G01/O01は未完了。本番・実プロジェクト・Gitへの操作はしていない。
+復旧：取得済みdatabase.dumpと同じPgBinを指定し、v4を実行。試験対象はpublicスキーマで、権限・所有者・Supabase管理スキーマ・Storage実体等は対象外。バックアップ再取得・パスワード再設定は不要。
+成功表示：XCLIP_PUBLIC_SCHEMA_RESTORE_CHECK_OK。
+
+---
+
+# 2026-10-12 DB隔離復元チェックv3
+
+2026-10-12 DB隔離復元チェック v3
+
+根拠：ユーザーのログ一覧はinitdb出力後、start-privateの時刻から進まずidentity/restore/countsが未作成。実コード確認で、Start-Process -Waitが起動したPostgreSQLの子孫プロセスの終了まで待つ問題を発見。ログ一覧だけでPostgreSQLの起動成功までは断定しない。
+訂正：単に待てば完了するという前回案内は不正確だった。v2には標準エラー処理の修正はあるが、長時間稼働する子プロセスの待機検証が不足していた。
+修正：Start-Process -Waitを使わず、Process.WaitForExitの有限タイムアウト付きオーバーロードで起動コマンド自身の終了のみを待つ。終了コード判定と非公開ログ分離を維持。各工程の進捗を表示し、成功表示はテスト用DBの停止後に出す。
+検証：Windows PowerShell 5.1でダミーの親プロセスが子プロセスを5秒稼働させたまま終了する試験を追加。ラッパーは約0.2秒で返り、子孫の終了待ちをしないことを確認。警告+exit0、exit7停止、引用符・スペース・末尾バックスラッシュ・日本語・空引数の受け渡しも再検証。実PostgreSQLによる復元は今回もユーザー実行待ち。
+切替：実行中のv2をCtrl+Cで中断し、前回の専用テストフォルダのclusterだけをpg_ctl -Dで停止してから、v3を実行する。全postgresプロセスの一括停止・フォルダ削除・本番への操作は行わない。停止時に稼働していないと表示された場合、その試験クラスタは停止済みまたは未起動。
+前回フォルダ：C:/Users/USER/Documents/XclipBackups/db-restore-test-f4bc95feef6b447dbbf4527c3e4a9e51/cluster
+v3は毎回新規フォルダを使用。取得済みdatabase.dump、暗号化バックアップ、DBパスワードは変更・再取得しない。旧配布ファイルも保存したまま別名で配布。
+復元範囲はpublicスキーマのみ。locale=C、所有者・権限の省略などv2の制限は維持。Supabase全体の復旧証明とはしない。
+ユーザーの2026-10-12のDBパスワード変更とDB取得成功は既存履歴どおり。G01/O01の最終完了は保留。こちらから本番・実プロジェクト・実DBへの操作やGit操作は行っていない。
+成功表示：XCLIP_PUBLIC_SCHEMA_RESTORE_CHECK_OK。
+公式仕様：https://learn.microsoft.com/en-us/powershell/module/microsoft.powershell.management/start-process?view=powershell-5.1
+
+---
+
+# 2026-10-12 DB隔離復元チェックv2
+
+2026-10-12 DB隔離復元チェック v2
+
+ユーザーの実行ログ：initdbがJapanese_Japan.932に対応するテキスト検索設定を見つけられない旨を出力し、PowerShellのNativeCommandErrorで停止。
+判断：このメッセージだけではinitdbの終了コードは確定できない。旧スクリプトはネイティブ標準エラーの出力をPowerShellのStop設定で終了扱いにしており、警告で止まる問題があった。
+修正対象：xclip-db-restore-check-20261012-v2.ps1。旧版と既存のバックアップ・配布ZIPは変更しない。
+変更：initdbをUTF8、locale=C、text-search-config=pg_catalog.simpleで初期化。Start-Process Hiddenの標準出力・標準エラーを非公開ログへ分離し、ExitCodeで判定。Windows引数の引用とバックスラッシュを適切に処理。テスト用DB停止後にだけ成功表示・SAFE-REPORTを保存。
+保護：毎回新規のテスト用フォルダを作成。新しいローカルPostgreSQLクラスタのdata_directoryを照合してから復元。接続先は127.0.0.1の専用ポート。本番DBへの接続・書き戻し、既存クラスタへの復元、DBパスワード変更はしない。前回の失敗フォルダは削除・再利用しない。
+検証：Windows PowerShell 5.1で構文検査とダミーのネイティブプログラムを実行。stderr警告+exit0で継続、exit7で停止、スペース・引用符・末尾バックスラッシュ・日本語・空引数の受け渡し、非公開ログ分離を確認。
+未検証：今回こちらでは実PostgreSQLのinitdb・pg_restoreを実行していない。ユーザーのDB復元結果待ち。
+復旧範囲：publicスキーマの内容を別DBへ復元する試験。所有者・権限・管理スキーマ・Storage実体は対象外。テスト用locale=Cは本番とのソート順の同等性を保証しない。
+DB取得成功の記録と2026-10-12のDBパスワード変更履歴は維持。バックアップ再取得やパスワード再設定は不要。
+G01/O01の完了状態は引き続き保留。アプリ本体・実環境の設定・Gitへの変更は行っていない。
+
+実行：v2.ps1を以前の展開フォルダに置き、チャットに記載した -Dump と -PgBin を指定して実行する。
+成功表示：XCLIP_PUBLIC_SCHEMA_RESTORE_CHECK_OK
+失敗時：エラーコードとexit番号を共有する。privateログは未編集でチャットへ貼らない。
+公式仕様：https://www.postgresql.org/docs/17/app-initdb.html
+
+---
+
+# 2026-10-12 DBバックアップ取得確認
+
+2026-10-12（日本時間）DBバックアップ取得成功
+
+根拠：ユーザー提供の実行ログ。
+確認表示：XCLIP_FILE_SNAPSHOT_AND_RESTORE_OK、XCLIP_DB_DUMP_AND_ARCHIVE_CHECK_OK。
+保存先：C:\Users\USER\Documents\XclipBackups\database-20261012-182101-7956ad
+暗号化版：上記の encrypted\snapshot.xclipbk。
+使用ツール：ユーザー指定のPostgreSQL 17.11-5 Windowsバイナリ。
+今回の認証は成功。2026-10-12のDBパスワードリセット後の再実行で取得成功の報告を受領した。リセットが以前の失敗の唯一の原因だったと断定はしない。
+パスワード・APIキー・DB内容は記録しない。
+
+検証範囲：pg_dump取得、pg_restore一覧検査、暗号化ファイルから別フォルダへの復元と内容照合が成功したというスクリプト完了ログを確認。
+未確認：実DBとしての隔離復元、別媒体保存、Supabase Storage利用有無と必要な実体保存、ローカル・本番ファイルのバックアップ報告と現行版照合。
+SAFE-REPORT.jsonとバックアップ本体の内容は今回未受領・未照合。
+O01は進行中。DB取得の工程のみ完了し、復旧全体を完了扱いにしない。G01も今回のDBログだけでは完了としない。
+こちらによる実環境操作・DB接続・Git操作・アプリコード更新はなし。
+
+次：xclip-db-restore-check-20261012.ps1に保存先のdatabase.dumpと同じPgBinを指定して実行。新しいローカルPostgreSQLクラスタだけにpublicスキーマを復元し、本番DBには接続しない。成功後も所有者・権限・管理スキーマ等の復旧範囲を区別する。
+
+---
+
+# 2026-10-12 DBパスワード変更の追記
+
+2026-10-12（日本時間）DBパスワード変更記録
+
+ユーザー報告：SupabaseのDBパスワードをリセットし、DBバックアップを再実行した。
+変更対象：DB接続用パスワード。パスワードの値は記録・保存しない。
+実施者：ユーザー。こちらからDB設定変更・実環境操作は行っていない。
+状態：変更・再実行の報告を受領。再実行結果は未受領のため、接続成功・バックアップ成功・復元成功は未確認。
+
+今後の対応方針（ユーザー指示）：
+DBパスワード関連の不具合が出た場合は、2026-10-12にパスワードを変更した履歴を案内する。
+直接接続・Session pooler・バックアップ・外部ツール等で、古いDBパスワードが残っていないか確認する。
+リセット直後のPooler認証失敗は、資格情報の組み合わせとキャッシュ遅延も切り分ける。変更履歴だけを根拠に原因を断定しない。
+Supabaseログイン用パスワード・APIキー・バックアップ暗号化用パスフレーズは、DBパスワードとは区別する。
+ログやチャットでパスワードそのものの共有を求めない。
+
+---
+
+# 2026-10-12 現行版保護・バックアップ準備
+
+この追記を、過去の当時の状態より優先する。
+
+2026-10-12 最優先2件：現行版の保護とバックアップ
+
+今回の状態：準備・隔離検証済み／実環境でのユーザー実行待ち。
+G01「現行版を確定・保護」とO01「DB・巡回状態・ローカルデータをバックアップ」に着手。
+既存の正常動作確認は引き継ぐが、バックアップ取得とDB復元確認はまだ受領していない。完了とは記録しない。
+
+配布内容：
+- xclip-local-snapshot-20261012.ps1：ローカルの未コミット変更・Git履歴・環境設定・.local-admin・教師データ・モデル等を暗号化保存。node_modules/.next/.turboは再生成可能なものとして除外。
+- xclip-server-snapshot-20261012.sh：ColorfulBoxの現行runtime/source/BUILD_ID、設定、Cron、永続巡回状態、手動削除記録、監視・ダウンロード状態を保存。Cronの設定は変更しない。作業中は既存ワーカーとデプロイのロックを取得し、同期の共通operation.lockを使う。
+- xclip-db-snapshot-20261012.ps1：画面で入力した接続情報で、pg_dumpによるDB全体の論理バックアップ、pg_restore一覧検査、暗号化保存を行う。秘密をチャットやコマンド履歴に入力しない。
+- xclip-db-restore-check-20261012.ps1：新しいローカルPostgreSQLクラスタだけにpublicスキーマを復元して確認。新クラスタのデータフォルダを照合してから接続し、最後に停止。本番への復元機能は持たない。
+- xclip-db-inventory-20261012.sql：Supabase SQL Editor用の読み取り専用メタデータ・主要件数確認。
+- 共通cjsと基準JSON：AES-256-GCM+scryptによる暗号化、全ファイルのSHA-256、復元先での内容照合、最新配布パッチとの比較。アプリ本体の更新ではない。
+
+使い方：同梱ファイルを同じフォルダへ展開。ローカル管理画面・開発サーバー・学習・編集を終了してから実行。
+Windows：powershell -NoProfile -ExecutionPolicy Bypass -File .\xclip-local-snapshot-20261012.ps1
+ColorfulBox：shとcjsと基準JSONを /home/rbxfxmfd/ に配置して bash /home/rbxfxmfd/xclip-server-snapshot-20261012.sh
+DB：powershell -NoProfile -ExecutionPolicy Bypass -File .\xclip-db-snapshot-20261012.ps1
+DB用ツールがない場合はPOSTGRES_CLIENT_MISSINGで停止する。PostgreSQLのコマンドラインツールを準備し、必要なら -PgBin 'C:\Program Files\PostgreSQL\18\bin' のように実際の場所を指定。サーバーのPostgreSQL以上の対応バージョンを使う。バージョンはSupabase SQL EditorのSELECT version();で確認できる。
+接続欄はSupabaseのConnect画面にあるDirectまたはSession poolerを使用。Transaction poolerは使用しない。DBパスワードとバックアップ用パスフレーズは実行時に非表示入力。
+DB復元：DB取得成功後に実際のdumpとPgBinを指定して xclip-db-restore-check-20261012.ps1 を実行。例はチャットにも記載。
+
+成功表示：
+ファイル：XCLIP_FILE_SNAPSHOT_AND_RESTORE_OK
+DB取得：XCLIP_DB_DUMP_AND_ARCHIVE_CHECK_OK
+DB public復元：XCLIP_PUBLIC_SCHEMA_RESTORE_CHECK_OK
+
+共有するもの：各バックアップのSAFE-REPORT.json、成功表示、エラーコードのみ。
+共有しないもの：環境ファイル、パスワード、dump、snapshot.xclipbk、restore-test、privateと付くログ・一覧。SAFE-REPORTに差分があっても上書きはしない。差分を次に確認する。
+保存先：Windowsは既定でDocuments\XclipBackups、ColorfulBoxは/home/rbxfxmfd/xclip-backups。バックアップ用パスフレーズを別途保管し、暗号化版を別端末・別媒体にもコピーする。バックアップに加えて復元先分の空き容量が必要。
+
+復旧時の原則：
+- restore-testは非公開の復元確認先。本番や現行ローカルへ自動コピーしない。
+- 実際の障害復旧では書き込み元を停止し、バックアップ後の手動削除・予約枠・取得位置も照合する。古い削除記録だけを復元して再掲載したり、利用予約をリセットして二重巡回することを避ける。
+- ファイルとDBは別時点のスナップショット。単一時点で一致した復元点と主張しない。復旧計画では両方の時刻と差分を扱う。
+- DB dumpはDBスキーマ・データ用。DBロールのパスワード、外部サービスの設定、Supabase Storageのファイル実体は別途保護する。Storage利用有無は管理画面で確認し、利用があれば別バックアップを追加する。
+- public復元試験では所有者・権限を適用しない。Supabase固有拡張や別スキーマへの依存で失敗した場合、成功扱いにせずログを非公開のまま原因を確認する。Supabaseの管理スキーマやサービス全体の復元を証明する試験ではない。
+
+完了条件：G01はローカル・本番の保存と照合報告を確認し、差分を解決または説明できること。O01はDB取得、必要データの保存、隔離復元、必要な別媒体保存と復旧範囲の確認まで。今回の準備だけで完了にしない。
+
+検証：Windows上のダミーデータで、隠しファイル・Git・巡回状態・日本語名・バイナリの暗号化と復元、内容ハッシュ、誤パスワード、改ざん拒否、既存復元先拒否、パストラバーサル拒否、ソース内保存拒否、整合性ガード失敗時の成功記録抑止、local/fileのCLIを確認。Node構文、PowerShell3ファイル構文、Bash構文に合格。
+未検証：実ColorfulBox実行、実DBのdump・復元、PostgreSQLネイティブ復元ツールの実行、実環境の保存容量・外部シンボリックリンク。実プロジェクト・本番の変更やGit操作は行っていない。
+
+公式資料：
+https://supabase.com/docs/guides/platform/backups
+https://supabase.com/docs/guides/database/connecting-to-postgres
+https://www.postgresql.org/docs/current/app-pgdump.html
+https://www.postgresql.org/docs/current/app-pgrestore.html
+https://www.postgresql.org/download/windows/
+
+---
+
+# 2026-10-12 方針確定（この追記を旧記述より優先）
+
+2026-10-12 方針確定：GitHubへ統一するのはコード・更新履歴・配布。管理画面は当面ローカルで継続する。
+G08〜G10の遠隔化関連3件は今回の移行対象外とし、将来候補として履歴を残す。運営対象は39件、将来候補3件。
+GitHub移行では、既存リポジトリの正本確定、最新コードの照合・統合、秘密情報と実行時データの分離、検証・配布・切り戻し手順の統一を進める。
+今回コード変更、Git操作、実環境への適用は実施していない。
+
+---
+
+# 最新状態の追記：2026-10-11 運営計画版
+
+この追記を、下に保存した旧版の当時の状態より優先する。旧履歴は改変せず保持する。
+
+- ユーザーから最新の共通投稿者管理等について「正常動作を確認できました」と報告を受領。状態を「配布・検証済み／ユーザー正常動作確認受領」に更新する。個々の操作の実施日時・本番BUILD_ID・全試験ログの取得までを意味しない。
+- 今後の運営タスクを旧TODO・並行計画・Tier資料・既存タスク・累積履歴から統合。GitHub管理統一とアクセス増加を主要課題に設定した。未取得の過去チャットは追補課題として残した。
+- 今回コード変更・実環境適用・Gitコミット／push・外部タスク登録は実施していない。旧Git記録と未記録の後続更新を区別し、現行版照合・Git統合を優先タスクに設定。
+- 既存の配布スクリプト・ZIP・チェックサムは変更していない。計画書の更新は、本番コードの更新ではない。
+
+---
+
+## 以下は以前の累積履歴（当時の記述をそのまま保持）
+
+# Xclip 更新履歴・引き継ぎ台帳
+
+最終更新：2026-10-11（日本時間）。この台帳は作成・検証・ローカル適用・本番適用を区別します。ファイルの存在だけで本番反映済みとは判断しません。
+
+## 現在の基準
+
+- 現在の開発先：`C:\Projects\xcliprank`。`Documents\x_video_rank_mvp` は古い環境であり、現在の更新元として使わない。
+- 本番：ColorfulBox、`https://xcliprank.com`。現在公開中のコードはサーバーの `.htaccess` にある `PassengerAppRoot` と、runtimeの `DEPLOY_SOURCE`・`.next/BUILD_ID` で照合する。古い会話のVercel向けデプロイ手順を現在の本番へそのまま適用しない。
+- GitのHEADだけでは現状を表さない。現在のローカルには未コミット変更・未追跡ファイルがある。更新前にそれらを保護する。
+- 今回のローカル修正は適用済み。本番用修正版は作成・検証済みで、サーバーでの実行結果は未受領。本番の再生不能動画の除外と、実DBへの再登録結果は未確認。
+- 対応する成果物とローカルコードのSHA-256は `Xclip-更新照合台帳.json` に記録する。ハッシュは取得時点の内容を示し、適用済みの証明とは区別する。
+
+## 過去の更新の復元
+
+参照できた会話・ローカル文書・更新ファイルから復元したものです。全会話の完全な監査を済ませたという意味ではありません。過去の適用状況を確認できないものは、そのまま未確認と記載します。
+
+| 日付・期間 | 内容 | 確認根拠・状態 |
+|---|---|---|
+| 2026-08〜09 | コンテンツフィルター、安全確認、手動除外・教師レビュー等の基盤 | 「Add content filter module」、現在の `lib/content-filter.ts` 等。全改版の本番適用日時は未照合。現在の保守で既存の手動除外や安全判定を上書きしない。 |
+| 2026-09-07頃 | 投稿画像へのモザイク・ぼかし・JPEG変換、適用フラグ | 「Add content filter module」の当時の本番反映報告と、その後のユーザー動作確認。旧Vercel環境での履歴であり、現在のColorfulBox版との一致は未照合。 |
+| 2026-09-07頃 | サイトとDBのバックアップ | 同会話に934ファイル・5テーブル13,191行のバックアップ報告。取得不能な機密変数等の不足も報告されている。完全復元可能との断定はしない。 |
+| 2026-09-07頃 | 広域探索停止・選別投稿者100%への設定 | 同会話にローカル変更・型検査成功。本番デプロイは認証エラーで未反映との報告。その後の現行版と同一とは判断しない。 |
+| 2026-09-13〜16 | 管理ハブ、アクセス・エンゲージメント、ローカル管理保護、開発先の固定 | 現在の文書、ローカルコード、保存済み更新アーカイブ。固定開発先は `C:\Projects\xcliprank`。当時のVercel運用文書は現在の公開方式と区別する。 |
+| 2026-09-30 | ランキング流動性・SEOの調査 | 「Xclip流動性とSEO」。この調査時点では追加実装・Preview作成なし。後日のランキング改修と区別する。 |
+| 2026-10-03 | 収集のページ継続、再開、公平な巡回順 | 「Xclip収集ログ確認」「Xclip収集の週次判断」、PR #7の反映済みとの過去報告。10/3の実行ログは24投稿者・287読み取り・39新規保存・248重複・実エラー0。現在の無料巡回とは別の有料収集経路の履歴。 |
+| 2026-10-04 | 動画カードのTier・スコア非表示、再生時間表示 | 「Xclip収集ログ確認」に作成・検証と切り替え不具合の修正履歴。切り替え修正後のユーザー成功報告あり。 |
+| 2026-10-04 | 新着・24時間ランキングの補充枠・重複回避 | 同会話に100件以上の表示、過去動画補充、日次枠85件、重複回避の改修と切り替え修正。ユーザー成功報告あり。今回の更新では配分・選択方法を変更していない。 |
+| 2026-10-04〜05 | 収集検索範囲の期限切れ対策 | 「Xclip収集ログ確認」に更新ファイルと `curated_search_expiry` 追加手順。「Xclip収集の週次判断」では10/5本番反映済みとの運用記録。現在のDB列をこの作業から直接照合はしていない。 |
+| 2026-10-06 | Tier再評価、教師データ分析、管理リンク、ローカルHost判定 | `docs/20261006-parallel-roadmap.md` と保存済み成果物。Host修正後のローカル正常動作は過去のユーザー報告。各モデルの本番反映・実精度の判定は別途必要。 |
+| 2026-10-07〜08 | 複数フレーム、プレビュー互換、教師分析、順序調整、再現率検証、モデルリリース関連 | 現在の `docs/tier-*.md`、コード、保存済み更新ファイル。成果物ごとの版とSHA-256を照合台帳に保存。ファイルがあることを本番適用済みの根拠にしない。 |
+| 2026-10-08〜09 | 動画保存の調査からローカル実装へ移行 | 「Implement video downloads and saves」は調査・変更案のみ。「Xclip収集ログ確認」では依存ファイル不足で初版/v2が停止し、v3へ修正、その後ユーザーがローカル保存成功を確認。調査のみの会話を完成版と誤認しない。 |
+| 2026-10-10〜11 | 投稿URLからの保存、直接再生、HLS、再生回復、URL許可リスト、時間メタデータ、表示文言 | 現在のローカルコード、`xclip-direct-*`・`xclip-video-url-*`・`xclip-site-copy-duration-*` 等の保存済み更新ファイル。今回の本番修正は、これらを含む実際の公開ビルドのソースをコピーして変更する。各過去版の適用時刻は未照合。 |
+| 2026-10-11 | 凍結アカウントの監視、投稿削除監視、低頻度巡回、診断ログ | 「Xclip監視ログ確認」の実ログと、suspended v3・lowload・diagnosticsの更新ファイル。15:17 JSTのログでは投稿2件が `message` 不在により判定不明となり途中休止。本番で旧監視が動いていたことを確認。 |
+| 2026-10-11 | FxTwitter無料巡回への移行と本番同期認証の修正 | 「プロジェクト運用方針確認」に認証修正後の本番同期動作確認。ローカルには10:36 JSTの更新バックアップが存在。自動収集は最大8投稿者・3時間周期・同一対象24時間以上・通信5秒間隔。有料の手動/復旧経路と区別する。 |
+| 2026-10-11 | プロフィールURLと100/200/300投稿による簡易登録・自動同期・掲載 | 同会話と11:11 JSTのローカル更新バックアップ。今回も登録・途中再開・既存データ保護のテストで確認。 |
+| 2026-10-11 | 選別投稿者の巡回管理画面 | 「プロジェクト運用方針確認」で作成・検証済みと訂正済み。19:37 JSTのローカルバックアップとコードでローカル適用を確認。本番dashboard単体更新の実行結果は未確認。今回の本番用修正に含まれる。 |
+| 2026-10-11 | 再生不能動画の除外・取得0件修正 | このチャットで作成・検証・ローカル適用。本番未適用。詳細は次項。 |
+
+## 今回の更新：availability-curated-fix-20261011
+
+### 変更
+
+- `lib/post-status.ts`：message省略を許容し、ID・投稿者・公開状態・動画メタデータを照合。削除と非表示を区別し、引用先だけの非表示で親投稿を除外しない。動画情報不足では除外解除しない。
+- `lib/availability-scan.ts`：投稿ごとの判定不明で監視全体を休止しない。削除・非表示は24時間以上離れた2回の確認と同一巡回の正常動画応答で確認してから除外。通信障害・制限の休止は維持。
+- `lib/fxtwitter-curated.ts`：新規取得は通常のstatuses一覧。cursorに取得経路を記録し、旧media一覧の途中再開との混在を防止。外部サービス障害と空一覧を区別する。
+- `lib/free-curated-scan.ts`：空一覧等の個別失敗で後続投稿者の巡回を止めない。既存投稿ID・累計・前回成功時刻を保持。
+- 巡回管理の既存コードとテストを統合。DBへの保存時の手動指定、安全確認、重複保護を維持。
+
+### 検証・適用
+
+- 登録、保存、本番同期、巡回管理、状態監視、空応答と通信障害の区別、新旧cursor、誤除外防止、復旧の模擬テスト成功。
+- 変更モジュールの型検査成功。配布した本番用ファイルの展開・照合・適用・再適用・未知版拒否を隔離コピーで確認。ローカル用ファイルの実適用成功。
+- 実通信：`@yoyoyokun19` のmedia一覧0件、statuses一覧20投稿、動画候補10件。有料X API利用0件。候補抽出でありDB登録成功の報告ではない。
+- ローカル適用：2026-10-11 20:52 JST。変更前バックアップ：`.local-admin/fxtwitter-curated-backups/20261011115212931-bd7faf`。
+- 本番用：`xclip-availability-curated-fix-deploy-20261011.sh`。ローカル用：`xclip-availability-curated-fix-local-20261011.ps1`。SHA-256は照合台帳を参照。
+- 本番の全体ビルドと公開後の確認はサーバーで更新ファイルを実行した際に行う。更新時に追加巡回・待機期限リセットは行わない。
+
+## 2026-10-11：更新履歴の運用追加
+
+ユーザー指示により、今後は更新ファイルをチャットへ直接添付し、実行方法もチャット本文へ記載する。更新履歴を継続し、以前の会話の更新も確認できた範囲で追記する。
+
+- この台帳、成果物とコードの照合台帳、ローカルの `AGENTS.md` に確認ルールを保存する。
+- 旧 `docs/development-workflow.md` には、Vercel手順が過去の記録であることと現在の台帳への参照を追記する。
+- この変更は文書・運用ルールのみ。上記プログラム更新ファイルの内容は変えていない。
+
+## 今後の各更新で必ず記録する項目
+
+1. 日時（JST）、依頼元の会話、具体的な変更目的。
+2. 基準にしたローカル/本番コード、対象ファイル、変更前後の照合値、既存の未コミット変更。
+3. 更新ファイル名・版・SHA-256、前提と含まれる更新、置き換える旧版。
+4. 実施した検証と結果、未確認事項。ビルド成功を本番反映済みと扱わない。
+5. 作成済み/検証済み/ローカル適用済み/本番適用済み/復旧済みを別々に記録。
+6. 適用先・時刻・成功表示・バックアップ先・復旧方法。共有されたサーバーログを根拠として追記する。
+
+未確認の項目を推測で埋めず、次に確認する項目として残す。古い会話のコードより、実際に適用されているコードとその照合結果を優先して整合を確認する。
+
+## 2026-10-11T21:20:56+09:00 : previous issue closed and recorded in Git
+
+- User instruction: treat the availability and zero-result collection work as complete and record it in Git. This records completion of the requested work; it does not certify full collection success for every author.
+- Screenshots supplied by the user show 43 and 25 published items, with author-specific fetching stopped partway through. No production database query or server installation log was supplied. Production deployment and end-to-end display remain unverified by this agent.
+- Scope: local FxTwitter registration and monitoring UI, their directly related modules/tests, handoff rules/history, and the exact production/local installer artifacts plus the production source patch archive under $releaseRelative.
+- Preserve unrelated download, playback, Tier-learning, collector and layout changes as uncommitted work. No application source changed in this recording operation. Release files match the previously recorded SHA-256 values; selected local source files were checked against the prior source snapshot.
+- Prior tests/typecheck remain as recorded above; no new build, paid API request, collection, database change or deployment was run. The production source zip is a patch set for the detected deployed source, not a complete standalone application; the local and production source variants must remain distinct.
+- Git commit is authorized in this conversation. GitHub push is not performed. The commit ID is recorded in the downloadable Git receipt after commit creation.
+- User operating preference: do not operate the PC, apply local updates, or run commands without an explicit request. In ordinary update delivery, supply downloadable files, complete history and inline execution instructions for the user to execute. This Git recording and read-only feasibility review are the current explicitly requested operations.
+- Next request is feasibility verification only: FxTwitter for author addition/bulk import; official X API for subsequent new-video polling. No implementation or scheduled-provider change is included in this completion commit.
+
+
+## 2026-10-11：hybrid-xapi24-20261011（作成・模擬検証済み、未適用）
+
+依頼：選別投稿者の追加と100/200/300投稿の一括取得はFxTwitterに残し、その後の新着動画巡回をX APIへ変更。直近24時間で最大24投稿者、前回以降の動画のみ。利用制限で中断した作成作業を継続し、登録の本番反映についても調査。
+
+- 基準：Git 84bd6f49cbeed2372b07408104e5d0348ffc0ac7、現在のローカルと保存済みの本番向けavailability-curated-fix配布物。両者の差を保持。対象プログラムは隔離作業コピーで編集し、C:\Projects\xcliprankへの適用・本番操作・Git操作は今回は行っていない。
+- 新着巡回：既存Cron入口のscan-free-curatedをX API専用処理へ転送。通常の旧有料バッチ入口は引き続き収集しない。別のCronは追加せず、同じflockとoperation.lockを使う。手動の明示的復旧経路は従来どおり。
+- 上限：直近24時間で最大24投稿者、同一投稿者も24時間以上。3時間ごと最大8投稿者、1投稿者につき1回最大100投稿、続きは次の対象巡回で再開。通信前に予約を永続化し、再起動・再同期・失敗でも予約枠を戻さない。枠の時刻を再設定するデプロイ処理はない。
+- 取得対象：from:投稿者 has:videos -is:retweet。前回IDまたは期限内start_timeを使用。両パラメータは同時に送らない。ページ送り中は検索終了時刻を固定し、DB保存完了まで前回IDを進めない。応答の投稿者IDとネイティブ動画URLを照合。不要なユーザー展開・プロフィール再取得は行わない。
+- 引き継ぎ：本番専用state-v1.jsonの登録一覧・停止状態・集計を維持。旧FxTwitter巡回が途中なら下側の取得境界から引き継ぐ。X用cursor・利用予約・取得位置は同じ永続ディレクトリ内x-api-v1.jsonへ分離する。基準なしは本番の最新保存済み投稿を参照し、それもなければ有料の初回取得をせず、無料一括取得の完了を待つ。
+- 新規登録：無料一括取得中はX巡回を待機。確認済みの最新投稿IDと完了情報を本番へ送る。既存X取得位置を後から一括取得の新しいIDで飛ばさない。動画候補0件のページでも登録完了情報を送る。
+- 登録未反映の調査：ローカルに行があること、本番専用巡回一覧への同期、動画DBへの掲載、サイトの新着表示は別。従来の選別投稿者一覧はis_curated:trueを主に扱い、FxTwitter追加は専用一覧で管理する。画面を閉じる・取得/同期/掲載失敗で初回処理は止まり、途中再開が必要。
+- 修正した復旧経路：本番側の登録が欠けた409を識別し、掲載段階で1回だけ登録一覧を再同期し、保存済みの同じページを掲載し直す。停止中・認証不良・DB失敗を自動解除しない。投稿者の停止・再開・登録解除は本番へ同期成功してからローカル状態を更新する。
+- 表示：本番への反映確認、ローカル一覧との未同期比較、X API予約数・応答投稿数・日次利用枠・初回完了待ち・7日検索範囲外の警告を追加。監視画面の読み取りはFxTwitter/X APIを呼ばない。
+- 既存保護：手動評価・手動非表示・安全除外・重複・凍結/削除/非表示の除外と復旧条件を維持。可用性監視は従来のFxTwitter系のまま、新着X巡回とは別。
+- 検証：通信/DBを模擬した上限・再起動・予約・途中移行・ページ保存失敗・旧cursor混入拒否・空/不正/部分失敗応答・429/認証/残高/通信休止・登録復旧・停止・安全掲載・巡回管理・既存可用性監視のテスト成功。変更モジュール、登録APIと画面の型検査成功。本番全体の型検査/ビルドは実際の稼働ソースで更新時に行う。
+- 配布検証：隔離コピーで本番パッチのステージ必須・未知版拒否・適用・再適用、ローカルパッチの未知版拒否・模擬テスト/型検査・適用・再適用・復元・登録データ保持を確認。配布shとps1の構文検査も成功。対象PCの実プロジェクトや本番への適用検証とは区別する。
+- 制限：Recent Searchは過去7日。検索範囲外は明示して無料一括取得で補完する。大量投稿者の続きページは日次枠内で順次処理する。24時間に最大24投稿者なので、登録者数が24を超える場合は順番待ちになる。
+- 個別投稿者の未反映原因は、ユーザーの対象名・エラー・本番ログが未受領のため断定していない。実API権限/残高、有料API実通信、実DB保存、本番表示は未確認。
+- 配布：本番用sh、ローカル用ps1、版別ソース・テストZIP、累積履歴・照合台帳。各対象と成果物のSHA-256は同梱台帳・チェックサムに保存。本番更新は稼働ソース・BUILD_ID・想定ファイルhashを照合し、隔離ビルドと公開確認の後に同じCronを更新。未知版は拒否、切替失敗時は旧runtime/settingsへ復旧。ローカルは変更前バックアップと内容照合付き復元を用意。
+- 今回の作成・検証だけでは適用済み扱いにしない。ユーザーが実行する。秘密の値・登録データ・環境ファイルは配布しない。
+
+なお、前項のGit記録対象のリリース保存先はreleases/20261011-availability-curated。文字列$releaseRelativeと記録された箇所はこの保存先を指す。
+
+
+## 2026-10-11：hybrid-xapi24 本番更新完了（ユーザー提供ログで確認）
+
+2026-10-11 hybrid-xapi24-20261011 本番反映確認記録
+
+証拠：ユーザーから提供された本番実行ログ。こちらから本番への接続・適用・API巡回・Git操作は行っていない。
+結果：XCLIP_HYBRID_XAPI24_DEPLOYMENT_COMPLETE を確認。
+本番：更新完了。ステージと公開後のページ、ランキング、Reels、登録同期API、巡回管理APIの確認成功。
+巡回：既存Cron更新・runtime確認成功。X API新着巡回、FxTwitter追加/一括取得、直近24時間24投稿者、3時間ごと最大8投稿者、同一投稿者24時間以上。
+起動待ち：最初のステージcurl接続拒否、切替直後の公開確認HTTP 503は、後続確認成功により解消。最終エラーではない。
+バックアップ：/home/rbxfxmfd/xclip-before-hybrid-xapi24-20261011.tlXJaO/runtime
+実行ステージ：/home/rbxfxmfd/xclip-hybrid-xapi24-20261011.Bds2LV
+稼働AppRoot：/home/rbxfxmfd/xclip-video-card-20261004.DJKKID/runtime
+実通信：この更新では収集APIを呼んでいない。X APIの認証・残高・実巡回・新着DB保存の成功は、後続の巡回実績で確認が必要。
+ローカル：更新の実行結果は未受領。適用済みとは扱わない。
+個別投稿者：反映されていない投稿者名・状態は未受領。原因は未確定。
+次の操作：本番成功後、ローカル更新ps1をユーザーが実行し、開発サーバーを再起動。本番への反映確認と必要な途中再開を行う。
+既存配布sh/ps1/ソースZIPおよびそのチェックサムは変更しない。
+
+
+## 2026-10-11：新着掲載条件の調査
+
+2026-10-11 追加調査（コード変更・本番操作なし）
+
+ユーザーの質問：FxTwitter選別投稿者追加で取得した動画の新着掲載順位、巡回管理が除外監視かどうか。
+確認対象：保存済み本番向けランキングコードとハイブリッド更新の掲載処理・巡回管理画面。
+発見：free-curated-publish.tsは新規authorsをis_curated:falseで作成する。一方、rankings/route.tsのfetchActiveCuratedAuthorIdsはis_curated:trueかつcurated_status:activeのみ取得し、fetchCandidatePoolはそのauthor_idだけに限定する。
+影響：この条件のままのランキング実装では、新たにFxTwitter側だけで登録した投稿者の動画は、公開可能なDB行として保存済みでもランキング候補から外れる。既に通常の選別投稿者条件を満たす投稿者は影響が異なる。
+個別確認：ユーザー提供画面の10/10は本番専用巡回一覧への同期成功を示し、サイトのランキング表示を証明しない。本番の個別DB行・現時点のランキングソースは直接確認していない。
+並び順：created_atは元のX投稿日時。追加登録日時を新着日時へ置き換えない。古い一括取得分は過去枠と評価条件に従う。
+巡回管理：fxtwitter-monitorは新着動画の取得巡回記録。更新後はX APIの取得・掲載件数・最終実行・待機状態を表示する。凍結・削除・非表示を確認する既存動画の可用性監視とは別。
+訂正：過去説明の「本番掲載」はDB保存・公開可能状態への変更成功を指し、ランキング候補への採用や実表示まで保証しない。この条件差を前回の説明では把握できていなかった。
+更新方針候補：新着/各ランキングの対象投稿者集合へ、専用登録一覧の対象投稿者を含める。is_curatedを一律trueにして旧収集へ再投入する方法は、二重巡回防止との整合が必要。今回は質問への調査のみで修正・配布更新は実施していない。
+
+
+## 2026-10-11：unified-authors-20261011（作成・模擬検証済み、未適用）
+
+- 依頼：通常登録とFxTwitter登録を同じ管理情報に統合。再生不可動画の監視画面を追加。凍結・非表示の投稿者を管理者が削除できるようにする。
+- 基準：本番適用ログで確認済みのhybrid-xapi24-20261011とその照合済み配布コード。ローカル適用は未確認なので、直前版と以前の既知版を内容照合して更新できるようにする。実プロジェクト・本番への適用とGit操作は今回行っていない。
+- 共通管理：authorsのis_curated=true、curated_status、期待Tier等を通常登録と共有。ローカルのFx登録ファイルは初回取得の途中再開用、サーバーの巡回ファイルは取得位置・予約・統計用に残し、投稿者の稼働状態はDBを参照する。旧通常登録画面は共通管理へ案内し、追加はFxTwitterの共通導線を使う。
+- 既存移行：既に同期済みのサーバー登録一覧を共通DBへ反映。動画の再取得、有料API、取得位置・予約枠のリセットはしない。既存の共通停止状態、評価・手動指定を維持。正常デプロイでは公開切替後に移行CLIを実行する。再試行は共通管理画面から可能。
+- 掲載条件の修正：FxTwitter新規投稿者のDB保存をis_curated:falseから共通管理のis_curated:trueへ変更。既存の新着・ランキング側の候補条件に入る。元の投稿日時・Tier・安全除外・重複条件は維持し、古い動画が必ず新着上位に来るとは扱わない。
+- 状態同期：停止・再開・削除は投稿者単位で本番へ操作。部分的なローカル一覧の同期で、他の投稿者を停止したり、停止中の投稿者を再開しない。新着CronはDBの共通状態を照合する。同じCron・operation.lock・24時間最大24投稿者・Xの取得境界を維持。
+- 手動削除：共通管理と追加画面に確認付き削除。削除記録を永続化してから、DBの投稿者をremoved/is_curated:falseへ変更し、その投稿者の動画をis_visible:falseにする。DB行と評価履歴は復旧用に保持し、物理削除しない。手動削除キーを既存の公開・ランキング・Reels・ダウンロード除外判定に統合し、監視による自動復旧・古い一覧の同期・再開・再掲載で復活しない。途中DB失敗は削除済み一覧から再試行可能。成功時に巡回一覧から除き、枠の時刻とX位置は保持する。
+- 再生不可監視：本番のアカウント/投稿状態ファイルを認証済みAPI経由で読み、最終確認、確定除外、再確認待ち、凍結、手動削除、次回最短時刻・休止・一巡完了をローカルの/availability-monitorへ表示。各詳細は最新最大500件。画面の更新は外部プロバイダ取得・DB更新・巡回の強制実行をしない。全実行ログではなく最新状態の確認画面。24時間離した確認とhealthy-control等の自動除外基準は変更しない。
+- 導線：管理トップに/curated-managerと/availability-monitorを追加。既存のカードや未知の編集を丸ごと上書きせず、構文を確認して必要なカードだけ追記。ローカル画面はproductionで404、操作APIはlocalhost同一オリジンJSONのみ、本番APIはCRON_SECRETとDB接続先照合を維持。
+- 検証：実DB/HTTPを模擬し、共通移行、ランキング候補条件、保存、停止の権威、部分一覧同期、削除確認、DB失敗再試行、再同期/自動復旧による復活防止、予約・cursor保持、監視の読み取り専用、ローカル操作の認証・状態保持を確認。既存の上限・ページ送り・登録復旧・可用性監視テストと変更箇所の型検査成功。複数TSX変更後にReactの確認スキルで読み込み・操作状態・エラー表示を確認。画面のPC操作による検証は行っていない。
+- 配布検証：隔離コピーで本番パッチのステージ必須・未知版拒否・適用・再適用と、その適用後ソースの共通管理/既存巡回/可用性テストを確認。ローカルパッチの未知版拒否・模擬テスト/型検査・適用・再適用・復元・登録データ保持を確認。sh/ps1構文検査成功。
+- 配布/適用：本番sh、ローカルps1、版別ソースZIP、累積履歴、照合台帳、SHA-256。実本番ソースで型検査・ビルド・ステージ/公開確認を行ってから完了する。未知版拒否、runtime/settingsの自動復旧、ローカルのファイルバックアップ/照合付き復元を継承。
+- 復旧の範囲：公開切替失敗時は前runtime/settingsへ戻す。共通DBへの移行済みフラグは自動巻き戻ししない（動画・評価・取得位置は消さない）。手動削除した動画もインストーラー復元では再掲載しない。移行のDB更新失敗はデプロイを完了扱いにせず、ログと画面から再確認・再試行する。
+- 状態：この版は未適用。実際の新着表示、実巡回、個別アカウント削除はユーザー実行後のログで確認する。秘密の値・実登録データ・環境ファイルは同梱しない。

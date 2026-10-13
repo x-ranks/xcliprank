@@ -1,0 +1,12 @@
+﻿2026-10-12 ローカル・ColorfulBoxファイルバックアップ確認
+
+ローカル：ユーザー添付SAFE-REPORT.jsonを読取確認。2026-10-12 17:59:33 JST、1,286ファイル、fileRestore=PASS。最新unified-authorsパッチ対象25ファイル一致、差分0。Git HEAD=84bd6f49cbeed2372b07408104e5d0348ffc0ac7。Git HEADだけを全コードの現行版とは扱わず、未コミット変更も含む保存記録として保持する。
+報告された暗号化アーカイブSHA-256：527cdd0362f4facf03447bbc075db4544e350cc5e6b9119b4601eae96b1fbb74。こちらから実アーカイブを再ハッシュした値ではない。
+ローカルJSONのdbRestore=PENDINGはファイルバックアップ作成時点の表示。後続のv5 DB public隔離復元成功（動画9959件・投稿者2406件）を最新状態として別途記録済み。ローカルバックアップの再実行は不要。
+
+ColorfulBox：ユーザー実行ログのXCLIP_FILE_SNAPSHOT_AND_RESTORE_OKを確認。保存先 /home/rbxfxmfd/xclip-backups/server-20261012T090140Z-177639 。JSONは同フォルダのSAFE-REPORT.json。ファイル保存・隔離復元照合の成功報告として受領。JSON本体はまだ未受領なので、BUILD_ID・DEPLOY_SOURCE・基準版との照合結果・状態保存範囲・暗号化ハッシュは未確認。
+ログ末尾のclient_loop: send disconnect: Connection resetは成功表示後のSSH接続切断を示す。これだけで完了済みバックアップが失敗・削除されたとは判断しない。接続し直してJSONを確認する。
+
+現状：ローカルファイル保存とパッチ対象の照合、ColorfulBoxファイル保存の成功ログ、DB取得とpublic隔離復元を確認済み。
+残り：ColorfulBox SAFE-REPORT.jsonの照合、暗号化バックアップの別端末・別媒体保存、Storage利用有無と必要な実体保存、復旧範囲の最終確認。G01/O01の完了はこの確認後に判断する。
+こちらで実プロジェクト・本番・DB・Gitの操作は行っていない。秘密情報やバックアップ本体は取得しない。

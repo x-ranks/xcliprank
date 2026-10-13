@@ -1,0 +1,6 @@
+﻿旧 --wait のターミナルで Ctrl+C を押して終了。
+xclip-fx-five-now-20261013.sh を /home/rbxfxmfd/ にアップロード。
+bash /home/rbxfxmfd/xclip-fx-five-now-20261013.sh
+新しい本番デプロイ/ローカル更新は不要。ランダムな安全条件を満たす5投稿者を1回実行。通常枠は保持し、今回は追加の手動5件として記録。
+成功 XCLIP_FX_FIVE_NOW_PASSED / 失敗 XCLIP_FX_FIVE_NOW_FAILED。JSONと最後の表示を共有。新着0でも正常取得は成功。
+同じ版の再実行で追加5件は開始しない。記録/取得位置/予約を削除しない。

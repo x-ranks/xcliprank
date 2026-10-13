@@ -1,0 +1,4 @@
+﻿xclip-xapi-auth-diagnose-20261012.shを/home/rbxfxmfdへアップロードし、ColorfulBoxで次を実行。
+bash /home/rbxfxmfd/xclip-xapi-auth-diagnose-20261012.sh
+表示されたJSONと成功/失敗コードだけを共有。tokenや.env本文は共有しない。外部通信・設定/DB/巡回状態の変更なし。
+追加オプション --probe-usage は利用状況APIへの外部GETを1回許可する場合だけ明示して使用。投稿検索なし。料金ゼロは保証しない。通常はまずオプションなしの診断結果を確認する。

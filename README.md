@@ -1,3 +1,5 @@
+> **2026-10-13 保存用ブランチ**：最新版の設定・完了履歴・配布物は [現在の状況](docs/XCLIP_CURRENT_STATUS.md) を参照。現行ローカルは `snapshots/local-20261013/`、本番用の既知差分は `snapshots/production-known-files-20261013/`。以下のルートの旧アプリ説明から直接公開しないでください。
+
 # X Video Rank MVP
 
 X API → Supabase → Ranking → X公式埋め込み、までをつないだテスト実装です。

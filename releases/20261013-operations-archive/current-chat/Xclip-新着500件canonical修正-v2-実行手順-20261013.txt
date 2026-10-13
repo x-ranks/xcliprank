@@ -1,0 +1,31 @@
+Xclip 新着500件canonical修正 v2 / 2026-10-13
+
+v1は公開前のcanonical検査で停止し、旧サイトのままです。v2は実Next resolverと隔離production HTML、配布物適用/復旧まで検証済み。本番・実ローカルへのv2適用は未実施。Git/GitHub未反映。
+
+1. 管理画面からの変更操作を止め、本番用shを /home/rbxfxmfd/ にアップロード。
+bash /home/rbxfxmfd/xclip-newest500-deploy-20261013-v2.sh
+成功: XCLIP_NEWEST500_V2_DEPLOYMENT_COMPLETE
+事前のソース照合・回帰・全体型検査・Nextビルド・隔離HTTP確認後に切替。
+公開確認を満たせない場合は旧runtimeへ自動復旧。PREVIOUS_RUNTIME_BACKUPのパスを保管する。
+COLLECTOR_BUSY/AVAILABILITY_WORKER_BUSYは巡回中のため未切替。完了後に同じshを実行。
+未知のコード/ビルド/設定差分では切替せず停止。hashを無条件追加しない。
+
+2. 本番成功後、新着 / の50件、さらに表示の2ページ目、24時間・週間との重複なしを確認。
+表示対象が不足する場合は500件未満。閲覧中の一覧は24時間保持し、削除された枠は詰め替えない。
+最新の新着へ、で新しい一覧へ戻る。新しい一覧は5分単位で更新。
+
+3. ローカル側も揃える場合、管理画面・開発サーバーを終了し、展開先で実行。
+powershell -NoProfile -ExecutionPolicy Bypass -File .\xclip-newest500-local-20261013-v2.ps1
+成功: XCLIP_NEWEST500_V2_LOCAL_INSTALLED または XCLIP_NEWEST500_V2_LOCAL_ALREADY_INSTALLED
+その後いつもの方法で開発サーバーを再起動。公開ページのプレビューは本番ランキングAPIを参照。
+管理機能、接続用env、巡回設定、取得位置、予約は変更しない。
+
+ローカルの復元（出力されたBACKUPを指定。後編集がある場合は上書きを拒否）:
+powershell -NoProfile -ExecutionPolicy Bypass -File .\xclip-newest500-local-20261013-v2.ps1 -RestoreBackup "BACKUPのフルパス"
+成功: XCLIP_NEWEST500_V2_LOCAL_RESTORED
+
+ソースZIPは更新対象の差分とインストーラー。完全なリポジトリ/DBバックアップではない。
+以前の累積履歴・適用証拠は同梱履歴/照合台帳を参照。
+アシスタントの検証は模擬DB/HTTP、実配布物の隔離適用・復旧・型・SSR・回帰。
+受領外の未変更本番コンポーネントは隔離型契約/SSR置換を用いた。契約は配布しない。
+実サーバーの全体型検査・ビルド・公開確認は本番更新スクリプト内で必須。
