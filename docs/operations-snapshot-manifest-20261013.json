@@ -12,8 +12,8 @@
     },
     {
       "path": "docs/operations-completion-20261013.json",
-      "sha256": "dc68362ea75fc00a229c33200e4e3025892dc38684860484e45c304731801bdc",
-      "bytes": 3828
+      "sha256": "cc173fc5bc2ec37b629bf6ce38928ad51f0b602bebdfe824bb461f311e554a82",
+      "bytes": 4630
     },
     {
       "path": "docs/production-known-files-20261013.json",
@@ -22,23 +22,23 @@
     },
     {
       "path": "docs/xclip-update-artifacts.json",
-      "sha256": "69768c2cf55ecea37ce9b6d078c310c967057781f322ac3cae54cd3b52a7a0e2",
-      "bytes": 276434
+      "sha256": "c4e103b25b9b3dee299c2ef9b1505464f431cd00f2271ce4362a96569e56667e",
+      "bytes": 277660
     },
     {
       "path": "docs/XCLIP_CURRENT_STATUS.md",
-      "sha256": "0b3eb5721057046c9625f57f97bb81742740e1a73a6933707632be5f01fec7df",
-      "bytes": 4199
+      "sha256": "dad57e2d479af446f6cd275c692f69617ce747362069bd5b40fbe983808efbd8",
+      "bytes": 4387
     },
     {
       "path": "docs/XCLIP_UPDATE_HISTORY.md",
-      "sha256": "f59cf3c62466612475d01e2d3048e0cc8e8c1dd7a3f41c494feec37b6f3e6fc0",
-      "bytes": 141097
+      "sha256": "c67d2c8648c4d1fff11da712965d74789adfa53d7f4b7c360f1117c44fd1eebf",
+      "bytes": 141530
     },
     {
       "path": "snapshots/README.md",
-      "sha256": "0b3eb5721057046c9625f57f97bb81742740e1a73a6933707632be5f01fec7df",
-      "bytes": 4199
+      "sha256": "dad57e2d479af446f6cd275c692f69617ce747362069bd5b40fbe983808efbd8",
+      "bytes": 4387
     },
     {
       "path": "snapshots/local-20261013/.env.example",
@@ -652,13 +652,13 @@
     },
     {
       "path": "snapshots/local-20261013/docs/xclip-update-artifacts.json",
-      "sha256": "69768c2cf55ecea37ce9b6d078c310c967057781f322ac3cae54cd3b52a7a0e2",
-      "bytes": 276434
+      "sha256": "c4e103b25b9b3dee299c2ef9b1505464f431cd00f2271ce4362a96569e56667e",
+      "bytes": 277660
     },
     {
       "path": "snapshots/local-20261013/docs/XCLIP_UPDATE_HISTORY.md",
-      "sha256": "f59cf3c62466612475d01e2d3048e0cc8e8c1dd7a3f41c494feec37b6f3e6fc0",
-      "bytes": 141097
+      "sha256": "c67d2c8648c4d1fff11da712965d74789adfa53d7f4b7c360f1117c44fd1eebf",
+      "bytes": 141530
     },
     {
       "path": "snapshots/local-20261013/lib/adult-score.ts",
@@ -2566,5 +2566,5 @@
       "bytes": 636
     }
   ],
-  "note": "Self excluded; includes historical base docs as well as newly archived files. No secrets or operational state."
+  "note": "All added snapshot, distribution and current status files; self and original main files excluded."
 }

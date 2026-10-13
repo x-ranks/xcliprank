@@ -39,7 +39,14 @@
     "branch": "archive/operations-20261013",
     "publication": "commit to dedicated preservation branch; root application and main unchanged",
     "previousLocalHead": "84bd6f4",
-    "remoteMainBase": "2bf1a1fca840fc4f3249e916fb1f6f92bbb13200"
+    "remoteMainBase": "2bf1a1fca840fc4f3249e916fb1f6f92bbb13200",
+    "gitRecorded": true,
+    "githubPushed": true,
+    "verifiedSnapshotCommit": "e0e4c3b5c961cefbc9eef1ea856b4f551a6c3edd",
+    "remoteVerification": "GitHub API ref SHA equals locally committed snapshot; private repo; main unchanged",
+    "verifiedAtJst": "2026-10-13T23:10:37+09:00",
+    "branchUrl": "https://github.com/x-ranks/xcliprank/tree/archive/operations-20261013",
+    "mainUnchangedSha": "2bf1a1fca840fc4f3249e916fb1f6f92bbb13200"
   },
   "assistantActions": {
     "productionDeployment": false,
@@ -74,7 +81,16 @@
       "knownProductionTargets": 59,
       "historicalArtifacts": 227
     },
-    "fullProductionBuild": "not rerun; full current production source not freshly captured"
+    "fullProductionBuild": "not rerun; full current production source not freshly captured",
+    "remoteGitHub": {
+      "repository": "x-ranks/xcliprank",
+      "branch": "archive/operations-20261013",
+      "verifiedRemoteCommit": "e0e4c3b5c961cefbc9eef1ea856b4f551a6c3edd",
+      "mainBeforeAndAfter": "2bf1a1fca840fc4f3249e916fb1f6f92bbb13200",
+      "remoteTreeComplete": true,
+      "remoteTreeEntries": 840,
+      "githubApiRead": true
+    }
   },
   "backups": "Original source, released files, runtime, DB, quota/cursor/registry and manual removal state unchanged. No backup data included."
 }
