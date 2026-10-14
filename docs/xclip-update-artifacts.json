@@ -1,11 +1,11 @@
 {
   "release": "ranking-updates-v2-20261014",
   "dateJst": "2026-10-14",
-  "productionApplied": false,
-  "localApplied": false,
-  "gitRecorded": false,
-  "githubPushed": false,
-  "gitFlagsMeaning": "package creation time; final state in GITHUB_RECORD-v2.json",
+  "productionApplied": true,
+  "localApplied": true,
+  "gitRecorded": true,
+  "githubPushed": true,
+  "gitFlagsMeaning": "Release code/artifacts already saved and remote verified before this documentation update; completion-record commit is identified by Git history.",
   "previousProductionAttempt": "failed before public cutover; no application files changed",
   "reportedSource": "/home/rbxfxmfd/xclip-registration-recovery1000-20261014.VDKmQf/source",
   "productionRemovedTarget": "app/fxtwitter-monitor/MonitorPanel.tsx",
@@ -5693,5 +5693,46 @@
       "e0e1660b972ab262581ad687656eb8defe52a898f3b9c5987b7f569d00a0df9b",
       "f5dfba9ed15b83af16079092dcbdd2fcdfff3586c9c08701c71cd8518b1c5767"
     ]
-  }
+  },
+  "applicationEvidence": {
+    "kind": "user_report",
+    "quote": "OK!この作業とその前の1000件にする作業どちらも完了しているので、記録しておいて"
+  },
+  "reportedCompleteDateJst": "2026-10-14",
+  "exactApplicationTime": null,
+  "postApplicationBuildId": null,
+  "completionRecord": "docs/completions/20261014-registration1000-ranking-v2.json",
+  "completedReleases": [
+    {
+      "release": "registration-recovery1000-20261014",
+      "title": "登録上限1,000投稿者・初回取得回復",
+      "status": "completed",
+      "productionApplied": true,
+      "actualLocalApplied": true,
+      "evidenceKind": "user_report",
+      "reportedCompleteDateJst": "2026-10-14",
+      "exactApplicationTime": null,
+      "postApplicationBuildId": null,
+      "independentlyReverifiedThisRecording": false,
+      "codeAndArtifactsCommit": "96c8bb15907d015f4d4223be5fe09d44770e940a",
+      "artifact": "releases/20261014-registration-recovery1000/Xclip-初回取得回復と登録1000-更新一式-20261014.zip",
+      "sha256": "5641a51fe9bb64bfe70ec88bce651d589e231b7742ab64e2118bd43f8d4bd7ee"
+    },
+    {
+      "release": "ranking-updates-v2-20261014",
+      "title": "ランキング更新日時・巡回待機表示v2",
+      "status": "completed",
+      "productionApplied": true,
+      "actualLocalApplied": true,
+      "evidenceKind": "user_report",
+      "reportedCompleteDateJst": "2026-10-14",
+      "exactApplicationTime": null,
+      "postApplicationBuildId": null,
+      "independentlyReverifiedThisRecording": false,
+      "codeAndArtifactsCommit": "1fafee476b762708360aa8c7bd1a30cd8ec95caf",
+      "artifact": "releases/20261014-ranking-updates-v2/Xclip-ランキング更新日時と巡回待機表示-v2-更新一式-20261014.zip",
+      "sha256": "0e5b1deba838a91f24769fc5312edd6d246f7c922cf540736882ab34c20d54ef"
+    }
+  ],
+  "previousRecordsMeaning": "Historical creation-time snapshots; retain their original flags. Current application state for the named two releases is in completionRecord."
 }
