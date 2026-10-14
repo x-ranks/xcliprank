@@ -20,3 +20,4 @@
 # Preserve archived update payload bytes and source checksums.
 /snapshots/** -text
 /releases/20261013-operations-archive/** -text
+/releases/20261014-registration-recovery1000/** -text
