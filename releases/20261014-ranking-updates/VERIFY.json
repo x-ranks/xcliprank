@@ -1,0 +1,134 @@
+{
+  "shipped": {
+    "passed": true,
+    "actualPowerShell": true,
+    "localStagedTypesAnd3Groups": true,
+    "productionApiTypecheck": true,
+    "productionShipped5Groups": true,
+    "unknownEditsRefused": true,
+    "restoreWith101NewRegistrationStates": true,
+    "privateStateBytesPreserved": true
+  },
+  "releaseGuards": {
+    "passed": true,
+    "verifier": "actual shipped; all HTTP mocked; positive and capacity/version refusals",
+    "shell": "worker/state lock order, ownership cleanup, build and rollback guards"
+  },
+  "regressions": {
+    "passed": true,
+    "tests": [
+      {
+        "scope": "production",
+        "test": "test-ranking-update-ui.cjs",
+        "passed": true
+      },
+      {
+        "scope": "production",
+        "test": "test-newest500.cjs",
+        "passed": true
+      },
+      {
+        "scope": "production",
+        "test": "test-newest500-pages.cjs",
+        "passed": true
+      },
+      {
+        "scope": "production",
+        "test": "test-ranking-liquidity-route.cjs",
+        "passed": true
+      },
+      {
+        "scope": "production",
+        "test": "test-registration-session.cjs",
+        "passed": true
+      },
+      {
+        "scope": "production",
+        "test": "test-fx-curated-patrol.cjs",
+        "passed": true
+      },
+      {
+        "scope": "production",
+        "test": "test-patrol-continuation.cjs",
+        "passed": true
+      },
+      {
+        "scope": "production",
+        "test": "test-free-curated-dashboard.cjs",
+        "passed": true
+      },
+      {
+        "scope": "production",
+        "test": "test-free-curated-production.cjs",
+        "passed": true
+      },
+      {
+        "scope": "production",
+        "test": "test-availability-monitor.cjs",
+        "passed": true
+      },
+      {
+        "scope": "production",
+        "test": "test-monitor-state-isolation.cjs",
+        "passed": true
+      },
+      {
+        "scope": "production",
+        "test": "test-direct-download.cjs",
+        "passed": true
+      },
+      {
+        "scope": "production",
+        "test": "test-stream-component.cjs",
+        "passed": true
+      },
+      {
+        "scope": "local",
+        "test": "test-ranking-update-ui.cjs",
+        "passed": true
+      },
+      {
+        "scope": "local",
+        "test": "test-newest500-local.cjs",
+        "passed": true
+      },
+      {
+        "scope": "local",
+        "test": "test-newest500-pages.cjs",
+        "passed": true
+      },
+      {
+        "scope": "local",
+        "test": "test-registration-progress.cjs",
+        "passed": true
+      },
+      {
+        "scope": "local",
+        "test": "test-free-curated-registration.cjs",
+        "passed": true
+      },
+      {
+        "scope": "local",
+        "test": "test-curated-manager-local.cjs",
+        "passed": true
+      },
+      {
+        "scope": "local",
+        "test": "test-direct-download.cjs",
+        "passed": true
+      },
+      {
+        "scope": "local",
+        "test": "test-stream-component.cjs",
+        "passed": true
+      }
+    ],
+    "localFullTypecheck": true,
+    "realProviderRequests": 0,
+    "realDbCalls": 0
+  },
+  "fullProductionBuild": "mandatory on server by user-run SH; current full production source unavailable",
+  "pcUiOperated": false,
+  "actualLocalApplied": false,
+  "productionApplied": false
+}
