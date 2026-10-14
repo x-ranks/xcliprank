@@ -1,0 +1,23 @@
+﻿ランキング更新日時・巡回待機表示 v2（2026-10-14）
+
+v1のUNKNOWN_SOURCE_VERSIONは公開切替前の停止で、本番サイトは未更新です。v2では本番に不要なローカル管理画面とローカル登録ファイルのguardを除外し、その既存内容を保持します。ハッシュ不明の内容を上書き許可したものではありません。関連するファイルの未知編集拒否は維持します。
+
+1. ローカル管理画面・開発サーバーを終了します。
+2. xclip-ranking-updates-deploy-20261014-v2.sh をColorfulBoxの /home/rbxfxmfd/ へアップロードして実行します。
+bash /home/rbxfxmfd/xclip-ranking-updates-deploy-20261014-v2.sh
+成功：XCLIP_RANKING_UPDATES_V2_DEPLOYMENT_COMPLETE
+本番の稼働元/BUILD_ID/対象SHA、全体の回帰/型/ビルド、配置前後HTTPを実サーバーで必須確認します。関連する未知変更や処理中ロックがあれば止まります。エラーで止まった場合はローカル更新へ進まずログを共有してください。
+
+3. ZIPを展開したWindowsフォルダーでPowerShellを開き、実行します。
+powershell -NoProfile -ExecutionPolicy Bypass -File .\xclip-ranking-updates-local-20261014-v2.ps1
+標準対象：C:\Projects\xcliprank
+成功：XCLIP_RANKING_UPDATES_V2_LOCAL_INSTALLED
+ローカルv1を既に適用済みでもv2を実行できます。同じ表示コードを保持し、累積履歴を更新します。
+
+4. 普段どおり管理サーバーを再起動します。
+本番の新着・24時間・週間で日本時間の更新日時と「最新の一覧を表示」を確認します。更新前の保存済み一覧は「集計基準」、次に生成された一覧は「一覧更新」です。古い版を外しても同じ5分枠の一覧は保持するため、反映には最大5分程度の待ち時間があります。
+http://localhost:3004/fxtwitter-monitor で巡回起動（待機判定含む）・投稿者への最終取得・24時間枠の空き待ちを確認します。
+
+ランキング選び方・1,000登録上限・巡回24時間24投稿者/3時間8/同一24時間/通信5秒・取得位置・予約・削除・DB/env/Cronは変更しません。
+今回のv2作成中には本番/実ローカルへのインストールや実DB/provider通信を行っていません。
+ローカルの変更前ファイルはBACKUP表示先に保存します。復元が必要なときは開発サーバーを終了し、同PS1に -Restore "BACKUPの絶対パス" を追加します。今回の更新対象に適用後の別編集があれば拒否し、それ以外の登録/巡回状態は保持します。
