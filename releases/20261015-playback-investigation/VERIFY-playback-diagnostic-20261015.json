@@ -1,0 +1,16 @@
+{
+  "shippedEmbeddedJsTestPassed": true,
+  "bashSyntaxPassed": true,
+  "realServerRun": false,
+  "networkOrDbRequests": 0,
+  "realAppChanged": false,
+  "guardCases": [
+    "missing",
+    "wrong root",
+    "wrong source",
+    "duplicate root",
+    "build mismatch",
+    "symlink",
+    "owner mismatch"
+  ]
+}

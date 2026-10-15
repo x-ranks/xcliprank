@@ -1,0 +1,155 @@
+{
+  "release": "playback-startup-investigation-20261015",
+  "scope": "read-only investigation; diagnostic only",
+  "dateJst": "2026-10-15",
+  "productionApplied": false,
+  "localApplied": false,
+  "appFixCreated": false,
+  "realBrowserReproduction": false,
+  "userReportsBothRankingAndReels": true,
+  "userReportsMultipleDeviceEnvironments": true,
+  "currentProductionPlaybackHashesPending": true,
+  "baselines": {
+    "local": {
+      "app/components/DirectPlaybackVideo.tsx": {
+        "present": true,
+        "sha256": "c329d61e69861baddab9859abf7402523960a46af10c8eda8e2fc003770017a6",
+        "bytes": 5711
+      },
+      "lib/browser-stream-playback.ts": {
+        "present": true,
+        "sha256": "eb1c8426b8a1f7503bf71e2881a07273eab3b31c1e5077fb8298f3e7599c0233",
+        "bytes": 4501
+      },
+      "lib/browser-direct-playback.ts": {
+        "present": true,
+        "sha256": "32e3c27abbf62b180edb0f6a03665e71274640c94db8909b38dd9e8a259f2793",
+        "bytes": 1632
+      },
+      "lib/browser-direct-download.ts": {
+        "present": true,
+        "sha256": "b7f89e71f1af94f9cb4e170a11a52b68b31dc3e13a1e641944f46bb3ea6c5ed5",
+        "bytes": 3316
+      },
+      "lib/playback-refresh.ts": {
+        "present": true,
+        "sha256": "09fb063c7e61e2a2e79a6f7a205e8031f7057fded9406a4d88d113896aaa00f7",
+        "bytes": 1715
+      },
+      "lib/download-free.ts": {
+        "present": true,
+        "sha256": "78116a42bd94f796fc6c97766ef4e2d7f6bca4bd0026a6ef53146e1f0b5d9866",
+        "bytes": 7921
+      },
+      "lib/video-download.ts": {
+        "present": true,
+        "sha256": "9e0ae9501b50f32f5b84561c179af40db62f5c9f992eb5fecfe89efe35fba37c",
+        "bytes": 2980
+      },
+      "app/api/video-playback-url/route.ts": {
+        "present": true,
+        "sha256": "3d63709513975c1415156e6e617cfa96784afef73ea63947d92f58760e4ffc90",
+        "bytes": 2531
+      },
+      "app/components/RankingClient.tsx": {
+        "present": true,
+        "sha256": "233a5c995829b32ddb0bb1b8b7558ce07519a9a674f4546a8d0bef3373d1e978",
+        "bytes": 15283
+      },
+      "app/reels/ReelsFeed.tsx": {
+        "present": true,
+        "sha256": "0262e8b1c6a054d3b31250732bbf95a577a1fce7d6c2d1e45fa4b9b18a12a937",
+        "bytes": 11653
+      },
+      "app/layout.tsx": {
+        "present": true,
+        "sha256": "ae1059af74fc7eedc0aed9e5a335069faf3d1d3cc9eada95992a32f4222ba116",
+        "bytes": 1384
+      },
+      "app/components/VideoDurationBadge.tsx": {
+        "present": false
+      },
+      "lib/supabase-admin.ts": {
+        "present": true,
+        "sha256": "f8b8ce736e78bc7ce0ded8dee0861921e6eeb90ffe93b070f9ba2c618fb502fe",
+        "bytes": 492
+      },
+      "lib/vendor/hls.mjs": {
+        "present": true,
+        "sha256": "11e668e41247b44b5807a10264f36e2edd9eaaa681167c46c9a681bd3757059b",
+        "bytes": 1484971
+      }
+    },
+    "knownProduction": {
+      "app/components/DirectPlaybackVideo.tsx": {
+        "present": true,
+        "sha256": "c329d61e69861baddab9859abf7402523960a46af10c8eda8e2fc003770017a6",
+        "bytes": 5711
+      },
+      "lib/browser-stream-playback.ts": {
+        "present": true,
+        "sha256": "eb1c8426b8a1f7503bf71e2881a07273eab3b31c1e5077fb8298f3e7599c0233",
+        "bytes": 4501
+      },
+      "lib/browser-direct-playback.ts": {
+        "present": true,
+        "sha256": "32e3c27abbf62b180edb0f6a03665e71274640c94db8909b38dd9e8a259f2793",
+        "bytes": 1632
+      },
+      "lib/browser-direct-download.ts": {
+        "present": true,
+        "sha256": "b7f89e71f1af94f9cb4e170a11a52b68b31dc3e13a1e641944f46bb3ea6c5ed5",
+        "bytes": 3316
+      },
+      "lib/playback-refresh.ts": {
+        "present": true,
+        "sha256": "6d99c05b6214e09ede453a88d46c640c241a0cf1e25b2104e383eceabc0044ed",
+        "bytes": 2304
+      },
+      "lib/download-free.ts": {
+        "present": true,
+        "sha256": "295b052cd33ee6daba9dc3620727e453764d08fccec63483b87d8262a7195d26",
+        "bytes": 8214
+      },
+      "lib/video-download.ts": {
+        "present": true,
+        "sha256": "9e0ae9501b50f32f5b84561c179af40db62f5c9f992eb5fecfe89efe35fba37c",
+        "bytes": 2980
+      },
+      "app/api/video-playback-url/route.ts": {
+        "present": true,
+        "sha256": "3d63709513975c1415156e6e617cfa96784afef73ea63947d92f58760e4ffc90",
+        "bytes": 2531
+      },
+      "app/components/RankingClient.tsx": {
+        "present": true,
+        "sha256": "566cc2ce5554d58646a83be9a7e4fb3ca40aff0eebd120c051b637b0d422caff",
+        "bytes": 15544
+      },
+      "app/reels/ReelsFeed.tsx": {
+        "present": true,
+        "sha256": "aebe67d17c0d3b9b88be873aabc03babb646088e3a9d8f0585029595c43c878e",
+        "bytes": 13353
+      },
+      "app/layout.tsx": {
+        "present": true,
+        "sha256": "ae1059af74fc7eedc0aed9e5a335069faf3d1d3cc9eada95992a32f4222ba116",
+        "bytes": 1384
+      },
+      "app/components/VideoDurationBadge.tsx": {
+        "present": false
+      },
+      "lib/supabase-admin.ts": {
+        "present": true,
+        "sha256": "f8b8ce736e78bc7ce0ded8dee0861921e6eeb90ffe93b070f9ba2c618fb502fe",
+        "bytes": 492
+      },
+      "lib/vendor/hls.mjs": {
+        "present": true,
+        "sha256": "11e668e41247b44b5807a10264f36e2edd9eaaa681167c46c9a681bd3757059b",
+        "bytes": 1484971
+      }
+    }
+  },
+  "previousCompletedUpdates": "See current cumulative history; no completion state rolled back."
+}
