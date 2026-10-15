@@ -3,7 +3,7 @@
   "dateJst": "2026-10-15",
   "scope": "local only",
   "productionApplied": false,
-  "localApplied": false,
+  "localApplied": true,
   "databaseOrModelChanged": false,
   "targets": {
     "app/components/PersonalLearningWorker.tsx": "23ba3e0772d52dd85785e4f1da4c7f9a41dffc08f327a1888ed96b54beb97283",
@@ -5791,5 +5791,26 @@
       ],
       "previousRecordsMeaning": "Historical creation-time snapshots; retain their original flags. Current application state for the named two releases is in completionRecord."
     }
+  },
+  "applicationEvidence": {
+    "kind": "user_report",
+    "quote": "OK!適用完了した。確認用リマインダーを作成しておいて。"
+  },
+  "exactApplicationTime": null,
+  "completionRecord": "docs/completions/20261015-learning-poll.json",
+  "postApplyUsageMeasured": false,
+  "confirmationReminder": {
+    "id": "xclip-48",
+    "name": "Xclip 通信削減の48時間後確認",
+    "kind": "heartbeat",
+    "status": "ACTIVE",
+    "scope": "one future reminder in this chat; no PC/browser/DB/API access",
+    "expectedAtJst": "2026-10-17T21:29:58.400000+09:00",
+    "comparison": [
+      "egress growth",
+      "logs ingest growth",
+      "past-24h xclip_tier_state GET count",
+      "local tab count and learning activity"
+    ]
   }
 }
