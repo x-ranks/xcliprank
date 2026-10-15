@@ -1,0 +1,125 @@
+{
+  "diagnostic": "xclip-db-usage-20261015",
+  "databaseWrites": 0,
+  "providerRequests": 0,
+  "rawResponsesSaved": false,
+  "requests": 4,
+  "errors": [],
+  "samples": {
+    "recent": {
+      "sampleRows": 8,
+      "candidateRowsBeforeContentFilter": 25,
+      "httpBodyBytes": 11140,
+      "averageFullJsonRowBytes": 1384.1,
+      "projectionEstimateBytes": 6637,
+      "projectionEstimatedReductionPercent": 40.1,
+      "largestFields": [
+        {
+          "field": "content_filter_reason",
+          "bytes": 968
+        },
+        {
+          "field": "video_url",
+          "bytes": 952
+        },
+        {
+          "field": "preview_image_url",
+          "bytes": 880
+        },
+        {
+          "field": "x_url",
+          "bytes": 538
+        },
+        {
+          "field": "first_seen_at",
+          "bytes": 414
+        },
+        {
+          "field": "last_seen_at",
+          "bytes": 384
+        },
+        {
+          "field": "created_at",
+          "bytes": 336
+        },
+        {
+          "field": "author_username",
+          "bytes": 290
+        }
+      ],
+      "estimatedGbFor500RowHydration10000Times": 6.92
+    },
+    "archive": {
+      "sampleRows": 8,
+      "candidateRowsBeforeContentFilter": 1161,
+      "httpBodyBytes": 11593,
+      "averageFullJsonRowBytes": 1440.6,
+      "projectionEstimateBytes": 7097,
+      "projectionEstimatedReductionPercent": 38.4,
+      "largestFields": [
+        {
+          "field": "content_filter_reason",
+          "bytes": 968
+        },
+        {
+          "field": "video_url",
+          "bytes": 953
+        },
+        {
+          "field": "preview_image_url",
+          "bytes": 880
+        },
+        {
+          "field": "text",
+          "bytes": 640
+        },
+        {
+          "field": "x_url",
+          "bytes": 500
+        },
+        {
+          "field": "first_seen_at",
+          "bytes": 411
+        },
+        {
+          "field": "last_seen_at",
+          "bytes": 382
+        },
+        {
+          "field": "created_at",
+          "bytes": 336
+        }
+      ],
+      "estimatedGbFor500RowHydration10000Times": 7.203
+    }
+  },
+  "localV2TargetMatches": {
+    "lib/ranking-update.ts": true,
+    "lib/initial-ranking.ts": true,
+    "app/components/RankingClient.tsx": true,
+    "app/components/DedicatedRankingPage.tsx": true,
+    "app/page.tsx": true,
+    "app/ranking/daily/page.tsx": true,
+    "app/ranking/weekly/page.tsx": true,
+    "app/fxtwitter-monitor/MonitorPanel.tsx": true,
+    "scripts/test-ranking-update-ui.cjs": true,
+    "scripts/test-newest500-pages.cjs": true,
+    "docs/XCLIP_UPDATE_HISTORY.md": true,
+    "docs/xclip-update-artifacts.json": true
+  },
+  "publicV2Marker": {
+    "present": true,
+    "sha256": "2fe15ccd3a9398f05ba58dce47d795407a1bc30246a999b44357e65a346ae93c",
+    "bytes": 22
+  },
+  "activeAuthorCount": 99,
+  "authorResponseBytes": 3917,
+  "estimatedAuthorResponseGbPer100000Views": 0.392,
+  "conditionalRebuildEstimate": {
+    "basis": "Sample JSON averages; 24/7 traffic rebuilding every 5 minutes; excludes weekly pools, hydration, HTTP overhead and compression. Not measured billing usage.",
+    "recentAndArchiveBytesPerBuild": 1707139,
+    "gbPer30Days": 14.75,
+    "dailyBudgetBytesFor5Gb30Days": 166666667
+  },
+  "checkedAtJst": "2026-10-15T18:41:37.732721+09:00"
+}
