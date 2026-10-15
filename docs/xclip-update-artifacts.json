@@ -5812,5 +5812,45 @@
       "past-24h xclip_tier_state GET count",
       "local tab count and learning activity"
     ]
+  },
+  "playbackSourceInvestigation20261015": {
+    "userProductionHashReportReceived": true,
+    "buildId": "H6KQokOwZZcvhnEQnY251",
+    "knownProductionFilesMatching": 8,
+    "differingOrAbsentFiles": [
+      "app/components/DirectPlaybackVideo.tsx",
+      "lib/browser-direct-playback.ts",
+      "lib/browser-direct-download.ts",
+      "app/api/video-playback-url/route.ts",
+      "app/layout.tsx",
+      "app/components/VideoDurationBadge.tsx"
+    ],
+    "exactProductionCodePending": true,
+    "applicationFixCreated": false,
+    "applicationFixApplied": false,
+    "readonlyExporterVerification": {
+      "embeddedShippedJsParsed": true,
+      "embeddedShippedJsMockExecutionPassed": true,
+      "bashSyntaxPassed": true,
+      "scenarios": [
+        "13 code texts, vendor hash only",
+        "private directory 700 and exclusive file 600",
+        "repeat creates separate artifact",
+        "missing/unknown hashes",
+        "build/source mismatch",
+        "owner/symlink/parent-symlink",
+        "root duplicates and foreign roots",
+        "concurrent code/root changes before export",
+        "possible secret refusal",
+        "partial output cleanup"
+      ],
+      "fixtureLimit": "Unknown production contents unavailable; synthetic bytes and SHA mapping used for embedded-script mock tests. Known files compared with real SHA256.",
+      "realServerExportRun": false,
+      "applicationModified": false,
+      "realProviderRequests": 0,
+      "realDatabaseQueries": 0,
+      "actualVideoBrowserOrCdnTests": false
+    },
+    "record": "docs/investigations/playback-production-source-20261015.json"
   }
 }

@@ -1,0 +1,23 @@
+{
+  "embeddedShippedJsParsed": true,
+  "embeddedShippedJsMockExecutionPassed": true,
+  "bashSyntaxPassed": true,
+  "scenarios": [
+    "13 code texts, vendor hash only",
+    "private directory 700 and exclusive file 600",
+    "repeat creates separate artifact",
+    "missing/unknown hashes",
+    "build/source mismatch",
+    "owner/symlink/parent-symlink",
+    "root duplicates and foreign roots",
+    "concurrent code/root changes before export",
+    "possible secret refusal",
+    "partial output cleanup"
+  ],
+  "fixtureLimit": "Unknown production contents unavailable; synthetic bytes and SHA mapping used for embedded-script mock tests. Known files compared with real SHA256.",
+  "realServerExportRun": false,
+  "applicationModified": false,
+  "realProviderRequests": 0,
+  "realDatabaseQueries": 0,
+  "actualVideoBrowserOrCdnTests": false
+}

@@ -1,0 +1,84 @@
+{
+  "diagnostic": "xclip-playback-source-check-20261015",
+  "runtime": "/home/rbxfxmfd/xclip-video-card-20261004.DJKKID/runtime",
+  "source": "/home/rbxfxmfd/xclip-ranking-updates-v2-20261014.aj9FwJ/source",
+  "buildId": "H6KQokOwZZcvhnEQnY251",
+  "buildMatches": true,
+  "files": {
+    "app/components/DirectPlaybackVideo.tsx": {
+      "present": true,
+      "bytes": 4895,
+      "sha256": "86a3cdd4d19c22f89407b142f12fcfaa3406821fb06ec32af1571818fb0479e2"
+    },
+    "lib/browser-stream-playback.ts": {
+      "present": true,
+      "bytes": 4501,
+      "sha256": "eb1c8426b8a1f7503bf71e2881a07273eab3b31c1e5077fb8298f3e7599c0233"
+    },
+    "lib/browser-direct-playback.ts": {
+      "present": true,
+      "bytes": 2487,
+      "sha256": "949376d6a5267838cfd29098baf091ca880362af919bfbab5923062832c9994f"
+    },
+    "lib/browser-direct-download.ts": {
+      "present": true,
+      "bytes": 3566,
+      "sha256": "dfcff3262a04e4d762030e8e762549567ca894a70e77806423d93c69ca04ffa7"
+    },
+    "lib/playback-refresh.ts": {
+      "present": true,
+      "bytes": 2304,
+      "sha256": "6d99c05b6214e09ede453a88d46c640c241a0cf1e25b2104e383eceabc0044ed"
+    },
+    "lib/download-free.ts": {
+      "present": true,
+      "bytes": 8214,
+      "sha256": "295b052cd33ee6daba9dc3620727e453764d08fccec63483b87d8262a7195d26"
+    },
+    "lib/video-download.ts": {
+      "present": true,
+      "bytes": 2980,
+      "sha256": "9e0ae9501b50f32f5b84561c179af40db62f5c9f992eb5fecfe89efe35fba37c"
+    },
+    "app/api/video-playback-url/route.ts": {
+      "present": true,
+      "bytes": 2652,
+      "sha256": "fe228ecb1cf7fb2580b3d5a00bca021aef83e07f4840e8758919ec2a07eaa60b"
+    },
+    "app/components/RankingClient.tsx": {
+      "present": true,
+      "bytes": 15544,
+      "sha256": "566cc2ce5554d58646a83be9a7e4fb3ca40aff0eebd120c051b637b0d422caff"
+    },
+    "app/reels/ReelsFeed.tsx": {
+      "present": true,
+      "bytes": 13353,
+      "sha256": "aebe67d17c0d3b9b88be873aabc03babb646088e3a9d8f0585029595c43c878e"
+    },
+    "app/layout.tsx": {
+      "present": true,
+      "bytes": 1449,
+      "sha256": "3601e5f334c10af1f8613073dcacb766448428c71d094956cf05f2e1532ca9cc"
+    },
+    "app/components/VideoDurationBadge.tsx": {
+      "present": true,
+      "bytes": 3739,
+      "sha256": "33c9a3bf7b964fd6175e65d77fc164932ecef12f4ee520949636182b512d8885"
+    },
+    "lib/supabase-admin.ts": {
+      "present": true,
+      "bytes": 492,
+      "sha256": "f8b8ce736e78bc7ce0ded8dee0861921e6eeb90ffe93b070f9ba2c618fb502fe"
+    },
+    "lib/vendor/hls.mjs": {
+      "present": true,
+      "bytes": 1484971,
+      "sha256": "11e668e41247b44b5807a10264f36e2edd9eaaa681167c46c9a681bd3757059b"
+    }
+  },
+  "evidence": "User pasted server diagnostic; no independent SSH access",
+  "networkRequests": 0,
+  "databaseQueries": 0,
+  "stateChanges": false,
+  "envRead": false
+}
