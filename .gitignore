@@ -28,3 +28,8 @@ artifacts/visual-preference-holdout/
 # FxTwitter local registry and installation backups
 .local-admin/fxtwitter-curated-*/
 .local-admin/fxtwitter-install-*/
+
+# Local ranking-update backups and isolated checks
+.local-admin/newest500-*/
+
+out/
