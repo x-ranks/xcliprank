@@ -21,5 +21,9 @@
   "sourceFileCount": 213,
   "exactAppAndLibPreserved": true,
   "userGoalFullyComplete": false,
-  "next": "Receive allowlisted production code JSON, verify contents, integrate separately and complete the full local/production source organization."
+  "next": "Receive allowlisted production code JSON, verify contents, integrate separately and complete the full local/production source organization.",
+  "mainIntegrationEvidence": "docs/completions/20261016-canonical-local-main.json",
+  "githubMainIntegrated": true,
+  "githubCiPassed": true,
+  "sourceTag": "local-admin-20261016"
 }

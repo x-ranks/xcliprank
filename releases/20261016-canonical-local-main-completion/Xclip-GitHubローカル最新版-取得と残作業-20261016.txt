@@ -1,0 +1,9 @@
+ローカル最新版はGitHub mainへ統合済み。タグlocal-admin-20261016。新規取得でソースSHA照合、GitHubのNode22・npm ci・36回帰・型・buildが成功。
+通常取得：git clone https://github.com/x-ranks/xcliprank.git xcliprank-latest
+取得後：cd xcliprank-latest → npm ci → npm run check:source → npm run test:offline
+管理者が秘密設定・必要なデータを別途復元後：npm run dev -- -p 3004
+本番の完全ソース統合は未完了です。次のSHを/home/rbxfxmfdへ置き、ユーザーが実行してください。
+bash /home/rbxfxmfd/xclip-github-production-source-export-20261016.sh
+成功：XCLIP_GITHUB_PRODUCTION_SOURCE_EXPORT_OK
+ATTACH_FILE=のJSONを取得してチャットに添付すると、本番版の統合を続行できます。
+この整理による実ローカル／本番へのアプリ適用はありません。

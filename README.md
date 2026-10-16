@@ -1,5 +1,7 @@
 # Xclip：最新ローカル管理ソース
 
+取得タグ：`local-admin-20261016`。PR #12統合済み。GitHubのNode22検証と通常cloneでのSHA照合成功。根拠：`docs/completions/20261016-canonical-local-main.json`。
+
 2026-10-16に実ローカル `C:\Projects\xcliprank` の未コミット・未追跡を含むコードを統合しました。リポジトリ直下の `app/`・`lib/` が現在のローカル管理版です。過去のZIPを順に適用する必要はありません。
 
 **本番ColorfulBoxの完全ソースは取得待ちです。直下をColorfulBoxへそのまま配置しないでください。** ローカルのランキングAPIは本番表示を読むプレビュー用で、公開サーバーの集計APIと異なります。`production/README.md` を参照してください。

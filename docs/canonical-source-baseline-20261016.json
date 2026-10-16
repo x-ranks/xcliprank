@@ -911,6 +911,8 @@
     "networkDeniedDuringChecks": true,
     "realStateAccessDenied": true,
     "realBrowserOrProviderTests": false,
-    "ciNode22Run": "pending GitHub workflow"
-  }
+    "ciNode22Run": "success:38893748509",
+    "freshDefaultBranchCloneVerified": true
+  },
+  "mainIntegrationEvidence": "docs/completions/20261016-canonical-local-main.json"
 }

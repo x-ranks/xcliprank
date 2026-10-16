@@ -1,5 +1,7 @@
 # 現在の運用・ソース状況（2026-10-16 JST）
 
+ローカル最新版のmain統合・タグ保存・通常clone確認・GitHub CI成功を確認済み。根拠：docs/completions/20261016-canonical-local-main.json。本番版の完全統合はコードJSON取得待ちで未完了。
+
 ## GitHub取得用ソースの整理
 
 リポジトリ直下app/libは実ローカル最新版へ統合。README.mdとdocs/canonical-source-status-20261016.jsonが現行の入口。ローカル管理は36回帰・型・隔離ビルド成功、本番版は全コードJSON取得待ちで完全統合未完了。以下の「ルート旧版」等は整理前の経緯。公開継続はユーザー指定。Vercel Git自動公開を無効化し、実ローカル／本番への追加適用はない。

@@ -1,3 +1,12 @@
+# 2026-10-16 JST：ローカル最新版をmainへ統合・GitHub新規取得確認
+
+- PR #12をmerge。ソース統合commit=3e9c0a1964b5838a340b49d99058bb9f91d09f30、取得タグ=local-admin-20261016。GitHub HEAD/main/tag一致を照合し、通常のgit cloneで新規取得したコードの207 SHAを確認。
+- GitHub Actions run38893748509でNode22、新規npm ci、36回帰、型、隔離Next.js buildがすべてsuccess。初回CIは現行検証通過後に旧本番用の不存在テスト参照で失敗し、スコープ整合後の全体検証が成功。FFmpeg依存2テストは別実行として維持。
+- 実ローカル213基準ファイルを読み取り再照合し、未変更を確認。秘密／実stateのGit除外を確認。Vercel最新deployment IDは作業前から不変、旧Git自動公開を無効化したまま本番ColorfulBoxと実ローカルへ適用しない。
+- 本番コード一式は未取得で、完全なローカル／本番統合というユーザー目標は未完了。production/README.mdと限定出力SHの手順でJSONを受領し、続行する。ローカル統合の完了と本番版の完成を混同しない。
+
+---
+
 # 2026-10-16 JST：GitHub取得用ソース整理・ローカル版統合
 
 - ユーザー依頼「Githubから取得すれば完全な最新版となるように整理」。実ローカルC:\Projects\xcliprankの未コミット／未追跡を含むプログラムを、隔離作業ブランチの直下へ統合。アプリ本体はバイト一致、過去release／snapshot・履歴は保存。現行の秘密・実state・教師／モデル・DB dumpはコピーしない。
