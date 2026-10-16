@@ -1,0 +1,99 @@
+{
+  "release": "label-learning-local-v1-20261017",
+  "dateJst": "2026-10-17",
+  "scope": "local code only",
+  "actualLocalApplied": false,
+  "productionApplied": false,
+  "checks": {
+    "test": {
+      "passed": 37,
+      "skipped": [
+        {
+          "name": "test-tier-compatible-playback.cjs",
+          "reason": "Requires external FFmpeg/FFprobe; run separately with installed tools"
+        },
+        {
+          "name": "test-tier-four-frames.cjs",
+          "reason": "Requires external FFmpeg/FFprobe; run separately with installed tools"
+        }
+      ],
+      "network": "denied",
+      "realState": "denied"
+    },
+    "types": {
+      "passed": 1,
+      "skipped": [],
+      "network": "denied",
+      "realState": "denied"
+    },
+    "build": {
+      "passed": 1,
+      "skipped": [],
+      "network": "denied",
+      "realState": "denied"
+    }
+  },
+  "shippedZipInstallReapplyRollbackUnknownEditRefusal": true,
+  "originalAppAndDependencyHashesUnchanged": true,
+  "shippedWorkAndGitPayloadIdentical": true,
+  "zipSha256": "cd253f5a540db5021867b3722fd7d2802ffa945b68a51f1502aad32996ef6411",
+  "payload": {
+    "lib/label-learning-core.ts": {
+      "before": null,
+      "after": "9b1e0730b1e1c0f350174048c358a0d03d873d75224ba893c146b121b9cf0866"
+    },
+    "lib/label-learning-http.ts": {
+      "before": null,
+      "after": "21970bd85d1a684603512f6e6b600874d7d97fc70d5f3c0a98e0f3497b1906ee"
+    },
+    "lib/label-learning-server.ts": {
+      "before": null,
+      "after": "1e84c19ac609bb06eaad88020a949b8bcc2bbca80507de56199cfe63f0af2357"
+    },
+    "lib/label-learning-service.ts": {
+      "before": null,
+      "after": "8bb2b05e1c3274e25f81de6f205e6dc00d10b78b0144e23defd0b8e6e362f7c2"
+    },
+    "lib/label-learning-video.ts": {
+      "before": null,
+      "after": "437a79a4fec1311316bcb6525c871cbdd6b114ec8c2e8020f22ba982fbd1986c"
+    },
+    "scripts/test-label-learning.cjs": {
+      "before": null,
+      "after": "e44b4f7a15300d84e42b4b1a7c3849b66bb7242dd787af237fa944953969e2ab"
+    },
+    "app/label-learning/LabelLearningPanel.tsx": {
+      "before": null,
+      "after": "1b01a93a52c6aa16e2d568b743f6166dc8e3c0ffa8787072c3c4d65acc09c6d0"
+    },
+    "app/label-learning/page.tsx": {
+      "before": null,
+      "after": "aff83f029e4c4c8fb3a6427b5d863a6850b8abb2fb8d365bed4eff6630aeca41"
+    },
+    "app/learning-tools/page.tsx": {
+      "before": "546846ba48a4907f8554f160adf942a40b23dca23a81bc47d87c690252ded1d4",
+      "after": "248617ecfd6cae028a01d7e0677bfcbab2a75463a06c549494386af4cff70ce5"
+    },
+    "app/api/label-learning/route.ts": {
+      "before": null,
+      "after": "0044310ad84075743a82008fdc617310eca31c90c21b1015bdbda52f89f14728"
+    },
+    "app/api/label-learning/frame/route.ts": {
+      "before": null,
+      "after": "5f23473da894a589d2209cde22e2376782064180eff2639bbdc4cbfc5677dc8c"
+    }
+  },
+  "nodeVersion": "26.7.0",
+  "nextVersion": "15.5.23",
+  "originalTestMocks": "3 obsolete mocks/path fixtures replaced ONLY in isolated verifier with the already-recorded 2026-10-16 GitHub corrections; not included in local installer.",
+  "realVideoDownloadOrFrameAccuracyTest": false,
+  "realDatabaseCalls": 0,
+  "realProviderCalls": 0,
+  "realBrowserTest": false,
+  "limitations": [
+    "FFmpeg/FFprobe unavailable on test PATH; two inherited video-tool tests skipped. Four-frame helper exercised with synthetic bytes and mocked decoder/model.",
+    "Actual extraction, CPU speed and labeling accuracy must be checked after user installation; 10 synthetic examples do not establish production precision.",
+    "Maximum 40 label definitions/300 prepared videos in this first version; initial random pool is the most recent 200 eligible DB rows, with explicit post ID input for others.",
+    "No production labels, tag URLs or Tier/ranking adoption; no SQL or env changes."
+  ]
+}

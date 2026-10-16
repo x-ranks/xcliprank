@@ -1,0 +1,60 @@
+{
+  "release": "label-learning-local-v1-20261017",
+  "scope": "local only",
+  "files": {
+    "lib/label-learning-core.ts": {
+      "before": null,
+      "after": "9b1e0730b1e1c0f350174048c358a0d03d873d75224ba893c146b121b9cf0866"
+    },
+    "lib/label-learning-http.ts": {
+      "before": null,
+      "after": "21970bd85d1a684603512f6e6b600874d7d97fc70d5f3c0a98e0f3497b1906ee"
+    },
+    "lib/label-learning-server.ts": {
+      "before": null,
+      "after": "1e84c19ac609bb06eaad88020a949b8bcc2bbca80507de56199cfe63f0af2357"
+    },
+    "lib/label-learning-service.ts": {
+      "before": null,
+      "after": "8bb2b05e1c3274e25f81de6f205e6dc00d10b78b0144e23defd0b8e6e362f7c2"
+    },
+    "lib/label-learning-video.ts": {
+      "before": null,
+      "after": "437a79a4fec1311316bcb6525c871cbdd6b114ec8c2e8020f22ba982fbd1986c"
+    },
+    "scripts/test-label-learning.cjs": {
+      "before": null,
+      "after": "e44b4f7a15300d84e42b4b1a7c3849b66bb7242dd787af237fa944953969e2ab"
+    },
+    "app/label-learning/LabelLearningPanel.tsx": {
+      "before": null,
+      "after": "1b01a93a52c6aa16e2d568b743f6166dc8e3c0ffa8787072c3c4d65acc09c6d0"
+    },
+    "app/label-learning/page.tsx": {
+      "before": null,
+      "after": "aff83f029e4c4c8fb3a6427b5d863a6850b8abb2fb8d365bed4eff6630aeca41"
+    },
+    "app/learning-tools/page.tsx": {
+      "before": "546846ba48a4907f8554f160adf942a40b23dca23a81bc47d87c690252ded1d4",
+      "after": "248617ecfd6cae028a01d7e0677bfcbab2a75463a06c549494386af4cff70ce5"
+    },
+    "app/api/label-learning/route.ts": {
+      "before": null,
+      "after": "0044310ad84075743a82008fdc617310eca31c90c21b1015bdbda52f89f14728"
+    },
+    "app/api/label-learning/frame/route.ts": {
+      "before": null,
+      "after": "5f23473da894a589d2209cde22e2376782064180eff2639bbdc4cbfc5677dc8c"
+    }
+  },
+  "guards": {
+    "lib/tier-personal-core.ts": "c57710c4fb870a9cb416d1cc12e0abd8e7ce9ed0815447331bd515aba900689b",
+    "lib/tier-personal-image.ts": "832843380b391ae1068cdb37808f8e67abcc67eb4ed67652cb5aebecdba1b1ff",
+    "lib/tier-personal-video.ts": "a6db1ba177d611f5fc3ff5c4895fbf9edc339e0807da13f9724a470a38623963",
+    "lib/supabase-admin.ts": "f8b8ce736e78bc7ce0ded8dee0861921e6eeb90ffe93b070f9ba2c618fb502fe",
+    "middleware.ts": "360364e47d0a338af98be50646d0a1ddaf2f01efaedd78c49fd9642daa65eb24",
+    "package.json": "02cdf17b8dbba5943f9b77cc1d65312583dddf769a123ce35e8520dddd2fa394",
+    "package-lock.json": "b20d20a42302e04e9bd0f1c2080e66953012f62314b690665d4967d9b8e86540"
+  },
+  "historyEntry": "# 2026-10-17 JST：ラベル作成・4フレーム教師・学習と精度確認（label-learning-local-v1-20261017）\n\n- ローカル専用 /label-learning と /api/label-learning、画像配信API、ラベル別の独立分類モデルを追加。管理入口へリンク。ラベル作成/改名/休止、動画4枚確認、該当/非該当/未確認、手動正解保存、10件以上から学習、教材内グループ分割検証と未使用動画の盲検チェック。\n- 新状態は .local-admin/label-learning-v1 のみ。Tierのモデル/教師/設定、既存 data/labels、DB、Cron、新着予約/取得位置、手動除去、掲載判定を変更しない。動画候補は既存DBの限定カラムを読取のみ。X/FxTwitter再収集なし。\n- 10/25/50/80%の4画像と既存の画像特徴抽出を再利用、Tier重みと分類ヘッドは独立。画像/特徴を保持し一時動画を削除。96MiB/動画上限、1本ずつ処理、10本ボタンの停止は現在の動画終了後。保存済みの同投稿と動画本体hash重複を拒否。FFmpeg/FFprobeと既存画像モデルが必要。\n- 未確認を負例にしない。ラベルごと該当/非該当2件以上、全体で10教材以上から試作。判定スコアは校正済み確率/正解率ではない。同じ投稿者ID/同じ動画hashを教材の分割評価でグループ化。独立評価では過去に学習した動画/投稿者と予測を見てから保存/変更した正解を除外。10件で精度を保証せず、対象数/採点できた項目数/的中率/検出率/F1を表示。\n- localhost/127.0.0.1/::1かつ非productionに限定、POSTは同一Origin必須、cross-site拒否、JSON上限32KiB、状態の原子的保存/排他/画面revision/破損拒否。GETはキャッシュ済みローカル状態のみ、DB/動画/画像モデルを取得しない。画像と教師/重みを公開Gitへ含めない。\n- 現行実ローカルの対象/依存SHAを基準にコードのみ隔離コピー。型/Nextビルド成功。新機能模擬テスト成功。旧ローカルテスト3本のモック/Windowsパス不整合を確認し、2026-10-16 GitHub保存済みの修正済みテストを検証コピーへ使用したところ全37回帰成功。これら3本は本配布の変更対象ではない。FFmpeg依存2テストはPATHでツールが見つからず未実行。実DB/CDN/学習精度/実ブラウザーは未確認。\n- インストーラーは未知の対象/依存版を拒否し、変更対象のみバックアップ。再適用は同一版を保持、復元時は導入後の変更を検査してからコードを復元し、新しいラベル教師/画像/モデルを削除しない。ZIPの実配布ファイルによる検証結果は別添VERIFY-FINAL.json。\n- 作成/隔離検証/配布候補。実ローカル・本番未適用。本番全source統合/動画詳細・タグ公開URLの実装とは別作業。10/14登録1,000/ランキングv2完了、10/15学習通信削減local完了と効果未測定、Fx24/8巡回、手動削除、保存機能の完了報告を維持。既存通知を追加/変更しない。\n"
+}
