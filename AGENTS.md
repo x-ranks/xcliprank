@@ -1,3 +1,9 @@
+# 2026-10-17 ユーザー指定の最優先課題
+
+- ラベル付け（L01）と個別URL `/p/[postId]`（M07）を開発の最優先とする。docs/XCLIP_TOP_PRIORITIES_20261017.md と docs/XCLIP_OPERATIONS_TASKS.md を必ず読む。
+- 個別ページには固有title（投稿者名＋本文先頭＋「動画を保存」）、保存ボタン、元投稿・投稿者へのリンク、同投稿者の他動画、ラベル関連動画、保存数・初回保存日時（欠損時非表示）を置く。戻る操作とURL共有・直接表示も要件。
+- ラベル学習コードはmain統合済みだが実環境適用・実測精度は未報告。個別URLは未実装。要件記録を適用完了と混同しない。
+
 # Xclip 最新ソースの作業ルール
 
 - README.md、docs/XCLIP_CURRENT_STATUS.md、docs/XCLIP_UPDATE_HISTORY.md、docs/xclip-update-artifacts.json、docs/canonical-source-status-20261016.jsonを先に読む。

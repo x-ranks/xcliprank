@@ -1,4 +1,21 @@
 {
+  "priorityMemory20261017": {
+    "date": "2026-10-17",
+    "scope": "requirements and priority memory only",
+    "requirements": "docs/XCLIP_TOP_PRIORITIES_20261017.md",
+    "requirementsSha256": "988361457f36d21ac2a1e11a3957349fe701b6d3920507fdc9fc174d90c128fa",
+    "highestDevelopmentPriority": [
+      "L01",
+      "M07"
+    ],
+    "individualUrl": "/p/[postId]",
+    "oldTaskIdsRetained": true,
+    "totalTasks": 46,
+    "applicationCodeChanged": false,
+    "actualLocalApplied": false,
+    "productionApplied": false,
+    "githubRecord": "this commit; verify remote HEAD after push"
+  },
   "release": "label-learning-local-v1-20261017",
   "scope": "local only",
   "files": {

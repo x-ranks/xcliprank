@@ -1,3 +1,5 @@
+【2026-10-17優先更新】開発の最優先はラベル付けと `/p/投稿ID` の個別ページ作成。必須7項目・戻る・URL共有は docs/XCLIP_TOP_PRIORITIES_20261017.md を参照。旧記述の最優先順より本指定を優先。ラベル学習はコードmain統合済み・実環境適用/実測精度未報告。個別URLは未実装。Supabase運営確認と既存リマインダーは継続。
+
 【2026-10-16後続更新を優先】GitHubはユーザー指定で公開を継続。PR #12によりmain直下は最新ローカル管理コードへ統合済み（タグlocal-admin-20261016、CI成功、新規clone照合済み）。以下の「private」「直下旧版」「統合未完了」は整理前の経緯。本番ColorfulBoxの完全コード統合は取得待ちで未完了。README.mdとdocs/completions/20261016-canonical-local-main.jsonを先に読む。
 
 Xclip / xcliprank 運営・開発：別AIへの引き継ぎ
