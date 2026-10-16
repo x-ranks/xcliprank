@@ -1,0 +1,30 @@
+{
+  "release": "label-learning-local-v1-20261017",
+  "dateJst": "2026-10-17",
+  "githubMainSourceIntegrated": true,
+  "pullRequest": "https://github.com/x-ranks/xcliprank/pull/13",
+  "sourceHead": "19e71f5c660a5ab73ea633ae419ed348a9eee57f",
+  "mergeCommit": "442bc316832b13b957cb5f2e3afa3ebd27dd2fac",
+  "githubActionsRun": 38975268374,
+  "githubNodeVersion": "22",
+  "githubCiConclusion": "success",
+  "githubChecks": [
+    "fresh npm ci",
+    "217 source hashes",
+    "37 offline regressions",
+    "isolated type check",
+    "isolated Next build"
+  ],
+  "actualLocalApplied": false,
+  "productionApplied": false,
+  "realLabelPrecisionMeasured": false,
+  "scope": "source integration and downloadable local-only installer; no runtime deployment",
+  "preserved": [
+    "Tier teacher/model/configuration",
+    "existing label JSON",
+    "production database",
+    "curated author registry/cursors/quota/removals"
+  ],
+  "artifactRecordNote": "Immutable ZIP/creation ledger records were written before Git push. This record supplies actual GitHub/CI completion evidence.",
+  "rollbackCommand": "powershell -NoProfile -ExecutionPolicy Bypass -File .\\xclip-label-learning-local-20261017.ps1 -Rollback \"BACKUP_FOLDER_NAME\""
+}

@@ -1,6 +1,6 @@
 # Xclip：最新ローカル管理ソース
 
-取得タグ：`local-admin-20261016`。PR #12統合済み。GitHubのNode22検証と通常cloneでのSHA照合成功。根拠：`docs/completions/20261016-canonical-local-main.json`。
+最新版mainはラベル学習v1を含みます（PR #13）。GitHubのNode22検証成功。10/16時点の基準タグは`local-admin-20261016`。根拠：`docs/completions/20261017-label-learning-source.json`と10/16の保存記録。
 
 2026-10-16に実ローカル `C:\Projects\xcliprank` の未コミット・未追跡を含むコードを統合しました。リポジトリ直下の `app/`・`lib/` が現在のローカル管理版です。過去のZIPを順に適用する必要はありません。
 

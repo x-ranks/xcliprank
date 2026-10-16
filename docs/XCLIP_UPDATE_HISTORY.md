@@ -1,3 +1,12 @@
+# 2026-10-17 JST：ラベル学習のGitHub最新版統合・CI確認
+
+- PR #13をmainへ統合。アプリ差分head=19e71f5c660a5ab73ea633ae419ed348a9eee57f、merge=442bc316832b13b957cb5f2e3afa3ebd27dd2fac。
+- GitHub Actions run38975268374でNode22、新規npm ci、217ソースSHA、37回帰、型、隔離Nextビルドがすべて成功。新規ソースはGitHubから取得可能。Vercel Git自動デプロイ無効を維持。
+- 実ローカルの変更対象と依存SHAを再確認し、未変更を確認。実ローカル/本番適用、実動画の画像抽出・ラベル精度実測は未実施。ラベル用教師・画像・モデルはGitHubへ含めない。
+- ZIP配布前の生成記録のgithubPushed=false等は生成時点の記録であり、この完了記録で保存状況を補足。実環境への適用完了を意味しない。docs/completions/20261017-label-learning-source.jsonを参照。
+
+---
+
 # 2026-10-17 JST：ラベル作成・4フレーム教師・学習と精度確認（label-learning-local-v1-20261017）
 
 - ローカル専用 /label-learning と /api/label-learning、画像配信API、ラベル別の独立分類モデルを追加。管理入口へリンク。ラベル作成/改名/休止、動画4枚確認、該当/非該当/未確認、手動正解保存、10件以上から学習、教材内グループ分割検証と未使用動画の盲検チェック。
