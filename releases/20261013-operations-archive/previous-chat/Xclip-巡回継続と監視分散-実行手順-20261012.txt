@@ -1,0 +1,4 @@
+﻿本番へxclip-patrol-continue-jitter-deploy-20261012.shを/home/rbxfxmfd/へアップロードし、bash /home/rbxfxmfd/xclip-patrol-continue-jitter-deploy-20261012.sh を実行。成功表示 XCLIP_PATROL_CONTINUE_JITTER_DEPLOYMENT_COMPLETE。
+ローカルは管理画面・開発サーバー・編集を終了し、ダウンロード先で powershell -NoProfile -ExecutionPolicy Bypass -File .\xclip-patrol-continue-jitter-local-20261012.ps1 を実行。成功表示 XCLIP_PATROL_CONTINUE_JITTER_LOCAL_INSTALLED または ALREADY_INSTALLED。再起動して /fxtwitter-monitor と /availability-monitor の記録を更新。
+適用中は追加登録・停止・削除等の管理操作を行わない。本番は従来の登録・次回時刻・24時間予約・取得位置を保持。強制巡回は行わず次の通常Cronを待つ。Xの認証・権限等が誤っている場合、その問題自体はこの更新では直さない。
+本番更新失敗は直前runtimeと設定を自動復旧。出力されたPREVIOUS_RUNTIME_BACKUPとSTAGING_DIRECTORYを保管。ローカルの内容照合付き復元は同じps1へ -RestoreBackup と表示されたBACKUPの絶対パスを渡す。DBや巡回状態は巻き戻さない。

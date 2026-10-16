@@ -1,0 +1,4 @@
+﻿本番はv2.shを/home/rbxfxmfdへアップロードし、bash /home/rbxfxmfd/xclip-patrol-continue-jitter-deploy-20261012-v2.sh を実行。成功表示 XCLIP_PATROL_CONTINUE_JITTER_V2_DEPLOYMENT_COMPLETE。
+既存xclip-author-monitor.shは書き換えず、xclip-author-monitor-jitter.shを前段に置く。元ファイルの削除・手編集は不要。
+ローカルは管理画面と開発サーバーを終了し、展開先で powershell -NoProfile -ExecutionPolicy Bypass -File .\xclip-patrol-continue-jitter-local-20261012-v2.ps1 を実行。成功表示 XCLIP_PATROL_CONTINUE_JITTER_LOCAL_INSTALLED または ALREADY_INSTALLED。
+元の予約・取得位置・管理状態は保持。強制巡回せず通常Cronを待つ。本番ビルド/公開確認の成功は実行ログで確認。

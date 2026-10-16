@@ -1,0 +1,96 @@
+{
+  "record": "operations-completion-20261013",
+  "recordedAtJst": "2026-10-13T23:03:36+09:00",
+  "applicationCodeChanged": false,
+  "newest500": {
+    "release": "newest500-20261013-v2",
+    "status": "COMPLETED_USER_CONFIRMED",
+    "productionApplied": true,
+    "productionEvidence": "ユーザー「OK!完了です。」。新たなBUILD_ID・適用時刻・全デプロイログは未受領。今回の本番再接続検査なし。",
+    "localApplied": true,
+    "localEvidence": "配布v2の15対象ファイルを現行ローカルとバイトSHA256照合、15/15一致。",
+    "localTargetMatches": {
+      "lib/ranking-pagination.ts": true,
+      "lib/initial-ranking.ts": true,
+      "lib/seo.ts": true,
+      "app/page.tsx": true,
+      "app/components/RankingClient.tsx": true,
+      "app/components/DedicatedRankingPage.tsx": true,
+      "app/ranking/daily/page.tsx": true,
+      "app/ranking/weekly/page.tsx": true,
+      "app/globals.css": true,
+      "app/api/rankings/route.ts": true,
+      "scripts/test-newest500-local.cjs": true,
+      "scripts/test-newest500-pages.cjs": true,
+      ".gitignore": true,
+      "docs/XCLIP_UPDATE_HISTORY.md": true,
+      "docs/xclip-update-artifacts.json": true
+    }
+  },
+  "videoSave": {
+    "status": "COMPLETED_USER_CONFIRMED",
+    "evidence": "ユーザー「動画保存機能についても以前実行した結果完了している」。既存累積履歴にも2026-10-08〜09のv3後ローカル保存成功確認あり。",
+    "actualExecutionDate": null,
+    "deployedBuildId": null,
+    "scopeLimitation": "以前の実行成功として完了記録。今回の実ブラウザー保存・本番ダウンロード再試験は未実施。"
+  },
+  "git": {
+    "repository": "x-ranks/xcliprank",
+    "branch": "archive/operations-20261013",
+    "publication": "commit to dedicated preservation branch; root application and main unchanged",
+    "previousLocalHead": "84bd6f4",
+    "remoteMainBase": "2bf1a1fca840fc4f3249e916fb1f6f92bbb13200",
+    "gitRecorded": true,
+    "githubPushed": true,
+    "verifiedSnapshotCommit": "e0e4c3b5c961cefbc9eef1ea856b4f551a6c3edd",
+    "remoteVerification": "GitHub API ref SHA equals locally committed snapshot; private repo; main unchanged",
+    "verifiedAtJst": "2026-10-13T23:10:37+09:00",
+    "branchUrl": "https://github.com/x-ranks/xcliprank/tree/archive/operations-20261013",
+    "mainUnchangedSha": "2bf1a1fca840fc4f3249e916fb1f6f92bbb13200"
+  },
+  "assistantActions": {
+    "productionDeployment": false,
+    "actualLocalProjectEdited": false,
+    "databaseQueries": 0,
+    "databaseWrites": 0,
+    "xOrFxProviderRequests": 0,
+    "browserOrPcUiOperations": 0
+  },
+  "snapshotScope": {
+    "local": "source snapshot only; secrets, private teaching/learning data and model weights excluded",
+    "production": "known patch files reconstructed in chronological order; not a full fresh production filesystem snapshot",
+    "distribution": "historical artifacts unchanged; older versions may contain obsolete pending/failed status, superseded by current completion receipt"
+  },
+  "verification": {
+    "status": "PASSED_OFFLINE",
+    "fullLocalTypecheck": "tsc --noEmit --incremental false; existing installed dependencies exposed through an ignored workspace-only node_modules junction; no package installation or actual-project writes",
+    "offlineTestGroups": [
+      "test-direct-download.cjs",
+      "test-download-free.cjs",
+      "test-download-url.cjs",
+      "test-url-resolve-fix.cjs",
+      "test-stream-playback.cjs",
+      "test-stream-component.cjs",
+      "test-newest500-local.cjs",
+      "test-newest500-pages.cjs"
+    ],
+    "testResult": "8/8 passed; all provider/DB/HTTP mocked",
+    "secretScan": "227 historical files and nested ZIP/PowerShell/shell payloads recursively inspected; real local credential values not found; actual credentials never printed",
+    "snapshotCounts": {
+      "localProgramAndOriginalDocs": 216,
+      "knownProductionTargets": 59,
+      "historicalArtifacts": 227
+    },
+    "fullProductionBuild": "not rerun; full current production source not freshly captured",
+    "remoteGitHub": {
+      "repository": "x-ranks/xcliprank",
+      "branch": "archive/operations-20261013",
+      "verifiedRemoteCommit": "e0e4c3b5c961cefbc9eef1ea856b4f551a6c3edd",
+      "mainBeforeAndAfter": "2bf1a1fca840fc4f3249e916fb1f6f92bbb13200",
+      "remoteTreeComplete": true,
+      "remoteTreeEntries": 840,
+      "githubApiRead": true
+    }
+  },
+  "backups": "Original source, released files, runtime, DB, quota/cursor/registry and manual removal state unchanged. No backup data included."
+}

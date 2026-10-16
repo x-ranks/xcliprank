@@ -17,8 +17,8 @@ export function rankingItemList(
     itemListOrder: "https://schema.org/ItemListOrderDescending",
     itemListElement: posts.slice(0, 100).map((post, index) => ({
       "@type": "ListItem",
-      position: index + 1,
-      name: `${index + 1}位 ${
+      position: post.ranking_position ?? index + 1,
+      name: `${post.ranking_position ?? index + 1}位 ${
         post.author_name ?? post.author_username ?? "X投稿者"
       }`,
       url: post.x_url

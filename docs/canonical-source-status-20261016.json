@@ -1,0 +1,25 @@
+{
+  "release": "canonical-source-local-stage-20261016",
+  "localCodeAtRepositoryRoot": true,
+  "productionCodeFullyIntegrated": false,
+  "productionExportNeeded": true,
+  "publicRepositoryApprovedByUser": true,
+  "legacyVercelGitDeploymentDisabled": true,
+  "actualLocalInstalledByThisTask": false,
+  "productionDeployedByThisTask": false,
+  "verification": {
+    "regressionPassCount": 36,
+    "optionalFfmpegTestsNotRun": 2,
+    "typeCheck": true,
+    "isolatedNextBuild": true,
+    "nodeVersion": "26.7.0",
+    "networkDeniedDuringChecks": true,
+    "realStateAccessDenied": true,
+    "realBrowserOrProviderTests": false,
+    "ciNode22Run": "pending GitHub workflow"
+  },
+  "sourceFileCount": 213,
+  "exactAppAndLibPreserved": true,
+  "userGoalFullyComplete": false,
+  "next": "Receive allowlisted production code JSON, verify contents, integrate separately and complete the full local/production source organization."
+}

@@ -1,0 +1,56 @@
+Xclip Git記録結果
+
+commit: 84bd6f49cbeed2372b07408104e5d0348ffc0ac7
+branch: fix/download-menu-20261009231119075
+message: Record completed FxTwitter availability and registration fixes
+記録ファイル数: 26
+GitHubへのpush: 未実施
+アプリケーションコードの追加変更・更新適用・DB操作・有料API実通信・本番デプロイ: 今回は未実施
+ローカルFxTwitter関連コードと、配布した本番/ローカル用更新ファイル・本番用ソース差分ZIP・履歴を保存。
+本番用ソースは稼働ソースへ適用する差分であり、ローカル版とは区別。
+配布インストーラーとソースZIPは改行変換を無効にし、Gitに保存された内容と元ファイルのバイト一致を確認。
+元からある末尾空白は配布物を改変せず維持。通常のdiff --checkでは2箇所検出、既存末尾空白を許容した検査は成功。
+無関係なTier/保存/再生等の未コミット変更・未追跡ファイルは保持。
+Gitインデックスに未コミットのステージ済み変更なし。
+
+記録したファイル:
+.gitignore
+AGENTS.md
+app/api/fxtwitter-authors/route.ts
+app/fxtwitter-authors/FreeAuthorsPanel.tsx
+app/fxtwitter-authors/page.tsx
+app/fxtwitter-monitor/MonitorPanel.tsx
+app/fxtwitter-monitor/page.tsx
+docs/XCLIP_UPDATE_HISTORY.md
+docs/development-workflow.md
+docs/xclip-update-artifacts.json
+lib/free-curated-client.ts
+lib/free-curated-metrics.ts
+lib/free-curated-registration.ts
+lib/fxtwitter-curated-save.ts
+lib/fxtwitter-curated-store.ts
+lib/fxtwitter-curated-tier.ts
+lib/fxtwitter-curated.ts
+lib/fxtwitter-local-access.ts
+releases/20261011-availability-curated/.gitattributes
+releases/20261011-availability-curated/SHA256SUMS.txt
+releases/20261011-availability-curated/xclip-availability-curated-fix-deploy-20261011.sh
+releases/20261011-availability-curated/xclip-availability-curated-fix-local-20261011.ps1
+releases/20261011-availability-curated/xclip-availability-curated-fix-source-20261011.zip
+scripts/test-free-curated-cursors.cjs
+scripts/test-free-curated-registration.cjs
+scripts/test-fxtwitter-curated.cjs
+
+残した追跡済みファイルの未コミット変更:
+app/components/DedicatedRankingPage.tsx
+app/components/RankingClient.tsx
+app/globals.css
+app/learning-tools/page.tsx
+app/page.tsx
+app/reels/ReelsFeed.tsx
+app/removal-request/page.tsx
+app/review/page.tsx
+lib/curated-collector.ts
+lib/tier-learning.ts
+middleware.ts
+next.config.ts

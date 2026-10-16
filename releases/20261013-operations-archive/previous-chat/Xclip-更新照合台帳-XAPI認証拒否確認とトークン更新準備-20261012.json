@@ -1,0 +1,1715 @@
+{
+  "record": "xapi-token-rejected-and-update-prepared-20261012",
+  "dateJst": "2026-10-12",
+  "applicationCodeChanged": false,
+  "applicationRelease": "patrol-continue-jitter-20261012-v3",
+  "localApplied": true,
+  "productionApplied": true,
+  "usageProbeEvidence": {
+    "http": 401,
+    "requests": 1,
+    "interpretation": "TOKEN_REJECTED_BY_X",
+    "stateChanges": false,
+    "evidence": "user diagnostic log"
+  },
+  "rootCause": "current runtime X_BEARER_TOKEN rejected by X even on Usage API; reason for invalidity unconfirmed",
+  "credentialUpdateApplied": false,
+  "credentialRegeneratedByAssistant": false,
+  "utilityFile": "xclip-xapi-token-update-20261012.sh",
+  "utilitySha256": "1f3dcd7e3f4b2d0700ecb6f76bc9feb0f0dc1a112fd078c6315d3264b38c7bf0",
+  "utilityValidation": "synthetic state and mocked HTTP; parser/env preservation, guarded write/rollback and private backups",
+  "providerRequestsByAssistant": 0,
+  "runtimeCredentialValidity": "rejected 401; repair pending",
+  "searchAccessTested": false,
+  "actualNewPublicationConfirmed": false,
+  "gitRecorded": false,
+  "githubPushed": false,
+  "historyFile": "Xclip-更新履歴-XAPI認証拒否確認とトークン更新準備-20261012.md",
+  "policyFile": "Xclip-更新前精査とチャット引き継ぎルール-20261012.txt",
+  "policySha256": "163627aad6258f35d41029afbdf8f835090261b4ff7f22efd706115d40c275d4",
+  "previousRecords": {
+    "record": "xapi-401-readonly-production-settings-verified-20261012",
+    "dateJst": "2026-10-12",
+    "applicationRelease": "patrol-continue-jitter-20261012-v3",
+    "localApplied": true,
+    "productionApplied": true,
+    "applicationCodeChanged": false,
+    "productionDiagnostic": {
+      "diagnostic": "xclip-xapi-auth-20261012",
+      "runtime": "/home/rbxfxmfd/xclip-video-card-20261004.DJKKID/runtime",
+      "source": "/home/rbxfxmfd/xclip-patrol-continue-jitter-20261012-v3.QaEslT/source",
+      "buildId": "mIrPiGvq1pdQAmP8cypM4",
+      "buildMatches": true,
+      "tokenPresent": true,
+      "tokenFormatFlagsAllFalse": true,
+      "equalsCronSecret": false,
+      "equalsKnownApiKey": false,
+      "interactiveTokenDefined": false,
+      "interactiveTokenDiffersFromFile": false,
+      "sourceEnvTokenMatchesRuntime": true,
+      "codeChecks": {
+        "lib/x-curated-search.ts": true,
+        "lib/x-curated-scan.ts": true,
+        "lib/free-curated-scan.ts": true,
+        "scripts/scan-free-curated.cjs": true,
+        "xclip-free-curated-collector.sh": true
+      },
+      "credentialValidity": "not tested",
+      "providerRequests": 0,
+      "stateChanges": false,
+      "evidence": "user-provided diagnostic JSON and XCLIP_AUTH_DIAGNOSTIC_COMPLETE"
+    },
+    "independentLiveSourceHashVerifiedByUserDiagnostic": true,
+    "tokenValidity": "not tested",
+    "rootCause": "HTTP401 observed; exact cause pending usage probe",
+    "nextAction": "user may run existing diagnostic with --probe-usage for one bounded GET /2/usage/tweets?days=1; no post collection or state writes",
+    "providerRequestsByAssistant": 0,
+    "gitRecorded": false,
+    "githubPushed": false,
+    "historyFile": "Xclip-更新履歴-XAPI401本番設定照合確認-20261012.md",
+    "policyFile": "Xclip-更新前精査とチャット引き継ぎルール-20261012.txt",
+    "policySha256": "b8f1f6ff9ec9e6fdf15e6a418dc8218bad1aeebfccf8990d6b12babe88cba58b",
+    "previousRecords": {
+      "record": "xapi-401-investigation-20261012",
+      "dateJst": "2026-10-12",
+      "applicationCodeChanged": false,
+      "localApplied": true,
+      "productionApplied": true,
+      "applicationRelease": "patrol-continue-jitter-20261012-v3",
+      "newApplicationOrSettingChanges": false,
+      "diagnosticExecutedOnServer": false,
+      "diagnosticFile": "xclip-xapi-auth-diagnose-20261012.sh",
+      "diagnosticSha256": "d55e0c45f686bdc96c423d83a264eb038090c4d0c9cea6ee68faf18ee5fd20f5",
+      "expectedSourceHashes": {
+        "lib/x-curated-search.ts": "90d41fadb981e46ea33bf7abee1aacc4c5422dadae9ac9f28055956d32465daf",
+        "lib/x-curated-scan.ts": "6e9d4e962810cb3a7fecf66bd1aa2ef5e4a9a9edec52ed6625aa8e1f6a8bbaca",
+        "lib/free-curated-scan.ts": "56c8784c00775685d5d010207d547c975c10f627fc60fb08aa64c2b351ed2c33",
+        "scripts/scan-free-curated.cjs": "7f60776a039678011c075facbc267a2ea210460206cf6184babe001bde3bfebd",
+        "xclip-free-curated-collector.sh": "e764170b661d83cbb2cadc288fffea83738954eada512af8c75b7f740a0023d2"
+      },
+      "localReadonlyTargetAudit": {
+        "project": "C:\\Projects\\xcliprank",
+        "method": "readonly SHA256 of v3 local patch targets only; no .env or private state reads",
+        "expectedTargets": 26,
+        "matched": 26,
+        "missing": [],
+        "different": []
+      },
+      "observedFailure": {
+        "timeJst": "2026-10-12T21:47:25+09:00",
+        "http": 401,
+        "nextCheckJst": "2026-10-13T21:47:25+09:00",
+        "watermarkPreserved": true,
+        "evidence": "user screenshot"
+      },
+      "causeStatus": "X authentication failure observed; exact invalid/stale/malformed credential cause pending diagnosis",
+      "realProviderRequestsByAssistant": 0,
+      "defaultDiagnosticProviderRequests": 0,
+      "optionalUsageProbe": "explicit --probe-usage only; 1 GET; not run by assistant; pricing not asserted",
+      "gitRecorded": false,
+      "githubPushed": false,
+      "historyFile": "Xclip-更新履歴-XAPI401調査-20261012.md",
+      "policyFile": "Xclip-更新前精査とチャット引き継ぎルール-20261012.txt",
+      "policySha256": "c8a4d29fbddf18abbc499f90e9e3599b5c074b73456be0fd1392709294370a57",
+      "previousRecords": {
+        "record": "patrol-v3-production-and-local-confirmed-20261012",
+        "dateJst": "2026-10-12",
+        "release": "patrol-continue-jitter-20261012-v3",
+        "status": "production and local application confirmed by user logs; actual scheduled collection pending verification",
+        "localApplied": true,
+        "productionApplied": true,
+        "appliedBy": "user",
+        "productionEvidence": [
+          "XCLIP_PATROL_CONTINUE_JITTER_V3_DEPLOYMENT_COMPLETE",
+          "PUBLIC_FREE_CURATED_DASHBOARD_OK",
+          "PUBLIC_COMMON_MANAGEMENT_AND_AVAILABILITY_OK",
+          "PUBLIC_FREE_CURATED_SYNC_OK"
+        ],
+        "localEvidence": "XCLIP_PATROL_CONTINUE_JITTER_LOCAL_INSTALLED; STAGED_FREE_CURATED_TYPES_OK",
+        "appliedAtJst": null,
+        "productionBuildId": null,
+        "productionV3StagePath": null,
+        "realScheduledProviderCollectionConfirmed": false,
+        "actualNewPublicationConfirmed": false,
+        "actualAvailabilityExclusionConfirmed": false,
+        "independentLiveFileHashCheck": false,
+        "actualProjectEditedByAssistant": false,
+        "gitRecorded": false,
+        "githubPushed": false,
+        "historyFile": "Xclip-更新履歴-巡回v3本番ローカル適用確認-20261012.md",
+        "policyFile": "Xclip-更新前精査とチャット引き継ぎルール-20261012.txt",
+        "policySha256": "9cc600efc724d7394014eada7b598fad8bc524afa325fc26821ab70ce3ee2053",
+        "previousRecords": {
+          "record": "patrol-v3-local-installation-confirmed-20261012",
+          "dateJst": "2026-10-12",
+          "release": "patrol-continue-jitter-20261012-v3",
+          "status": "local installation confirmed by user log; production success unconfirmed",
+          "localApplied": true,
+          "productionApplied": false,
+          "productionApplicationStatus": "unconfirmed; v3 success log not received",
+          "installedBy": "user",
+          "evidence": "XCLIP_PATROL_CONTINUE_JITTER_LOCAL_INSTALLED; STAGED_FREE_CURATED_TYPES_OK; six mocked test groups PASS",
+          "localBackup": "C:\\Projects\\xcliprank\\.local-admin\\fxtwitter-curated-backups\\20261012124122107-f9ef6a",
+          "appliedAtJst": null,
+          "uiAndProductionSyncStatus": "not confirmed by installation log",
+          "independentLiveFileHashCheck": false,
+          "actualProjectEditedByAssistant": false,
+          "gitRecorded": false,
+          "githubPushed": false,
+          "historyFile": "Xclip-更新履歴-巡回v3ローカル適用確認-20261012.md",
+          "policyFile": "Xclip-更新前精査とチャット引き継ぎルール-20261012.txt",
+          "policySha256": "ec7777fd30e59604474398767a698b8fd9cd5760f953ef27b9624739c2ecff3e",
+          "previousRecords": {
+            "record": "pre-update-review-and-cross-chat-handoff-20261012",
+            "dateJst": "2026-10-12",
+            "userInstruction": "本番・ローカルを精査してコード作成し、別チャットへ引き継ぐ",
+            "historyFile": "Xclip-更新履歴-更新前精査ルール追加-20261012.md",
+            "policyFile": "Xclip-更新前精査とチャット引き継ぎルール-20261012.txt",
+            "policySha256": "54b22e3e79b6f4ace9d3d4da89e8d202c8bb359bea65f499c960821e074ea0d3",
+            "scope": "Xclip; Documents/Codex descendant chats via AGENTS.md; elsewhere specify policy file",
+            "applicationCodeChanged": false,
+            "actualProjectEdited": false,
+            "productionApplied": false,
+            "localApplied": false,
+            "gitRecorded": false,
+            "githubPushed": false,
+            "latestCodeRelease": "patrol-continue-jitter-20261012-v3; application success unconfirmed",
+            "previousRecords": {
+              "release": "patrol-continue-jitter-20261012-v3",
+              "dateJst": "2026-10-12",
+              "status": "created and isolated-tested; production/local application pending",
+              "applicationCodeChanged": true,
+              "v3OperationalCodeChangedFromV2": false,
+              "productionApplied": false,
+              "localApplied": false,
+              "gitRecorded": false,
+              "historyFile": "Xclip-更新履歴-巡回継続と監視分散-v3-20261012.md",
+              "previousRecords": {
+                "release": "patrol-continue-jitter-20261012-v2",
+                "dateJst": "2026-10-12",
+                "status": "created and isolated-tested; production/local application pending",
+                "applicationCodeChanged": true,
+                "productionApplied": false,
+                "localApplied": false,
+                "gitRecorded": false,
+                "historyFile": "Xclip-更新履歴-巡回継続と監視分散-v2-20261012.md",
+                "previousRecords": {
+                  "release": "patrol-continue-jitter-20261012",
+                  "dateJst": "2026-10-12",
+                  "status": "created and isolated-tested; production/local application pending",
+                  "applicationCodeChanged": true,
+                  "productionApplied": false,
+                  "localApplied": false,
+                  "gitRecorded": false,
+                  "previousRecords": {
+                    "release": "snapshot-tools-20261012-v1",
+                    "dateJst": "2026-10-12",
+                    "tasks": [
+                      "G01",
+                      "O01"
+                    ],
+                    "status": "G01 completed; O01 final coverage and offsite-copy checks pending",
+                    "applicationCodeChanged": false,
+                    "productionApplied": false,
+                    "gitRecorded": false,
+                    "baseline": "unified-authors-20261011 patch targets; cumulative history includes user normal-operation confirmation",
+                    "compatibility": {
+                      "local": "Node.js 22 or compatible; Windows PowerShell 5.1+; existing .git directory",
+                      "production": "existing ColorfulBox layout/node22; flock; shared registry lock; no schema or quota change",
+                      "database": "PostgreSQL client compatible with source server; password entered at execution; separate native test cluster requires full tools"
+                    },
+                    "limitations": [
+                      "Supabase Storage bodies and role passwords require separate protection.",
+                      "File and DB snapshots are not an atomic combined recovery point.",
+                      "Actual production restore, managed Supabase service restoration and DB native-tool execution not verified."
+                    ],
+                    "files": [
+                      {
+                        "name": "xclip-snapshot-20261012.cjs",
+                        "sha256": "ee30bde0ae6c67f7a98125ab2183973022063707e1eb25827f1058ddfddcb689"
+                      },
+                      {
+                        "name": "xclip-baseline-20261012.json",
+                        "sha256": "7cceac3a6d011238fdaecca7ff9b733ca81486b875c6efe9c0e226680a7288c4"
+                      },
+                      {
+                        "name": "xclip-local-snapshot-20261012.ps1",
+                        "sha256": "5a16c41f54186e7f4efeec562916bde36f372cd4de40b1f95545784c1ab6c252"
+                      },
+                      {
+                        "name": "xclip-server-snapshot-20261012.sh",
+                        "sha256": "68039f5276c1f5f762989121d02dd4194cf80acc839ef27b536cf318b6fe4189"
+                      },
+                      {
+                        "name": "xclip-db-snapshot-20261012.ps1",
+                        "sha256": "3d83b164a19ab1516802b9bc7f74e5c84ea577b4af5aff38925987ca1e123628"
+                      },
+                      {
+                        "name": "xclip-db-restore-check-20261012.ps1",
+                        "sha256": "e18e38ef331b8f6f66a5ce7874bb24a98b23eefce11b151d446539259fbf3c6b"
+                      },
+                      {
+                        "name": "xclip-db-inventory-20261012.sql",
+                        "sha256": "f488bf0cc5b4e90a04e4bb52ac8e835729e8e68b97e98630ad4a73eb5114e2d5"
+                      },
+                      {
+                        "name": "Xclip-現行版保護とバックアップ-実行手順-20261012.txt",
+                        "sha256": "b3b4cecc9b2484eaa2438153717c972f7ffb8d19ec3bce834515d70c02167cab"
+                      },
+                      {
+                        "name": "Xclip-更新履歴-バックアップ準備-20261012.md",
+                        "sha256": "62f4cbbde669d9b793a658dec352e144c88e2dfa9a72f7b3595ca4b33eaf72c4"
+                      },
+                      {
+                        "name": "Xclip-運営タスク一覧-バックアップ準備-20261012.csv",
+                        "sha256": "4958d22115f2521c5fbaeaf91b809e50a5e737dd4c9cf1cd23cb5de2538ab53d"
+                      }
+                    ],
+                    "dbPasswordChange": {
+                      "dateJst": "2026-10-12",
+                      "evidence": "user reports resetting DB password and retrying backup",
+                      "secretStored": false,
+                      "executionResult": "Subsequent DB backup and v5 public-schema isolated restore succeeded, confirmed by user logs.",
+                      "futureGuidance": "Refer to this reset when troubleshooting DB password failures; check outdated credentials before concluding a cause."
+                    },
+                    "historyFile": "Xclip-更新履歴-現行版保護完了-20261012.md",
+                    "documentationAdditions": [
+                      {
+                        "name": "Xclip-現行版保護完了記録-20261012.txt",
+                        "sha256": "35b5cac94329438b9ebd73dc7c44f20377b2738ba127f904eed4b3fa8f150404"
+                      },
+                      {
+                        "name": "Xclip-更新履歴-現行版保護完了-20261012.md",
+                        "sha256": "01a975b5892f3b4de0657678ac8378d364c8ef4389172bc928b718dcf4e021b8"
+                      },
+                      {
+                        "name": "Xclip-運営タスク一覧-現行版保護完了-20261012.csv",
+                        "sha256": "4e29cbc5d54e9ee7fec04285b2cb3dc95334faaef848a254f8d106273f0fd3bd"
+                      }
+                    ],
+                    "backupExecution": {
+                      "dateJst": "2026-10-12",
+                      "evidence": "user-supplied completion log",
+                      "localBackupDirectory": "C:\\Users\\USER\\Documents\\XclipBackups\\database-20261012-182101-7956ad",
+                      "dump": "success reported",
+                      "pgRestoreList": "success implied by script completion",
+                      "encryptedFileRoundtrip": "success reported",
+                      "actualDatabaseRestore": "public-schema isolated restore passed in v5; owners/grants/managed schemas excluded",
+                      "offsiteCopy": "unconfirmed",
+                      "localAndServerSnapshots": "both SAFE-REPORTs verified; file restoration passed; 25 local / 30 server patch targets match",
+                      "safeReportReceived": false
+                    },
+                    "restoreToolUpdate": {
+                      "release": "db-restore-check-20261012-v2",
+                      "supersedes": "xclip-db-restore-check-20261012.ps1 only for future restore-check executions; prior file not changed",
+                      "reason": "Japanese locale text-search message was treated as NativeCommandError",
+                      "verification": "Windows PowerShell 5.1 syntax and fixture-native warning/exit/argument/log tests passed; real DB execution pending",
+                      "applicationCodeChanged": false,
+                      "productionApplied": false,
+                      "rollback": "No live change. Retain prior files and backup; isolated test folders are not live restore targets."
+                    },
+                    "restoreToolUpdateV3": {
+                      "release": "db-restore-check-20261012-v3",
+                      "supersedes": "v2 for future restore checks; prior files unchanged",
+                      "reason": "Start-Process -Wait waits for long-lived PostgreSQL descendants",
+                      "verification": "Windows PowerShell 5.1 native fixtures: parent exited while descendant stayed alive; command-only wait returned in about 0.2 seconds. Existing stderr/exit/argument tests pass. Actual PostgreSQL restoration pending.",
+                      "scope": "new isolated local test DB only",
+                      "recovery": "Interrupt v2, stop only its exact private test cluster, rerun v3 in a new test directory. No backup recreation or production restoration."
+                    },
+                    "restoreToolUpdateV4": {
+                      "release": "db-restore-check-20261012-v4",
+                      "reason": "User log: schema public missing; preparation dropped schema without recreating it.",
+                      "change": "Create public in the verified new local test database before restoring its objects.",
+                      "productionApplied": false,
+                      "actualDatabaseRestoration": "pending user execution",
+                      "verification": "Preparation SQL order checked. Windows PowerShell 5.1 syntax, native warning/exit/argument tests and descendant regression test passed; parent wait returned in about 0.21s while its child stayed alive for 5s. Actual DB restoration remains pending."
+                    },
+                    "restoreToolUpdateV5": {
+                      "release": "db-restore-check-20261012-v5",
+                      "reason": "initdb automatically prefixes pg_catalog.; passing pg_catalog.simple generated pg_catalog.pg_catalog.simple",
+                      "change": "Use text-search-config=simple and check generated postgresql.conf before starting test DB.",
+                      "verification": "PostgreSQL 17 source reviewed; Windows PowerShell 5.1 config guard and existing native/descendant fixtures passed. Actual restore pending user execution.",
+                      "productionApplied": false,
+                      "originalDumpChanged": false
+                    },
+                    "publicRestoreConfirmation": {
+                      "dateJst": "2026-10-12",
+                      "evidence": "user-provided six-step v5 success log",
+                      "posts": 9959,
+                      "authors": 2406,
+                      "testDirectory": "C:/Users/USER/Documents/XclipBackups/db-restore-test-598d8fc6f352413cb5dc5736a6c9d2c7",
+                      "testClusterStopped": true,
+                      "liveDatabaseCompared": false,
+                      "safeReportReceived": false,
+                      "limits": "public schema only; counts are backup-time restored counts, not current live or per-row equality verification"
+                    },
+                    "localSnapshotConfirmation": {
+                      "evidence": "user attachment SAFE-REPORT.json read",
+                      "report": {
+                        "version": 1,
+                        "createdAtJst": "2026-10-12 17:59:33",
+                        "files": 1286,
+                        "archiveSHA256": "527cdd0362f4facf03447bbc075db4544e350cc5e6b9119b4601eae96b1fbb74",
+                        "fileRestore": "PASS",
+                        "kind": "local",
+                        "gitHead": "84bd6f49cbeed2372b07408104e5d0348ffc0ac7",
+                        "dbRestore": "PENDING",
+                        "releaseComparison": {
+                          "scope": "Latest unified-authors patch targets only; not the entire project.",
+                          "matched": 25,
+                          "differences": []
+                        },
+                        "limitations": [
+                          "DB restoration is separate.",
+                          "GitHub is not a backup of runtime data.",
+                          "External providers and Storage object bodies are not copied.",
+                          "restore-test contains private plaintext; do not upload it."
+                        ]
+                      },
+                      "archiveHashIndependentlyRecalculated": false
+                    },
+                    "serverSnapshotConfirmation": {
+                      "evidence": "user execution completion log",
+                      "status": "SAFE-REPORT verified; fileRestore PASS; 30 patch targets match; no missing optional state directories",
+                      "directory": "/home/rbxfxmfd/xclip-backups/server-20261012T090140Z-177639",
+                      "sshDisconnect": "after completion; not by itself backup failure",
+                      "report": {
+                        "version": 1,
+                        "createdAtJst": "2026-10-12 18:01:53",
+                        "files": 2616,
+                        "archiveSHA256": "bb46c2d4308a9b9d615a2d07c3a8ca72d1e4716c191c37ce6f7660f3066d40a1",
+                        "fileRestore": "PASS",
+                        "kind": "server",
+                        "runtime": "/home/rbxfxmfd/xclip-video-card-20261004.DJKKID/runtime",
+                        "source": "/home/rbxfxmfd/xclip-unified-authors-20261011.EUK9ml/source",
+                        "buildId": "NBTFhCLivYLdIgsCJt9_a",
+                        "missingOptional": [],
+                        "dbRestore": "PENDING",
+                        "releaseComparison": {
+                          "scope": "Latest unified-authors patch targets only; not the entire project.",
+                          "matched": 30,
+                          "differences": []
+                        },
+                        "consistency": "File hashes verified; DB dump is a separate snapshot. Coordinate maintenance for an atomic recovery point.",
+                        "limitations": [
+                          "DB restoration is separate.",
+                          "GitHub is not a backup of runtime data.",
+                          "External providers and Storage object bodies are not copied.",
+                          "restore-test contains private plaintext; do not upload it."
+                        ]
+                      },
+                      "archiveHashIndependentlyRecalculated": false
+                    },
+                    "taskStatus": {
+                      "G01": "complete 2026-10-12 by local/server receipts and version correspondence",
+                      "O01": "pending offsite archive copy and Storage object coverage confirmation"
+                    }
+                  },
+                  "patrolContinueJitterRelease": {
+                    "id": "patrol-continue-jitter-20261012",
+                    "status": "created; mocked/typechecked; application and deployment pending",
+                    "base": "unified-authors-20261011; SAFE-REPORT target correspondence confirmed 2026-10-12",
+                    "productionTargets": [
+                      {
+                        "path": "lib/free-curated-metrics.ts",
+                        "sha256": "7d128ce238140a30862b4a0f2cdbbf5d70094b00590dd94ee7c475e022a1702a",
+                        "acceptedBefore": [
+                          "46c6c6aeee3bcdb25861851fca1791674591b51ebc63bf94f718e781f22cfaa2",
+                          "7d128ce238140a30862b4a0f2cdbbf5d70094b00590dd94ee7c475e022a1702a"
+                        ]
+                      },
+                      {
+                        "path": "lib/free-curated-server-store.ts",
+                        "sha256": "66c4649ea7eba584a54199ef9bceb69e52c93619cae56394bcd51b0339840696",
+                        "acceptedBefore": [
+                          "29e4e697467296a4231b8acdc50b67ef48dc6aa8ede0bec3a2bc3e2436f50ac1",
+                          "66c4649ea7eba584a54199ef9bceb69e52c93619cae56394bcd51b0339840696"
+                        ]
+                      },
+                      {
+                        "path": "lib/free-curated-scan.ts",
+                        "sha256": "56c8784c00775685d5d010207d547c975c10f627fc60fb08aa64c2b351ed2c33",
+                        "acceptedBefore": [
+                          "56c8784c00775685d5d010207d547c975c10f627fc60fb08aa64c2b351ed2c33",
+                          "e7535f09f87af99f8a4296f2358229096caecccb7601e498c495f52d4c7b20a0"
+                        ]
+                      },
+                      {
+                        "path": "lib/free-curated-dashboard.ts",
+                        "sha256": "90cb71db273a833d942ad5572e6056dab678391c70eb11cc0808a869f7e5816e",
+                        "acceptedBefore": [
+                          "0a9a86e42dffa4bed09c4bc25476341ffd9feb9bc6c38b01da25ca1e66ec2af1",
+                          "90cb71db273a833d942ad5572e6056dab678391c70eb11cc0808a869f7e5816e",
+                          "d30d7d841235b56048a99159567152c77f45b63ddab3767c738d583ddd49345b"
+                        ]
+                      },
+                      {
+                        "path": "lib/free-curated-sync.ts",
+                        "sha256": "fd3174b445c9d4a01c2e69ec0e4763d0c1f75daf92e695f07be41534eb57ae04",
+                        "acceptedBefore": [
+                          "158abf1ded6b859c938e250d1ca0f74a1704ffd89a35f74b4b2f8bb0645dba2a",
+                          "fd3174b445c9d4a01c2e69ec0e4763d0c1f75daf92e695f07be41534eb57ae04"
+                        ]
+                      },
+                      {
+                        "path": "scripts/test-free-curated-dashboard.cjs",
+                        "sha256": "294407832acf2e4f20e4d153ba40cac7eeda7bd35162ac70a84b2e1f28369172",
+                        "acceptedBefore": [
+                          "294407832acf2e4f20e4d153ba40cac7eeda7bd35162ac70a84b2e1f28369172",
+                          "45b8b68795bd5c7e93fafee724cfb0589fd088e02a3f0c992c24696c1cacf20c",
+                          "def0469ba7129f036980e07b39fe43c2c60b22a1b7bbd076286f2b738f127d4a"
+                        ]
+                      },
+                      {
+                        "path": "lib/post-status.ts",
+                        "sha256": "cefbc7955dfd9101edad3f8a7e1f5cfbbb09301350319c4f7717f9cafba43c81",
+                        "acceptedBefore": [
+                          "cefbc7955dfd9101edad3f8a7e1f5cfbbb09301350319c4f7717f9cafba43c81",
+                          "f98053058ca61d0b293aebc5c30601ab62c84c82211bc1b4e255b895c830457f"
+                        ]
+                      },
+                      {
+                        "path": "scripts/test-free-curated-production.cjs",
+                        "sha256": "37a3389001ede44437b0173560c3571da3b5f798678c9a1e4f1dd59d6aef8ad3",
+                        "acceptedBefore": [
+                          "37a3389001ede44437b0173560c3571da3b5f798678c9a1e4f1dd59d6aef8ad3",
+                          "e88fbd33874e0b79678e8615f2e19fd146021de2c4924fec2e7d5388b91bba01"
+                        ]
+                      },
+                      {
+                        "path": "lib/availability-scan.ts",
+                        "sha256": "6cae8e8564f67bf81fa37c40c423118704370f93f6990db41c9db1a73243ab22",
+                        "acceptedBefore": [
+                          "6cae8e8564f67bf81fa37c40c423118704370f93f6990db41c9db1a73243ab22",
+                          "80f17dd766467061a5a64d51cf5b3f11fac724a97e4372640b8537f6a2c8f76d",
+                          "aa1c31479cf3b308e7cea314ea12913fce718a8c80544ced49cc25545f7f0253"
+                        ]
+                      },
+                      {
+                        "path": "scripts/test-availability-curated-regression.cjs",
+                        "sha256": "686b9b06556052f137d4d9bf7f0523475f74fbcda4fd5841d2c29425f0a31ee2",
+                        "acceptedBefore": [
+                          "686b9b06556052f137d4d9bf7f0523475f74fbcda4fd5841d2c29425f0a31ee2",
+                          "d204641effff94da2faa0654353722b85c8daf089c6b9c2d9340497594df07b8"
+                        ]
+                      },
+                      {
+                        "path": "scripts/test-availability-monitor.cjs",
+                        "sha256": "5269f53d75dfc985dd09d26b8c0b8ca060a426c1cfd92bc87f9a3a53ba2c2b04",
+                        "acceptedBefore": [
+                          "5269f53d75dfc985dd09d26b8c0b8ca060a426c1cfd92bc87f9a3a53ba2c2b04",
+                          "74df1cfc333aa86e783a4ef4279446f3ab33c0e6bda378db806579f9fcf6d3d2"
+                        ]
+                      },
+                      {
+                        "path": "scripts/test-free-curated-cursors.cjs",
+                        "sha256": "1e0c2315e28bf7d2ee7455987e2bae4d9692beed5ca2eb7b8415d952e040eaba",
+                        "acceptedBefore": [
+                          "082df00aec184a7e5c920daf12a4af5adcabb5a5563b2c10787b97b47a937545",
+                          "1e0c2315e28bf7d2ee7455987e2bae4d9692beed5ca2eb7b8415d952e040eaba"
+                        ]
+                      },
+                      {
+                        "path": "lib/fxtwitter-curated.ts",
+                        "sha256": "e2174eec5358424bc146a3dc8fb01041eb1a1289cb636e1b93c12be88d309876",
+                        "acceptedBefore": [
+                          "7da548054d3d523b3ca4284f301e9da03193fbf591b63634ee5a5cd9bbda4566",
+                          "e2174eec5358424bc146a3dc8fb01041eb1a1289cb636e1b93c12be88d309876"
+                        ]
+                      },
+                      {
+                        "path": "lib/x-curated-state.ts",
+                        "sha256": "a44eb46949f1f21f83d63847b04046a3a76a99c34ac6e065ffca9e3e95e1ad74",
+                        "acceptedBefore": [
+                          "a44eb46949f1f21f83d63847b04046a3a76a99c34ac6e065ffca9e3e95e1ad74",
+                          "c57930ca78bf3f454ac525d5b5f80afee9ae2b0a67cf7d44646ca045f7ff4dda"
+                        ]
+                      },
+                      {
+                        "path": "lib/x-curated-search.ts",
+                        "sha256": "90d41fadb981e46ea33bf7abee1aacc4c5422dadae9ac9f28055956d32465daf",
+                        "acceptedBefore": [
+                          "90d41fadb981e46ea33bf7abee1aacc4c5422dadae9ac9f28055956d32465daf",
+                          "a36835a6117d0a43dca4b3d5afebf4cc5f3f51fc22dd53b664d039c2fca8c50e"
+                        ]
+                      },
+                      {
+                        "path": "lib/x-curated-scan.ts",
+                        "sha256": "6e9d4e962810cb3a7fecf66bd1aa2ef5e4a9a9edec52ed6625aa8e1f6a8bbaca",
+                        "acceptedBefore": [
+                          "3219ca753b95574c4f04166bc4d5a2770e4fc9acfe9537bdc219dafa322fa767",
+                          "3788732c94040adc01beac9d1647e9cf266382dc5701e6e0845f3463b865e1ae",
+                          "6e9d4e962810cb3a7fecf66bd1aa2ef5e4a9a9edec52ed6625aa8e1f6a8bbaca"
+                        ]
+                      },
+                      {
+                        "path": "scripts/test-x-curated-hybrid.cjs",
+                        "sha256": "2e08403265d1482511369479f4685bac532800cc5221d92af3470dcb78e13315",
+                        "acceptedBefore": [
+                          "2e08403265d1482511369479f4685bac532800cc5221d92af3470dcb78e13315",
+                          "7bce639deea965649e642adb43d5bffaa5324a9bd5164e4745fe8bad3fb1f8c2",
+                          "fb2e8f64a2c587abeeebd27be5c6c089c456ca42a29b9a27d525721f54dbffb3"
+                        ]
+                      },
+                      {
+                        "path": "app/api/free-curated-sync/route.ts",
+                        "sha256": "674b3ed4124b44ecb244eb673d6bf886edd168dd0434bd932a090e50003be56b",
+                        "acceptedBefore": [
+                          "674b3ed4124b44ecb244eb673d6bf886edd168dd0434bd932a090e50003be56b",
+                          "b9280e0116a493e81c5f4cb764c82d5df2720173bb0c14c328454febd497e2bf"
+                        ]
+                      },
+                      {
+                        "path": "app/api/collect-curated-batch/route.ts",
+                        "sha256": "c5e2828c5654bbc918dc36f5b17cf7d448e54ac0918ec8b44b3b8213263641e5",
+                        "acceptedBefore": [
+                          "2072e9cfd72df6705f7dc36c7107daa6a3a677e99c19c83e54866574f7084008",
+                          "c5e2828c5654bbc918dc36f5b17cf7d448e54ac0918ec8b44b3b8213263641e5"
+                        ]
+                      },
+                      {
+                        "path": "scripts/scan-free-curated.cjs",
+                        "sha256": "7f60776a039678011c075facbc267a2ea210460206cf6184babe001bde3bfebd",
+                        "acceptedBefore": [
+                          "62eb7007bcd6495e4a48ece008edd43c7bc0513b00fb724a7c792177146f463a",
+                          "7f60776a039678011c075facbc267a2ea210460206cf6184babe001bde3bfebd"
+                        ]
+                      },
+                      {
+                        "path": "lib/curated-common.ts",
+                        "sha256": "13fc29b481944ba14bf37cd50514569a5d2d5b21d2ac2053b841cca20ab8963a",
+                        "acceptedBefore": [
+                          "13fc29b481944ba14bf37cd50514569a5d2d5b21d2ac2053b841cca20ab8963a",
+                          "cad8d6c34a1e67db6cc01ac8b2e941aed64e4213213004ae98250200056d9368"
+                        ]
+                      },
+                      {
+                        "path": "lib/curated-removals.ts",
+                        "sha256": "146091b0fbb71f74d81315253637245de5279e593a0fe661f18c395929774959",
+                        "acceptedBefore": [
+                          "146091b0fbb71f74d81315253637245de5279e593a0fe661f18c395929774959",
+                          "e44ab96c40f003634f4fc6406510d51eee96763d4c56b457239b986df890935a"
+                        ]
+                      },
+                      {
+                        "path": "lib/availability-dashboard.ts",
+                        "sha256": "d8718daf1b48b094b924ea1176509164e1f77fe3057ce5a720828b8632f0a37e",
+                        "acceptedBefore": [
+                          "061b150615e68fe7fe5cd13cf5748a2e5091391568ee8e0484b31fa3202daf26",
+                          "d8718daf1b48b094b924ea1176509164e1f77fe3057ce5a720828b8632f0a37e"
+                        ]
+                      },
+                      {
+                        "path": "lib/post-status-store.ts",
+                        "sha256": "78b6c548039702d14fccf898493c8f8c2c5340739662f214187dbc8473542176",
+                        "acceptedBefore": [
+                          "78b6c548039702d14fccf898493c8f8c2c5340739662f214187dbc8473542176",
+                          "84831d63ec3f4cca050b652ba8b1bac1c992d9d004fda6c49dbe76820ad58671"
+                        ]
+                      },
+                      {
+                        "path": "lib/author-status-scan.ts",
+                        "sha256": "38dafa495a2c7f13a12fbcff08657cf73643a568f028da780a5b7ad6893450bc",
+                        "acceptedBefore": [
+                          "1edc4bf7765cfcbf90936f89cd98b13e71cb817f651fb17e4c4b65e010cf8b85",
+                          "38dafa495a2c7f13a12fbcff08657cf73643a568f028da780a5b7ad6893450bc",
+                          "a1c26774f09b1a853cd1c0b1ba8f5674e49c3f517bd327fff87c2aee37c62d7e"
+                        ]
+                      },
+                      {
+                        "path": "lib/free-curated-publish.ts",
+                        "sha256": "2246b0546df14004a95e9acfe3ef2b6904ea4dc3dd0a93c6f105c2afb4d738f4",
+                        "acceptedBefore": [
+                          "2246b0546df14004a95e9acfe3ef2b6904ea4dc3dd0a93c6f105c2afb4d738f4",
+                          "550a5cd132b8e68898c93132492e4cd7d6df1f1f2ba3f289c7e6bf577e2648dc"
+                        ]
+                      },
+                      {
+                        "path": "scripts/test-curated-common.cjs",
+                        "sha256": "8ae83e059e4d863d77eec2601288b2e29cdd6073d79df3419ee7375e9117e1d7",
+                        "acceptedBefore": [
+                          "8ae83e059e4d863d77eec2601288b2e29cdd6073d79df3419ee7375e9117e1d7",
+                          "e721cc3713b707bf382b9918de944fca3aa01314fd113932843df8d7df26fb72"
+                        ]
+                      },
+                      {
+                        "path": "scripts/test-author-status.cjs",
+                        "sha256": "915c4b5babc1dccc3382499c0579e7c5b0a438d27c9c40b4bd53f7dcf965a73a",
+                        "acceptedBefore": [
+                          "915c4b5babc1dccc3382499c0579e7c5b0a438d27c9c40b4bd53f7dcf965a73a",
+                          "a994f989ff01ae387c813f1c790736404ae1435ed34da112e8ab0a5bc3a6fe5f"
+                        ]
+                      },
+                      {
+                        "path": "scripts/migrate-curated-common.cjs",
+                        "sha256": "a5ec5cb29d43904fb39e102cf33680e06921a672887a3be10a0a22b7eed5a0b2",
+                        "acceptedBefore": [
+                          "a5ec5cb29d43904fb39e102cf33680e06921a672887a3be10a0a22b7eed5a0b2",
+                          "bfeac51096d6f7766372ea704c3ff04267a639a1e0380aa9c2dea189adc6d4a7"
+                        ]
+                      },
+                      {
+                        "path": "lib/availability-policy.ts",
+                        "sha256": "fc4add1950a5c8207131e3f266e8b1c68827d254b4509b8903acaf53ae1b5fbd",
+                        "acceptedBefore": [
+                          "274cc8ce25bf6bc96a806a4080335abd151c885789c85fcb78cc3e5baf271959",
+                          "c521ae8542702c90b381942e417b2a604e1614728c1121b6eff1b90229c1d91b",
+                          "fc4add1950a5c8207131e3f266e8b1c68827d254b4509b8903acaf53ae1b5fbd"
+                        ]
+                      },
+                      {
+                        "path": "scripts/test-patrol-continuation.cjs",
+                        "sha256": "0c673e678ce3b4629b8234dac2f6b87857c2eb7e141b369c80528b087e9e30cf",
+                        "acceptedBefore": [
+                          "0c673e678ce3b4629b8234dac2f6b87857c2eb7e141b369c80528b087e9e30cf",
+                          "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+                        ]
+                      },
+                      {
+                        "path": "scripts/test-monitor-jitter.cjs",
+                        "sha256": "74a56a5ad7761260b95d431e89b5b8a7565d1428c193c11e5849d9d17aea4028",
+                        "acceptedBefore": [
+                          "74a56a5ad7761260b95d431e89b5b8a7565d1428c193c11e5849d9d17aea4028",
+                          "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+                        ]
+                      },
+                      {
+                        "path": "docs/releases/XCLIP_PATROL_CONTINUE_JITTER_20261012.md",
+                        "sha256": "eaa7d6f0381368ef86c36319e70282446be1edcbdd779b2fd61ab3d09de6b3ec",
+                        "acceptedBefore": [
+                          "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+                          "eaa7d6f0381368ef86c36319e70282446be1edcbdd779b2fd61ab3d09de6b3ec"
+                        ]
+                      }
+                    ],
+                    "localTargets": [
+                      {
+                        "path": "lib/fxtwitter-curated.ts",
+                        "sha256": "e2174eec5358424bc146a3dc8fb01041eb1a1289cb636e1b93c12be88d309876",
+                        "acceptedBefore": [
+                          "7da548054d3d523b3ca4284f301e9da03193fbf591b63634ee5a5cd9bbda4566",
+                          "e2174eec5358424bc146a3dc8fb01041eb1a1289cb636e1b93c12be88d309876"
+                        ]
+                      },
+                      {
+                        "path": "lib/fxtwitter-curated-store.ts",
+                        "sha256": "655034dbd06926d5515a82276409e576476f5a258e8b2be774209eaadaa6f305",
+                        "acceptedBefore": [
+                          "655034dbd06926d5515a82276409e576476f5a258e8b2be774209eaadaa6f305",
+                          "e9437357aa968348598866cc3a2cebcccb7b1266fc96278195e2bb2027b7e631"
+                        ]
+                      },
+                      {
+                        "path": "lib/fxtwitter-curated-save.ts",
+                        "sha256": "f64c8942cc81f6932492dc1b39bc1666224538c63b42c28747f0da4bce7c376e",
+                        "acceptedBefore": [
+                          "3e0ef0e63922e55196829df6f6481131e7c9b7a533ce6ce6353868d0510127aa",
+                          "f64c8942cc81f6932492dc1b39bc1666224538c63b42c28747f0da4bce7c376e"
+                        ]
+                      },
+                      {
+                        "path": "lib/fxtwitter-curated-tier.ts",
+                        "sha256": "7d71a34ecdaba52971125669e71c637b2aebb5f1a8519cc16c155d9327d7548d",
+                        "acceptedBefore": [
+                          "2b0afa1ac6ac7ddbbb6f1dea2781d0f038e9669df19281269b416824b688df2e",
+                          "7d71a34ecdaba52971125669e71c637b2aebb5f1a8519cc16c155d9327d7548d"
+                        ]
+                      },
+                      {
+                        "path": "lib/fxtwitter-local-access.ts",
+                        "sha256": "5728717bae5c27b20123c6afd39e743fa9f1a0ce16c0bda9b4bf7abf5651bdf5",
+                        "acceptedBefore": [
+                          "4f37134efcf51d83f914871fbe20f5ff216f8acf9fe744063a37a4fe5ad4a68d",
+                          "5728717bae5c27b20123c6afd39e743fa9f1a0ce16c0bda9b4bf7abf5651bdf5"
+                        ]
+                      },
+                      {
+                        "path": "app/api/fxtwitter-authors/route.ts",
+                        "sha256": "5ad03827347bac7253d3159e744781a53b67a72586e111cfa3ed38513e930816",
+                        "acceptedBefore": [
+                          "5ad03827347bac7253d3159e744781a53b67a72586e111cfa3ed38513e930816",
+                          "f78903d270627cebbbd2ab848ab912cfb14058698d6c1d1f6d038e60d7f39509"
+                        ]
+                      },
+                      {
+                        "path": "app/fxtwitter-authors/page.tsx",
+                        "sha256": "442f8385c749345bbe3ce12dbb987443d680c7cb18032879bf138c93df52c8f9",
+                        "acceptedBefore": [
+                          "442f8385c749345bbe3ce12dbb987443d680c7cb18032879bf138c93df52c8f9",
+                          "85f7092a4517af26249947de90b735605984efaccf0a546bcabffc708a0e518f"
+                        ]
+                      },
+                      {
+                        "path": "app/fxtwitter-authors/FreeAuthorsPanel.tsx",
+                        "sha256": "8682a58571d01750fdd0453360ca05cb4a22979789866d0ea8550c25a581972a",
+                        "acceptedBefore": [
+                          "8682a58571d01750fdd0453360ca05cb4a22979789866d0ea8550c25a581972a",
+                          "f433b9cdeb47121d8e95a982869687c40aad6a50b99ebe428b72d91006544db5"
+                        ]
+                      },
+                      {
+                        "path": "scripts/test-fxtwitter-curated.cjs",
+                        "sha256": "fb743132909881337b8511e03418befc2bfd6fd154f7f9376ea9079a6099ab90",
+                        "acceptedBefore": [
+                          "c81f010819b833f03805546f14286cdd430baef12d3f0dcc34589ea378133aff",
+                          "fb743132909881337b8511e03418befc2bfd6fd154f7f9376ea9079a6099ab90"
+                        ]
+                      },
+                      {
+                        "path": "lib/free-curated-client.ts",
+                        "sha256": "37c93e21642640f61e07882b3be42a9bc8f295f7245d5f7e6b9dd0e3ea14ef7a",
+                        "acceptedBefore": [
+                          "37c93e21642640f61e07882b3be42a9bc8f295f7245d5f7e6b9dd0e3ea14ef7a",
+                          "652ea7128e22e74f1f694bd66f2aefb9282dba944d477c00fd70c79b60d20b42"
+                        ]
+                      },
+                      {
+                        "path": "lib/free-curated-registration.ts",
+                        "sha256": "34e5e9554d86a2445b25abe66db0ebdd2688a728ec17b40ebd92b5aeddd14d26",
+                        "acceptedBefore": [
+                          "34e5e9554d86a2445b25abe66db0ebdd2688a728ec17b40ebd92b5aeddd14d26",
+                          "fc53daf89687b8034284ef021bc9859eb369ce4f244790a5bff5c11f2a83561e"
+                        ]
+                      },
+                      {
+                        "path": "scripts/test-free-curated-registration.cjs",
+                        "sha256": "83334bb39d95a93da09abab6d89e44270437d3b1f1ac477a662618878a9a32f5",
+                        "acceptedBefore": [
+                          "83334bb39d95a93da09abab6d89e44270437d3b1f1ac477a662618878a9a32f5",
+                          "ca4edbda96baacc58fddd9486dbd61e18d237ec857642bf815d0df0e82f6f150"
+                        ]
+                      },
+                      {
+                        "path": "lib/free-curated-metrics.ts",
+                        "sha256": "7d128ce238140a30862b4a0f2cdbbf5d70094b00590dd94ee7c475e022a1702a",
+                        "acceptedBefore": [
+                          "46c6c6aeee3bcdb25861851fca1791674591b51ebc63bf94f718e781f22cfaa2",
+                          "7d128ce238140a30862b4a0f2cdbbf5d70094b00590dd94ee7c475e022a1702a"
+                        ]
+                      },
+                      {
+                        "path": "app/fxtwitter-monitor/page.tsx",
+                        "sha256": "204bf735f3cc9f4513207226e211492efd43190c27f5ee7dab20ecf0050ca6d2",
+                        "acceptedBefore": [
+                          "204bf735f3cc9f4513207226e211492efd43190c27f5ee7dab20ecf0050ca6d2",
+                          "b7a994a41a171ab66f4bd44aa64fa4e14599e43ca632b2863a4b9bbbcb21ad92"
+                        ]
+                      },
+                      {
+                        "path": "app/fxtwitter-monitor/MonitorPanel.tsx",
+                        "sha256": "77b27806bd032feb05eee51f6e0132f978167d2562c87fa8e3bcd876c117f583",
+                        "acceptedBefore": [
+                          "77b27806bd032feb05eee51f6e0132f978167d2562c87fa8e3bcd876c117f583",
+                          "bb4d3356dca8fb4e736321922b9e4dddec65a252145ea9ef756ea4dfaa025157",
+                          "e082cb77ee85dbabf9777d896cc04bb8807790f457e171c90ba89976c48c045f"
+                        ]
+                      },
+                      {
+                        "path": "scripts/test-free-curated-cursors.cjs",
+                        "sha256": "1e0c2315e28bf7d2ee7455987e2bae4d9692beed5ca2eb7b8415d952e040eaba",
+                        "acceptedBefore": [
+                          "082df00aec184a7e5c920daf12a4af5adcabb5a5563b2c10787b97b47a937545",
+                          "1e0c2315e28bf7d2ee7455987e2bae4d9692beed5ca2eb7b8415d952e040eaba"
+                        ]
+                      },
+                      {
+                        "path": "scripts/test-registration-recovery.cjs",
+                        "sha256": "fc045c2e909948ef48f7143257313321d4c901bdad55155e53fcc242bfaa875e",
+                        "acceptedBefore": [
+                          "31c001e99a062277c70634a6cd776d01ec3fb68754d197b613ff6b772dc690ef",
+                          "fc045c2e909948ef48f7143257313321d4c901bdad55155e53fcc242bfaa875e"
+                        ]
+                      },
+                      {
+                        "path": "app/api/curated-manager/route.ts",
+                        "sha256": "4287130d91f5ba2f00d8e64c783e9480d69317dd0039057812365ec00f3a0c70",
+                        "acceptedBefore": [
+                          "4287130d91f5ba2f00d8e64c783e9480d69317dd0039057812365ec00f3a0c70",
+                          "8d5b66ba91b04c4b03c4da2dd17382a0f9716893934c4b6e089bc608e3d36af6"
+                        ]
+                      },
+                      {
+                        "path": "app/curated-manager/page.tsx",
+                        "sha256": "c827df52db15ea27901997388784c3a9775e8b140768b83f5dbcbe2b967bedd8",
+                        "acceptedBefore": [
+                          "c06398f84f61135a4cfa40b4ee09d654aee31377f74827cfc43691168eaf76ff",
+                          "c827df52db15ea27901997388784c3a9775e8b140768b83f5dbcbe2b967bedd8"
+                        ]
+                      },
+                      {
+                        "path": "app/curated-manager/Panel.tsx",
+                        "sha256": "25863de46a79bca7161cc2bb01f47c7d08e084e415adc002cba323a012152d1c",
+                        "acceptedBefore": [
+                          "25863de46a79bca7161cc2bb01f47c7d08e084e415adc002cba323a012152d1c",
+                          "ac03aeec0ed855fc25de76273cbe8d1cdff500aeb5322abde87bee5deaf40e1e"
+                        ]
+                      },
+                      {
+                        "path": "app/availability-monitor/page.tsx",
+                        "sha256": "adf7de382a9cf4063d5d86db1e7dacc98827807ab139886765715c7a6c031f89",
+                        "acceptedBefore": [
+                          "adf7de382a9cf4063d5d86db1e7dacc98827807ab139886765715c7a6c031f89",
+                          "f92f90c7883744e3e755e00fc74cd3b9672e7412035f0c198131085650cc133d"
+                        ]
+                      },
+                      {
+                        "path": "app/availability-monitor/Panel.tsx",
+                        "sha256": "e7f27ae6ea072a080a7b60e160007bc2b48407a9dc303a06b416546bf81199c1",
+                        "acceptedBefore": [
+                          "79d8d720caf8e1a45bb5139bbf6ce8907c7ed96e894ac5c45f88745829f77a93",
+                          "cafb18c616d99d0190c6701bf8b3e4f87f13d3a075abd8e8b00d92646d5eddfa",
+                          "e7f27ae6ea072a080a7b60e160007bc2b48407a9dc303a06b416546bf81199c1"
+                        ]
+                      },
+                      {
+                        "path": "app/curated-authors/page.tsx",
+                        "sha256": "a0e046586a10ed39c6c2b0734e9bddc83547f449e3b2393c4dc6c06af3f3a9f3",
+                        "acceptedBefore": [
+                          "a0e046586a10ed39c6c2b0734e9bddc83547f449e3b2393c4dc6c06af3f3a9f3",
+                          "cb354f11d482cd62c823d917d24f9e78a1252067467d24a4138ec5ad3e519323"
+                        ]
+                      },
+                      {
+                        "path": "scripts/test-curated-manager-local.cjs",
+                        "sha256": "f9f662618761a10e43d88a277763475cabdba42f025e340a3af3baeb0ee460a7",
+                        "acceptedBefore": [
+                          "475170f5c770e9d6ba38d1cc0574fa4837b9ab1daccb61bb719e7fc7bce2a9d7",
+                          "f9f662618761a10e43d88a277763475cabdba42f025e340a3af3baeb0ee460a7"
+                        ]
+                      },
+                      {
+                        "path": "docs/XCLIP_UPDATE_HISTORY.md",
+                        "sha256": "eaa7d6f0381368ef86c36319e70282446be1edcbdd779b2fd61ab3d09de6b3ec",
+                        "acceptedBefore": [
+                          "7c222a6b2f6d5cd777f8523b9c3e0b7d9d489d059433c44760828b001f0c6d5d",
+                          "c862f60202203f71fa07efeb8ee95e04d6518e9bee028bf9b58509ed1559ece9",
+                          "eaa7d6f0381368ef86c36319e70282446be1edcbdd779b2fd61ab3d09de6b3ec"
+                        ]
+                      }
+                    ],
+                    "quota": "rolling 24h at most 24 authors, failed attempts included; at most 8 per 3h batch; no reservation/cursor reset",
+                    "fxJitter": "start 0..240 sec before lock; sequential requests 8000..20000 ms; existing cooldown and safety checks",
+                    "actualProviderRequests": 0,
+                    "productionApplied": false,
+                    "localApplied": false,
+                    "gitRecorded": false,
+                    "rootCauseOfPriorXError": "unconfirmed: HTTP error code not received",
+                    "rollback": "prior runtime and schedulers; source backup on local; no state/DB rollback",
+                    "metadataSelfHash": "payload integrity covers the local manifest file; self-referential metadata target hash excluded from this table"
+                  },
+                  "historyFile": "Xclip-更新履歴-巡回継続と監視分散-20261012.md"
+                },
+                "v1DeploymentAttempt": {
+                  "result": "failed before public activation and scheduler changes",
+                  "phase": "scheduler prepare",
+                  "error": "UNKNOWN_SCHEDULER_SCRIPT",
+                  "source": "/home/rbxfxmfd/xclip-unified-authors-20261011.EUK9ml/source",
+                  "stage": "/home/rbxfxmfd/xclip-patrol-continue-jitter-20261012.Qa7iJA",
+                  "reportedSchedulerHashes": {
+                    "xclip-free-curated-collector.sh": "e764170b661d83cbb2cadc288fffea83738954eada512af8c75b7f740a0023d2",
+                    "xclip-author-monitor.sh": "4751ef024feb238642e9544df78c45841cb3b398e985148b28b6aba220ce072f"
+                  },
+                  "legacyMonitorContentsKnown": false
+                },
+                "schedulerFix": {
+                  "legacyMonitor": "preserved unchanged; dependency hash captured at execution; never accepted for overwrite",
+                  "managedScripts": {
+                    "free-collector.sh": [
+                      "e764170b661d83cbb2cadc288fffea83738954eada512af8c75b7f740a0023d2"
+                    ],
+                    "monitor-jitter.sh": [
+                      "69a9b983b9f9d5e992577f6ba053373086657fe503b07dddafd7cc8cfe8b355c"
+                    ]
+                  },
+                  "cron": "reuse marker; old monitor line switched to jitter wrapper; one collector/one monitor line",
+                  "safety": "unknown managed scripts rejected with basename/hash; dependency concurrent edit refused; unrelated cron and newer changes preserved",
+                  "checkRuntime": "wrapper validates without executing unknown legacy script"
+                },
+                "productionTargets": [
+                  {
+                    "path": "lib/free-curated-metrics.ts",
+                    "sha256": "7d128ce238140a30862b4a0f2cdbbf5d70094b00590dd94ee7c475e022a1702a",
+                    "acceptedBefore": [
+                      "46c6c6aeee3bcdb25861851fca1791674591b51ebc63bf94f718e781f22cfaa2",
+                      "7d128ce238140a30862b4a0f2cdbbf5d70094b00590dd94ee7c475e022a1702a"
+                    ]
+                  },
+                  {
+                    "path": "lib/free-curated-server-store.ts",
+                    "sha256": "66c4649ea7eba584a54199ef9bceb69e52c93619cae56394bcd51b0339840696",
+                    "acceptedBefore": [
+                      "29e4e697467296a4231b8acdc50b67ef48dc6aa8ede0bec3a2bc3e2436f50ac1",
+                      "66c4649ea7eba584a54199ef9bceb69e52c93619cae56394bcd51b0339840696"
+                    ]
+                  },
+                  {
+                    "path": "lib/free-curated-scan.ts",
+                    "sha256": "56c8784c00775685d5d010207d547c975c10f627fc60fb08aa64c2b351ed2c33",
+                    "acceptedBefore": [
+                      "56c8784c00775685d5d010207d547c975c10f627fc60fb08aa64c2b351ed2c33",
+                      "e7535f09f87af99f8a4296f2358229096caecccb7601e498c495f52d4c7b20a0"
+                    ]
+                  },
+                  {
+                    "path": "lib/free-curated-dashboard.ts",
+                    "sha256": "90cb71db273a833d942ad5572e6056dab678391c70eb11cc0808a869f7e5816e",
+                    "acceptedBefore": [
+                      "0a9a86e42dffa4bed09c4bc25476341ffd9feb9bc6c38b01da25ca1e66ec2af1",
+                      "90cb71db273a833d942ad5572e6056dab678391c70eb11cc0808a869f7e5816e",
+                      "d30d7d841235b56048a99159567152c77f45b63ddab3767c738d583ddd49345b"
+                    ]
+                  },
+                  {
+                    "path": "lib/free-curated-sync.ts",
+                    "sha256": "fd3174b445c9d4a01c2e69ec0e4763d0c1f75daf92e695f07be41534eb57ae04",
+                    "acceptedBefore": [
+                      "158abf1ded6b859c938e250d1ca0f74a1704ffd89a35f74b4b2f8bb0645dba2a",
+                      "fd3174b445c9d4a01c2e69ec0e4763d0c1f75daf92e695f07be41534eb57ae04"
+                    ]
+                  },
+                  {
+                    "path": "scripts/test-free-curated-dashboard.cjs",
+                    "sha256": "294407832acf2e4f20e4d153ba40cac7eeda7bd35162ac70a84b2e1f28369172",
+                    "acceptedBefore": [
+                      "294407832acf2e4f20e4d153ba40cac7eeda7bd35162ac70a84b2e1f28369172",
+                      "45b8b68795bd5c7e93fafee724cfb0589fd088e02a3f0c992c24696c1cacf20c",
+                      "def0469ba7129f036980e07b39fe43c2c60b22a1b7bbd076286f2b738f127d4a"
+                    ]
+                  },
+                  {
+                    "path": "lib/post-status.ts",
+                    "sha256": "cefbc7955dfd9101edad3f8a7e1f5cfbbb09301350319c4f7717f9cafba43c81",
+                    "acceptedBefore": [
+                      "cefbc7955dfd9101edad3f8a7e1f5cfbbb09301350319c4f7717f9cafba43c81",
+                      "f98053058ca61d0b293aebc5c30601ab62c84c82211bc1b4e255b895c830457f"
+                    ]
+                  },
+                  {
+                    "path": "scripts/test-free-curated-production.cjs",
+                    "sha256": "37a3389001ede44437b0173560c3571da3b5f798678c9a1e4f1dd59d6aef8ad3",
+                    "acceptedBefore": [
+                      "37a3389001ede44437b0173560c3571da3b5f798678c9a1e4f1dd59d6aef8ad3",
+                      "e88fbd33874e0b79678e8615f2e19fd146021de2c4924fec2e7d5388b91bba01"
+                    ]
+                  },
+                  {
+                    "path": "lib/availability-scan.ts",
+                    "sha256": "6cae8e8564f67bf81fa37c40c423118704370f93f6990db41c9db1a73243ab22",
+                    "acceptedBefore": [
+                      "6cae8e8564f67bf81fa37c40c423118704370f93f6990db41c9db1a73243ab22",
+                      "80f17dd766467061a5a64d51cf5b3f11fac724a97e4372640b8537f6a2c8f76d",
+                      "aa1c31479cf3b308e7cea314ea12913fce718a8c80544ced49cc25545f7f0253"
+                    ]
+                  },
+                  {
+                    "path": "scripts/test-availability-curated-regression.cjs",
+                    "sha256": "686b9b06556052f137d4d9bf7f0523475f74fbcda4fd5841d2c29425f0a31ee2",
+                    "acceptedBefore": [
+                      "686b9b06556052f137d4d9bf7f0523475f74fbcda4fd5841d2c29425f0a31ee2",
+                      "d204641effff94da2faa0654353722b85c8daf089c6b9c2d9340497594df07b8"
+                    ]
+                  },
+                  {
+                    "path": "scripts/test-availability-monitor.cjs",
+                    "sha256": "5269f53d75dfc985dd09d26b8c0b8ca060a426c1cfd92bc87f9a3a53ba2c2b04",
+                    "acceptedBefore": [
+                      "5269f53d75dfc985dd09d26b8c0b8ca060a426c1cfd92bc87f9a3a53ba2c2b04",
+                      "74df1cfc333aa86e783a4ef4279446f3ab33c0e6bda378db806579f9fcf6d3d2"
+                    ]
+                  },
+                  {
+                    "path": "scripts/test-free-curated-cursors.cjs",
+                    "sha256": "1e0c2315e28bf7d2ee7455987e2bae4d9692beed5ca2eb7b8415d952e040eaba",
+                    "acceptedBefore": [
+                      "082df00aec184a7e5c920daf12a4af5adcabb5a5563b2c10787b97b47a937545",
+                      "1e0c2315e28bf7d2ee7455987e2bae4d9692beed5ca2eb7b8415d952e040eaba"
+                    ]
+                  },
+                  {
+                    "path": "lib/fxtwitter-curated.ts",
+                    "sha256": "e2174eec5358424bc146a3dc8fb01041eb1a1289cb636e1b93c12be88d309876",
+                    "acceptedBefore": [
+                      "7da548054d3d523b3ca4284f301e9da03193fbf591b63634ee5a5cd9bbda4566",
+                      "e2174eec5358424bc146a3dc8fb01041eb1a1289cb636e1b93c12be88d309876"
+                    ]
+                  },
+                  {
+                    "path": "lib/x-curated-state.ts",
+                    "sha256": "a44eb46949f1f21f83d63847b04046a3a76a99c34ac6e065ffca9e3e95e1ad74",
+                    "acceptedBefore": [
+                      "a44eb46949f1f21f83d63847b04046a3a76a99c34ac6e065ffca9e3e95e1ad74",
+                      "c57930ca78bf3f454ac525d5b5f80afee9ae2b0a67cf7d44646ca045f7ff4dda"
+                    ]
+                  },
+                  {
+                    "path": "lib/x-curated-search.ts",
+                    "sha256": "90d41fadb981e46ea33bf7abee1aacc4c5422dadae9ac9f28055956d32465daf",
+                    "acceptedBefore": [
+                      "90d41fadb981e46ea33bf7abee1aacc4c5422dadae9ac9f28055956d32465daf",
+                      "a36835a6117d0a43dca4b3d5afebf4cc5f3f51fc22dd53b664d039c2fca8c50e"
+                    ]
+                  },
+                  {
+                    "path": "lib/x-curated-scan.ts",
+                    "sha256": "6e9d4e962810cb3a7fecf66bd1aa2ef5e4a9a9edec52ed6625aa8e1f6a8bbaca",
+                    "acceptedBefore": [
+                      "3219ca753b95574c4f04166bc4d5a2770e4fc9acfe9537bdc219dafa322fa767",
+                      "3788732c94040adc01beac9d1647e9cf266382dc5701e6e0845f3463b865e1ae",
+                      "6e9d4e962810cb3a7fecf66bd1aa2ef5e4a9a9edec52ed6625aa8e1f6a8bbaca"
+                    ]
+                  },
+                  {
+                    "path": "scripts/test-x-curated-hybrid.cjs",
+                    "sha256": "2e08403265d1482511369479f4685bac532800cc5221d92af3470dcb78e13315",
+                    "acceptedBefore": [
+                      "2e08403265d1482511369479f4685bac532800cc5221d92af3470dcb78e13315",
+                      "7bce639deea965649e642adb43d5bffaa5324a9bd5164e4745fe8bad3fb1f8c2",
+                      "fb2e8f64a2c587abeeebd27be5c6c089c456ca42a29b9a27d525721f54dbffb3"
+                    ]
+                  },
+                  {
+                    "path": "app/api/free-curated-sync/route.ts",
+                    "sha256": "674b3ed4124b44ecb244eb673d6bf886edd168dd0434bd932a090e50003be56b",
+                    "acceptedBefore": [
+                      "674b3ed4124b44ecb244eb673d6bf886edd168dd0434bd932a090e50003be56b",
+                      "b9280e0116a493e81c5f4cb764c82d5df2720173bb0c14c328454febd497e2bf"
+                    ]
+                  },
+                  {
+                    "path": "app/api/collect-curated-batch/route.ts",
+                    "sha256": "c5e2828c5654bbc918dc36f5b17cf7d448e54ac0918ec8b44b3b8213263641e5",
+                    "acceptedBefore": [
+                      "2072e9cfd72df6705f7dc36c7107daa6a3a677e99c19c83e54866574f7084008",
+                      "c5e2828c5654bbc918dc36f5b17cf7d448e54ac0918ec8b44b3b8213263641e5"
+                    ]
+                  },
+                  {
+                    "path": "scripts/scan-free-curated.cjs",
+                    "sha256": "7f60776a039678011c075facbc267a2ea210460206cf6184babe001bde3bfebd",
+                    "acceptedBefore": [
+                      "62eb7007bcd6495e4a48ece008edd43c7bc0513b00fb724a7c792177146f463a",
+                      "7f60776a039678011c075facbc267a2ea210460206cf6184babe001bde3bfebd"
+                    ]
+                  },
+                  {
+                    "path": "lib/curated-common.ts",
+                    "sha256": "13fc29b481944ba14bf37cd50514569a5d2d5b21d2ac2053b841cca20ab8963a",
+                    "acceptedBefore": [
+                      "13fc29b481944ba14bf37cd50514569a5d2d5b21d2ac2053b841cca20ab8963a",
+                      "cad8d6c34a1e67db6cc01ac8b2e941aed64e4213213004ae98250200056d9368"
+                    ]
+                  },
+                  {
+                    "path": "lib/curated-removals.ts",
+                    "sha256": "146091b0fbb71f74d81315253637245de5279e593a0fe661f18c395929774959",
+                    "acceptedBefore": [
+                      "146091b0fbb71f74d81315253637245de5279e593a0fe661f18c395929774959",
+                      "e44ab96c40f003634f4fc6406510d51eee96763d4c56b457239b986df890935a"
+                    ]
+                  },
+                  {
+                    "path": "lib/availability-dashboard.ts",
+                    "sha256": "d8718daf1b48b094b924ea1176509164e1f77fe3057ce5a720828b8632f0a37e",
+                    "acceptedBefore": [
+                      "061b150615e68fe7fe5cd13cf5748a2e5091391568ee8e0484b31fa3202daf26",
+                      "d8718daf1b48b094b924ea1176509164e1f77fe3057ce5a720828b8632f0a37e"
+                    ]
+                  },
+                  {
+                    "path": "lib/post-status-store.ts",
+                    "sha256": "78b6c548039702d14fccf898493c8f8c2c5340739662f214187dbc8473542176",
+                    "acceptedBefore": [
+                      "78b6c548039702d14fccf898493c8f8c2c5340739662f214187dbc8473542176",
+                      "84831d63ec3f4cca050b652ba8b1bac1c992d9d004fda6c49dbe76820ad58671"
+                    ]
+                  },
+                  {
+                    "path": "lib/author-status-scan.ts",
+                    "sha256": "38dafa495a2c7f13a12fbcff08657cf73643a568f028da780a5b7ad6893450bc",
+                    "acceptedBefore": [
+                      "1edc4bf7765cfcbf90936f89cd98b13e71cb817f651fb17e4c4b65e010cf8b85",
+                      "38dafa495a2c7f13a12fbcff08657cf73643a568f028da780a5b7ad6893450bc",
+                      "a1c26774f09b1a853cd1c0b1ba8f5674e49c3f517bd327fff87c2aee37c62d7e"
+                    ]
+                  },
+                  {
+                    "path": "lib/free-curated-publish.ts",
+                    "sha256": "2246b0546df14004a95e9acfe3ef2b6904ea4dc3dd0a93c6f105c2afb4d738f4",
+                    "acceptedBefore": [
+                      "2246b0546df14004a95e9acfe3ef2b6904ea4dc3dd0a93c6f105c2afb4d738f4",
+                      "550a5cd132b8e68898c93132492e4cd7d6df1f1f2ba3f289c7e6bf577e2648dc"
+                    ]
+                  },
+                  {
+                    "path": "scripts/test-curated-common.cjs",
+                    "sha256": "8ae83e059e4d863d77eec2601288b2e29cdd6073d79df3419ee7375e9117e1d7",
+                    "acceptedBefore": [
+                      "8ae83e059e4d863d77eec2601288b2e29cdd6073d79df3419ee7375e9117e1d7",
+                      "e721cc3713b707bf382b9918de944fca3aa01314fd113932843df8d7df26fb72"
+                    ]
+                  },
+                  {
+                    "path": "scripts/test-author-status.cjs",
+                    "sha256": "915c4b5babc1dccc3382499c0579e7c5b0a438d27c9c40b4bd53f7dcf965a73a",
+                    "acceptedBefore": [
+                      "915c4b5babc1dccc3382499c0579e7c5b0a438d27c9c40b4bd53f7dcf965a73a",
+                      "a994f989ff01ae387c813f1c790736404ae1435ed34da112e8ab0a5bc3a6fe5f"
+                    ]
+                  },
+                  {
+                    "path": "scripts/migrate-curated-common.cjs",
+                    "sha256": "a5ec5cb29d43904fb39e102cf33680e06921a672887a3be10a0a22b7eed5a0b2",
+                    "acceptedBefore": [
+                      "a5ec5cb29d43904fb39e102cf33680e06921a672887a3be10a0a22b7eed5a0b2",
+                      "bfeac51096d6f7766372ea704c3ff04267a639a1e0380aa9c2dea189adc6d4a7"
+                    ]
+                  },
+                  {
+                    "path": "lib/availability-policy.ts",
+                    "sha256": "fc4add1950a5c8207131e3f266e8b1c68827d254b4509b8903acaf53ae1b5fbd",
+                    "acceptedBefore": [
+                      "274cc8ce25bf6bc96a806a4080335abd151c885789c85fcb78cc3e5baf271959",
+                      "c521ae8542702c90b381942e417b2a604e1614728c1121b6eff1b90229c1d91b",
+                      "fc4add1950a5c8207131e3f266e8b1c68827d254b4509b8903acaf53ae1b5fbd"
+                    ]
+                  },
+                  {
+                    "path": "scripts/test-patrol-continuation.cjs",
+                    "sha256": "0c673e678ce3b4629b8234dac2f6b87857c2eb7e141b369c80528b087e9e30cf",
+                    "acceptedBefore": [
+                      "0c673e678ce3b4629b8234dac2f6b87857c2eb7e141b369c80528b087e9e30cf",
+                      "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+                    ]
+                  },
+                  {
+                    "path": "scripts/test-monitor-jitter.cjs",
+                    "sha256": "74a56a5ad7761260b95d431e89b5b8a7565d1428c193c11e5849d9d17aea4028",
+                    "acceptedBefore": [
+                      "74a56a5ad7761260b95d431e89b5b8a7565d1428c193c11e5849d9d17aea4028",
+                      "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+                    ]
+                  },
+                  {
+                    "path": "docs/releases/XCLIP_PATROL_CONTINUE_JITTER_20261012_V2.md",
+                    "sha256": "2c2226fba03550fb069663ae2aeb33b2d89c5f185c12e79ce58a1fa9ec29043c",
+                    "acceptedBefore": [
+                      "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+                      "2c2226fba03550fb069663ae2aeb33b2d89c5f185c12e79ce58a1fa9ec29043c"
+                    ]
+                  }
+                ],
+                "localTargets": [
+                  {
+                    "path": "lib/fxtwitter-curated.ts",
+                    "sha256": "e2174eec5358424bc146a3dc8fb01041eb1a1289cb636e1b93c12be88d309876"
+                  },
+                  {
+                    "path": "lib/fxtwitter-curated-store.ts",
+                    "sha256": "655034dbd06926d5515a82276409e576476f5a258e8b2be774209eaadaa6f305"
+                  },
+                  {
+                    "path": "lib/fxtwitter-curated-save.ts",
+                    "sha256": "f64c8942cc81f6932492dc1b39bc1666224538c63b42c28747f0da4bce7c376e"
+                  },
+                  {
+                    "path": "lib/fxtwitter-curated-tier.ts",
+                    "sha256": "7d71a34ecdaba52971125669e71c637b2aebb5f1a8519cc16c155d9327d7548d"
+                  },
+                  {
+                    "path": "lib/fxtwitter-local-access.ts",
+                    "sha256": "5728717bae5c27b20123c6afd39e743fa9f1a0ce16c0bda9b4bf7abf5651bdf5"
+                  },
+                  {
+                    "path": "app/api/fxtwitter-authors/route.ts",
+                    "sha256": "5ad03827347bac7253d3159e744781a53b67a72586e111cfa3ed38513e930816"
+                  },
+                  {
+                    "path": "app/fxtwitter-authors/page.tsx",
+                    "sha256": "442f8385c749345bbe3ce12dbb987443d680c7cb18032879bf138c93df52c8f9"
+                  },
+                  {
+                    "path": "app/fxtwitter-authors/FreeAuthorsPanel.tsx",
+                    "sha256": "8682a58571d01750fdd0453360ca05cb4a22979789866d0ea8550c25a581972a"
+                  },
+                  {
+                    "path": "scripts/test-fxtwitter-curated.cjs",
+                    "sha256": "fb743132909881337b8511e03418befc2bfd6fd154f7f9376ea9079a6099ab90"
+                  },
+                  {
+                    "path": "lib/free-curated-client.ts",
+                    "sha256": "37c93e21642640f61e07882b3be42a9bc8f295f7245d5f7e6b9dd0e3ea14ef7a"
+                  },
+                  {
+                    "path": "lib/free-curated-registration.ts",
+                    "sha256": "34e5e9554d86a2445b25abe66db0ebdd2688a728ec17b40ebd92b5aeddd14d26"
+                  },
+                  {
+                    "path": "scripts/test-free-curated-registration.cjs",
+                    "sha256": "83334bb39d95a93da09abab6d89e44270437d3b1f1ac477a662618878a9a32f5"
+                  },
+                  {
+                    "path": "lib/free-curated-metrics.ts",
+                    "sha256": "7d128ce238140a30862b4a0f2cdbbf5d70094b00590dd94ee7c475e022a1702a"
+                  },
+                  {
+                    "path": "app/fxtwitter-monitor/page.tsx",
+                    "sha256": "204bf735f3cc9f4513207226e211492efd43190c27f5ee7dab20ecf0050ca6d2"
+                  },
+                  {
+                    "path": "app/fxtwitter-monitor/MonitorPanel.tsx",
+                    "sha256": "77b27806bd032feb05eee51f6e0132f978167d2562c87fa8e3bcd876c117f583"
+                  },
+                  {
+                    "path": "scripts/test-free-curated-cursors.cjs",
+                    "sha256": "1e0c2315e28bf7d2ee7455987e2bae4d9692beed5ca2eb7b8415d952e040eaba"
+                  },
+                  {
+                    "path": "scripts/test-registration-recovery.cjs",
+                    "sha256": "fc045c2e909948ef48f7143257313321d4c901bdad55155e53fcc242bfaa875e"
+                  },
+                  {
+                    "path": "app/api/curated-manager/route.ts",
+                    "sha256": "4287130d91f5ba2f00d8e64c783e9480d69317dd0039057812365ec00f3a0c70"
+                  },
+                  {
+                    "path": "app/curated-manager/page.tsx",
+                    "sha256": "c827df52db15ea27901997388784c3a9775e8b140768b83f5dbcbe2b967bedd8"
+                  },
+                  {
+                    "path": "app/curated-manager/Panel.tsx",
+                    "sha256": "25863de46a79bca7161cc2bb01f47c7d08e084e415adc002cba323a012152d1c"
+                  },
+                  {
+                    "path": "app/availability-monitor/page.tsx",
+                    "sha256": "adf7de382a9cf4063d5d86db1e7dacc98827807ab139886765715c7a6c031f89"
+                  },
+                  {
+                    "path": "app/availability-monitor/Panel.tsx",
+                    "sha256": "e7f27ae6ea072a080a7b60e160007bc2b48407a9dc303a06b416546bf81199c1"
+                  },
+                  {
+                    "path": "app/curated-authors/page.tsx",
+                    "sha256": "a0e046586a10ed39c6c2b0734e9bddc83547f449e3b2393c4dc6c06af3f3a9f3"
+                  },
+                  {
+                    "path": "scripts/test-curated-manager-local.cjs",
+                    "sha256": "f9f662618761a10e43d88a277763475cabdba42f025e340a3af3baeb0ee460a7"
+                  },
+                  {
+                    "path": "docs/XCLIP_UPDATE_HISTORY.md",
+                    "sha256": "2c2226fba03550fb069663ae2aeb33b2d89c5f185c12e79ce58a1fa9ec29043c"
+                  }
+                ]
+              },
+              "v2DeploymentAttempt": {
+                "result": "failed before public activation and Cron changes",
+                "stage": "/home/rbxfxmfd/xclip-patrol-continue-jitter-20261012-v2.GQvnu7",
+                "phase": "test-availability-monitor.cjs:46",
+                "actual": 6,
+                "expected": 0,
+                "cause": "manual-removal registry not isolated in monitor tests; reproduced with synthetic 3 removals / 6 keys",
+                "realRegistryContentsRead": false
+              },
+              "testIsolationFix": {
+                "targets": [
+                  "scripts/test-availability-monitor.cjs",
+                  "scripts/test-availability-curated-regression.cjs",
+                  "scripts/test-monitor-state-isolation.cjs"
+                ],
+                "coverage": "both monitor tests with inherited synthetic removals; unchanged inherited bytes/directory; production assertions unchanged",
+                "providerRequests": 0,
+                "databaseWrites": 0,
+                "schedulerChangedFromV2": false
+              },
+              "productionTargets": [
+                {
+                  "path": "lib/free-curated-metrics.ts",
+                  "sha256": "7d128ce238140a30862b4a0f2cdbbf5d70094b00590dd94ee7c475e022a1702a",
+                  "acceptedBefore": [
+                    "46c6c6aeee3bcdb25861851fca1791674591b51ebc63bf94f718e781f22cfaa2",
+                    "7d128ce238140a30862b4a0f2cdbbf5d70094b00590dd94ee7c475e022a1702a"
+                  ]
+                },
+                {
+                  "path": "lib/free-curated-server-store.ts",
+                  "sha256": "66c4649ea7eba584a54199ef9bceb69e52c93619cae56394bcd51b0339840696",
+                  "acceptedBefore": [
+                    "29e4e697467296a4231b8acdc50b67ef48dc6aa8ede0bec3a2bc3e2436f50ac1",
+                    "66c4649ea7eba584a54199ef9bceb69e52c93619cae56394bcd51b0339840696"
+                  ]
+                },
+                {
+                  "path": "lib/free-curated-scan.ts",
+                  "sha256": "56c8784c00775685d5d010207d547c975c10f627fc60fb08aa64c2b351ed2c33",
+                  "acceptedBefore": [
+                    "56c8784c00775685d5d010207d547c975c10f627fc60fb08aa64c2b351ed2c33",
+                    "e7535f09f87af99f8a4296f2358229096caecccb7601e498c495f52d4c7b20a0"
+                  ]
+                },
+                {
+                  "path": "lib/free-curated-dashboard.ts",
+                  "sha256": "90cb71db273a833d942ad5572e6056dab678391c70eb11cc0808a869f7e5816e",
+                  "acceptedBefore": [
+                    "0a9a86e42dffa4bed09c4bc25476341ffd9feb9bc6c38b01da25ca1e66ec2af1",
+                    "90cb71db273a833d942ad5572e6056dab678391c70eb11cc0808a869f7e5816e",
+                    "d30d7d841235b56048a99159567152c77f45b63ddab3767c738d583ddd49345b"
+                  ]
+                },
+                {
+                  "path": "lib/free-curated-sync.ts",
+                  "sha256": "fd3174b445c9d4a01c2e69ec0e4763d0c1f75daf92e695f07be41534eb57ae04",
+                  "acceptedBefore": [
+                    "158abf1ded6b859c938e250d1ca0f74a1704ffd89a35f74b4b2f8bb0645dba2a",
+                    "fd3174b445c9d4a01c2e69ec0e4763d0c1f75daf92e695f07be41534eb57ae04"
+                  ]
+                },
+                {
+                  "path": "scripts/test-free-curated-dashboard.cjs",
+                  "sha256": "294407832acf2e4f20e4d153ba40cac7eeda7bd35162ac70a84b2e1f28369172",
+                  "acceptedBefore": [
+                    "294407832acf2e4f20e4d153ba40cac7eeda7bd35162ac70a84b2e1f28369172",
+                    "45b8b68795bd5c7e93fafee724cfb0589fd088e02a3f0c992c24696c1cacf20c",
+                    "def0469ba7129f036980e07b39fe43c2c60b22a1b7bbd076286f2b738f127d4a"
+                  ]
+                },
+                {
+                  "path": "lib/post-status.ts",
+                  "sha256": "cefbc7955dfd9101edad3f8a7e1f5cfbbb09301350319c4f7717f9cafba43c81",
+                  "acceptedBefore": [
+                    "cefbc7955dfd9101edad3f8a7e1f5cfbbb09301350319c4f7717f9cafba43c81",
+                    "f98053058ca61d0b293aebc5c30601ab62c84c82211bc1b4e255b895c830457f"
+                  ]
+                },
+                {
+                  "path": "scripts/test-free-curated-production.cjs",
+                  "sha256": "37a3389001ede44437b0173560c3571da3b5f798678c9a1e4f1dd59d6aef8ad3",
+                  "acceptedBefore": [
+                    "37a3389001ede44437b0173560c3571da3b5f798678c9a1e4f1dd59d6aef8ad3",
+                    "e88fbd33874e0b79678e8615f2e19fd146021de2c4924fec2e7d5388b91bba01"
+                  ]
+                },
+                {
+                  "path": "lib/availability-scan.ts",
+                  "sha256": "6cae8e8564f67bf81fa37c40c423118704370f93f6990db41c9db1a73243ab22",
+                  "acceptedBefore": [
+                    "6cae8e8564f67bf81fa37c40c423118704370f93f6990db41c9db1a73243ab22",
+                    "80f17dd766467061a5a64d51cf5b3f11fac724a97e4372640b8537f6a2c8f76d",
+                    "aa1c31479cf3b308e7cea314ea12913fce718a8c80544ced49cc25545f7f0253"
+                  ]
+                },
+                {
+                  "path": "scripts/test-availability-curated-regression.cjs",
+                  "sha256": "31fe3b6c037a14a2d0f5da10e2b1da868e5e58776a28219a195735dd8f0016c0",
+                  "acceptedBefore": [
+                    "31fe3b6c037a14a2d0f5da10e2b1da868e5e58776a28219a195735dd8f0016c0",
+                    "686b9b06556052f137d4d9bf7f0523475f74fbcda4fd5841d2c29425f0a31ee2",
+                    "d204641effff94da2faa0654353722b85c8daf089c6b9c2d9340497594df07b8"
+                  ]
+                },
+                {
+                  "path": "scripts/test-availability-monitor.cjs",
+                  "sha256": "d761ea9a3d93bcf3aebe52b6d008a51ce910b4acdf6543580ae331e7cd588719",
+                  "acceptedBefore": [
+                    "5269f53d75dfc985dd09d26b8c0b8ca060a426c1cfd92bc87f9a3a53ba2c2b04",
+                    "74df1cfc333aa86e783a4ef4279446f3ab33c0e6bda378db806579f9fcf6d3d2",
+                    "d761ea9a3d93bcf3aebe52b6d008a51ce910b4acdf6543580ae331e7cd588719"
+                  ]
+                },
+                {
+                  "path": "scripts/test-free-curated-cursors.cjs",
+                  "sha256": "1e0c2315e28bf7d2ee7455987e2bae4d9692beed5ca2eb7b8415d952e040eaba",
+                  "acceptedBefore": [
+                    "082df00aec184a7e5c920daf12a4af5adcabb5a5563b2c10787b97b47a937545",
+                    "1e0c2315e28bf7d2ee7455987e2bae4d9692beed5ca2eb7b8415d952e040eaba"
+                  ]
+                },
+                {
+                  "path": "lib/fxtwitter-curated.ts",
+                  "sha256": "e2174eec5358424bc146a3dc8fb01041eb1a1289cb636e1b93c12be88d309876",
+                  "acceptedBefore": [
+                    "7da548054d3d523b3ca4284f301e9da03193fbf591b63634ee5a5cd9bbda4566",
+                    "e2174eec5358424bc146a3dc8fb01041eb1a1289cb636e1b93c12be88d309876"
+                  ]
+                },
+                {
+                  "path": "lib/x-curated-state.ts",
+                  "sha256": "a44eb46949f1f21f83d63847b04046a3a76a99c34ac6e065ffca9e3e95e1ad74",
+                  "acceptedBefore": [
+                    "a44eb46949f1f21f83d63847b04046a3a76a99c34ac6e065ffca9e3e95e1ad74",
+                    "c57930ca78bf3f454ac525d5b5f80afee9ae2b0a67cf7d44646ca045f7ff4dda"
+                  ]
+                },
+                {
+                  "path": "lib/x-curated-search.ts",
+                  "sha256": "90d41fadb981e46ea33bf7abee1aacc4c5422dadae9ac9f28055956d32465daf",
+                  "acceptedBefore": [
+                    "90d41fadb981e46ea33bf7abee1aacc4c5422dadae9ac9f28055956d32465daf",
+                    "a36835a6117d0a43dca4b3d5afebf4cc5f3f51fc22dd53b664d039c2fca8c50e"
+                  ]
+                },
+                {
+                  "path": "lib/x-curated-scan.ts",
+                  "sha256": "6e9d4e962810cb3a7fecf66bd1aa2ef5e4a9a9edec52ed6625aa8e1f6a8bbaca",
+                  "acceptedBefore": [
+                    "3219ca753b95574c4f04166bc4d5a2770e4fc9acfe9537bdc219dafa322fa767",
+                    "3788732c94040adc01beac9d1647e9cf266382dc5701e6e0845f3463b865e1ae",
+                    "6e9d4e962810cb3a7fecf66bd1aa2ef5e4a9a9edec52ed6625aa8e1f6a8bbaca"
+                  ]
+                },
+                {
+                  "path": "scripts/test-x-curated-hybrid.cjs",
+                  "sha256": "2e08403265d1482511369479f4685bac532800cc5221d92af3470dcb78e13315",
+                  "acceptedBefore": [
+                    "2e08403265d1482511369479f4685bac532800cc5221d92af3470dcb78e13315",
+                    "7bce639deea965649e642adb43d5bffaa5324a9bd5164e4745fe8bad3fb1f8c2",
+                    "fb2e8f64a2c587abeeebd27be5c6c089c456ca42a29b9a27d525721f54dbffb3"
+                  ]
+                },
+                {
+                  "path": "app/api/free-curated-sync/route.ts",
+                  "sha256": "674b3ed4124b44ecb244eb673d6bf886edd168dd0434bd932a090e50003be56b",
+                  "acceptedBefore": [
+                    "674b3ed4124b44ecb244eb673d6bf886edd168dd0434bd932a090e50003be56b",
+                    "b9280e0116a493e81c5f4cb764c82d5df2720173bb0c14c328454febd497e2bf"
+                  ]
+                },
+                {
+                  "path": "app/api/collect-curated-batch/route.ts",
+                  "sha256": "c5e2828c5654bbc918dc36f5b17cf7d448e54ac0918ec8b44b3b8213263641e5",
+                  "acceptedBefore": [
+                    "2072e9cfd72df6705f7dc36c7107daa6a3a677e99c19c83e54866574f7084008",
+                    "c5e2828c5654bbc918dc36f5b17cf7d448e54ac0918ec8b44b3b8213263641e5"
+                  ]
+                },
+                {
+                  "path": "scripts/scan-free-curated.cjs",
+                  "sha256": "7f60776a039678011c075facbc267a2ea210460206cf6184babe001bde3bfebd",
+                  "acceptedBefore": [
+                    "62eb7007bcd6495e4a48ece008edd43c7bc0513b00fb724a7c792177146f463a",
+                    "7f60776a039678011c075facbc267a2ea210460206cf6184babe001bde3bfebd"
+                  ]
+                },
+                {
+                  "path": "lib/curated-common.ts",
+                  "sha256": "13fc29b481944ba14bf37cd50514569a5d2d5b21d2ac2053b841cca20ab8963a",
+                  "acceptedBefore": [
+                    "13fc29b481944ba14bf37cd50514569a5d2d5b21d2ac2053b841cca20ab8963a",
+                    "cad8d6c34a1e67db6cc01ac8b2e941aed64e4213213004ae98250200056d9368"
+                  ]
+                },
+                {
+                  "path": "lib/curated-removals.ts",
+                  "sha256": "146091b0fbb71f74d81315253637245de5279e593a0fe661f18c395929774959",
+                  "acceptedBefore": [
+                    "146091b0fbb71f74d81315253637245de5279e593a0fe661f18c395929774959",
+                    "e44ab96c40f003634f4fc6406510d51eee96763d4c56b457239b986df890935a"
+                  ]
+                },
+                {
+                  "path": "lib/availability-dashboard.ts",
+                  "sha256": "d8718daf1b48b094b924ea1176509164e1f77fe3057ce5a720828b8632f0a37e",
+                  "acceptedBefore": [
+                    "061b150615e68fe7fe5cd13cf5748a2e5091391568ee8e0484b31fa3202daf26",
+                    "d8718daf1b48b094b924ea1176509164e1f77fe3057ce5a720828b8632f0a37e"
+                  ]
+                },
+                {
+                  "path": "lib/post-status-store.ts",
+                  "sha256": "78b6c548039702d14fccf898493c8f8c2c5340739662f214187dbc8473542176",
+                  "acceptedBefore": [
+                    "78b6c548039702d14fccf898493c8f8c2c5340739662f214187dbc8473542176",
+                    "84831d63ec3f4cca050b652ba8b1bac1c992d9d004fda6c49dbe76820ad58671"
+                  ]
+                },
+                {
+                  "path": "lib/author-status-scan.ts",
+                  "sha256": "38dafa495a2c7f13a12fbcff08657cf73643a568f028da780a5b7ad6893450bc",
+                  "acceptedBefore": [
+                    "1edc4bf7765cfcbf90936f89cd98b13e71cb817f651fb17e4c4b65e010cf8b85",
+                    "38dafa495a2c7f13a12fbcff08657cf73643a568f028da780a5b7ad6893450bc",
+                    "a1c26774f09b1a853cd1c0b1ba8f5674e49c3f517bd327fff87c2aee37c62d7e"
+                  ]
+                },
+                {
+                  "path": "lib/free-curated-publish.ts",
+                  "sha256": "2246b0546df14004a95e9acfe3ef2b6904ea4dc3dd0a93c6f105c2afb4d738f4",
+                  "acceptedBefore": [
+                    "2246b0546df14004a95e9acfe3ef2b6904ea4dc3dd0a93c6f105c2afb4d738f4",
+                    "550a5cd132b8e68898c93132492e4cd7d6df1f1f2ba3f289c7e6bf577e2648dc"
+                  ]
+                },
+                {
+                  "path": "scripts/test-curated-common.cjs",
+                  "sha256": "8ae83e059e4d863d77eec2601288b2e29cdd6073d79df3419ee7375e9117e1d7",
+                  "acceptedBefore": [
+                    "8ae83e059e4d863d77eec2601288b2e29cdd6073d79df3419ee7375e9117e1d7",
+                    "e721cc3713b707bf382b9918de944fca3aa01314fd113932843df8d7df26fb72"
+                  ]
+                },
+                {
+                  "path": "scripts/test-author-status.cjs",
+                  "sha256": "915c4b5babc1dccc3382499c0579e7c5b0a438d27c9c40b4bd53f7dcf965a73a",
+                  "acceptedBefore": [
+                    "915c4b5babc1dccc3382499c0579e7c5b0a438d27c9c40b4bd53f7dcf965a73a",
+                    "a994f989ff01ae387c813f1c790736404ae1435ed34da112e8ab0a5bc3a6fe5f"
+                  ]
+                },
+                {
+                  "path": "scripts/migrate-curated-common.cjs",
+                  "sha256": "a5ec5cb29d43904fb39e102cf33680e06921a672887a3be10a0a22b7eed5a0b2",
+                  "acceptedBefore": [
+                    "a5ec5cb29d43904fb39e102cf33680e06921a672887a3be10a0a22b7eed5a0b2",
+                    "bfeac51096d6f7766372ea704c3ff04267a639a1e0380aa9c2dea189adc6d4a7"
+                  ]
+                },
+                {
+                  "path": "lib/availability-policy.ts",
+                  "sha256": "fc4add1950a5c8207131e3f266e8b1c68827d254b4509b8903acaf53ae1b5fbd",
+                  "acceptedBefore": [
+                    "274cc8ce25bf6bc96a806a4080335abd151c885789c85fcb78cc3e5baf271959",
+                    "c521ae8542702c90b381942e417b2a604e1614728c1121b6eff1b90229c1d91b",
+                    "fc4add1950a5c8207131e3f266e8b1c68827d254b4509b8903acaf53ae1b5fbd"
+                  ]
+                },
+                {
+                  "path": "scripts/test-patrol-continuation.cjs",
+                  "sha256": "0c673e678ce3b4629b8234dac2f6b87857c2eb7e141b369c80528b087e9e30cf",
+                  "acceptedBefore": [
+                    "0c673e678ce3b4629b8234dac2f6b87857c2eb7e141b369c80528b087e9e30cf",
+                    "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+                  ]
+                },
+                {
+                  "path": "scripts/test-monitor-jitter.cjs",
+                  "sha256": "74a56a5ad7761260b95d431e89b5b8a7565d1428c193c11e5849d9d17aea4028",
+                  "acceptedBefore": [
+                    "74a56a5ad7761260b95d431e89b5b8a7565d1428c193c11e5849d9d17aea4028",
+                    "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+                  ]
+                },
+                {
+                  "path": "scripts/test-monitor-state-isolation.cjs",
+                  "sha256": "8b88c817f6ad86767aa0c0980d0f75efba6012b9aaa0088a42210516b29376f9",
+                  "acceptedBefore": [
+                    "8b88c817f6ad86767aa0c0980d0f75efba6012b9aaa0088a42210516b29376f9",
+                    "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+                  ]
+                },
+                {
+                  "path": "docs/releases/XCLIP_PATROL_CONTINUE_JITTER_20261012_V3.md",
+                  "sha256": "f783427d5310b36f614b2e49d5fbba0200394f87842337dad4ec439add584f21",
+                  "acceptedBefore": [
+                    "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+                    "f783427d5310b36f614b2e49d5fbba0200394f87842337dad4ec439add584f21"
+                  ]
+                }
+              ],
+              "localTargets": [
+                {
+                  "path": "lib/fxtwitter-curated.ts",
+                  "sha256": "e2174eec5358424bc146a3dc8fb01041eb1a1289cb636e1b93c12be88d309876"
+                },
+                {
+                  "path": "lib/fxtwitter-curated-store.ts",
+                  "sha256": "655034dbd06926d5515a82276409e576476f5a258e8b2be774209eaadaa6f305"
+                },
+                {
+                  "path": "lib/fxtwitter-curated-save.ts",
+                  "sha256": "f64c8942cc81f6932492dc1b39bc1666224538c63b42c28747f0da4bce7c376e"
+                },
+                {
+                  "path": "lib/fxtwitter-curated-tier.ts",
+                  "sha256": "7d71a34ecdaba52971125669e71c637b2aebb5f1a8519cc16c155d9327d7548d"
+                },
+                {
+                  "path": "lib/fxtwitter-local-access.ts",
+                  "sha256": "5728717bae5c27b20123c6afd39e743fa9f1a0ce16c0bda9b4bf7abf5651bdf5"
+                },
+                {
+                  "path": "app/api/fxtwitter-authors/route.ts",
+                  "sha256": "5ad03827347bac7253d3159e744781a53b67a72586e111cfa3ed38513e930816"
+                },
+                {
+                  "path": "app/fxtwitter-authors/page.tsx",
+                  "sha256": "442f8385c749345bbe3ce12dbb987443d680c7cb18032879bf138c93df52c8f9"
+                },
+                {
+                  "path": "app/fxtwitter-authors/FreeAuthorsPanel.tsx",
+                  "sha256": "8682a58571d01750fdd0453360ca05cb4a22979789866d0ea8550c25a581972a"
+                },
+                {
+                  "path": "scripts/test-fxtwitter-curated.cjs",
+                  "sha256": "fb743132909881337b8511e03418befc2bfd6fd154f7f9376ea9079a6099ab90"
+                },
+                {
+                  "path": "lib/free-curated-client.ts",
+                  "sha256": "37c93e21642640f61e07882b3be42a9bc8f295f7245d5f7e6b9dd0e3ea14ef7a"
+                },
+                {
+                  "path": "lib/free-curated-registration.ts",
+                  "sha256": "34e5e9554d86a2445b25abe66db0ebdd2688a728ec17b40ebd92b5aeddd14d26"
+                },
+                {
+                  "path": "scripts/test-free-curated-registration.cjs",
+                  "sha256": "83334bb39d95a93da09abab6d89e44270437d3b1f1ac477a662618878a9a32f5"
+                },
+                {
+                  "path": "lib/free-curated-metrics.ts",
+                  "sha256": "7d128ce238140a30862b4a0f2cdbbf5d70094b00590dd94ee7c475e022a1702a"
+                },
+                {
+                  "path": "app/fxtwitter-monitor/page.tsx",
+                  "sha256": "204bf735f3cc9f4513207226e211492efd43190c27f5ee7dab20ecf0050ca6d2"
+                },
+                {
+                  "path": "app/fxtwitter-monitor/MonitorPanel.tsx",
+                  "sha256": "77b27806bd032feb05eee51f6e0132f978167d2562c87fa8e3bcd876c117f583"
+                },
+                {
+                  "path": "scripts/test-free-curated-cursors.cjs",
+                  "sha256": "1e0c2315e28bf7d2ee7455987e2bae4d9692beed5ca2eb7b8415d952e040eaba"
+                },
+                {
+                  "path": "scripts/test-registration-recovery.cjs",
+                  "sha256": "fc045c2e909948ef48f7143257313321d4c901bdad55155e53fcc242bfaa875e"
+                },
+                {
+                  "path": "app/api/curated-manager/route.ts",
+                  "sha256": "4287130d91f5ba2f00d8e64c783e9480d69317dd0039057812365ec00f3a0c70"
+                },
+                {
+                  "path": "app/curated-manager/page.tsx",
+                  "sha256": "c827df52db15ea27901997388784c3a9775e8b140768b83f5dbcbe2b967bedd8"
+                },
+                {
+                  "path": "app/curated-manager/Panel.tsx",
+                  "sha256": "25863de46a79bca7161cc2bb01f47c7d08e084e415adc002cba323a012152d1c"
+                },
+                {
+                  "path": "app/availability-monitor/page.tsx",
+                  "sha256": "adf7de382a9cf4063d5d86db1e7dacc98827807ab139886765715c7a6c031f89"
+                },
+                {
+                  "path": "app/availability-monitor/Panel.tsx",
+                  "sha256": "e7f27ae6ea072a080a7b60e160007bc2b48407a9dc303a06b416546bf81199c1"
+                },
+                {
+                  "path": "app/curated-authors/page.tsx",
+                  "sha256": "a0e046586a10ed39c6c2b0734e9bddc83547f449e3b2393c4dc6c06af3f3a9f3"
+                },
+                {
+                  "path": "scripts/test-curated-manager-local.cjs",
+                  "sha256": "f9f662618761a10e43d88a277763475cabdba42f025e340a3af3baeb0ee460a7"
+                },
+                {
+                  "path": "docs/XCLIP_UPDATE_HISTORY.md",
+                  "sha256": "f783427d5310b36f614b2e49d5fbba0200394f87842337dad4ec439add584f21"
+                }
+              ]
+            }
+          }
+        }
+      }
+    }
+  }
+}

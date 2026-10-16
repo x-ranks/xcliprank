@@ -1,0 +1,22 @@
+{
+  "release": "learning-poll-v1-20261015",
+  "passed": true,
+  "actualShippedPs1Used": true,
+  "typeAndMockChecksPassed": true,
+  "applyReapplyRestorePassed": true,
+  "unknownGuardRefused": true,
+  "editedRestoreRefused": true,
+  "protectedPrivateFiles": 7,
+  "fixtureAuthors": 101,
+  "fixtureReservations": 24,
+  "privateDataUnchanged": true,
+  "realDbOrProviderCalls": 0,
+  "actualLocalApplied": false,
+  "mutatingLearningAndAdoptionFunctionsByteForByteUnchanged": true,
+  "actualLocalTargetAndGuardHashesStillMatch": true,
+  "reactChecklist": "hooks/dependencies, single leader, cross-tab wake, overlap/cleanup, visibility, no shared SSR state, status role",
+  "liveReadonlyProjectionProbePassed": true,
+  "postApplyUsageMeasured": false,
+  "freePlanFeasibility": "pending measurement",
+  "checkedAtUtc": "2026-10-15T12:23:25.579595+00:00"
+}

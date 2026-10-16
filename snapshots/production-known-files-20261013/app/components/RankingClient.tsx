@@ -1,0 +1,481 @@
+"use client";
+import type { RankingPagination } from "../../lib/ranking-pagination";
+import useSuspendedAuthors from "./useSuspendedAuthors";
+import { isUnavailablePost } from "../../lib/post-status";
+import DirectPlaybackVideo from "./DirectPlaybackVideo";
+
+import { directPlaybackUrl } from "../../lib/browser-direct-playback";
+
+import VideoDownloadButton from "./VideoDownloadButton";
+
+import { useEffect, useMemo, useRef, useState } from "react";
+import VideoDurationBadge from "./VideoDurationBadge";
+import { trackEngagement } from "../../lib/engagement-client";
+
+export type RankPost = {
+  author_id?: string;
+  x_post_id: string;
+  ranking_position?: number;
+  author_username: string | null;
+  author_name: string | null;
+  x_url: string;
+  preview_image_url: string | null;
+  video_url: string | null;
+  video_bitrate: number | null;
+  views: number;
+  likes: number;
+  reposts: number;
+  replies: number;
+  score: number;
+  adult_tier: string | null;
+  created_at: string;
+  ranking_supplemented?: boolean;
+};
+
+export type Range = "trending" | "daily" | "weekly";
+
+type RankingClientProps = {
+  initialRange?: Range;
+  initialPosts?: RankPost[];
+  range?: Range;
+  fixedRange?: boolean;
+  pagination?: RankingPagination;
+  edition?: string;
+};
+
+const INITIAL_COUNTS: Record<Range, number> = {
+  trending: 50,
+  daily: 100,
+  weekly: 24
+};
+
+const LOAD_MORE_COUNTS: Record<Range, number> = {
+  trending: 25,
+  daily: 25,
+  weekly: 12
+};
+
+export default function RankingClient({
+  initialRange = "trending",
+  initialPosts = [],
+  range: controlledRange,
+  fixedRange = false,
+  pagination,
+  edition
+}: RankingClientProps = {}) {
+  const blockedKeys = useSuspendedAuthors();
+  const blockSignature = blockedKeys.join("|");
+  const blocked = useMemo(() => new Set(blockedKeys), [blockedKeys]);
+  const [range, setRange] = useState<Range>(initialRange);
+  const activeRange = controlledRange ?? range;
+  const query = new URLSearchParams({ range: activeRange });
+  if (pagination && activeRange === "trending") query.set("page", String(pagination.page));
+  const activeEdition = pagination?.edition ?? edition;
+  if (activeEdition) query.set("edition", activeEdition);
+  const rankingQuery = query.toString();
+  const [posts, setPosts] = useState<RankPost[]>(initialPosts);
+  const [loading, setLoading] = useState(initialPosts.length === 0);
+  const [visibleCount, setVisibleCount] = useState(
+    INITIAL_COUNTS[activeRange]
+  );
+  const [selectedPost, setSelectedPost] = useState<RankPost | null>(null);
+  const [videoError, setVideoError] = useState(false);
+  const initialRangeRef = useRef(activeRange);
+  const initialPostsUsedRef = useRef(false);
+
+  useEffect(() => {
+    const controller = new AbortController();
+    if (
+      !initialPostsUsedRef.current &&
+      initialPosts.length > 0 &&
+      activeRange === initialRangeRef.current
+    ) {
+      initialPostsUsedRef.current = true;
+      return;
+    }
+
+    setLoading(true);
+    setVisibleCount(INITIAL_COUNTS[activeRange]);
+
+    fetch(`/api/rankings?${rankingQuery}`, {
+      cache: "no-store", signal: controller.signal
+    })
+      .then(async (r) => { const json = await r.json(); if (!r.ok || json.ok !== true || !Array.isArray(json.data)) throw Error("RANKING_REFRESH_FAILED"); return json; })
+      .then((json) => { if (!controller.signal.aborted) setPosts(json.data); })
+      .catch(() => {})
+      .finally(() => { if (!controller.signal.aborted) setLoading(false); });
+    return () => controller.abort();
+  }, [activeRange, initialPosts.length, blockSignature, rankingQuery]);
+
+  useEffect(() => {
+    if (selectedPost && isUnavailablePost(selectedPost, blocked)) setSelectedPost(null);
+  }, [selectedPost, blocked]);
+
+  useEffect(() => {
+    if (!selectedPost) return;
+
+    setVideoError(false);
+
+    const onKeyDown = (event: KeyboardEvent) => {
+      if (event.key === "Escape") {
+        setSelectedPost(null);
+      }
+    };
+
+    document.body.classList.add("modal-open");
+    window.addEventListener("keydown", onKeyDown);
+
+    trackEngagement({
+      eventType: "video_open",
+      xPostId: selectedPost.x_post_id,
+      range: activeRange,
+      source: "ranking_card"
+    });
+
+    const qualifiedViewTimer = window.setTimeout(() => {
+      trackEngagement({
+        eventType: "qualified_view",
+        xPostId: selectedPost.x_post_id,
+        range: activeRange,
+        source: "ranking_modal",
+        metadata: { seconds: 5 }
+      });
+    }, 5000);
+
+    return () => {
+      window.clearTimeout(qualifiedViewTimer);
+      document.body.classList.remove("modal-open");
+      window.removeEventListener("keydown", onKeyDown);
+    };
+  }, [selectedPost, activeRange]);
+
+  const safePosts = useMemo(() => posts.filter(p => !isUnavailablePost(p, blocked)), [posts, blocked]);
+  const visiblePosts = useMemo(
+    () => pagination ? safePosts : safePosts.slice(0, visibleCount),
+    [safePosts, visibleCount, pagination]
+  );
+  return (
+    <>
+      <div className="download-page-link"><a href="/download">↓ 投稿URLから動画を保存</a></div>
+      {fixedRange ? (
+        <div className="ranking-page-summary">
+          <span>{loading ? "集計中…" : pagination ? `${pagination.totalPosts}件中 ${pagination.page} / ${pagination.totalPages}ページ（このページ${safePosts.length}件）` : `${safePosts.length}件を表示`}</span>
+        </div>
+      ) : (
+        <div className="tabs">
+          {[
+            ["trending", "新着"],
+            ["daily", "24時間"],
+            ["weekly", "週間"]
+          ].map(([key, label]) => (
+            <button
+              key={key}
+              className={activeRange === key ? "active" : ""}
+              onClick={() => {
+                const nextRange = key as Range;
+                setRange(nextRange);
+                trackEngagement({
+                  eventType: "ranking_change",
+                  range: nextRange,
+                  source: "ranking_tabs"
+                });
+              }}
+            >
+              {label}
+            </button>
+          ))}
+
+          <span className="result-count">
+            {safePosts.length}件
+          </span>
+        </div>
+      )}
+
+      {loading && (
+        <div className="status">
+          読み込み中…
+        </div>
+      )}
+
+      {!loading && safePosts.length === 0 && (
+        <div className="empty">
+          <h2>表示できる動画がありません</h2>
+
+          <p>
+            時間をおいて再度確認してください。
+          </p>
+        </div>
+      )}
+
+      <div className="video-grid">
+        {visiblePosts.map((p, index) => (
+          <article
+            className="video-card"
+            key={p.x_post_id}
+            onClick={() => setSelectedPost(p)}
+            tabIndex={0}
+            role="button"
+            onKeyDown={(event) => {
+              if (
+                event.key === "Enter" ||
+                event.key === " "
+              ) {
+                event.preventDefault();
+                setSelectedPost(p);
+              }
+            }}
+          >
+            <div className="thumb-wrap">
+              {p.preview_image_url ? (
+                <img
+                  src={p.preview_image_url}
+                  alt={`${
+                    p.author_name ??
+                    p.author_username ??
+                    "Xユーザー"
+                  }の動画（ランキング${p.ranking_position ?? index + 1}位）`}
+                  className="thumb"
+                  loading={index < 4 ? "eager" : "lazy"}
+                  fetchPriority={index === 0 ? "high" : "auto"}
+                />
+              ) : (
+                <div className="thumb thumb-fallback">
+                  X VIDEO
+                </div>
+              )}
+
+              <span className="rank-badge">
+                #{p.ranking_position ?? index + 1}
+              </span>
+
+              {p.video_url && <VideoDurationBadge postId={p.x_post_id} />}
+
+              <div
+                className="play-button"
+                aria-hidden="true"
+              >
+                ▶
+              </div>
+            </div>
+
+            <div className="card-body">
+              <div className="author-row">
+                <strong>
+                  {p.author_name ??
+                    p.author_username ??
+                    "X user"}
+                </strong>
+
+                {p.author_username && (
+                  <span>
+                    @{p.author_username}
+                  </span>
+                )}
+              </div>
+
+              <div className="compact-metrics">
+                <span>
+                  👁 {compact(p.views)}
+                </span>
+
+                <span>
+                  ♥ {compact(p.likes)}
+                </span>
+
+                <span>
+                  ↻ {compact(p.reposts)}
+                </span>
+              </div>
+            </div>
+          </article>
+        ))}
+      </div>
+
+      {!pagination && !loading &&
+        visibleCount < safePosts.length && (
+          <div className="load-more-wrap">
+            <button
+              className="load-more"
+              onClick={() =>
+                setVisibleCount(
+                  (n) =>
+                    n + LOAD_MORE_COUNTS[activeRange]
+                )
+              }
+            >
+              もっと見る
+            </button>
+          </div>
+        )}
+
+      {pagination && (
+        <nav className="ranking-pagination" aria-label="新着動画のページ送り">
+          {pagination.previousHref && <a href={pagination.previousHref}>前の50件</a>}
+          <span aria-current="page">{pagination.page} / {pagination.totalPages}</span>
+          {pagination.nextHref && <a className="load-more" href={pagination.nextHref}>さらに表示（次の50件）</a>}
+          <a href="/">最新の新着へ</a>
+        </nav>
+      )}
+
+      {selectedPost && (
+        <div
+          className="modal-backdrop"
+          role="presentation"
+          onMouseDown={(event) => {
+            if (
+              event.currentTarget ===
+              event.target
+            ) {
+              setSelectedPost(null);
+            }
+          }}
+        >
+          <section
+            className="modal-panel"
+            role="dialog"
+            aria-modal="true"
+          >
+            <button
+              className="modal-close"
+              onClick={() =>
+                setSelectedPost(null)
+              }
+              aria-label="閉じる"
+            >
+              ×
+            </button>
+
+            <div className="modal-heading">
+              <div>
+                <strong>
+                  {selectedPost.author_name ??
+                    selectedPost.author_username ??
+                    "X user"}
+                </strong>
+
+                {selectedPost.author_username && (
+                  <span>
+                    @{selectedPost.author_username}
+                  </span>
+                )}
+              </div>
+
+              <a
+                href={selectedPost.x_url}
+                target="_blank"
+                rel="noreferrer"
+                onClick={() =>
+                  trackEngagement({
+                    eventType: "outbound_x",
+                    xPostId: selectedPost.x_post_id,
+                    range: activeRange,
+                    source: "modal_heading"
+                  })
+                }
+              >
+                Xで開く ↗
+              </a>
+            </div>
+
+            {selectedPost.video_url &&
+            !videoError ? (
+              <div className="direct-video-wrap">
+                <DirectPlaybackVideo postId={selectedPost.x_post_id} key={selectedPost.x_post_id} src={directPlaybackUrl(selectedPost.video_url)}
+                  className="direct-video"
+                  controls
+                  playsInline
+                  autoPlay
+                  preload="metadata"
+                  poster={
+                    selectedPost.preview_image_url ??
+                    undefined
+                  }
+                  onError={() =>
+                    setVideoError(true)
+                  }
+                >
+                  
+                </DirectPlaybackVideo>
+              </div>
+            ) : (
+              <div className="video-fallback">
+                <h3>
+                  動画が再生できません。
+                </h3>
+
+                <p>
+                  投稿から動画が再生できるかお試しください。
+                </p>
+
+                <a
+                  href={selectedPost.x_url}
+                  target="_blank"
+                  rel="noreferrer"
+                  className="fallback-button"
+                  onClick={() =>
+                    trackEngagement({
+                      eventType: "outbound_x",
+                      xPostId: selectedPost.x_post_id,
+                      range: activeRange,
+                      source: "video_fallback"
+                    })
+                  }
+                >
+                  Xで動画を見る
+                </a>
+              </div>
+            )}
+
+            {selectedPost.video_url && <VideoDownloadButton key={selectedPost.x_post_id} postId={selectedPost.x_post_id} />}
+            <div className="modal-metrics">
+              <span>
+                👁{" "}
+                {selectedPost.views.toLocaleString()}
+              </span>
+
+              <span>
+                ♥{" "}
+                {selectedPost.likes.toLocaleString()}
+              </span>
+
+              <span>
+                ↻{" "}
+                {selectedPost.reposts.toLocaleString()}
+              </span>
+
+              <span>
+                💬{" "}
+                {selectedPost.replies.toLocaleString()}
+              </span>
+
+              <span>
+                Score {selectedPost.score}
+              </span>
+
+              {selectedPost.video_bitrate && (
+                <span>
+                  {Math.round(
+                    selectedPost.video_bitrate /
+                      1000
+                  )}
+                  kbps
+                </span>
+              )}
+            </div>
+          </section>
+        </div>
+      )}
+    </>
+  );
+}
+
+function compact(value: number) {
+  return new Intl.NumberFormat(
+    "ja-JP",
+    {
+      notation: "compact",
+      maximumFractionDigits: 1
+    }
+  ).format(value || 0);
+}
+

@@ -2,7 +2,21 @@ import { NextRequest, NextResponse } from "next/server";
 
 export const runtime = "nodejs";
 
-import { cachedVideoDuration, isAllowedVideoUrl } from "../../../lib/video-duration";
+function isAllowedVideoUrl(rawUrl: string) {
+  try {
+    const url = new URL(rawUrl);
+
+    return (
+      url.protocol === "https:" &&
+      (
+        url.hostname === "video.twimg.com" ||
+        url.hostname.endsWith(".video.twimg.com")
+      )
+    );
+  } catch {
+    return false;
+  }
+}
 
 export async function GET(req: NextRequest) {
   const rawUrl = req.nextUrl.searchParams.get("url");
@@ -19,13 +33,6 @@ export async function GET(req: NextRequest) {
       { error: "Video host is not allowed" },
       { status: 400 }
     );
-  }
-
-  if (req.nextUrl.searchParams.get("metadata") === "1") {
-    const durationSeconds = await cachedVideoDuration(rawUrl);
-    return NextResponse.json({ durationSeconds }, {
-      headers: { "Cache-Control": `public, max-age=${durationSeconds === null ? 300 : 3600}` },
-    });
   }
 
   try {

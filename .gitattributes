@@ -16,3 +16,25 @@
 *.npz binary
 *.png binary
 *.webp binary
+
+# Preserve archived update payload bytes and source checksums.
+/snapshots/** -text
+/releases/20261013-operations-archive/** -text
+/releases/20261014-registration-recovery1000/** -text
+/releases/20261014-ranking-updates/** -text
+/releases/20261014-ranking-updates-v2/** -text
+
+# Canonical local-source snapshot hashes refer to the exact inspected bytes.
+/app/** -text
+/lib/** -text
+/scripts/** -text
+/sql/** -text
+/supabase/** -text
+/docs/** -text
+/package.json -text
+/package-lock.json -text
+/middleware.ts -text
+/next.config.ts -text
+/visual-filter-model/model.json -text
+/tools/**/*.sh text eol=lf
+/.env.example text eol=lf

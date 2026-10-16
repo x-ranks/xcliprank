@@ -1,0 +1,10 @@
+﻿2026-10-12 DB隔離復元チェック v4
+
+根拠：ユーザーの復元ログで ERROR: schema "public" does not exist。最初のpublic.xclip_claim_tier_worker関数の作成に失敗。
+原因：こちらの復元準備SQLはpublicを削除し、再作成しないままpublicに絞ったpg_restoreを開始していた。今回の復元経路ではスキーマの器が作られず、最初の関数定義で失敗。DBパスワード変更による認証不良ではない。
+修正：新規ローカル試験クラスタのdata_directory照合後、DROP SCHEMA publicの直後にCREATE SCHEMA publicを実行。エラー時の停止、localhost限定、終了コード判定、子孫を待たない待機、工程表示、最後の停止を維持。
+対象：xclip-db-restore-check-20261012-v4.ps1のみ。旧v1/v2/v3と取得済みDBバックアップは上書きしない。毎回新規試験クラスタを作るため、前回失敗フォルダの削除・再利用は不要。
+検証：準備SQLの変更箇所と順序を照合。Windows PowerShell 5.1の構文とネイティブ警告・終了コード・引数・子プロセス待機の模擬テスト成功。子が5秒稼働する試験で親コマンド待機は約0.21秒で返った。実PostgreSQLの復元はユーザー実行待ち。
+復元成功は未確認。DBバックアップ取得成功と2026-10-12のパスワード変更履歴は維持。G01/O01は未完了。本番・実プロジェクト・Gitへの操作はしていない。
+復旧：取得済みdatabase.dumpと同じPgBinを指定し、v4を実行。試験対象はpublicスキーマで、権限・所有者・Supabase管理スキーマ・Storage実体等は対象外。バックアップ再取得・パスワード再設定は不要。
+成功表示：XCLIP_PUBLIC_SCHEMA_RESTORE_CHECK_OK。

@@ -1,0 +1,61 @@
+unified-authors-20261011
+作成・模擬検証済み。今回の版は本番・実際のローカルに未適用です。
+前提：本番はhybrid-xapi24-20261011更新済み（提供ログで確認）。
+
+1 本番を先に更新
+xclip-unified-authors-deploy-20261011.sh を /home/rbxfxmfd/ にアップロードし、本番で実行します。
+
+bash /home/rbxfxmfd/xclip-unified-authors-deploy-20261011.sh
+
+成功表示：CURATED_COMMON_MIGRATION_OK と XCLIP_UNIFIED_AUTHORS_DEPLOYMENT_COMPLETE
+更新後、既存登録を共通DBへ移行します。動画再取得・有料API巡回・24時間枠や取得位置のリセットはしません。
+未知の版は上書きせず停止します。エラー時はローカル更新へ進まず、秘密の値を除いたエラー行をチャットへ貼ってください。
+実際の稼働ソースで型検査・ビルド・公開確認を実施します。切替失敗時は旧runtime/settingsへ戻しますが、共通DBへの移行済みフラグは自動で戻しません。動画や評価履歴は消しません。
+
+2 ローカルを更新
+開発サーバーを停止します。ps1をダウンロードフォルダに保存し、PowerShellで実行します。
+
+powershell -ExecutionPolicy Bypass -File "$env:USERPROFILE\Downloads\xclip-unified-authors-local-20261011.ps1" -Project "C:\Projects\xcliprank"
+
+成功表示：XCLIP_UNIFIED_AUTHORS_LOCAL_INSTALLED
+再適用済み：XCLIP_UNIFIED_AUTHORS_LOCAL_ALREADY_INSTALLED
+BACKUP= の保存先を控えてください。登録データ・環境設定は保持します。Gitの切替・コミット・pushは行いません。
+
+Set-Location C:\Projects\xcliprank
+npm run dev -- --hostname 127.0.0.1 --port 3004
+
+3 管理画面
+http://localhost:3004/learning-tools#operations 管理トップに2つの画面を追加します。
+http://localhost:3004/curated-manager 通常登録・FxTwitter登録の共通管理、停止/再開/削除。
+http://localhost:3004/availability-monitor 再生不可動画の監視結果。
+http://localhost:3004/fxtwitter-authors 共通の追加・一括取得。FxTwitterを使用。
+http://localhost:3004/fxtwitter-monitor 新着動画の取得巡回。X APIを使用。
+旧 /curated-authors は共通管理へ案内します。
+
+共通管理の「本番の一覧を更新」で以前の投稿者とFxTwitterで追加した投稿者を確認してください。
+必要なら「既存投稿者を共通管理へ移行」で、移行を再試行できます。取得済み動画は取り直しません。
+本番にまだ同期していないローカル登録は追加画面から同期し、途中の初回取得は「続きを再開」してください。
+共通登録により新着・ランキングの投稿者条件を満たします。元のX投稿日時、Tier、手動指定、安全除外、表示枠とキャッシュは従来どおりです。追加日時を新着日時にせず、過去動画が必ず上位に来る仕様ではありません。
+
+4 投稿者の削除
+共通管理で「投稿者と動画を掲載から削除」を押し、確認します。
+投稿者の巡回を止め、その投稿者の動画をサイトから除外します。DB行・評価履歴は復旧用に保持します。
+削除記録を先に永続化するため、後続のDB更新に失敗しても自動再掲載を防ぎます。「削除済み」一覧で再試行できます。
+古い一覧の同期・再開・自動監視による復旧では復活しません。削除取消しの画面はこの版には含めていません。
+
+5 再生不可動画の監視
+既存の本番監視結果を読みます。最終確認、確定除外、再確認待ち、凍結、手動削除、休止・次回最短時刻を確認できます。
+詳細は最新最大500件ずつです。全実行ログではなく、最新状態の確認画面です。
+画面の更新ではX API/FxTwitterへアクセスせず、巡回も強制実行しません。記録なしの場合は本番の監視Cron実行ログを確認してください。
+新着取得の巡回記録とは別画面です。
+
+6 ローカルコードの復元
+必要な場合、インストール時のBACKUP=保存先を指定します。
+
+powershell -ExecutionPolicy Bypass -File "$env:USERPROFILE\Downloads\xclip-unified-authors-local-20261011.ps1" -Project "C:\Projects\xcliprank" -RestoreBackup "インストール時に表示されたBACKUPの絶対パス"
+
+更新後に対象ファイルを編集した場合は、上書きを拒否します。
+コード復元では本番DBの共通移行や手動削除を取り消しません。
+
+同梱：本番sh、ローカルps1、版別ソースZIP、以前の会話を含む累積更新履歴、照合台帳、SHA-256。
+ソースZIPはアプリ全体ではありません。配布インストーラーを使用してください。

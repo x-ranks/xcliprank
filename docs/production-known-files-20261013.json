@@ -1,0 +1,418 @@
+{
+  "scope": "known update targets only, not full production",
+  "files": [
+    {
+      "path": "lib/free-curated-metrics.ts",
+      "sha256": "54d94177f281bdc4f5676128581a116f0eb52fe3b8758c15cce98ae51a2ceb29",
+      "bytes": 2336,
+      "sourceArtifact": "xclip-fx-context-source-20261013.zip",
+      "sourceArtifactSha256": "b15d77ce07248d6260e08011666304c7826c42b277c0a2546b3edede69d6070e"
+    },
+    {
+      "path": "lib/free-curated-server-store.ts",
+      "sha256": "66c4649ea7eba584a54199ef9bceb69e52c93619cae56394bcd51b0339840696",
+      "bytes": 4612,
+      "sourceArtifact": "xclip-fx-context-source-20261013.zip",
+      "sourceArtifactSha256": "b15d77ce07248d6260e08011666304c7826c42b277c0a2546b3edede69d6070e"
+    },
+    {
+      "path": "lib/free-curated-scan.ts",
+      "sha256": "53dbf8d867f93da2276af3dc33cda7a615f15bbba2dfb1ded1f1c07b6d4c57e3",
+      "bytes": 2952,
+      "sourceArtifact": "xclip-fx-context-source-20261013.zip",
+      "sourceArtifactSha256": "b15d77ce07248d6260e08011666304c7826c42b277c0a2546b3edede69d6070e"
+    },
+    {
+      "path": "lib/free-curated-dashboard.ts",
+      "sha256": "b85501b83ed96cdb61c2c69765ac6ee9908f5bf87629a187c3e7bb98aacefe36",
+      "bytes": 3725,
+      "sourceArtifact": "xclip-fx-context-source-20261013.zip",
+      "sourceArtifactSha256": "b15d77ce07248d6260e08011666304c7826c42b277c0a2546b3edede69d6070e"
+    },
+    {
+      "path": "lib/free-curated-sync.ts",
+      "sha256": "bde1aacd03fe7c741e8202ed7f0d66ccf7a7b075caf46aa80da0c21202c0b357",
+      "bytes": 8982,
+      "sourceArtifact": "xclip-fx-context-source-20261013.zip",
+      "sourceArtifactSha256": "b15d77ce07248d6260e08011666304c7826c42b277c0a2546b3edede69d6070e"
+    },
+    {
+      "path": "scripts/test-free-curated-dashboard.cjs",
+      "sha256": "a6a96e9baef03c55c16a417e6a5fd9a36a79aa159b9927cf3bde3f54bb9a6bdb",
+      "bytes": 7362,
+      "sourceArtifact": "xclip-fx-context-source-20261013.zip",
+      "sourceArtifactSha256": "b15d77ce07248d6260e08011666304c7826c42b277c0a2546b3edede69d6070e"
+    },
+    {
+      "path": "lib/post-status.ts",
+      "sha256": "cefbc7955dfd9101edad3f8a7e1f5cfbbb09301350319c4f7717f9cafba43c81",
+      "bytes": 3014,
+      "sourceArtifact": "xclip-fx-context-source-20261013.zip",
+      "sourceArtifactSha256": "b15d77ce07248d6260e08011666304c7826c42b277c0a2546b3edede69d6070e"
+    },
+    {
+      "path": "scripts/test-free-curated-production.cjs",
+      "sha256": "31f8317c1fbf68e184dfd14ca939ce3eeb59c5a8ecc454c99d6c32b4bd7fa75b",
+      "bytes": 9682,
+      "sourceArtifact": "xclip-fx-context-source-20261013.zip",
+      "sourceArtifactSha256": "b15d77ce07248d6260e08011666304c7826c42b277c0a2546b3edede69d6070e"
+    },
+    {
+      "path": "lib/availability-scan.ts",
+      "sha256": "6cae8e8564f67bf81fa37c40c423118704370f93f6990db41c9db1a73243ab22",
+      "bytes": 6798,
+      "sourceArtifact": "xclip-fx-context-source-20261013.zip",
+      "sourceArtifactSha256": "b15d77ce07248d6260e08011666304c7826c42b277c0a2546b3edede69d6070e"
+    },
+    {
+      "path": "scripts/test-availability-curated-regression.cjs",
+      "sha256": "31fe3b6c037a14a2d0f5da10e2b1da868e5e58776a28219a195735dd8f0016c0",
+      "bytes": 5939,
+      "sourceArtifact": "xclip-fx-context-source-20261013.zip",
+      "sourceArtifactSha256": "b15d77ce07248d6260e08011666304c7826c42b277c0a2546b3edede69d6070e"
+    },
+    {
+      "path": "scripts/test-availability-monitor.cjs",
+      "sha256": "d761ea9a3d93bcf3aebe52b6d008a51ce910b4acdf6543580ae331e7cd588719",
+      "bytes": 8343,
+      "sourceArtifact": "xclip-fx-context-source-20261013.zip",
+      "sourceArtifactSha256": "b15d77ce07248d6260e08011666304c7826c42b277c0a2546b3edede69d6070e"
+    },
+    {
+      "path": "scripts/test-free-curated-cursors.cjs",
+      "sha256": "1e0c2315e28bf7d2ee7455987e2bae4d9692beed5ca2eb7b8415d952e040eaba",
+      "bytes": 1270,
+      "sourceArtifact": "xclip-fx-context-source-20261013.zip",
+      "sourceArtifactSha256": "b15d77ce07248d6260e08011666304c7826c42b277c0a2546b3edede69d6070e"
+    },
+    {
+      "path": "lib/fxtwitter-curated.ts",
+      "sha256": "112e8bead9108d0d90566cb274f415862943e191c1caa745b547b7a3463f84df",
+      "bytes": 15551,
+      "sourceArtifact": "xclip-fx-context-source-20261013.zip",
+      "sourceArtifactSha256": "b15d77ce07248d6260e08011666304c7826c42b277c0a2546b3edede69d6070e"
+    },
+    {
+      "path": "lib/x-curated-state.ts",
+      "sha256": "a44eb46949f1f21f83d63847b04046a3a76a99c34ac6e065ffca9e3e95e1ad74",
+      "bytes": 2947,
+      "sourceArtifact": "xclip-fx-context-source-20261013.zip",
+      "sourceArtifactSha256": "b15d77ce07248d6260e08011666304c7826c42b277c0a2546b3edede69d6070e"
+    },
+    {
+      "path": "lib/x-curated-search.ts",
+      "sha256": "90d41fadb981e46ea33bf7abee1aacc4c5422dadae9ac9f28055956d32465daf",
+      "bytes": 6627,
+      "sourceArtifact": "xclip-fx-context-source-20261013.zip",
+      "sourceArtifactSha256": "b15d77ce07248d6260e08011666304c7826c42b277c0a2546b3edede69d6070e"
+    },
+    {
+      "path": "lib/x-curated-scan.ts",
+      "sha256": "6e9d4e962810cb3a7fecf66bd1aa2ef5e4a9a9edec52ed6625aa8e1f6a8bbaca",
+      "bytes": 8418,
+      "sourceArtifact": "xclip-fx-context-source-20261013.zip",
+      "sourceArtifactSha256": "b15d77ce07248d6260e08011666304c7826c42b277c0a2546b3edede69d6070e"
+    },
+    {
+      "path": "scripts/test-x-curated-hybrid.cjs",
+      "sha256": "a073190a11e4704fc85299cfcaf8c3f1cdcb20c44343a5e260467a433d57831d",
+      "bytes": 11538,
+      "sourceArtifact": "xclip-fx-context-source-20261013.zip",
+      "sourceArtifactSha256": "b15d77ce07248d6260e08011666304c7826c42b277c0a2546b3edede69d6070e"
+    },
+    {
+      "path": "app/api/free-curated-sync/route.ts",
+      "sha256": "9297554c9d9b5a14039eb4e7c8ea1be40d91546afc2b38e14a67719f1a1e7192",
+      "bytes": 2476,
+      "sourceArtifact": "xclip-fx-context-source-20261013.zip",
+      "sourceArtifactSha256": "b15d77ce07248d6260e08011666304c7826c42b277c0a2546b3edede69d6070e"
+    },
+    {
+      "path": "app/api/collect-curated-batch/route.ts",
+      "sha256": "cc4bf7d344933c04f017bcf8ba47eae152e5bc7563d34f486e1b566035ce2450",
+      "bytes": 5702,
+      "sourceArtifact": "xclip-fx-context-source-20261013.zip",
+      "sourceArtifactSha256": "b15d77ce07248d6260e08011666304c7826c42b277c0a2546b3edede69d6070e"
+    },
+    {
+      "path": "scripts/scan-free-curated.cjs",
+      "sha256": "00e9c212ab5059dd95f39988289c1fd9c4e2d3c38f4b189ab9f99a44090ede85",
+      "bytes": 1299,
+      "sourceArtifact": "xclip-fx-context-source-20261013.zip",
+      "sourceArtifactSha256": "b15d77ce07248d6260e08011666304c7826c42b277c0a2546b3edede69d6070e"
+    },
+    {
+      "path": "lib/curated-common.ts",
+      "sha256": "13fc29b481944ba14bf37cd50514569a5d2d5b21d2ac2053b841cca20ab8963a",
+      "bytes": 6155,
+      "sourceArtifact": "xclip-fx-context-source-20261013.zip",
+      "sourceArtifactSha256": "b15d77ce07248d6260e08011666304c7826c42b277c0a2546b3edede69d6070e"
+    },
+    {
+      "path": "lib/curated-removals.ts",
+      "sha256": "146091b0fbb71f74d81315253637245de5279e593a0fe661f18c395929774959",
+      "bytes": 1531,
+      "sourceArtifact": "xclip-fx-context-source-20261013.zip",
+      "sourceArtifactSha256": "b15d77ce07248d6260e08011666304c7826c42b277c0a2546b3edede69d6070e"
+    },
+    {
+      "path": "lib/availability-dashboard.ts",
+      "sha256": "d8718daf1b48b094b924ea1176509164e1f77fe3057ce5a720828b8632f0a37e",
+      "bytes": 1402,
+      "sourceArtifact": "xclip-fx-context-source-20261013.zip",
+      "sourceArtifactSha256": "b15d77ce07248d6260e08011666304c7826c42b277c0a2546b3edede69d6070e"
+    },
+    {
+      "path": "lib/post-status-store.ts",
+      "sha256": "78b6c548039702d14fccf898493c8f8c2c5340739662f214187dbc8473542176",
+      "bytes": 3967,
+      "sourceArtifact": "xclip-fx-context-source-20261013.zip",
+      "sourceArtifactSha256": "b15d77ce07248d6260e08011666304c7826c42b277c0a2546b3edede69d6070e"
+    },
+    {
+      "path": "lib/author-status-scan.ts",
+      "sha256": "38dafa495a2c7f13a12fbcff08657cf73643a568f028da780a5b7ad6893450bc",
+      "bytes": 3402,
+      "sourceArtifact": "xclip-fx-context-source-20261013.zip",
+      "sourceArtifactSha256": "b15d77ce07248d6260e08011666304c7826c42b277c0a2546b3edede69d6070e"
+    },
+    {
+      "path": "lib/free-curated-publish.ts",
+      "sha256": "37a569784e25d1db8dc0cba0fb0838322178a69514d83cd4452c710d1b6244b8",
+      "bytes": 8096,
+      "sourceArtifact": "xclip-fx-context-source-20261013.zip",
+      "sourceArtifactSha256": "b15d77ce07248d6260e08011666304c7826c42b277c0a2546b3edede69d6070e"
+    },
+    {
+      "path": "scripts/test-curated-common.cjs",
+      "sha256": "8ae83e059e4d863d77eec2601288b2e29cdd6073d79df3419ee7375e9117e1d7",
+      "bytes": 10032,
+      "sourceArtifact": "xclip-fx-context-source-20261013.zip",
+      "sourceArtifactSha256": "b15d77ce07248d6260e08011666304c7826c42b277c0a2546b3edede69d6070e"
+    },
+    {
+      "path": "scripts/test-author-status.cjs",
+      "sha256": "915c4b5babc1dccc3382499c0579e7c5b0a438d27c9c40b4bd53f7dcf965a73a",
+      "bytes": 5192,
+      "sourceArtifact": "xclip-fx-context-source-20261013.zip",
+      "sourceArtifactSha256": "b15d77ce07248d6260e08011666304c7826c42b277c0a2546b3edede69d6070e"
+    },
+    {
+      "path": "scripts/migrate-curated-common.cjs",
+      "sha256": "a5ec5cb29d43904fb39e102cf33680e06921a672887a3be10a0a22b7eed5a0b2",
+      "bytes": 758,
+      "sourceArtifact": "xclip-fx-context-source-20261013.zip",
+      "sourceArtifactSha256": "b15d77ce07248d6260e08011666304c7826c42b277c0a2546b3edede69d6070e"
+    },
+    {
+      "path": "docs/releases/XCLIP_UNIFIED_AUTHORS_20261011.md",
+      "sha256": "7c222a6b2f6d5cd777f8523b9c3e0b7d9d489d059433c44760828b001f0c6d5d",
+      "bytes": 28496,
+      "sourceArtifact": "xclip-unified-authors-source-20261011.zip",
+      "sourceArtifactSha256": "db23be95312024cdb716eed0d5ac530179e6d2dc7b399fc7e2410e62b2327b3e"
+    },
+    {
+      "path": "lib/availability-policy.ts",
+      "sha256": "fc4add1950a5c8207131e3f266e8b1c68827d254b4509b8903acaf53ae1b5fbd",
+      "bytes": 2890,
+      "sourceArtifact": "xclip-fx-context-source-20261013.zip",
+      "sourceArtifactSha256": "b15d77ce07248d6260e08011666304c7826c42b277c0a2546b3edede69d6070e"
+    },
+    {
+      "path": "scripts/test-patrol-continuation.cjs",
+      "sha256": "153c1f3bbd977aa88d58dca3f99da526008cdd04b0696876e540555257d92808",
+      "bytes": 6438,
+      "sourceArtifact": "xclip-fx-context-source-20261013.zip",
+      "sourceArtifactSha256": "b15d77ce07248d6260e08011666304c7826c42b277c0a2546b3edede69d6070e"
+    },
+    {
+      "path": "scripts/test-monitor-jitter.cjs",
+      "sha256": "74a56a5ad7761260b95d431e89b5b8a7565d1428c193c11e5849d9d17aea4028",
+      "bytes": 899,
+      "sourceArtifact": "xclip-fx-context-source-20261013.zip",
+      "sourceArtifactSha256": "b15d77ce07248d6260e08011666304c7826c42b277c0a2546b3edede69d6070e"
+    },
+    {
+      "path": "scripts/test-monitor-state-isolation.cjs",
+      "sha256": "8b88c817f6ad86767aa0c0980d0f75efba6012b9aaa0088a42210516b29376f9",
+      "bytes": 1424,
+      "sourceArtifact": "xclip-fx-context-source-20261013.zip",
+      "sourceArtifactSha256": "b15d77ce07248d6260e08011666304c7826c42b277c0a2546b3edede69d6070e"
+    },
+    {
+      "path": "docs/releases/XCLIP_PATROL_CONTINUE_JITTER_20261012_V3.md",
+      "sha256": "f783427d5310b36f614b2e49d5fbba0200394f87842337dad4ec439add584f21",
+      "bytes": 69551,
+      "sourceArtifact": "xclip-patrol-continue-jitter-source-20261012-v3.zip",
+      "sourceArtifactSha256": "d0c5eab0ed7a6d6a1e8d4dd5543fe498e6d049101a71e06ec7b773a39dfb528c"
+    },
+    {
+      "path": "lib/fx-curated-state.ts",
+      "sha256": "a969d227e69596700a5b9660f5a7b38c32fde575593ae2c07efe74e9c7f95d00",
+      "bytes": 2793,
+      "sourceArtifact": "xclip-fx-context-source-20261013.zip",
+      "sourceArtifactSha256": "b15d77ce07248d6260e08011666304c7826c42b277c0a2546b3edede69d6070e"
+    },
+    {
+      "path": "lib/fx-curated-scan.ts",
+      "sha256": "bcce2bc98243540a67bde97972af7f880a299d03122b8ac9359f796741f4305e",
+      "bytes": 10786,
+      "sourceArtifact": "xclip-fx-context-source-20261013.zip",
+      "sourceArtifactSha256": "b15d77ce07248d6260e08011666304c7826c42b277c0a2546b3edede69d6070e"
+    },
+    {
+      "path": "scripts/test-fx-curated-patrol.cjs",
+      "sha256": "63a6a541e7e875cfcfbff17a0094033ae12f872a02d53edcc54ede40070fd5f2",
+      "bytes": 19301,
+      "sourceArtifact": "xclip-fx-context-source-20261013.zip",
+      "sourceArtifactSha256": "b15d77ce07248d6260e08011666304c7826c42b277c0a2546b3edede69d6070e"
+    },
+    {
+      "path": "docs/releases/XCLIP_FX_TEMPORARY_PATROL_20261012.md",
+      "sha256": "641ac7eb4d48ee2d71c93e0a589b7816aa5a35e2c676647cc40c8f17291f8843",
+      "bytes": 91899,
+      "sourceArtifact": "xclip-fx-context-source-20261013.zip",
+      "sourceArtifactSha256": "b15d77ce07248d6260e08011666304c7826c42b277c0a2546b3edede69d6070e"
+    },
+    {
+      "path": "scripts/test-free-curated-timeline.cjs",
+      "sha256": "c446448b8229a450c8ba0d1473dfef353a482712a71b4be7452809b3c2cf5ba5",
+      "bytes": 5703,
+      "sourceArtifact": "xclip-fx-context-source-20261013.zip",
+      "sourceArtifactSha256": "b15d77ce07248d6260e08011666304c7826c42b277c0a2546b3edede69d6070e"
+    },
+    {
+      "path": "docs/releases/XCLIP_FX_TIMELINE_FIX_20261013.md",
+      "sha256": "08f79a91ac8849c30df8b6d5456fa46f1791cb1ca01afaa9d9ce5c4f1b14170e",
+      "bytes": 104262,
+      "sourceArtifact": "xclip-fx-context-source-20261013.zip",
+      "sourceArtifactSha256": "b15d77ce07248d6260e08011666304c7826c42b277c0a2546b3edede69d6070e"
+    },
+    {
+      "path": "docs/releases/XCLIP_FX_CONTEXT_PUBLICATION_20261013.md",
+      "sha256": "e3a9f69f5bf1cfe974a7538b49641731e3afbaaf632e8365dc646ca743160f04",
+      "bytes": 122142,
+      "sourceArtifact": "xclip-fx-context-source-20261013.zip",
+      "sourceArtifactSha256": "b15d77ce07248d6260e08011666304c7826c42b277c0a2546b3edede69d6070e"
+    },
+    {
+      "path": "lib/ranking-pagination.ts",
+      "sha256": "e0e1660b972ab262581ad687656eb8defe52a898f3b9c5987b7f569d00a0df9b",
+      "bytes": 906,
+      "sourceArtifact": "xclip-newest500-source-20261013-v2.zip",
+      "sourceArtifactSha256": "c626bee9d5c1c4ec7d2662c1911d51d238dff4f658ee5411c8954d7f91542577"
+    },
+    {
+      "path": "lib/initial-ranking.ts",
+      "sha256": "7e13e0a74fa0dcab2a4bece4eaf694e65925742e541d81e8826f700b13c08584",
+      "bytes": 1233,
+      "sourceArtifact": "xclip-newest500-source-20261013-v2.zip",
+      "sourceArtifactSha256": "c626bee9d5c1c4ec7d2662c1911d51d238dff4f658ee5411c8954d7f91542577"
+    },
+    {
+      "path": "lib/seo.ts",
+      "sha256": "cea942eecabda17a886e646d8833dccf9f1632c86721939806b6ff254e50ba15",
+      "bytes": 1197,
+      "sourceArtifact": "xclip-newest500-source-20261013-v2.zip",
+      "sourceArtifactSha256": "c626bee9d5c1c4ec7d2662c1911d51d238dff4f658ee5411c8954d7f91542577"
+    },
+    {
+      "path": "app/page.tsx",
+      "sha256": "397e19b4baed6b35d86c397a2dc7667b5358b119e405895fcee3bb4a4af85012",
+      "bytes": 4755,
+      "sourceArtifact": "xclip-newest500-source-20261013-v2.zip",
+      "sourceArtifactSha256": "c626bee9d5c1c4ec7d2662c1911d51d238dff4f658ee5411c8954d7f91542577"
+    },
+    {
+      "path": "app/components/RankingClient.tsx",
+      "sha256": "e0d5146ad8308b696fafdbcd2c7d9bcb190da24836770156b601136c8a97e366",
+      "bytes": 14369,
+      "sourceArtifact": "xclip-newest500-source-20261013-v2.zip",
+      "sourceArtifactSha256": "c626bee9d5c1c4ec7d2662c1911d51d238dff4f658ee5411c8954d7f91542577"
+    },
+    {
+      "path": "app/components/DedicatedRankingPage.tsx",
+      "sha256": "b77112dc1ed36b0606330c949166894b378fb972f14b4efb45a38b280d99b94c",
+      "bytes": 3461,
+      "sourceArtifact": "xclip-newest500-source-20261013-v2.zip",
+      "sourceArtifactSha256": "c626bee9d5c1c4ec7d2662c1911d51d238dff4f658ee5411c8954d7f91542577"
+    },
+    {
+      "path": "app/ranking/daily/page.tsx",
+      "sha256": "6a1261f28a7267b8476560d2d08136e1d6f5caad7ee8e87afd2707a7c1ddfac7",
+      "bytes": 1853,
+      "sourceArtifact": "xclip-newest500-source-20261013-v2.zip",
+      "sourceArtifactSha256": "c626bee9d5c1c4ec7d2662c1911d51d238dff4f658ee5411c8954d7f91542577"
+    },
+    {
+      "path": "app/ranking/weekly/page.tsx",
+      "sha256": "aa85e4a5507c3db09aa02f5f9395205c17a2ac922c7c6d3cc34ebb0c5fd22a58",
+      "bytes": 1752,
+      "sourceArtifact": "xclip-newest500-source-20261013-v2.zip",
+      "sourceArtifactSha256": "c626bee9d5c1c4ec7d2662c1911d51d238dff4f658ee5411c8954d7f91542577"
+    },
+    {
+      "path": "app/globals.css",
+      "sha256": "5b3f3b71f301557899f981ee3b0b0440d46d55734d7c2832502ae7f02b2203cd",
+      "bytes": 33195,
+      "sourceArtifact": "xclip-newest500-source-20261013-v2.zip",
+      "sourceArtifactSha256": "c626bee9d5c1c4ec7d2662c1911d51d238dff4f658ee5411c8954d7f91542577"
+    },
+    {
+      "path": "app/api/rankings/route.ts",
+      "sha256": "1c744b5358dd3abd9508c58884f1fd727cc11b9586351b53a14b9f5e3b659114",
+      "bytes": 33229,
+      "sourceArtifact": "xclip-newest500-source-20261013-v2.zip",
+      "sourceArtifactSha256": "c626bee9d5c1c4ec7d2662c1911d51d238dff4f658ee5411c8954d7f91542577"
+    },
+    {
+      "path": "lib/newest-feed.ts",
+      "sha256": "906cf083902725cf2f932456a5f1e97bd98ade43a347c43e6761899cc462e195",
+      "bytes": 3758,
+      "sourceArtifact": "xclip-newest500-source-20261013-v2.zip",
+      "sourceArtifactSha256": "c626bee9d5c1c4ec7d2662c1911d51d238dff4f658ee5411c8954d7f91542577"
+    },
+    {
+      "path": "lib/ranking-editions.ts",
+      "sha256": "7902790835a68930000133c838075e81a88d3726b41fd9a2ed9c1cf3eaa3a295",
+      "bytes": 5915,
+      "sourceArtifact": "xclip-newest500-source-20261013-v2.zip",
+      "sourceArtifactSha256": "c626bee9d5c1c4ec7d2662c1911d51d238dff4f658ee5411c8954d7f91542577"
+    },
+    {
+      "path": "scripts/test-newest500.cjs",
+      "sha256": "79d6b8ef807e6f903d3057870fd064c0e32a39aae77c469d41d62951e5d569ba",
+      "bytes": 8732,
+      "sourceArtifact": "xclip-newest500-source-20261013-v2.zip",
+      "sourceArtifactSha256": "c626bee9d5c1c4ec7d2662c1911d51d238dff4f658ee5411c8954d7f91542577"
+    },
+    {
+      "path": "scripts/test-newest500-pages.cjs",
+      "sha256": "a683cf54e116275dffbcce6a7be9664249cd4e5b3ca36bf7d398f89f7033ca69",
+      "bytes": 5835,
+      "sourceArtifact": "xclip-newest500-source-20261013-v2.zip",
+      "sourceArtifactSha256": "c626bee9d5c1c4ec7d2662c1911d51d238dff4f658ee5411c8954d7f91542577"
+    },
+    {
+      "path": "scripts/test-ranking-liquidity-route.cjs",
+      "sha256": "546756c9638647e914c6b2213df6beba004f05bca0d40b8df13b2a5b30c7509f",
+      "bytes": 7392,
+      "sourceArtifact": "xclip-newest500-source-20261013-v2.zip",
+      "sourceArtifactSha256": "c626bee9d5c1c4ec7d2662c1911d51d238dff4f658ee5411c8954d7f91542577"
+    },
+    {
+      "path": "docs/releases/XCLIP_NEWEST500_V2_20261013.md",
+      "sha256": "85ac42c017e76dae0681f9b918276cd3175a448777732f348a831ef9d46047f4",
+      "bytes": 138612,
+      "sourceArtifact": "xclip-newest500-source-20261013-v2.zip",
+      "sourceArtifactSha256": "c626bee9d5c1c4ec7d2662c1911d51d238dff4f658ee5411c8954d7f91542577"
+    },
+    {
+      "path": "docs/releases/xclip-newest500-v2-20261013.json",
+      "sha256": "201bda9dee67469de4e28d154f68546d1a0852ece2e58f1881e3eb7175984a3e",
+      "bytes": 272282,
+      "sourceArtifact": "xclip-newest500-source-20261013-v2.zip",
+      "sourceArtifactSha256": "c626bee9d5c1c4ec7d2662c1911d51d238dff4f658ee5411c8954d7f91542577"
+    }
+  ]
+}

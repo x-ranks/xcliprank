@@ -1,0 +1,11 @@
+const fs=require('fs'),ts=require('typescript'),assert=require('assert/strict');
+require.extensions['.ts']=(m,f)=>m._compile(ts.transpileModule(fs.readFileSync(f,'utf8'),{compilerOptions:{module:ts.ModuleKind.CommonJS,target:ts.ScriptTarget.ES2022}}).outputText,f);
+const {fetchFreeMediaPage}=require('../lib/fxtwitter-curated.ts');
+(async()=>{const author={id:'123',username:'test',name:'Test',expectedTier:'S'},feeds=[];
+const fetcher=async url=>{const u=new URL(url);feeds.push([u.pathname,u.searchParams.get('cursor')]);return Response.json({code:200,results:[],cursor:{bottom:'next'}})};
+const first=await fetchFreeMediaPage(author,20,null,fetcher);assert.equal(first.nextCursor,'xclip-statuses-v1:next');
+await fetchFreeMediaPage(author,20,first.nextCursor,fetcher);await fetchFreeMediaPage(author,20,'legacy',fetcher);
+assert.deepEqual(feeds,[['/2/profile/id%3A123/statuses',null],['/2/profile/id%3A123/statuses','next'],['/2/profile/id%3A123/media','legacy']]);
+await assert.rejects(()=>fetchFreeMediaPage(author,20,'xclip-statuses-v1:',fetcher));
+console.log('PASS CURSORS: statuses for fresh pages; feed-tagged cursor persisted; legacy media pagination retained; invalid cursor refused. Network mocked.');
+})().catch(e=>{console.error(e);process.exitCode=1});

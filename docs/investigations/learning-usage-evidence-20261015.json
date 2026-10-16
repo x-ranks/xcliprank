@@ -1,0 +1,115 @@
+{
+  "dateJst": "2026-10-15",
+  "userReportedMultipleLongLivedLocalTabs": true,
+  "logSourceCountsUserReported": {
+    "edge_logs": 130867,
+    "postgres_logs": 577,
+    "postgrest_logs": 209,
+    "pgbouncer_logs": 25,
+    "storage_logs": 10,
+    "realtime_logs": 5
+  },
+  "topApiCountsUserReported": [
+    {
+      "target": "xclip_tier_state",
+      "method": "GET",
+      "status": 200,
+      "requests": 101615
+    },
+    {
+      "target": "posts",
+      "method": "GET",
+      "status": 200,
+      "requests": 10441
+    },
+    {
+      "target": "other_database_api",
+      "method": "DELETE",
+      "status": 204,
+      "requests": 8428
+    },
+    {
+      "target": "other_database_api",
+      "method": "POST",
+      "status": 200,
+      "requests": 8410
+    },
+    {
+      "target": "authors",
+      "method": "GET",
+      "status": 200,
+      "requests": 493
+    },
+    {
+      "target": "posts",
+      "method": "HEAD",
+      "status": 200,
+      "requests": 267
+    },
+    {
+      "target": "engagement_events",
+      "method": "POST",
+      "status": 201,
+      "requests": 54
+    }
+  ],
+  "logLimitations": "Counts are not billed bytes. Queries were run at different times; other_database_api is not yet an exact table/function classification.",
+  "productionSourceUserReported": {
+    "runtime": "/home/rbxfxmfd/xclip-video-card-20261004.DJKKID/runtime",
+    "source": "/home/rbxfxmfd/xclip-ranking-updates-v2-20261014.aj9FwJ/source",
+    "buildId": "H6KQokOwZZcvhnEQnY251",
+    "buildMatches": true,
+    "defaultEditionFilesWrittenLast24h": 46
+  },
+  "stateSizeReadOnly": {
+    "diagnostic": "learning-state-size-20261015",
+    "requests": 1,
+    "databaseWrites": 0,
+    "providerRequests": 0,
+    "modelOrTeacherDataSaved": false,
+    "httpBodyBytes": 111761,
+    "payloadBytesByKey": {
+      "video-preparation": 125,
+      "new-video-evaluation": 166,
+      "worker-status": 19014,
+      "active-model": 80706,
+      "config": 121
+    },
+    "fullStatusPayloadBytesEstimate": 180838,
+    "basis": "Current in-memory sample. Full GET reads active-model twice; JSON/HTTP overhead and compression excluded. Not billing bytes.",
+    "checkedAtJst": "2026-10-15T21:16:28.008607+09:00"
+  },
+  "projectionReadOnly": {
+    "diagnostic": "learning-status-projection-20261015",
+    "databaseWrites": 0,
+    "providerRequests": 0,
+    "modelOrTeacherDataSaved": false,
+    "requests": 2,
+    "projections": [
+      {
+        "fields": [
+          "featureSpec",
+          "revision",
+          "samples",
+          "trainedAt",
+          "validation"
+        ],
+        "httpBodyBytes": 1815,
+        "rows": 1,
+        "weightsPresent": false,
+        "passed": true
+      },
+      {
+        "fields": [
+          "adoption",
+          "mode"
+        ],
+        "httpBodyBytes": 295,
+        "rows": 1,
+        "weightsPresent": false,
+        "passed": true
+      }
+    ],
+    "checkedAtJst": "2026-10-15T21:20:08.364207+09:00"
+  }
+}

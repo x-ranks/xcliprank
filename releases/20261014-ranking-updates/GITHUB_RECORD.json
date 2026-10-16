@@ -1,0 +1,14 @@
+{
+  "repository": "x-ranks/xcliprank",
+  "branch": "archive/operations-20261013",
+  "codeAndArtifactsCommit": "83d5c0cc31b54ce9a9efa78b9d26235ba41b3afb",
+  "remoteHeadVerified": true,
+  "mainVerifiedUnchanged": "2bf1a1fca840fc4f3249e916fb1f6f92bbb13200",
+  "gitRecorded": true,
+  "githubPushed": true,
+  "productionApplied": false,
+  "actualLocalApplied": false,
+  "scope": "ranking-update display candidate; immutable prior releases retained; no deployment",
+  "packageGitFlagsMeaning": "creation-time flags; this receipt records later completed GitHub saving",
+  "checkedAtUtc": "2026-10-14T12:53:32.598899+00:00"
+}

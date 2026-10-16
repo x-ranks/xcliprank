@@ -1,0 +1,10 @@
+{
+  "mode": "types",
+  "passed": [
+    "types"
+  ],
+  "skipped": [],
+  "failures": [],
+  "network": "denied",
+  "realState": "denied"
+}

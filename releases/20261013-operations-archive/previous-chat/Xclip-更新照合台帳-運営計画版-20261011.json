@@ -1,0 +1,2639 @@
+{
+  "schemaVersion": 2,
+  "generatedAt": "2026-10-11T22:46:47.053306+09:00",
+  "purpose": "運営計画と正常動作確認の追記。コード変更なし。",
+  "operationConfirmation": {
+    "source": "current conversation: human user",
+    "statement": "OK!正常動作を確認できました。",
+    "status": "user-reported normal operation",
+    "limits": "個別全試験ログ、実施時刻、現在の本番版ID、後続Git記録は今回未取得。"
+  },
+  "priorManifest": {
+    "file": "Xclip-更新照合台帳-共通管理-20261011.json",
+    "sha256": "a803ab96f3bc4206f95f1eab64b566ad080f147c1e0990047a2a3df9aa151476",
+    "snapshot": {
+      "schemaVersion": 1,
+      "generatedAtJst": "2026-10-11T21:00:35.201669+09:00",
+      "historyFile": "docs/XCLIP_UPDATE_HISTORY.md",
+      "project": "C:\\Projects\\xcliprank",
+      "sourceControl": {
+        "head": "fd0aa62f81849d5bfde16f6fb5eeeb5efe1465bc",
+        "branch": "fix/download-menu-20261009231119075",
+        "workingTreeStatus": [
+          "M .gitignore",
+          " M app/components/DedicatedRankingPage.tsx",
+          " M app/components/RankingClient.tsx",
+          " M app/globals.css",
+          " M app/learning-tools/page.tsx",
+          " M app/page.tsx",
+          " M app/reels/ReelsFeed.tsx",
+          " M app/removal-request/page.tsx",
+          " M app/review/page.tsx",
+          " M lib/curated-collector.ts",
+          " M lib/tier-learning.ts",
+          " M middleware.ts",
+          " M next.config.ts",
+          "?? app/api/fxtwitter-authors/",
+          "?? app/api/tier-personal-model/",
+          "?? app/api/tier-preview-playback/",
+          "?? app/api/tier-reevaluation/",
+          "?? app/api/tier-teacher-analysis/",
+          "?? app/api/tier-video-preview/",
+          "?? app/api/video-download/",
+          "?? app/api/video-playback-url/",
+          "?? app/api/video-resolve/",
+          "?? app/components/DirectPlaybackVideo.tsx",
+          "?? app/components/PersonalLearningWorker.tsx",
+          "?? app/components/TierPreviewVideo.tsx",
+          "?? app/components/VideoDownloadButton.tsx",
+          "?? app/download-policy/",
+          "?? app/download/",
+          "?? app/fxtwitter-authors/",
+          "?? app/fxtwitter-monitor/",
+          "?? app/tier-personal-model/",
+          "?? app/tier-reevaluation/",
+          "?? app/tier-teacher-analysis/",
+          "?? app/tier-video-preview/",
+          "?? docs/20261006-parallel-roadmap.md",
+          "?? docs/tier-compatible-playback-20261008.md",
+          "?? docs/tier-four-frames-20261007.md",
+          "?? docs/tier-high-recall-20261008.md",
+          "?? docs/tier-ordinal-adjustment-20261008.md",
+          "?? docs/tier-personal-model-20261006.md",
+          "?? docs/tier-teacher-improvements-20261008.md",
+          "?? docs/tier-video-preview-20261008.md",
+          "?? lib/browser-direct-download.ts",
+          "?? lib/browser-direct-playback.ts",
+          "?? lib/browser-playback-recovery.ts",
+          "?? lib/browser-stream-playback.ts",
+          "?? lib/download-free.ts",
+          "?? lib/download-url-store.ts",
+          "?? lib/download-url.ts",
+          "?? lib/free-curated-client.ts",
+          "?? lib/free-curated-metrics.ts",
+          "?? lib/free-curated-registration.ts",
+          "?? lib/fxtwitter-curated-save.ts",
+          "?? lib/fxtwitter-curated-store.ts",
+          "?? lib/fxtwitter-curated-tier.ts",
+          "?? lib/fxtwitter-curated.ts",
+          "?? lib/fxtwitter-local-access.ts",
+          "?? lib/playback-refresh.ts",
+          "?? lib/tier-model-release.ts",
+          "?? lib/tier-new-video-worker.ts",
+          "?? lib/tier-personal-core.ts",
+          "?? lib/tier-personal-engine.ts",
+          "?? lib/tier-personal-evaluation.ts",
+          "?? lib/tier-personal-image.ts",
+          "?? lib/tier-personal-store.ts",
+          "?? lib/tier-personal-video.ts",
+          "?? lib/tier-preview-playback.ts",
+          "?? lib/tier-reevaluation.ts",
+          "?? lib/tier-teacher-analysis.ts",
+          "?? lib/tier-video-preview.ts",
+          "?? lib/tier-visual-comparison.ts",
+          "?? lib/vendor/",
+          "?? lib/video-download.ts",
+          "?? scripts/test-direct-download.cjs",
+          "?? scripts/test-direct-playback.cjs",
+          "?? scripts/test-download-free.cjs",
+          "?? scripts/test-download-url.cjs",
+          "?? scripts/test-free-curated-cursors.cjs",
+          "?? scripts/test-free-curated-registration.cjs",
+          "?? scripts/test-fxtwitter-curated.cjs",
+          "?? scripts/test-hls-loader.cjs",
+          "?? scripts/test-playback-component.cjs",
+          "?? scripts/test-playback-recovery.cjs",
+          "?? scripts/test-stream-component.cjs",
+          "?? scripts/test-stream-playback.cjs",
+          "?? scripts/test-tier-compatible-playback.cjs",
+          "?? scripts/test-tier-four-frames.cjs",
+          "?? scripts/test-tier-high-recall.cjs",
+          "?? scripts/test-tier-model-release.cjs",
+          "?? scripts/test-tier-new-video-worker.cjs",
+          "?? scripts/test-tier-ordinal-adjustment.cjs",
+          "?? scripts/test-tier-personal-engine.cjs",
+          "?? scripts/test-tier-personal.cjs",
+          "?? scripts/test-tier-preview-playback.cjs",
+          "?? scripts/test-tier-reevaluation-auth.cjs",
+          "?? scripts/test-tier-reevaluation.cjs",
+          "?? scripts/test-tier-teacher-analysis.cjs",
+          "?? scripts/test-tier-teacher-improvements.cjs",
+          "?? scripts/test-tier-video-preview.cjs",
+          "?? scripts/test-tier-visual-comparison.cjs",
+          "?? scripts/test-url-resolve-fix.cjs",
+          "?? scripts/test-video-download.cjs",
+          "?? sql/",
+          "?? xclip-tier-reevaluation-20261006.zip"
+        ]
+      },
+      "release": {
+        "id": "availability-curated-fix-20261011",
+        "localStatus": "applied",
+        "localAppliedAtJst": "2026-10-11T20:52:12+09:00",
+        "productionStatus": "not confirmed; execution log not yet received",
+        "artifacts": [
+          {
+            "filename": "xclip-availability-curated-fix-deploy-20261011.sh",
+            "sha256": "a69af93b9bced2026cacce5c105d040c4e925c71fcd60af8f1e5c5556f647deb",
+            "bytes": 52364
+          },
+          {
+            "filename": "xclip-availability-curated-fix-local-20261011.ps1",
+            "sha256": "3cad8fce341d700dc21ef51ba4e944f5d31a9fe85bf665a67d155ae283c0a920",
+            "bytes": 155373
+          }
+        ],
+        "productionProposedSourceHashes": [
+          {
+            "path": "lib/free-curated-metrics.ts",
+            "sha256": "7d128ce238140a30862b4a0f2cdbbf5d70094b00590dd94ee7c475e022a1702a"
+          },
+          {
+            "path": "lib/free-curated-server-store.ts",
+            "sha256": "d12fb37bc871a03588362f89bb059ccc4b0c3732da9fc306eb97f927c05d5058"
+          },
+          {
+            "path": "lib/free-curated-scan.ts",
+            "sha256": "33e810157da4a8f2a2cb67045b3635fb45d7813b3150cf1575a502843b27f842"
+          },
+          {
+            "path": "lib/free-curated-dashboard.ts",
+            "sha256": "47b989d508aafeabe9d2ae984f57f6c5dac9e9115751deba71d8411965da15b9"
+          },
+          {
+            "path": "lib/free-curated-sync.ts",
+            "sha256": "81594fbd099f1add0ee4b7e06a6a3d0e9ec3855140f529158204174f68dba6fa"
+          },
+          {
+            "path": "scripts/test-free-curated-dashboard.cjs",
+            "sha256": "7c64aecd6bcbf7277b7fc2f9e5b69062e986760addb64dd251e77eb4e7ca0cec"
+          },
+          {
+            "path": "lib/post-status.ts",
+            "sha256": "cefbc7955dfd9101edad3f8a7e1f5cfbbb09301350319c4f7717f9cafba43c81"
+          },
+          {
+            "path": "scripts/test-free-curated-production.cjs",
+            "sha256": "d6274336536b61be7998d3dbd86e2682cc2c4dd553ec9507757b39cf69c7f7bb"
+          },
+          {
+            "path": "lib/availability-scan.ts",
+            "sha256": "104a5aabd39cdabb5bcb16ff6ab632fb8233aed7fae391ee55edd57c2a479f62"
+          },
+          {
+            "path": "scripts/test-availability-curated-regression.cjs",
+            "sha256": "686b9b06556052f137d4d9bf7f0523475f74fbcda4fd5841d2c29425f0a31ee2"
+          },
+          {
+            "path": "scripts/test-availability-monitor.cjs",
+            "sha256": "5269f53d75dfc985dd09d26b8c0b8ca060a426c1cfd92bc87f9a3a53ba2c2b04"
+          },
+          {
+            "path": "scripts/test-free-curated-cursors.cjs",
+            "sha256": "1e0c2315e28bf7d2ee7455987e2bae4d9692beed5ca2eb7b8415d952e040eaba"
+          },
+          {
+            "path": "lib/fxtwitter-curated.ts",
+            "sha256": "5c13fd3c2fe01bc8c8f796744ddb36b3e3785e0dba94ef28242e46c45d0f307f"
+          }
+        ]
+      },
+      "historicalArtifacts": [
+        {
+          "filename": "xclip-availability-diagnostics-20261011.sh",
+          "bytes": 13041,
+          "sha256": "8540ba57559be89d1523c0067b4bd4cf5e67eca07e82b213e2142ca78e3223f0",
+          "fileSavedAtJst": "2026-10-11T09:08:35.624492+09:00",
+          "appliedStatus": "unknown unless supported by a history entry or installation receipt"
+        },
+        {
+          "filename": "xclip-availability-lowload-deploy-20261011.sh",
+          "bytes": 67580,
+          "sha256": "ef7c05ff3c40f0d4fae0a2db07df918869e19564a0602d0ae97dd3dd81f78b34",
+          "fileSavedAtJst": "2026-10-11T08:55:04.715101+09:00",
+          "appliedStatus": "unknown unless supported by a history entry or installation receipt"
+        },
+        {
+          "filename": "xclip-current-targets.zip",
+          "bytes": 20006,
+          "sha256": "020c3364b482549d570d562a591d002681d7d1e13a2fff1e6a92f5a343c68db8",
+          "fileSavedAtJst": "2026-10-07T21:06:55.912968+09:00",
+          "appliedStatus": "unknown unless supported by a history entry or installation receipt"
+        },
+        {
+          "filename": "xclip-direct-media-fix-20261010.ps1",
+          "bytes": 56245,
+          "sha256": "1ff9ed9dea7450da58d6e0242ecaa1030e9bdc628070715ed60e4386b97bfa22",
+          "fileSavedAtJst": "2026-10-10T20:42:36.593801+09:00",
+          "appliedStatus": "unknown unless supported by a history entry or installation receipt"
+        },
+        {
+          "filename": "xclip-direct-no-credit-local-20261010.ps1",
+          "bytes": 90101,
+          "sha256": "52c927474aaf46b155facdfc528fae46c899713b36da7d871c2f01c2119b50a2",
+          "fileSavedAtJst": "2026-10-10T20:11:38.58709+09:00",
+          "appliedStatus": "unknown unless supported by a history entry or installation receipt"
+        },
+        {
+          "filename": "xclip-direct-playback-fix-20261010.ps1",
+          "bytes": 52622,
+          "sha256": "84f035f056469811530eca6e7d84a2fcd878393e67ceacfc2599a3242b5e999e",
+          "fileSavedAtJst": "2026-10-10T23:05:37.515766+09:00",
+          "appliedStatus": "unknown unless supported by a history entry or installation receipt"
+        },
+        {
+          "filename": "xclip-direct-ranking-local-20261010.ps1",
+          "bytes": 22965,
+          "sha256": "ee2c19041bfedd1cd4ab5bcb1556ea555aa667867ca6911f1a055ad0d684f496",
+          "fileSavedAtJst": "2026-10-10T22:53:34.176852+09:00",
+          "appliedStatus": "unknown unless supported by a history entry or installation receipt"
+        },
+        {
+          "filename": "xclip-direct-stream-deploy-20261010.sh",
+          "bytes": 592862,
+          "sha256": "fd1752e20f43070eeedd3c06d3790fe28f677d1a74616181881b257d8c712d67",
+          "fileSavedAtJst": "2026-10-10T23:43:31.054416+09:00",
+          "appliedStatus": "unknown unless supported by a history entry or installation receipt"
+        },
+        {
+          "filename": "xclip-direct-stream-deploy-v2-20261010.sh",
+          "bytes": 593045,
+          "sha256": "293d892b833c1082ca9f0b532a3ec5cedb579b6b1675c2b68696762a617d3c71",
+          "fileSavedAtJst": "2026-10-11T00:00:01.24142+09:00",
+          "appliedStatus": "unknown unless supported by a history entry or installation receipt"
+        },
+        {
+          "filename": "xclip-direct-url-fix-20261010.ps1",
+          "bytes": 54977,
+          "sha256": "bc9b9819200dc19b518ca34bd3dd6147dfeafd6b78338bcc4fa0d785ccb8f211",
+          "fileSavedAtJst": "2026-10-10T20:30:34.731325+09:00",
+          "appliedStatus": "unknown unless supported by a history entry or installation receipt"
+        },
+        {
+          "filename": "xclip-download-menu-20261010.ps1",
+          "bytes": 6345,
+          "sha256": "c853650d9a72ccf64b9827a89c63653bc1bbd6821451e6d8499236cb358bbeef",
+          "fileSavedAtJst": "2026-10-10T08:11:06.37105+09:00",
+          "appliedStatus": "unknown unless supported by a history entry or installation receipt"
+        },
+        {
+          "filename": "xclip-fix-four-frame-dependency-20261007.ps1",
+          "bytes": 7644,
+          "sha256": "14dc8693e3d17b8bebe1aa9c578cca3ff3f95759439a7f9d0ae92242e2786104",
+          "fileSavedAtJst": "2026-10-07T21:18:27.209826+09:00",
+          "appliedStatus": "unknown unless supported by a history entry or installation receipt"
+        },
+        {
+          "filename": "xclip-free-curated-dashboard-deploy-20261011.sh",
+          "bytes": 32924,
+          "sha256": "b51366e504c3535ed7e8d6ad33c2f592f90293c3b191724ae95ddab0dbcbfba9",
+          "fileSavedAtJst": "2026-10-11T19:34:22.4533+09:00",
+          "appliedStatus": "unknown unless supported by a history entry or installation receipt"
+        },
+        {
+          "filename": "xclip-free-curated-dashboard-local-20261011.ps1",
+          "bytes": 151446,
+          "sha256": "00cbc275a09f4f75b23460b05dbb09c7ce0f010323cb21306e682e82e438cddf",
+          "fileSavedAtJst": "2026-10-11T19:34:27.790718+09:00",
+          "appliedStatus": "unknown unless supported by a history entry or installation receipt"
+        },
+        {
+          "filename": "xclip-free-curated-production-deploy-20261011.sh",
+          "bytes": 45060,
+          "sha256": "edf0c655d668df7b0906a8c4c8b2059aeaa3058494caabb25ce9027691922a6a",
+          "fileSavedAtJst": "2026-10-11T10:28:42.560258+09:00",
+          "appliedStatus": "unknown unless supported by a history entry or installation receipt"
+        },
+        {
+          "filename": "xclip-free-curated-production-deploy-v2-20261011.sh",
+          "bytes": 45121,
+          "sha256": "995ebb9eec70a49af3691543705dca351cf1dc3553010586cb4bc221c229b4b4",
+          "fileSavedAtJst": "2026-10-11T10:32:34.947382+09:00",
+          "appliedStatus": "unknown unless supported by a history entry or installation receipt"
+        },
+        {
+          "filename": "xclip-free-curated-production-local-20261011.ps1",
+          "bytes": 99244,
+          "sha256": "d9468c2c07974a4930ec3702225ddce6e51e1e50befe3a0d9a0d805a9ab9a418",
+          "fileSavedAtJst": "2026-10-11T10:28:53.244183+09:00",
+          "appliedStatus": "unknown unless supported by a history entry or installation receipt"
+        },
+        {
+          "filename": "Xclip-free-curated-README-20261011.md",
+          "bytes": 6738,
+          "sha256": "5416eed6e3a4ddbdded97f0b122dc7a2787d97b4aefb9d8f8e40ac5111253fea",
+          "fileSavedAtJst": "2026-10-11T10:35:08.000603+09:00",
+          "appliedStatus": "unknown unless supported by a history entry or installation receipt"
+        },
+        {
+          "filename": "xclip-free-curated-simple-local-20261011.ps1",
+          "bytes": 125424,
+          "sha256": "e36df94fc4a7785ec95fa7383048d95781cb362485785f7637c966b154f5b972",
+          "fileSavedAtJst": "2026-10-11T11:11:04.766955+09:00",
+          "appliedStatus": "unknown unless supported by a history entry or installation receipt"
+        },
+        {
+          "filename": "xclip-fxtwitter-curated-local-20261011.ps1",
+          "bytes": 84669,
+          "sha256": "294f63f3bd080596ae8be1a71f76a29c42989d26f1ac9c92fb4ba31c972bfbb2",
+          "fileSavedAtJst": "2026-10-11T08:19:48.334105+09:00",
+          "appliedStatus": "unknown unless supported by a history entry or installation receipt"
+        },
+        {
+          "filename": "xclip-fxtwitter-curated-local-v2-20261011.ps1",
+          "bytes": 89037,
+          "sha256": "d98b57ec8197805d6b12d2cbf37327380994356d32c19cfc223ebe3d503fd608",
+          "fileSavedAtJst": "2026-10-11T08:30:16.083965+09:00",
+          "appliedStatus": "unknown unless supported by a history entry or installation receipt"
+        },
+        {
+          "filename": "xclip-no-credit-local-20261010.ps1",
+          "bytes": 45826,
+          "sha256": "b7c486600f24ed45ec5fd2358731346fc5c55a51cd3d3bff5a11ca50ef8003c7",
+          "fileSavedAtJst": "2026-10-10T18:03:51.311313+09:00",
+          "appliedStatus": "unknown unless supported by a history entry or installation receipt"
+        },
+        {
+          "filename": "xclip-operations-links-20261006.ps1",
+          "bytes": 2559,
+          "sha256": "1e1a6e816a46251ed31229acd5572bfcf274979515705cfd32ef6c6b0725e557",
+          "fileSavedAtJst": "2026-10-06T22:46:43.904239+09:00",
+          "appliedStatus": "unknown unless supported by a history entry or installation receipt"
+        },
+        {
+          "filename": "xclip-recovery-resume-deploy-20261003 (1).sh",
+          "bytes": 31337,
+          "sha256": "4d6359511de12f004700041b12aeb83767e264d9d1cc4aebe1e253c111ad85eb",
+          "fileSavedAtJst": "2026-10-03T23:32:54.622488+09:00",
+          "appliedStatus": "unknown unless supported by a history entry or installation receipt"
+        },
+        {
+          "filename": "xclip-recovery-resume-deploy-20261003 (2).sh",
+          "bytes": 31337,
+          "sha256": "4d6359511de12f004700041b12aeb83767e264d9d1cc4aebe1e253c111ad85eb",
+          "fileSavedAtJst": "2026-10-03T23:32:54.622488+09:00",
+          "appliedStatus": "unknown unless supported by a history entry or installation receipt"
+        },
+        {
+          "filename": "xclip-recovery-resume-deploy-20261003 (3).sh",
+          "bytes": 31337,
+          "sha256": "4d6359511de12f004700041b12aeb83767e264d9d1cc4aebe1e253c111ad85eb",
+          "fileSavedAtJst": "2026-10-03T23:32:54.622488+09:00",
+          "appliedStatus": "unknown unless supported by a history entry or installation receipt"
+        },
+        {
+          "filename": "xclip-recovery-resume-deploy-20261003 (4).sh",
+          "bytes": 31337,
+          "sha256": "4d6359511de12f004700041b12aeb83767e264d9d1cc4aebe1e253c111ad85eb",
+          "fileSavedAtJst": "2026-10-03T23:32:54.622488+09:00",
+          "appliedStatus": "unknown unless supported by a history entry or installation receipt"
+        },
+        {
+          "filename": "xclip-recovery-resume-deploy-20261003.sh",
+          "bytes": 31337,
+          "sha256": "4d6359511de12f004700041b12aeb83767e264d9d1cc4aebe1e253c111ad85eb",
+          "fileSavedAtJst": "2026-10-03T23:32:54.622488+09:00",
+          "appliedStatus": "unknown unless supported by a history entry or installation receipt"
+        },
+        {
+          "filename": "xclip-review-current.zip",
+          "bytes": 5068,
+          "sha256": "28c9642b4709ab3ee6c1a5464ec79493b02f337675f3e3bf8efedc99a9344f5f",
+          "fileSavedAtJst": "2026-10-07T21:02:56.277756+09:00",
+          "appliedStatus": "unknown unless supported by a history entry or installation receipt"
+        },
+        {
+          "filename": "xclip-site-copy-duration-deploy-20261011.sh",
+          "bytes": 51052,
+          "sha256": "36fd021b0b202e7cfa3c2c56ef319fe5c00c6b060dc10f84db160b8d87703a85",
+          "fileSavedAtJst": "2026-10-11T00:25:07.044501+09:00",
+          "appliedStatus": "unknown unless supported by a history entry or installation receipt"
+        },
+        {
+          "filename": "xclip-site-copy-duration-deploy-v2-20261011.sh",
+          "bytes": 51052,
+          "sha256": "7fc38ac1e041d06fe9b64e55615e9f2ba8cecfe1f59bf6c883056468d38285d5",
+          "fileSavedAtJst": "2026-10-11T00:31:56.892416+09:00",
+          "appliedStatus": "unknown unless supported by a history entry or installation receipt"
+        },
+        {
+          "filename": "xclip-site-copy-duration-deploy-v3-20261011.sh",
+          "bytes": 50950,
+          "sha256": "ab0708f8efce757d734e3fc313493742198dafa60446c114ff0928a1cb45bed0",
+          "fileSavedAtJst": "2026-10-11T00:39:18.989278+09:00",
+          "appliedStatus": "unknown unless supported by a history entry or installation receipt"
+        },
+        {
+          "filename": "xclip-stream-playback-local-20261010.ps1",
+          "bytes": 2383315,
+          "sha256": "733cc3faa37d062909172871135bb036280db6b190d4307634da8b11a0e2aedc",
+          "fileSavedAtJst": "2026-10-10T23:24:39.410102+09:00",
+          "appliedStatus": "unknown unless supported by a history entry or installation receipt"
+        },
+        {
+          "filename": "xclip-suspended-authors-deploy-20261011.sh",
+          "bytes": 62935,
+          "sha256": "671e88c5d100488d38896732dd3151ed629cef264fb1c668cc6f3b8b1d3198ac",
+          "fileSavedAtJst": "2026-10-11T07:27:36.15533+09:00",
+          "appliedStatus": "unknown unless supported by a history entry or installation receipt"
+        },
+        {
+          "filename": "xclip-suspended-authors-deploy-v2-20261011.sh",
+          "bytes": 63043,
+          "sha256": "017b03c4f72ac0737a7281569ce52689365d016194c213a5aef13c99716eedcc",
+          "fileSavedAtJst": "2026-10-11T07:36:35.926526+09:00",
+          "appliedStatus": "unknown unless supported by a history entry or installation receipt"
+        },
+        {
+          "filename": "xclip-suspended-authors-deploy-v3-20261011.sh",
+          "bytes": 63268,
+          "sha256": "61efabe43b0b5946c16d836abca4dcd5cd04a843afa7557b0b50a09087c65d9a",
+          "fileSavedAtJst": "2026-10-11T07:42:36.409539+09:00",
+          "appliedStatus": "unknown unless supported by a history entry or installation receipt"
+        },
+        {
+          "filename": "xclip-teacher-analysis-20261006.ps1",
+          "bytes": 41376,
+          "sha256": "9f645e56750f9783bb1b841599f0e4313b015140d42c28cfc9caab8c15f741ce",
+          "fileSavedAtJst": "2026-10-06T22:41:41.479135+09:00",
+          "appliedStatus": "unknown unless supported by a history entry or installation receipt"
+        },
+        {
+          "filename": "xclip-tier-comparison-2026-10-07.json",
+          "bytes": 17731,
+          "sha256": "c0ad2dcab1945958bb5df5328639b62c51fcdf6feea7a71ccb19b7c0d036dd62",
+          "fileSavedAtJst": "2026-10-08T07:05:48.380698+09:00",
+          "appliedStatus": "unknown unless supported by a history entry or installation receipt"
+        },
+        {
+          "filename": "xclip-tier-compatible-playback-20261008.ps1",
+          "bytes": 42107,
+          "sha256": "dd285eaf459cc031d611e613b6468a8db0e06acb77386cfd2410dae5bb626e16",
+          "fileSavedAtJst": "2026-10-08T21:10:56.170593+09:00",
+          "appliedStatus": "unknown unless supported by a history entry or installation receipt"
+        },
+        {
+          "filename": "xclip-tier-four-frames-20261007.ps1",
+          "bytes": 207186,
+          "sha256": "fde38212ffdff53d32f74d71d9001c8a51276f511f28b5831285f69339edf902",
+          "fileSavedAtJst": "2026-10-07T20:55:15.852617+09:00",
+          "appliedStatus": "unknown unless supported by a history entry or installation receipt"
+        },
+        {
+          "filename": "xclip-tier-four-frames-compatible-20261007.ps1",
+          "bytes": 209300,
+          "sha256": "391d010def64cfdeccc9a5f557bd20937d17fa4819ba809ec7b13e0597bb4cfd",
+          "fileSavedAtJst": "2026-10-07T21:00:33.971659+09:00",
+          "appliedStatus": "unknown unless supported by a history entry or installation receipt"
+        },
+        {
+          "filename": "xclip-tier-four-frames-compatible-v2-20261007.ps1",
+          "bytes": 209388,
+          "sha256": "ba42459a26493746482f01ac35e1c95ed94b8347a889132642b8d87846405be3",
+          "fileSavedAtJst": "2026-10-07T21:04:40.80298+09:00",
+          "appliedStatus": "unknown unless supported by a history entry or installation receipt"
+        },
+        {
+          "filename": "xclip-tier-four-frames-pc-20261007.ps1",
+          "bytes": 198968,
+          "sha256": "a7075366c82638ffc9f5416ac0e767f6f412e2aeb4e0b8d40d23a14dbf1eee73",
+          "fileSavedAtJst": "2026-10-07T21:10:36.767555+09:00",
+          "appliedStatus": "unknown unless supported by a history entry or installation receipt"
+        },
+        {
+          "filename": "xclip-tier-high-recall-20261008.ps1",
+          "bytes": 70790,
+          "sha256": "131361e1097b3743dfbbbe599188070a47c6fb9017c335141c29231d64b43f5c",
+          "fileSavedAtJst": "2026-10-08T21:55:48.024698+09:00",
+          "appliedStatus": "unknown unless supported by a history entry or installation receipt"
+        },
+        {
+          "filename": "xclip-tier-host-fix-20261006.ps1",
+          "bytes": 6668,
+          "sha256": "57c025d60ebfb975b0faaeb9bd9048851bc6468ee424eea14b9e9571ef384398",
+          "fileSavedAtJst": "2026-10-06T22:15:11.893792+09:00",
+          "appliedStatus": "unknown unless supported by a history entry or installation receipt"
+        },
+        {
+          "filename": "xclip-tier-model-release-20261008 (1).zip",
+          "bytes": 137502,
+          "sha256": "8f768bceb06192e6bc0cc3463ce733fa2a3538439a223fca59ddaf99dd46487f",
+          "fileSavedAtJst": "2026-10-08T22:30:15.543988+09:00",
+          "appliedStatus": "unknown unless supported by a history entry or installation receipt"
+        },
+        {
+          "filename": "xclip-tier-model-release-20261008.ps1",
+          "bytes": 108483,
+          "sha256": "240378cc9833d9623dc11551c9cf7aafb8e267f9189be362ade8498d869ff5e6",
+          "fileSavedAtJst": "2026-10-08T09:28:02+09:00",
+          "appliedStatus": "unknown unless supported by a history entry or installation receipt"
+        },
+        {
+          "filename": "xclip-tier-model-release-20261008.zip",
+          "bytes": 137502,
+          "sha256": "8f768bceb06192e6bc0cc3463ce733fa2a3538439a223fca59ddaf99dd46487f",
+          "fileSavedAtJst": "2026-10-08T22:30:15.543988+09:00",
+          "appliedStatus": "unknown unless supported by a history entry or installation receipt"
+        },
+        {
+          "filename": "xclip-tier-model-release-deploy-20261008.sh",
+          "bytes": 93345,
+          "sha256": "fa49fc6fd3313e2ae7a1665fb0a3ea89a2c7648176e7feb0e6277c0527aed823",
+          "fileSavedAtJst": "2026-10-08T09:28:02+09:00",
+          "appliedStatus": "unknown unless supported by a history entry or installation receipt"
+        },
+        {
+          "filename": "xclip-tier-model-release-guide-20261008.md",
+          "bytes": 8659,
+          "sha256": "81cfffa5b4de7f1f5546ffd695bed6092b03438f84f33834335bc352a15358c7",
+          "fileSavedAtJst": "2026-10-08T22:29:40.839559+09:00",
+          "appliedStatus": "unknown unless supported by a history entry or installation receipt"
+        },
+        {
+          "filename": "xclip-tier-ordinal-adjustment-20261008.ps1",
+          "bytes": 128270,
+          "sha256": "f152d2eab7334aae95b71fa6d7c16fde49a98c66e101ec924f1e263bd08c7fe2",
+          "fileSavedAtJst": "2026-10-08T21:32:07.756164+09:00",
+          "appliedStatus": "unknown unless supported by a history entry or installation receipt"
+        },
+        {
+          "filename": "xclip-tier-preview-playback-fix-20261008.ps1",
+          "bytes": 23815,
+          "sha256": "6febe40de07c6b8820ed0d0ace8dff9c410869a4a5103f7ea096a7036f092413",
+          "fileSavedAtJst": "2026-10-08T20:58:29.06712+09:00",
+          "appliedStatus": "unknown unless supported by a history entry or installation receipt"
+        },
+        {
+          "filename": "xclip-tier-reevaluation-20261006 (1).zip",
+          "bytes": 36792,
+          "sha256": "0e8a1c77c98f503ce99fc6dfab0dd33d9041ade05e931353436a1ba9a8ab6840",
+          "fileSavedAtJst": "2026-10-06T22:07:25.697637+09:00",
+          "appliedStatus": "unknown unless supported by a history entry or installation receipt"
+        },
+        {
+          "filename": "xclip-tier-reevaluation-20261006.zip",
+          "bytes": 36792,
+          "sha256": "0e8a1c77c98f503ce99fc6dfab0dd33d9041ade05e931353436a1ba9a8ab6840",
+          "fileSavedAtJst": "2026-10-06T22:07:25.697637+09:00",
+          "appliedStatus": "unknown unless supported by a history entry or installation receipt"
+        },
+        {
+          "filename": "xclip-tier-teacher-improvements-20261008.ps1",
+          "bytes": 78606,
+          "sha256": "28286eede67c2267557c3f19f28626a49d1f645bdece6772f1e32e51998214f3",
+          "fileSavedAtJst": "2026-10-08T07:04:14.897037+09:00",
+          "appliedStatus": "unknown unless supported by a history entry or installation receipt"
+        },
+        {
+          "filename": "xclip-tier-video-preview-20261008.ps1",
+          "bytes": 156242,
+          "sha256": "e99754b568001128889fe132b9c4b006863e324299dfdf68197aa5fd2f67ff48",
+          "fileSavedAtJst": "2026-10-08T17:54:54.538541+09:00",
+          "appliedStatus": "unknown unless supported by a history entry or installation receipt"
+        },
+        {
+          "filename": "xclip-verify-inhopark-20261003.sh",
+          "bytes": 3142,
+          "sha256": "d3c6570994fd49c6b03978fbc08949558c61918ea912c21c3d470c77423c033f",
+          "fileSavedAtJst": "2026-10-03T23:26:35.528344+09:00",
+          "appliedStatus": "unknown unless supported by a history entry or installation receipt"
+        },
+        {
+          "filename": "xclip-video-download-20261009.ps1",
+          "bytes": 125919,
+          "sha256": "f1e12ec8341672fe573d61789c6063bb214548a80e680f62e8d085a41946e51c",
+          "fileSavedAtJst": "2026-10-09T22:49:17.216986+09:00",
+          "appliedStatus": "unknown unless supported by a history entry or installation receipt"
+        },
+        {
+          "filename": "xclip-video-download-compatible-v2-20261009.ps1",
+          "bytes": 41421,
+          "sha256": "508e52c7c5e30b69110d55666b3938c88a9096d84db3b9028fcaa1f9d6c99daf",
+          "fileSavedAtJst": "2026-10-09T22:56:10.710921+09:00",
+          "appliedStatus": "unknown unless supported by a history entry or installation receipt"
+        },
+        {
+          "filename": "xclip-video-download-compatible-v3-20261009.ps1",
+          "bytes": 40925,
+          "sha256": "3d63ee4df05802ed8161c6062a03e9518e490bdbc85fac771bd3399710a4f66d",
+          "fileSavedAtJst": "2026-10-09T23:00:44.838492+09:00",
+          "appliedStatus": "unknown unless supported by a history entry or installation receipt"
+        },
+        {
+          "filename": "xclip-video-url-deploy-20261009.sh",
+          "bytes": 36879,
+          "sha256": "038535dda69c756778d7e87916e38f1e3a786f12e26b0d550444558c1ccc7b0a",
+          "fileSavedAtJst": "2026-10-10T08:03:57.970212+09:00",
+          "appliedStatus": "unknown unless supported by a history entry or installation receipt"
+        },
+        {
+          "filename": "xclip-video-url-install-20261009.ps1",
+          "bytes": 90037,
+          "sha256": "d5d6709ef395f94f2e5ebb6bbab269f105e1db156859631cc09fee834e9aa106",
+          "fileSavedAtJst": "2026-10-10T08:04:57.277355+09:00",
+          "appliedStatus": "unknown unless supported by a history entry or installation receipt"
+        },
+        {
+          "filename": "xclip-video-url-menu-allowlist-deploy-20261010.sh",
+          "bytes": 45300,
+          "sha256": "1bc5936b8c55cc66a3cf774a0bbfce1b49e350976d8934d0de3680950d3b1c7f",
+          "fileSavedAtJst": "2026-10-10T08:27:50.428433+09:00",
+          "appliedStatus": "unknown unless supported by a history entry or installation receipt"
+        },
+        {
+          "filename": "xclip-video-url-menu-deploy-20261010.sh",
+          "bytes": 39731,
+          "sha256": "f7ddc9563a135d375eee9d9c6ebdcbb734192f3c09de6d3dd5408a6b9dd8b66b",
+          "fileSavedAtJst": "2026-10-10T08:12:24.490677+09:00",
+          "appliedStatus": "unknown unless supported by a history entry or installation receipt"
+        },
+        {
+          "filename": "xclip-video-url-menu-diagnostic-deploy-20261010.sh",
+          "bytes": 41230,
+          "sha256": "72f40aad844726513d82c904c8764b5ddd2dcee060e6314241e7f3d79c5ba52a",
+          "fileSavedAtJst": "2026-10-10T08:19:37.396775+09:00",
+          "appliedStatus": "unknown unless supported by a history entry or installation receipt"
+        },
+        {
+          "filename": "xclip-video-url-menu-permissions-deploy-20261010.sh",
+          "bytes": 47769,
+          "sha256": "93d047cfb7ac2f4c43da8581037e84ae23d086f1256499f86cc6b78430cd7f5e",
+          "fileSavedAtJst": "2026-10-10T08:41:30.902654+09:00",
+          "appliedStatus": "unknown unless supported by a history entry or installation receipt"
+        },
+        {
+          "filename": "xcliprank-local-update-20260916.zip",
+          "bytes": 24969,
+          "sha256": "97349ead8e73b58ad287407d3b4d0ac7deed3bc7440be42e6787713af77a149b",
+          "fileSavedAtJst": "2026-09-16T21:38:28.904879+09:00",
+          "appliedStatus": "unknown unless supported by a history entry or installation receipt"
+        },
+        {
+          "filename": "xcliprank-root-fix-20260914.zip",
+          "bytes": 8889,
+          "sha256": "32ff11169ff8b3640dc92cfe89355716c03c3092286620b2e54d9b4ca0749174",
+          "fileSavedAtJst": "2026-09-14T20:57:02.406311+09:00",
+          "appliedStatus": "unknown unless supported by a history entry or installation receipt"
+        }
+      ],
+      "localInstallationReceipts": [
+        {
+          "backup": ".local-admin/fxtwitter-curated-backups/20261010233027902-be050e",
+          "project": "C:\\Projects\\xcliprank",
+          "files": [
+            {
+              "path": "lib/fxtwitter-curated.ts",
+              "installedHash": "8c0e7d13b7176dc1ab2351d584a59b9f6dcd031c5748c4ded9b56788a43bbc29",
+              "existedBefore": false
+            },
+            {
+              "path": "lib/fxtwitter-curated-store.ts",
+              "installedHash": "ec77a249fcee30c950969da04ad40120d54b9fa8e5a44b09ed818a62470ee582",
+              "existedBefore": false
+            },
+            {
+              "path": "lib/fxtwitter-curated-save.ts",
+              "installedHash": "f64c8942cc81f6932492dc1b39bc1666224538c63b42c28747f0da4bce7c376e",
+              "existedBefore": false
+            },
+            {
+              "path": "lib/fxtwitter-curated-tier.ts",
+              "installedHash": "7d71a34ecdaba52971125669e71c637b2aebb5f1a8519cc16c155d9327d7548d",
+              "existedBefore": false
+            },
+            {
+              "path": "lib/fxtwitter-local-access.ts",
+              "installedHash": "5728717bae5c27b20123c6afd39e743fa9f1a0ce16c0bda9b4bf7abf5651bdf5",
+              "existedBefore": false
+            },
+            {
+              "path": "app/api/fxtwitter-authors/route.ts",
+              "installedHash": "94bb284076649ad28d01f5043db6fc7a602d0f8b15f379b46ec8d3037e414263",
+              "existedBefore": false
+            },
+            {
+              "path": "app/fxtwitter-authors/page.tsx",
+              "installedHash": "442f8385c749345bbe3ce12dbb987443d680c7cb18032879bf138c93df52c8f9",
+              "existedBefore": false
+            },
+            {
+              "path": "app/fxtwitter-authors/FreeAuthorsPanel.tsx",
+              "installedHash": "045df8ec8d0dcc4299d2af98d5098919467893d3febad3c54f5fab1ba0616c63",
+              "existedBefore": false
+            },
+            {
+              "path": "scripts/test-fxtwitter-curated.cjs",
+              "installedHash": "3df17d74c7f1338e0e301c9b4540c099f8070e6926ca449d1a27218f538468b6",
+              "existedBefore": false
+            },
+            {
+              "path": "app/learning-tools/page.tsx",
+              "installedHash": "45418384a6139efd13dacb9c930d39f0e17f0f540b6a073562b04153d0b304e1",
+              "existedBefore": true
+            },
+            {
+              "path": ".gitignore",
+              "installedHash": "0f972ab2ee2ede74b6bbcd5ce5d513bf1b388b48e8596133bf966a4b4ee9c47c",
+              "existedBefore": true
+            }
+          ]
+        },
+        {
+          "backup": ".local-admin/fxtwitter-curated-backups/20261011013645070-2cc7e1",
+          "project": "C:\\Projects\\xcliprank",
+          "files": [
+            {
+              "path": "lib/fxtwitter-curated.ts",
+              "installedHash": "1ad0c78f9ae6d2fb8ed7a38d3b825213d541c26b1d38cfef18a71c5ce7575ac8",
+              "existedBefore": true
+            },
+            {
+              "path": "app/api/fxtwitter-authors/route.ts",
+              "installedHash": "8c53f6ea7baa797849b7764a826b62f7b849a51c6dd64b29ae0aa23e9efc3eb5",
+              "existedBefore": true
+            },
+            {
+              "path": "app/fxtwitter-authors/FreeAuthorsPanel.tsx",
+              "installedHash": "aaa870323a3cc1aa2c1a80035b5975b60c18822bb2581e9d71eadee26d4b06d8",
+              "existedBefore": true
+            },
+            {
+              "path": "lib/free-curated-client.ts",
+              "installedHash": "36945935294ebf5a95db94eee20a783510cb00c03fb46411f9068fbca51a00bf",
+              "existedBefore": false
+            }
+          ]
+        },
+        {
+          "backup": ".local-admin/fxtwitter-curated-backups/20261011021114906-f1e97c",
+          "project": "C:\\Projects\\xcliprank",
+          "files": [
+            {
+              "path": "lib/fxtwitter-curated.ts",
+              "installedHash": "35850633f11cd238cc0e98d8591796db166f6e4a27cd58a49948b889aad5415c",
+              "existedBefore": true
+            },
+            {
+              "path": "lib/fxtwitter-curated-store.ts",
+              "installedHash": "64eb4f59c266f6cdd1434e5e76160a80c2bcae0cf2778348d5124e08d2f88e41",
+              "existedBefore": true
+            },
+            {
+              "path": "app/api/fxtwitter-authors/route.ts",
+              "installedHash": "44c75cf6abc14eecb70d058903a48eda2a04f5ad19462ab9b46398d44899aabb",
+              "existedBefore": true
+            },
+            {
+              "path": "app/fxtwitter-authors/FreeAuthorsPanel.tsx",
+              "installedHash": "6eb77a7c4ed093b361e0597c3a9f0d19e66070ac9bd135cc08452a4538a8bb9e",
+              "existedBefore": true
+            },
+            {
+              "path": "lib/free-curated-client.ts",
+              "installedHash": "ece527416f7a77657f7e75bdf8018afdd4bfae79c0efefbf8d77c6d1f1e43d60",
+              "existedBefore": true
+            },
+            {
+              "path": "lib/free-curated-registration.ts",
+              "installedHash": "e39a456505b96291218093cf03a30ce65ed88bfb23f38e2af2403c47dbe2a586",
+              "existedBefore": false
+            },
+            {
+              "path": "scripts/test-free-curated-registration.cjs",
+              "installedHash": "9cc5af5c0407ddfe675a5b4ab8cb8071ba8c384cffac2f96f7cada8840f0ef9f",
+              "existedBefore": false
+            }
+          ]
+        },
+        {
+          "backup": ".local-admin/fxtwitter-curated-backups/20261011103727407-6a39ef",
+          "project": "C:\\Projects\\xcliprank",
+          "files": [
+            {
+              "path": "app/api/fxtwitter-authors/route.ts",
+              "installedHash": "2d3dd282eed9b2c2641b501646b2a2c55f3027513ac1fb1f31094f0a0f72295b",
+              "existedBefore": true
+            },
+            {
+              "path": "app/fxtwitter-authors/FreeAuthorsPanel.tsx",
+              "installedHash": "45521cfda5336cc944e2aea0b281b6cf6d8790dc70ac26d1295235f9b256d9dd",
+              "existedBefore": true
+            },
+            {
+              "path": "lib/free-curated-registration.ts",
+              "installedHash": "868db3fe54c51849f5524591264f1486d75061006c000369f07dcb53f9bd6f20",
+              "existedBefore": true
+            },
+            {
+              "path": "scripts/test-free-curated-registration.cjs",
+              "installedHash": "83334bb39d95a93da09abab6d89e44270437d3b1f1ac477a662618878a9a32f5",
+              "existedBefore": true
+            },
+            {
+              "path": "lib/free-curated-metrics.ts",
+              "installedHash": "7d128ce238140a30862b4a0f2cdbbf5d70094b00590dd94ee7c475e022a1702a",
+              "existedBefore": false
+            },
+            {
+              "path": "app/fxtwitter-monitor/page.tsx",
+              "installedHash": "204bf735f3cc9f4513207226e211492efd43190c27f5ee7dab20ecf0050ca6d2",
+              "existedBefore": false
+            },
+            {
+              "path": "app/fxtwitter-monitor/MonitorPanel.tsx",
+              "installedHash": "2ecb296bcdf73ab2f0aef3c330a3143611f5f17d2b8f636ad0900b876895e7a9",
+              "existedBefore": false
+            },
+            {
+              "path": "app/learning-tools/page.tsx",
+              "installedHash": "083e259d9c0a2b58e7843937756924e08eed14ea5833b977fc41406d31b2e986",
+              "existedBefore": true
+            }
+          ]
+        },
+        {
+          "backup": ".local-admin/fxtwitter-curated-backups/20261011115212931-bd7faf",
+          "project": "C:\\Projects\\xcliprank",
+          "files": [
+            {
+              "path": "lib/fxtwitter-curated.ts",
+              "installedHash": "5c13fd3c2fe01bc8c8f796744ddb36b3e3785e0dba94ef28242e46c45d0f307f",
+              "existedBefore": true
+            },
+            {
+              "path": "scripts/test-fxtwitter-curated.cjs",
+              "installedHash": "1b8e9c42eeedef230992c5a59e52d20b25810fd7f5552229fcc92b46f779e636",
+              "existedBefore": true
+            },
+            {
+              "path": "scripts/test-free-curated-cursors.cjs",
+              "installedHash": "1e0c2315e28bf7d2ee7455987e2bae4d9692beed5ca2eb7b8415d952e040eaba",
+              "existedBefore": false
+            }
+          ]
+        }
+      ],
+      "localSourceSnapshot": [
+        {
+          "path": "app/api/adult-authors/route.ts",
+          "sha256": "8967e7f174741f5fb73b366d28c82266af387447762f1f64cb641ac1f198de4f"
+        },
+        {
+          "path": "app/api/collect/route.ts",
+          "sha256": "e30230dd80f442ac7e3dad1bc25fde2309df1456411dd40aa4c2f1eedfc10c89"
+        },
+        {
+          "path": "app/api/collect-curated-author/route.ts",
+          "sha256": "c241570710ef209fe4eed5747ccdb07b97591e66174c7dc6f3751f14390fb1fa"
+        },
+        {
+          "path": "app/api/collect-curated-batch/route.ts",
+          "sha256": "68e25d2c92a53f32e91312beb3337d0788f41cc815d67bbc3af1c052d8d2412f"
+        },
+        {
+          "path": "app/api/collect-priority/route.ts",
+          "sha256": "784fb3330687ceef9d70f2ee806b6b535c16ca23a06a49330ea2e859d8309219"
+        },
+        {
+          "path": "app/api/collect-priority-batch/route.ts",
+          "sha256": "bdb0459878dd24f9868a0478ce7a5a317bc3e61d977e95ff9c877a8bbbcff48c"
+        },
+        {
+          "path": "app/api/collect-test/route.ts",
+          "sha256": "0a057eb2179df30bcadffb09b76f5a76996935e539c5fa663747e2783470a95c"
+        },
+        {
+          "path": "app/api/content-filter-backfill/route.ts",
+          "sha256": "0b93b995d695a0413011429b810c6cee0da34fe623e3b16525962ffcec9b073b"
+        },
+        {
+          "path": "app/api/content-filter-preview/route.ts",
+          "sha256": "1e98e7c2245ae3b6dd13b3b71613514ab2d29c4fc60f6d3583faa73878dd910d"
+        },
+        {
+          "path": "app/api/content-filter-review/route.ts",
+          "sha256": "4959b48aeea10b9811e21407b9d120bfd0de2acc08d25b6f54f3028ec73af570"
+        },
+        {
+          "path": "app/api/curated-authors/route.ts",
+          "sha256": "cc9374296de44849535c5e31e627e74c2c574b1b6f83da22585af2deb2d3a5a1"
+        },
+        {
+          "path": "app/api/engagement/route.ts",
+          "sha256": "e178333c158e12e02323de8ba8872aa10df0e52dafcfd05a49e186a4a908d516"
+        },
+        {
+          "path": "app/api/engagement-stats/route.ts",
+          "sha256": "c054b932f8ac491250150bcfc3913051989a76e74191f86627cb90ccf1506397"
+        },
+        {
+          "path": "app/api/fxtwitter-authors/route.ts",
+          "sha256": "2d3dd282eed9b2c2641b501646b2a2c55f3027513ac1fb1f31094f0a0f72295b"
+        },
+        {
+          "path": "app/api/local-admin-status/route.ts",
+          "sha256": "a90ca731cb59b7f1a49f771f0bc7e5bb6ecb0a685e0386ea63cec837ee48a5f6"
+        },
+        {
+          "path": "app/api/preference-feature-cache/route.ts",
+          "sha256": "b01a91546deda18669134ad0cded97dfc5be51ba64d8611f3ee9fd434df93ec6"
+        },
+        {
+          "path": "app/api/preference-model/route.ts",
+          "sha256": "8a96bc2b03b62a74dcd7b2a40f35e926da07a809b65209311722ab6cd2897825"
+        },
+        {
+          "path": "app/api/ranking-admin/route.ts",
+          "sha256": "64703f59d7174e39768f084a2a49ee19e4a4df75d3055d0b8b704edace8d95e7"
+        },
+        {
+          "path": "app/api/rankings/route.ts",
+          "sha256": "3d4cb2862832eeb9f97016f957eb40cf0abbce52b0e51f2932cfefdba12c33cd"
+        },
+        {
+          "path": "app/api/rebuild-author-signals/route.ts",
+          "sha256": "549612ec3b7706264913b608ed4fac31c4a3bf6cf237c8a0f2e2429263858423"
+        },
+        {
+          "path": "app/api/recount-authors/route.ts",
+          "sha256": "f14cbdf08e729179e31bf84fbcf3cb74d7f6b68eff35357575582f2c4ebe489c"
+        },
+        {
+          "path": "app/api/recount-effective-adult/route.ts",
+          "sha256": "ecf8b3886b353409aff1e7bed0c1822294fa8351d0a6bd6bae16bd1f7c45febf"
+        },
+        {
+          "path": "app/api/recount-posts/route.ts",
+          "sha256": "0256d185c2e073c605c7c1d9c6c8b41543add97bff54f417727f8a09cdae8ea7"
+        },
+        {
+          "path": "app/api/reels/route.ts",
+          "sha256": "465c70bbe9a8395d8cde48f18d00112cd9d33319db670b1b69b85f4862d6eed4"
+        },
+        {
+          "path": "app/api/removal-requests/route.ts",
+          "sha256": "45bb8b897cfd53108202e080aed37a869af8c957c24857a2259788ac5647af0c"
+        },
+        {
+          "path": "app/api/review/route.ts",
+          "sha256": "e49373d4311acc6f0377fa6f1e6bde2e733550a11ce491d33b6f02c6b5de9bc1"
+        },
+        {
+          "path": "app/api/run-cycle/route.ts",
+          "sha256": "01e563629aa7fcdfa94e5b6093dcf2ef0cf844f52dad24d700522a38383123bf"
+        },
+        {
+          "path": "app/api/teacher-authors/route.ts",
+          "sha256": "4d6be89869ff9fb45283aeee8485367f5ecf7b77707231cec4b0159ee46254cc"
+        },
+        {
+          "path": "app/api/tier-personal-model/route.ts",
+          "sha256": "00a0f25bb408075cfd72f5ecc437f11bc1a8ee9ce21ecfc3a3c1e03feb8e1e4c"
+        },
+        {
+          "path": "app/api/tier-preview-playback/route.ts",
+          "sha256": "7e8dd7fa6ec88ea9fedeb1b1c5009bff5679d038373031574f12a05dc023c668"
+        },
+        {
+          "path": "app/api/tier-reevaluation/route.ts",
+          "sha256": "2b5064bdbf4296f43be3c63c60c66de1ea76eb305806455ef0283bc348ed72f2"
+        },
+        {
+          "path": "app/api/tier-teacher-analysis/route.ts",
+          "sha256": "e85e12347c03d9c67d0d16354ee8c3d63088b825b796fdb30998e74beec69357"
+        },
+        {
+          "path": "app/api/tier-video-preview/route.ts",
+          "sha256": "a75bba92d947c37c0ec91e1dbbaebc997c09835faf31252244ed74812de00567"
+        },
+        {
+          "path": "app/api/video/route.ts",
+          "sha256": "ca9636659d7faaec116ee7ecf39ebeaa7c59a7052e6b2254196dbffd573517b2"
+        },
+        {
+          "path": "app/api/video-download/route.ts",
+          "sha256": "18101fe4685cb21f5647c71b95beee044b1b17f738964f9e7777f8da724ef67e"
+        },
+        {
+          "path": "app/api/video-playback-url/route.ts",
+          "sha256": "3d63709513975c1415156e6e617cfa96784afef73ea63947d92f58760e4ffc90"
+        },
+        {
+          "path": "app/api/video-resolve/route.ts",
+          "sha256": "68b72f70630345e15b25d629cd3ec2a23aa33d3f2fe1e039802751e593fa8e20"
+        },
+        {
+          "path": "app/api/visual-filter-image/route.ts",
+          "sha256": "6b3cf40a5bf2d3b0698c93cea6cec6ef32854c43212d4d512818fd4c4497bbf4"
+        },
+        {
+          "path": "app/api/visual-filter-model/[file]/route.ts",
+          "sha256": "53c5396149c40dc329c04eb7b753f53307d7c2f21249eeae844933bfb8b32088"
+        },
+        {
+          "path": "app/api/visual-filter-preview/route.ts",
+          "sha256": "005d30d858816d3738055b92be85b0fc37bbb20c9e293a6dc4f19c371b24829b"
+        },
+        {
+          "path": "app/api/visual-preference-scores/route.ts",
+          "sha256": "b46b7a984e9b7b501dc28f2304181b8e45dc9bc38a7709f859518a1a101be3af"
+        },
+        {
+          "path": "app/api/x-api-usage/route.ts",
+          "sha256": "baf4811d5d382217c987d25bb98ba9624e168c39221b91b44736ec2bccae1d45"
+        },
+        {
+          "path": "app/api/x-promotion/route.ts",
+          "sha256": "6fd409e4acf58796c1467214164a2d7ab3e68d524fec473dfef75352e7a081a1"
+        },
+        {
+          "path": "app/combined-ranking-preview/page.tsx",
+          "sha256": "a9314149643bad8aab16ef02caae97e6e4e94a8b18840c1b9656df05811a302b"
+        },
+        {
+          "path": "app/components/DedicatedRankingPage.tsx",
+          "sha256": "6730c210470554b53d744740a8eb9e0618692dd5a0bab74c0c77bb09e834e3d4"
+        },
+        {
+          "path": "app/components/DirectPlaybackVideo.tsx",
+          "sha256": "c329d61e69861baddab9859abf7402523960a46af10c8eda8e2fc003770017a6"
+        },
+        {
+          "path": "app/components/EngagementVisitTracker.tsx",
+          "sha256": "f9fc3709bfaa17dfcd809a2e3eaf9f1fe5b01c29c26afcb4e8acc24a4af897de"
+        },
+        {
+          "path": "app/components/PersonalLearningWorker.tsx",
+          "sha256": "8575a2230469cc049f25511dc4571ee7a5734d39c1424e696501cbf138b6a4c5"
+        },
+        {
+          "path": "app/components/RankingClient.tsx",
+          "sha256": "9255d02cc9bd5b4dcc133065f93f71441ad5b7be8b7e0a2e3c5b5bd88fe7ad6c"
+        },
+        {
+          "path": "app/components/StructuredData.tsx",
+          "sha256": "420c48544efe5274f6242bf0401a085d72366aefca88c11ec771f306bbc27c48"
+        },
+        {
+          "path": "app/components/TierPreviewVideo.tsx",
+          "sha256": "cbfd99870726d6e9f03a8dd598d6b32f61c39c444fda0ce3401929a67b99dbbf"
+        },
+        {
+          "path": "app/components/TweetEmbed.tsx",
+          "sha256": "1b27d2ea2dea1cfb3d7ce19660c8d4f50f6f5243572de206f80b8546ace03b4b"
+        },
+        {
+          "path": "app/components/VideoDownloadButton.tsx",
+          "sha256": "abdae15d9cb939991432287c95c3c085ddcd994cd608fc4e60281c5bf3ec3c21"
+        },
+        {
+          "path": "app/content-filter-review/page.tsx",
+          "sha256": "57e20a4a28c15bec5b61672338de0d7a7f1ef343e65c78faa12e52575db56135"
+        },
+        {
+          "path": "app/curated-authors/page.tsx",
+          "sha256": "e34eccd1b1b858f1b9254229ef060214ec56bcba8a2f9e5a12735deea32c6a46"
+        },
+        {
+          "path": "app/download/DownloadForm.tsx",
+          "sha256": "6212d4eb5104ef4a778db30463f8df5525e2a9872e0c5fe57950f684f629297a"
+        },
+        {
+          "path": "app/download/page.tsx",
+          "sha256": "1e843ecc29d994f8e10a19f096efdc55b8c69ff8c6f24fef87cdf7e82d8610be"
+        },
+        {
+          "path": "app/download-policy/page.tsx",
+          "sha256": "6e5e9fe04ea9cd34baa5ecf6f5a27af00a708c8cfcb8157cabc2fdab310d5189"
+        },
+        {
+          "path": "app/engagement-admin/page.tsx",
+          "sha256": "bf2404836292b33234d463074821dae686d8ad57f42e1580fa33d17268088cde"
+        },
+        {
+          "path": "app/fxtwitter-authors/FreeAuthorsPanel.tsx",
+          "sha256": "45521cfda5336cc944e2aea0b281b6cf6d8790dc70ac26d1295235f9b256d9dd"
+        },
+        {
+          "path": "app/fxtwitter-authors/page.tsx",
+          "sha256": "442f8385c749345bbe3ce12dbb987443d680c7cb18032879bf138c93df52c8f9"
+        },
+        {
+          "path": "app/fxtwitter-monitor/MonitorPanel.tsx",
+          "sha256": "2ecb296bcdf73ab2f0aef3c330a3143611f5f17d2b8f636ad0900b876895e7a9"
+        },
+        {
+          "path": "app/fxtwitter-monitor/page.tsx",
+          "sha256": "204bf735f3cc9f4513207226e211492efd43190c27f5ee7dab20ecf0050ca6d2"
+        },
+        {
+          "path": "app/layout.tsx",
+          "sha256": "ae1059af74fc7eedc0aed9e5a335069faf3d1d3cc9eada95992a32f4222ba116"
+        },
+        {
+          "path": "app/learning-tools/page.tsx",
+          "sha256": "083e259d9c0a2b58e7843937756924e08eed14ea5833b977fc41406d31b2e986"
+        },
+        {
+          "path": "app/page.tsx",
+          "sha256": "a6cfed186b7d28cc63d97a9486dac2d9bcb1af9cc25d42c56a462a96a40c76a4"
+        },
+        {
+          "path": "app/preference-model/page.tsx",
+          "sha256": "9937b065031dd25eb64d896d146a9bb8438b2a13cc5207cab63757544d90a1ee"
+        },
+        {
+          "path": "app/ranking/daily/page.tsx",
+          "sha256": "2f6fa0a16a415f27758ba7f61f8c7f94f27b27d1a28a157b30214dd92792395b"
+        },
+        {
+          "path": "app/ranking/weekly/page.tsx",
+          "sha256": "8c73b67dc08bc99235ab93759dc797283da7d747bf689f456e726b3642a2da87"
+        },
+        {
+          "path": "app/ranking-admin/page.tsx",
+          "sha256": "8e652992a02666815e8c4b54797412fe1f9f6c12ec79b64b64b39fa2e40c7dca"
+        },
+        {
+          "path": "app/reels/page.tsx",
+          "sha256": "4fd7711dee2552e460e7bec78fe1db8510772bf24cce663ea1bee3d72862979c"
+        },
+        {
+          "path": "app/reels/ReelsFeed.tsx",
+          "sha256": "0262e8b1c6a054d3b31250732bbf95a577a1fce7d6c2d1e45fa4b9b18a12a937"
+        },
+        {
+          "path": "app/removal-request/page.tsx",
+          "sha256": "10413567821b9b805fcf172c1b46bf4fc1dd2a16aab493d98137e0be1a4008db"
+        },
+        {
+          "path": "app/removal-requests-admin/page.tsx",
+          "sha256": "33852bcc7e00279c291a01e7ba4b77c121990c01219be699d843b0808dd3c551"
+        },
+        {
+          "path": "app/review/page.tsx",
+          "sha256": "93ae3eac0caddf9c8fbfde75950fd685e195c80cb5fb621172f016fc2a48b907"
+        },
+        {
+          "path": "app/robots.ts",
+          "sha256": "023caf86a21cc3fbc27008f3d51ffbde025388bc4a855f409e67173926ff8b06"
+        },
+        {
+          "path": "app/site-visual-preference-review/page.tsx",
+          "sha256": "f7f526f15e49d5c24dd45362c6934cd67e3c616039d012e9bd292d3646e35fd7"
+        },
+        {
+          "path": "app/site-visual-preference-review-2/page.tsx",
+          "sha256": "df85baf7c3b4796cd2995e452cc4f4d15328f86c942f78dc9b22306c20a633c6"
+        },
+        {
+          "path": "app/site-visual-preference-review-3/page.tsx",
+          "sha256": "9a224786515cf75da0d20e03ef12d8c2aa74b49dd738cce1934d26179927a498"
+        },
+        {
+          "path": "app/sitemap.ts",
+          "sha256": "08eba6ab67795523ab18a55fc7c3cc79954641816890b2ba4f7382ad13420bfc"
+        },
+        {
+          "path": "app/teacher-authors/page.tsx",
+          "sha256": "d3758c652313176b469bcceb00c0118da56d761d5636fa90ac41b297d67b62ee"
+        },
+        {
+          "path": "app/tier-personal-model/layout.tsx",
+          "sha256": "869c07996f51857775a90b2baeaea2375ea19c2101ab4ba0307d0b5a2085dac4"
+        },
+        {
+          "path": "app/tier-personal-model/page.tsx",
+          "sha256": "d28b148b4961d77a2cee0731d4e6c4dd8fb3cb71f0432056d64756d5850890f4"
+        },
+        {
+          "path": "app/tier-reevaluation/layout.tsx",
+          "sha256": "935c6af81bd3d9a0fab0476e9c266eafafab94ab5fff5ad2563be18d07d53076"
+        },
+        {
+          "path": "app/tier-reevaluation/page.tsx",
+          "sha256": "567981340abe5c52eb6999bd5f185dd227b9f8a0bf504adf1221bdf49ffbc3aa"
+        },
+        {
+          "path": "app/tier-teacher-analysis/layout.tsx",
+          "sha256": "fb348e2665225e7410d65e47e5f457230640658dd96298adf48e07e6c6630192"
+        },
+        {
+          "path": "app/tier-teacher-analysis/page.tsx",
+          "sha256": "4ec929216e827be546dcab0bb55c65f5bd67bb99b5ff0fffed2fae980e8ea3cb"
+        },
+        {
+          "path": "app/tier-video-preview/layout.tsx",
+          "sha256": "5f1f7b593815cda9cd8d751bb7e4b2c16240385beaec154d28ebf832629acdab"
+        },
+        {
+          "path": "app/tier-video-preview/page.tsx",
+          "sha256": "a9888df66689e6a26049df62801d805118cd527d51b0f7a281893250580474ea"
+        },
+        {
+          "path": "app/visual-filter-preview/page.tsx",
+          "sha256": "521d0e55712657e5fc89eebae409f86427934050d3182f2ea8122f1b2fa780d1"
+        },
+        {
+          "path": "app/visual-reference-review/page.tsx",
+          "sha256": "b94c005b476c8a4a2576b8b77e26123b8d3f3899275f804f95a1c4a8abf7d50c"
+        },
+        {
+          "path": "app/x-api-usage/page.tsx",
+          "sha256": "c0927b02f7a2a515630bf19d2e34380678d578eff1550569d316af351e6caf29"
+        },
+        {
+          "path": "app/x-promotion/page.tsx",
+          "sha256": "c1395b41936396f557e225eed8724f929c5287814147f0c1d20c038be5d0e939"
+        },
+        {
+          "path": "lib/adult-score.ts",
+          "sha256": "f3945af35340fd5aef7086a45d5980d0c1754ff661bdde4c120d9107847f4e09"
+        },
+        {
+          "path": "lib/browser-direct-download.ts",
+          "sha256": "b7f89e71f1af94f9cb4e170a11a52b68b31dc3e13a1e641944f46bb3ea6c5ed5"
+        },
+        {
+          "path": "lib/browser-direct-playback.ts",
+          "sha256": "32e3c27abbf62b180edb0f6a03665e71274640c94db8909b38dd9e8a259f2793"
+        },
+        {
+          "path": "lib/browser-playback-recovery.ts",
+          "sha256": "ceb1f9e136b58b64f87d4d967b3b1f2cbfb0a5fa578aaf1bd7d694365fd259ba"
+        },
+        {
+          "path": "lib/browser-stream-playback.ts",
+          "sha256": "eb1c8426b8a1f7503bf71e2881a07273eab3b31c1e5077fb8298f3e7599c0233"
+        },
+        {
+          "path": "lib/content-filter.ts",
+          "sha256": "32702b77ed751395ef311dbf2402b708dea7f01341235c02c84c7eff7730bff5"
+        },
+        {
+          "path": "lib/cron-auth.ts",
+          "sha256": "8a9e85861e294fc1e5338407039735663f7b60f0250389a5b10882f5d0954ac2"
+        },
+        {
+          "path": "lib/curated-collector.ts",
+          "sha256": "02e5526538a760b604d0a4131319638da1e7b124c1d12c44753d62768b2d6c3e"
+        },
+        {
+          "path": "lib/download-free.ts",
+          "sha256": "78116a42bd94f796fc6c97766ef4e2d7f6bca4bd0026a6ef53146e1f0b5d9866"
+        },
+        {
+          "path": "lib/download-url-store.ts",
+          "sha256": "324ef6eab6a1b1c35ba00c10d5212160ae06d8cdd686e43a1f1e05676ecabada"
+        },
+        {
+          "path": "lib/download-url.ts",
+          "sha256": "70c8c2dd4906742f8a0a6fc7a3dd030605c9894b853c7d17cdb298afe9b20c9c"
+        },
+        {
+          "path": "lib/engagement-client.ts",
+          "sha256": "44863379f1e6989e5158873daee0cd1d7b4deef90b9e566957b51458d3278422"
+        },
+        {
+          "path": "lib/error-message.ts",
+          "sha256": "77c79aa9b0fd4a760c627fd0c98c2c724793048121eb2ac1dbc63c542b7b30cb"
+        },
+        {
+          "path": "lib/free-curated-client.ts",
+          "sha256": "ece527416f7a77657f7e75bdf8018afdd4bfae79c0efefbf8d77c6d1f1e43d60"
+        },
+        {
+          "path": "lib/free-curated-metrics.ts",
+          "sha256": "7d128ce238140a30862b4a0f2cdbbf5d70094b00590dd94ee7c475e022a1702a"
+        },
+        {
+          "path": "lib/free-curated-registration.ts",
+          "sha256": "868db3fe54c51849f5524591264f1486d75061006c000369f07dcb53f9bd6f20"
+        },
+        {
+          "path": "lib/fxtwitter-curated-save.ts",
+          "sha256": "f64c8942cc81f6932492dc1b39bc1666224538c63b42c28747f0da4bce7c376e"
+        },
+        {
+          "path": "lib/fxtwitter-curated-store.ts",
+          "sha256": "64eb4f59c266f6cdd1434e5e76160a80c2bcae0cf2778348d5124e08d2f88e41"
+        },
+        {
+          "path": "lib/fxtwitter-curated-tier.ts",
+          "sha256": "7d71a34ecdaba52971125669e71c637b2aebb5f1a8519cc16c155d9327d7548d"
+        },
+        {
+          "path": "lib/fxtwitter-curated.ts",
+          "sha256": "5c13fd3c2fe01bc8c8f796744ddb36b3e3785e0dba94ef28242e46c45d0f307f"
+        },
+        {
+          "path": "lib/fxtwitter-local-access.ts",
+          "sha256": "5728717bae5c27b20123c6afd39e743fa9f1a0ce16c0bda9b4bf7abf5651bdf5"
+        },
+        {
+          "path": "lib/initial-ranking.ts",
+          "sha256": "152a8d81f14a05c05eb6f3ea3613ce1b5b3f752544930fa62c01aa5d32fe08c8"
+        },
+        {
+          "path": "lib/playback-refresh.ts",
+          "sha256": "09fb063c7e61e2a2e79a6f7a205e8031f7057fded9406a4d88d113896aaa00f7"
+        },
+        {
+          "path": "lib/ranking.ts",
+          "sha256": "3eef807645941acdc114f6b9a12432ed9058b4f060b421eed5b9fc8d87b71c07"
+        },
+        {
+          "path": "lib/seo.ts",
+          "sha256": "ffd6beb9b4a0a3e1a34307478255d9687c0c70c7ca31fc25dc53e2ff21d246d8"
+        },
+        {
+          "path": "lib/supabase-admin.ts",
+          "sha256": "f8b8ce736e78bc7ce0ded8dee0861921e6eeb90ffe93b070f9ba2c618fb502fe"
+        },
+        {
+          "path": "lib/tier-learning.ts",
+          "sha256": "d454f243a4cd80af6fbeb0095281542812e23488707af6b3c5294ea8759531f8"
+        },
+        {
+          "path": "lib/tier-model-release.ts",
+          "sha256": "8b28b80cd2885e12afff9b2d73834f13c39aaa70c314dd08ccad145627bd1a65"
+        },
+        {
+          "path": "lib/tier-new-video-worker.ts",
+          "sha256": "4f8b98c267fec2b42ce2afc59b495c634e31a7001cdee5538d40851f87f654e3"
+        },
+        {
+          "path": "lib/tier-personal-core.ts",
+          "sha256": "c57710c4fb870a9cb416d1cc12e0abd8e7ce9ed0815447331bd515aba900689b"
+        },
+        {
+          "path": "lib/tier-personal-engine.ts",
+          "sha256": "0058206e4bd21524c8db8d6701d7bb1a19c7f56a72340310a80ced73fef30301"
+        },
+        {
+          "path": "lib/tier-personal-evaluation.ts",
+          "sha256": "e81c5cc08ad0f07aa8aa497c227abbb785a245e41c8eef0db91543a7a8c2cc3a"
+        },
+        {
+          "path": "lib/tier-personal-image.ts",
+          "sha256": "832843380b391ae1068cdb37808f8e67abcc67eb4ed67652cb5aebecdba1b1ff"
+        },
+        {
+          "path": "lib/tier-personal-store.ts",
+          "sha256": "1d924043e933f703bd2210e9ceb3131c8c95c3a9fe4a0e9a393bddc5d037fc01"
+        },
+        {
+          "path": "lib/tier-personal-video.ts",
+          "sha256": "a6db1ba177d611f5fc3ff5c4895fbf9edc339e0807da13f9724a470a38623963"
+        },
+        {
+          "path": "lib/tier-preview-playback.ts",
+          "sha256": "d401b0de1ea0367cd80f1ad1f3dc94d3d5e90cf9f2d7fdf984f0af425c8a81ee"
+        },
+        {
+          "path": "lib/tier-reevaluation.ts",
+          "sha256": "d0ed57dbb77d58b224d0bec4955be7cff67b18133bf99296bef18bfd3ecfe481"
+        },
+        {
+          "path": "lib/tier-teacher-analysis.ts",
+          "sha256": "e1ff7659f163c774b6cc8ab42febf048c0a2047adc1bbfe4a2ff8ea7a7f8812d"
+        },
+        {
+          "path": "lib/tier-video-preview.ts",
+          "sha256": "9e2570c7e36ce1887a127be40134b8fb7269fd47be2cfee9840599f3143c2a66"
+        },
+        {
+          "path": "lib/tier-visual-comparison.ts",
+          "sha256": "89e76c2d6f3511e810bc52efb4c82f512d658ba2978a507c51d56b3ee147bf8d"
+        },
+        {
+          "path": "lib/video-download.ts",
+          "sha256": "9e0ae9501b50f32f5b84561c179af40db62f5c9f992eb5fecfe89efe35fba37c"
+        },
+        {
+          "path": "lib/x-image-safety.ts",
+          "sha256": "bf98a41b248cf70246aa1453f6e92de8a70b11e1bcdcfc11ecdca1eb4926511c"
+        },
+        {
+          "path": "lib/x-publish.ts",
+          "sha256": "c54b31fdadd84a7b92323345880b534b6854171be25c2d4d4c86f60b50587e93"
+        },
+        {
+          "path": "lib/x.ts",
+          "sha256": "59dee9613ff5d392f963ebd7159dc91a2019fa00b6682b400699ef947cc4a58b"
+        },
+        {
+          "path": "scripts/test-direct-download.cjs",
+          "sha256": "4f028284612febf771dd05ea56f6c7489bc49a5c94ec43ffde3a832b77e79da2"
+        },
+        {
+          "path": "scripts/test-direct-playback.cjs",
+          "sha256": "70b0dbc259df734213c7cffaae7819adf3e393e727e11d4f9f66eed1b5264c86"
+        },
+        {
+          "path": "scripts/test-download-free.cjs",
+          "sha256": "47801f744491f22154a77d3dc61893d416b8bb3a495751f945feaf746836091d"
+        },
+        {
+          "path": "scripts/test-download-url.cjs",
+          "sha256": "80d7e3c8555a4378062c9fedf7ba9f06c02fe2683748048d1891deb8cab81e3f"
+        },
+        {
+          "path": "scripts/test-free-curated-cursors.cjs",
+          "sha256": "1e0c2315e28bf7d2ee7455987e2bae4d9692beed5ca2eb7b8415d952e040eaba"
+        },
+        {
+          "path": "scripts/test-free-curated-registration.cjs",
+          "sha256": "83334bb39d95a93da09abab6d89e44270437d3b1f1ac477a662618878a9a32f5"
+        },
+        {
+          "path": "scripts/test-fxtwitter-curated.cjs",
+          "sha256": "1b8e9c42eeedef230992c5a59e52d20b25810fd7f5552229fcc92b46f779e636"
+        },
+        {
+          "path": "scripts/test-hls-loader.cjs",
+          "sha256": "fefca727f4120ec0ffc6eaf9b8e6381c28aebabfebf0c1cd0547ab5e752827c2"
+        },
+        {
+          "path": "scripts/test-playback-component.cjs",
+          "sha256": "ce0b8b07dee810e586a7a8566fd484f425ccd7db6be6265df904d30ecbc1d6c8"
+        },
+        {
+          "path": "scripts/test-playback-recovery.cjs",
+          "sha256": "203c30a5003d28b1503f02d84825690782c2a63f050e4d3b1edec090c36af174"
+        },
+        {
+          "path": "scripts/test-stream-component.cjs",
+          "sha256": "2043cd39f55ab3e09429e11308803b1f709d0348f5c4095f479682691f6c4d6f"
+        },
+        {
+          "path": "scripts/test-stream-playback.cjs",
+          "sha256": "b24e52726cb6ef219c8cf988d16912b3e5fc569918bc13423047fe6e16c579a0"
+        },
+        {
+          "path": "scripts/test-tier-compatible-playback.cjs",
+          "sha256": "638bfaf5869f574285b91dbfd6b90387defa72b73d8537d96b65772fca1fb439"
+        },
+        {
+          "path": "scripts/test-tier-four-frames.cjs",
+          "sha256": "df0b34a1672b4756ea6be08a42fee601e2851c9fdf2112017dd3f2b9b6179c84"
+        },
+        {
+          "path": "scripts/test-tier-high-recall.cjs",
+          "sha256": "4fc21bb498f5f435c190bb06c7bd314595af5ce02ac22051ed096629151034ca"
+        },
+        {
+          "path": "scripts/test-tier-model-release.cjs",
+          "sha256": "b7aeec8506b7e050d83b03408e113f277458e8b88ad06a386e9623afbec19732"
+        },
+        {
+          "path": "scripts/test-tier-new-video-worker.cjs",
+          "sha256": "122eea4e319434381d2b175e9ff092405fd6ecc91f0a90ae83709f2aca8c7a00"
+        },
+        {
+          "path": "scripts/test-tier-ordinal-adjustment.cjs",
+          "sha256": "b15fb979028fbd4a1be53138053b4a209c01bb08bcd54c8dae5521edc5bf0db6"
+        },
+        {
+          "path": "scripts/test-tier-personal-engine.cjs",
+          "sha256": "77dbef676c6e72c00ce949d6ab6460f4221d282644d7114c2524d31147b25d8b"
+        },
+        {
+          "path": "scripts/test-tier-personal.cjs",
+          "sha256": "5a99b37cacb95a88474d2fd39f1575f8df63d347054deffc0102893a0cedf4bf"
+        },
+        {
+          "path": "scripts/test-tier-preview-playback.cjs",
+          "sha256": "4d09b1e509edd722b17425344c4c27e28d15f97e4ea0305363a021351e729700"
+        },
+        {
+          "path": "scripts/test-tier-reevaluation-auth.cjs",
+          "sha256": "706e2c84778e707032c100788d6387332fb758ae1f8e5d37117b75bdc3c11045"
+        },
+        {
+          "path": "scripts/test-tier-reevaluation.cjs",
+          "sha256": "fd4ab95605b0f6da4428c7d8631a5d3ff35a9426ce0a2cf279e50ea0ee434426"
+        },
+        {
+          "path": "scripts/test-tier-teacher-analysis.cjs",
+          "sha256": "03bc246e3044bd929d061aad023623c5bb3f8886b53e1380e9ae6ff216e60093"
+        },
+        {
+          "path": "scripts/test-tier-teacher-improvements.cjs",
+          "sha256": "8e391a0f1730debd66fb12f494d91c90e0c050c40c19179653608c79180e04d9"
+        },
+        {
+          "path": "scripts/test-tier-video-preview.cjs",
+          "sha256": "b480f961ae540e43ea2987bbabe489109ff3288252762164d97c9bfa656fc99a"
+        },
+        {
+          "path": "scripts/test-tier-visual-comparison.cjs",
+          "sha256": "d14e92d001554e885c35bbf90091041880d29719c53d7b82b19f5261f1e2f0f1"
+        },
+        {
+          "path": "scripts/test-url-resolve-fix.cjs",
+          "sha256": "0bc35b9a3fd8028e9c64a1ed48019fda613e83e85e67a9073a21ef7111e07c5a"
+        },
+        {
+          "path": "scripts/test-video-download.cjs",
+          "sha256": "4f028284612febf771dd05ea56f6c7489bc49a5c94ec43ffde3a832b77e79da2"
+        }
+      ],
+      "limitations": [
+        "Historical file saved dates are not deployment dates.",
+        "Only confirmed prior conversation and artifact evidence has been backfilled; remaining past deployment states are unknown.",
+        "Source ZIP hash is omitted here because it contains this manifest.",
+        "No environment files, credentials, or private data contents are recorded."
+      ],
+      "completionRecording": {
+        "recordedAtJst": "2026-10-11T21:20:56+09:00",
+        "userClosed": true,
+        "applicationCodeChanged": false,
+        "gitOperation": "scoped local commit; no push",
+        "priorHead": "fd0aa62f81849d5bfde16f6fb5eeeb5efe1465bc",
+        "artifacts": [
+          {
+            "sha256": "a69af93b9bced2026cacce5c105d040c4e925c71fcd60af8f1e5c5556f647deb",
+            "path": "releases/20261011-availability-curated/xclip-availability-curated-fix-deploy-20261011.sh"
+          },
+          {
+            "sha256": "3cad8fce341d700dc21ef51ba4e944f5d31a9fe85bf665a67d155ae283c0a920",
+            "path": "releases/20261011-availability-curated/xclip-availability-curated-fix-local-20261011.ps1"
+          },
+          {
+            "sha256": "1394b738a6dc937623b98afb48ed4a5e435b30e860dd104425a05c35d62e3935",
+            "path": "releases/20261011-availability-curated/xclip-availability-curated-fix-source-20261011.zip"
+          }
+        ],
+        "selectedPaths": [
+          ".gitignore",
+          "AGENTS.md",
+          "docs/development-workflow.md",
+          "docs/XCLIP_UPDATE_HISTORY.md",
+          "docs/xclip-update-artifacts.json",
+          "app/api/fxtwitter-authors/route.ts",
+          "app/fxtwitter-authors/page.tsx",
+          "app/fxtwitter-authors/FreeAuthorsPanel.tsx",
+          "app/fxtwitter-monitor/page.tsx",
+          "app/fxtwitter-monitor/MonitorPanel.tsx",
+          "lib/free-curated-client.ts",
+          "lib/free-curated-metrics.ts",
+          "lib/free-curated-registration.ts",
+          "lib/fxtwitter-curated-save.ts",
+          "lib/fxtwitter-curated-store.ts",
+          "lib/fxtwitter-curated-tier.ts",
+          "lib/fxtwitter-curated.ts",
+          "lib/fxtwitter-local-access.ts",
+          "scripts/test-fxtwitter-curated.cjs",
+          "scripts/test-free-curated-registration.cjs",
+          "scripts/test-free-curated-cursors.cjs",
+          "releases/20261011-availability-curated/xclip-availability-curated-fix-deploy-20261011.sh",
+          "releases/20261011-availability-curated/xclip-availability-curated-fix-local-20261011.ps1",
+          "releases/20261011-availability-curated/xclip-availability-curated-fix-source-20261011.zip"
+        ],
+        "productionVerification": "user screenshots only; no server execution log or DB verification",
+        "nextRequest": "hybrid X API collection feasibility review only, not implemented"
+      },
+      "proposedHybridRelease": {
+        "id": "hybrid-xapi24-20261011",
+        "status": "created and mocked-tested; not applied",
+        "baseGitCommit": "84bd6f49cbeed2372b07408104e5d0348ffc0ac7",
+        "provider": {
+          "registration": "fxtwitter",
+          "bulk": "fxtwitter",
+          "scheduledNewVideos": "x_api",
+          "availabilityMonitor": "fxtwitter"
+        },
+        "rolling24hAuthorLimit": 24,
+        "perAuthorMinHours": 24,
+        "maxRawPostsPerAuthorAttempt": 100,
+        "productionTargets": [
+          {
+            "path": "lib/free-curated-metrics.ts",
+            "sha256": "7d128ce238140a30862b4a0f2cdbbf5d70094b00590dd94ee7c475e022a1702a",
+            "acceptedBefore": [
+              "46c6c6aeee3bcdb25861851fca1791674591b51ebc63bf94f718e781f22cfaa2",
+              "7d128ce238140a30862b4a0f2cdbbf5d70094b00590dd94ee7c475e022a1702a",
+              "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+            ]
+          },
+          {
+            "path": "lib/free-curated-server-store.ts",
+            "sha256": "66c4649ea7eba584a54199ef9bceb69e52c93619cae56394bcd51b0339840696",
+            "acceptedBefore": [
+              "56d1f86fd5aa0de6b047dd164b465af01c41e2e5e2466c3bfbd0e34337d9d65e",
+              "66c4649ea7eba584a54199ef9bceb69e52c93619cae56394bcd51b0339840696",
+              "83c78ae5373e58391f6381fe1add8f8cc1d3804c97429f7e84f4186b05bce050",
+              "c75bef7dcee742409065db7994fdf0ad9efd02ee0c8e78b049f4840dbca2ea52",
+              "d12fb37bc871a03588362f89bb059ccc4b0c3732da9fc306eb97f927c05d5058",
+              "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+            ]
+          },
+          {
+            "path": "lib/free-curated-scan.ts",
+            "sha256": "deeca848ee31340bd947309541435ef3fa277e85ea6f178aab8e35fe4731e70b",
+            "acceptedBefore": [
+              "2185ec8ddee010d6c4ba0cc1fa208a322650d7825ff43ad4567fe1be0adc351a",
+              "33e810157da4a8f2a2cb67045b3635fb45d7813b3150cf1575a502843b27f842",
+              "7d1c4d6058da4e5377ef18f73bdae9a57261eaef994dacb10d7d9546b8f90da2",
+              "a0db8b706be4ad4737b0e39e3c08ffa72b9585c75bc5133d7836d3817cf32cd5",
+              "cd9d9d59b725924440423de2c5e59b5b54598b31c39f7d91b9d6d611746f735e",
+              "deeca848ee31340bd947309541435ef3fa277e85ea6f178aab8e35fe4731e70b",
+              "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+              "f6a78cf20359902616ce8d136b576517d10190ae53006fab07b95ba176f83a66"
+            ]
+          },
+          {
+            "path": "lib/free-curated-dashboard.ts",
+            "sha256": "0a9a86e42dffa4bed09c4bc25476341ffd9feb9bc6c38b01da25ca1e66ec2af1",
+            "acceptedBefore": [
+              "0a9a86e42dffa4bed09c4bc25476341ffd9feb9bc6c38b01da25ca1e66ec2af1",
+              "47b989d508aafeabe9d2ae984f57f6c5dac9e9115751deba71d8411965da15b9",
+              "e1c53ed3483d099e69a97f922aa7646df24903a36a14d7df92ee272a6cd41b4e",
+              "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+            ]
+          },
+          {
+            "path": "lib/free-curated-sync.ts",
+            "sha256": "cb90a23a71c1c93b4be2be55ef7785f096b82cc51e1b01c051f720e108323834",
+            "acceptedBefore": [
+              "01ef4efa60bbb5acbd999205dd381a6556ab4de69f32a928738b1b2f607aadaa",
+              "1aed1f01bf7cc0437a09debc673b7b5344f9e68f02dabe00bbb82df0f1a91222",
+              "81594fbd099f1add0ee4b7e06a6a3d0e9ec3855140f529158204174f68dba6fa",
+              "cb90a23a71c1c93b4be2be55ef7785f096b82cc51e1b01c051f720e108323834",
+              "ddbacb6cda90a46ed9e62045ec4a79e60cbb987a5850dba18f501eac9893c5b7",
+              "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+            ]
+          },
+          {
+            "path": "scripts/test-free-curated-dashboard.cjs",
+            "sha256": "def0469ba7129f036980e07b39fe43c2c60b22a1b7bbd076286f2b738f127d4a",
+            "acceptedBefore": [
+              "0c6c7283ed7dc3501a311d8c985af74dbd84a17f5a8d8165ee987213aad44698",
+              "7c64aecd6bcbf7277b7fc2f9e5b69062e986760addb64dd251e77eb4e7ca0cec",
+              "def0469ba7129f036980e07b39fe43c2c60b22a1b7bbd076286f2b738f127d4a",
+              "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+              "f176a8d504409b737a92bfa33c7479dfe641ab8e2e8c8a74cf3eb77c958af352",
+              "f86d4265f38547d55c7d654eea7a7b74e9aafc3c5bb04ac44acdf460d775c422"
+            ]
+          },
+          {
+            "path": "lib/post-status.ts",
+            "sha256": "cefbc7955dfd9101edad3f8a7e1f5cfbbb09301350319c4f7717f9cafba43c81",
+            "acceptedBefore": [
+              "2d474e830b56548e2953ce7dfc959f9c014c24594ee2c7b394ca6641df4b1e8a",
+              "6ebe5a5bd135c2957ea65abb37de4282220da8e2a6b41bc7ca99b58e66f85e89",
+              "97faf182cc2f34e9185e75227a9458c976ebf49bb9cc756553c6ec11ad4f0531",
+              "cefbc7955dfd9101edad3f8a7e1f5cfbbb09301350319c4f7717f9cafba43c81",
+              "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+              "f98053058ca61d0b293aebc5c30601ab62c84c82211bc1b4e255b895c830457f"
+            ]
+          },
+          {
+            "path": "scripts/test-free-curated-production.cjs",
+            "sha256": "e626a15ca5ff3566e666b88eaa0f5cffbdf52f0e106e705b5c0609ad707202e6",
+            "acceptedBefore": [
+              "25960edd13d66e4fe602455845868006a8df61a1ba249471f744d266eeb90104",
+              "921fe541425687385842e45bdce1e9542b71ed88cf0ae335eb5693e8781fdb84",
+              "d6274336536b61be7998d3dbd86e2682cc2c4dd553ec9507757b39cf69c7f7bb",
+              "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+              "e626a15ca5ff3566e666b88eaa0f5cffbdf52f0e106e705b5c0609ad707202e6",
+              "f435182d01b4539e89f1d8dd11825c3c4e6b32a381102dc90b5ed3f565c8cb2e"
+            ]
+          },
+          {
+            "path": "lib/availability-scan.ts",
+            "sha256": "104a5aabd39cdabb5bcb16ff6ab632fb8233aed7fae391ee55edd57c2a479f62",
+            "acceptedBefore": [
+              "104a5aabd39cdabb5bcb16ff6ab632fb8233aed7fae391ee55edd57c2a479f62",
+              "8c9d1aff160cffb06f8fad1044f6739eb21dfb5ef06311750c52e781d4264e54",
+              "d99ee035d84d2a38f83ab4a6e135a3b02e44747772afaf45ff638935e781e4f9",
+              "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+              "e64fe49cbabefb15565cec0e1f7128385a74bb1785456604957197b1979d777e"
+            ]
+          },
+          {
+            "path": "scripts/test-availability-curated-regression.cjs",
+            "sha256": "686b9b06556052f137d4d9bf7f0523475f74fbcda4fd5841d2c29425f0a31ee2",
+            "acceptedBefore": [
+              "686b9b06556052f137d4d9bf7f0523475f74fbcda4fd5841d2c29425f0a31ee2",
+              "d204641effff94da2faa0654353722b85c8daf089c6b9c2d9340497594df07b8",
+              "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+            ]
+          },
+          {
+            "path": "scripts/test-availability-monitor.cjs",
+            "sha256": "5269f53d75dfc985dd09d26b8c0b8ca060a426c1cfd92bc87f9a3a53ba2c2b04",
+            "acceptedBefore": [
+              "34a3ac94df4f5a85d40a9353c1790642513df64eb0375a0ee1740820d94ee2a9",
+              "5269f53d75dfc985dd09d26b8c0b8ca060a426c1cfd92bc87f9a3a53ba2c2b04",
+              "74df1cfc333aa86e783a4ef4279446f3ab33c0e6bda378db806579f9fcf6d3d2",
+              "9c52690d5e8109c64798735fa68954b9e46d7e76b7c08b538f86726719ff43b3",
+              "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+            ]
+          },
+          {
+            "path": "scripts/test-free-curated-cursors.cjs",
+            "sha256": "1e0c2315e28bf7d2ee7455987e2bae4d9692beed5ca2eb7b8415d952e040eaba",
+            "acceptedBefore": [
+              "082df00aec184a7e5c920daf12a4af5adcabb5a5563b2c10787b97b47a937545",
+              "1e0c2315e28bf7d2ee7455987e2bae4d9692beed5ca2eb7b8415d952e040eaba",
+              "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+            ]
+          },
+          {
+            "path": "lib/fxtwitter-curated.ts",
+            "sha256": "e2174eec5358424bc146a3dc8fb01041eb1a1289cb636e1b93c12be88d309876",
+            "acceptedBefore": [
+              "1ad0c78f9ae6d2fb8ed7a38d3b825213d541c26b1d38cfef18a71c5ce7575ac8",
+              "5c13fd3c2fe01bc8c8f796744ddb36b3e3785e0dba94ef28242e46c45d0f307f",
+              "8c0e7d13b7176dc1ab2351d584a59b9f6dcd031c5748c4ded9b56788a43bbc29",
+              "bc16acf2eade80b19b98e24fa9d4c0d7864815568f75e2f80187859c1ed30560",
+              "c43561a7cb0fe9874222b7711968e7773e9b3418fa8cb94c45006836d25b4440",
+              "e2174eec5358424bc146a3dc8fb01041eb1a1289cb636e1b93c12be88d309876",
+              "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+            ]
+          },
+          {
+            "path": "lib/x-curated-state.ts",
+            "sha256": "a44eb46949f1f21f83d63847b04046a3a76a99c34ac6e065ffca9e3e95e1ad74",
+            "acceptedBefore": [
+              "a44eb46949f1f21f83d63847b04046a3a76a99c34ac6e065ffca9e3e95e1ad74",
+              "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+            ]
+          },
+          {
+            "path": "lib/x-curated-search.ts",
+            "sha256": "90d41fadb981e46ea33bf7abee1aacc4c5422dadae9ac9f28055956d32465daf",
+            "acceptedBefore": [
+              "90d41fadb981e46ea33bf7abee1aacc4c5422dadae9ac9f28055956d32465daf",
+              "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+            ]
+          },
+          {
+            "path": "lib/x-curated-scan.ts",
+            "sha256": "3219ca753b95574c4f04166bc4d5a2770e4fc9acfe9537bdc219dafa322fa767",
+            "acceptedBefore": [
+              "3219ca753b95574c4f04166bc4d5a2770e4fc9acfe9537bdc219dafa322fa767",
+              "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+            ]
+          },
+          {
+            "path": "scripts/test-x-curated-hybrid.cjs",
+            "sha256": "e9ee8f850373328f0059008442b3c7eb314e149eeb98f1c29abcf8465d144cce",
+            "acceptedBefore": [
+              "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+              "e9ee8f850373328f0059008442b3c7eb314e149eeb98f1c29abcf8465d144cce"
+            ]
+          },
+          {
+            "path": "app/api/free-curated-sync/route.ts",
+            "sha256": "159d63a04a5a4652a8ab2982e3b696832374c792102ccba5f2b0b5fcabe42ab9",
+            "acceptedBefore": [
+              "07ddec69720786472c2ceef2df66fb67e05f415c5d5b5cd9c3d7fec3dede9bac",
+              "159d63a04a5a4652a8ab2982e3b696832374c792102ccba5f2b0b5fcabe42ab9",
+              "86a9d14c940457914c0fd8553f0c2281f0f7becde0722928243552aca255f3bf",
+              "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+            ]
+          },
+          {
+            "path": "app/api/collect-curated-batch/route.ts",
+            "sha256": "c5e2828c5654bbc918dc36f5b17cf7d448e54ac0918ec8b44b3b8213263641e5",
+            "acceptedBefore": [
+              "4319f9ff090f98d14b7dbd571a9376923f299ad84ae59104770c581f72ed025f",
+              "68e25d2c92a53f32e91312beb3337d0788f41cc815d67bbc3af1c052d8d2412f",
+              "8cd0a5e9ad6dc8d1db38c68df38fb0ed34fcfbb9f439aa0d5cd693f5779b8432",
+              "ad37a3af5bf80e47bb99f78228b106a1507611f27f752347c5ec32fde3373d05",
+              "c5e2828c5654bbc918dc36f5b17cf7d448e54ac0918ec8b44b3b8213263641e5"
+            ]
+          },
+          {
+            "path": "scripts/scan-free-curated.cjs",
+            "sha256": "7f60776a039678011c075facbc267a2ea210460206cf6184babe001bde3bfebd",
+            "acceptedBefore": [
+              "516ae44a08f4454179f87c33a60496cdd73b748c585fcbee7b4e35185130bcae",
+              "54e161df4048d78b57e5017d962c31908806a131c61cbff864c85bdb5a52a7e2",
+              "7f60776a039678011c075facbc267a2ea210460206cf6184babe001bde3bfebd",
+              "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+            ]
+          },
+          {
+            "path": "docs/releases/XCLIP_HYBRID_20261011.md",
+            "sha256": "6e5d91df7a299be463fae837f31cebdff47036d431f81f0f770e23f95412a6d0",
+            "acceptedBefore": [
+              "6e5d91df7a299be463fae837f31cebdff47036d431f81f0f770e23f95412a6d0",
+              "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+            ]
+          }
+        ],
+        "localTargets": [
+          {
+            "path": "lib/fxtwitter-curated.ts",
+            "sha256": "e2174eec5358424bc146a3dc8fb01041eb1a1289cb636e1b93c12be88d309876",
+            "acceptedBefore": [
+              "0a4418c620937f0eb1d5aac7be1fde690147095c41ac00349e9d59df7314aedf",
+              "1ad0c78f9ae6d2fb8ed7a38d3b825213d541c26b1d38cfef18a71c5ce7575ac8",
+              "35850633f11cd238cc0e98d8591796db166f6e4a27cd58a49948b889aad5415c",
+              "5c13fd3c2fe01bc8c8f796744ddb36b3e3785e0dba94ef28242e46c45d0f307f",
+              "8c0e7d13b7176dc1ab2351d584a59b9f6dcd031c5748c4ded9b56788a43bbc29",
+              "e2174eec5358424bc146a3dc8fb01041eb1a1289cb636e1b93c12be88d309876"
+            ]
+          },
+          {
+            "path": "lib/fxtwitter-curated-store.ts",
+            "sha256": "655034dbd06926d5515a82276409e576476f5a258e8b2be774209eaadaa6f305",
+            "acceptedBefore": [
+              "64eb4f59c266f6cdd1434e5e76160a80c2bcae0cf2778348d5124e08d2f88e41",
+              "655034dbd06926d5515a82276409e576476f5a258e8b2be774209eaadaa6f305",
+              "ec77a249fcee30c950969da04ad40120d54b9fa8e5a44b09ed818a62470ee582"
+            ]
+          },
+          {
+            "path": "lib/fxtwitter-curated-save.ts",
+            "sha256": "f64c8942cc81f6932492dc1b39bc1666224538c63b42c28747f0da4bce7c376e",
+            "acceptedBefore": [
+              "3911856aa50be423bf73ccfb72e078c24604fd1577e58c0251413c9d0d95045f",
+              "f64c8942cc81f6932492dc1b39bc1666224538c63b42c28747f0da4bce7c376e"
+            ]
+          },
+          {
+            "path": "lib/fxtwitter-curated-tier.ts",
+            "sha256": "7d71a34ecdaba52971125669e71c637b2aebb5f1a8519cc16c155d9327d7548d",
+            "acceptedBefore": [
+              "53fac7b5c4765f283e4c5b61e0b766fb574f155a51297811c42aafa3c9587aa3",
+              "7d71a34ecdaba52971125669e71c637b2aebb5f1a8519cc16c155d9327d7548d"
+            ]
+          },
+          {
+            "path": "lib/fxtwitter-local-access.ts",
+            "sha256": "5728717bae5c27b20123c6afd39e743fa9f1a0ce16c0bda9b4bf7abf5651bdf5",
+            "acceptedBefore": [
+              "5728717bae5c27b20123c6afd39e743fa9f1a0ce16c0bda9b4bf7abf5651bdf5"
+            ]
+          },
+          {
+            "path": "app/api/fxtwitter-authors/route.ts",
+            "sha256": "b2c4857910ff958040dbeda88437abe747ec17dea6842bb7fb9b4bc4c7ed26c3",
+            "acceptedBefore": [
+              "2d3dd282eed9b2c2641b501646b2a2c55f3027513ac1fb1f31094f0a0f72295b",
+              "44c75cf6abc14eecb70d058903a48eda2a04f5ad19462ab9b46398d44899aabb",
+              "8c53f6ea7baa797849b7764a826b62f7b849a51c6dd64b29ae0aa23e9efc3eb5",
+              "94bb284076649ad28d01f5043db6fc7a602d0f8b15f379b46ec8d3037e414263",
+              "b2c4857910ff958040dbeda88437abe747ec17dea6842bb7fb9b4bc4c7ed26c3"
+            ]
+          },
+          {
+            "path": "app/fxtwitter-authors/page.tsx",
+            "sha256": "442f8385c749345bbe3ce12dbb987443d680c7cb18032879bf138c93df52c8f9",
+            "acceptedBefore": [
+              "442f8385c749345bbe3ce12dbb987443d680c7cb18032879bf138c93df52c8f9"
+            ]
+          },
+          {
+            "path": "app/fxtwitter-authors/FreeAuthorsPanel.tsx",
+            "sha256": "0a8cc5818f4ce06ca572d36313af0ee6311e7fe1cae113317d563918e3e31bac",
+            "acceptedBefore": [
+              "045df8ec8d0dcc4299d2af98d5098919467893d3febad3c54f5fab1ba0616c63",
+              "0a8cc5818f4ce06ca572d36313af0ee6311e7fe1cae113317d563918e3e31bac",
+              "45521cfda5336cc944e2aea0b281b6cf6d8790dc70ac26d1295235f9b256d9dd",
+              "6eb77a7c4ed093b361e0597c3a9f0d19e66070ac9bd135cc08452a4538a8bb9e",
+              "aaa870323a3cc1aa2c1a80035b5975b60c18822bb2581e9d71eadee26d4b06d8"
+            ]
+          },
+          {
+            "path": "scripts/test-fxtwitter-curated.cjs",
+            "sha256": "fb743132909881337b8511e03418befc2bfd6fd154f7f9376ea9079a6099ab90",
+            "acceptedBefore": [
+              "1b8e9c42eeedef230992c5a59e52d20b25810fd7f5552229fcc92b46f779e636",
+              "3df17d74c7f1338e0e301c9b4540c099f8070e6926ca449d1a27218f538468b6",
+              "fb743132909881337b8511e03418befc2bfd6fd154f7f9376ea9079a6099ab90"
+            ]
+          },
+          {
+            "path": "lib/free-curated-client.ts",
+            "sha256": "37c93e21642640f61e07882b3be42a9bc8f295f7245d5f7e6b9dd0e3ea14ef7a",
+            "acceptedBefore": [
+              "36945935294ebf5a95db94eee20a783510cb00c03fb46411f9068fbca51a00bf",
+              "37c93e21642640f61e07882b3be42a9bc8f295f7245d5f7e6b9dd0e3ea14ef7a",
+              "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+              "ece527416f7a77657f7e75bdf8018afdd4bfae79c0efefbf8d77c6d1f1e43d60"
+            ]
+          },
+          {
+            "path": "lib/free-curated-registration.ts",
+            "sha256": "34e5e9554d86a2445b25abe66db0ebdd2688a728ec17b40ebd92b5aeddd14d26",
+            "acceptedBefore": [
+              "34e5e9554d86a2445b25abe66db0ebdd2688a728ec17b40ebd92b5aeddd14d26",
+              "868db3fe54c51849f5524591264f1486d75061006c000369f07dcb53f9bd6f20",
+              "e39a456505b96291218093cf03a30ce65ed88bfb23f38e2af2403c47dbe2a586",
+              "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+            ]
+          },
+          {
+            "path": "scripts/test-free-curated-registration.cjs",
+            "sha256": "83334bb39d95a93da09abab6d89e44270437d3b1f1ac477a662618878a9a32f5",
+            "acceptedBefore": [
+              "83334bb39d95a93da09abab6d89e44270437d3b1f1ac477a662618878a9a32f5",
+              "9cc5af5c0407ddfe675a5b4ab8cb8071ba8c384cffac2f96f7cada8840f0ef9f",
+              "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+            ]
+          },
+          {
+            "path": "lib/free-curated-metrics.ts",
+            "sha256": "7d128ce238140a30862b4a0f2cdbbf5d70094b00590dd94ee7c475e022a1702a",
+            "acceptedBefore": [
+              "7d128ce238140a30862b4a0f2cdbbf5d70094b00590dd94ee7c475e022a1702a",
+              "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+            ]
+          },
+          {
+            "path": "app/fxtwitter-monitor/page.tsx",
+            "sha256": "204bf735f3cc9f4513207226e211492efd43190c27f5ee7dab20ecf0050ca6d2",
+            "acceptedBefore": [
+              "204bf735f3cc9f4513207226e211492efd43190c27f5ee7dab20ecf0050ca6d2",
+              "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+            ]
+          },
+          {
+            "path": "app/fxtwitter-monitor/MonitorPanel.tsx",
+            "sha256": "32d215cf5e8b5e10a5bf7eeb6b78e031e6336b392e6585cee462264d7edd60d4",
+            "acceptedBefore": [
+              "2ecb296bcdf73ab2f0aef3c330a3143611f5f17d2b8f636ad0900b876895e7a9",
+              "32d215cf5e8b5e10a5bf7eeb6b78e031e6336b392e6585cee462264d7edd60d4",
+              "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+            ]
+          },
+          {
+            "path": "scripts/test-free-curated-cursors.cjs",
+            "sha256": "1e0c2315e28bf7d2ee7455987e2bae4d9692beed5ca2eb7b8415d952e040eaba",
+            "acceptedBefore": [
+              "1e0c2315e28bf7d2ee7455987e2bae4d9692beed5ca2eb7b8415d952e040eaba",
+              "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+            ]
+          },
+          {
+            "path": "scripts/test-registration-recovery.cjs",
+            "sha256": "fc045c2e909948ef48f7143257313321d4c901bdad55155e53fcc242bfaa875e",
+            "acceptedBefore": [
+              "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+              "fc045c2e909948ef48f7143257313321d4c901bdad55155e53fcc242bfaa875e"
+            ]
+          },
+          {
+            "path": "docs/XCLIP_UPDATE_HISTORY.md",
+            "sha256": "6e5d91df7a299be463fae837f31cebdff47036d431f81f0f770e23f95412a6d0",
+            "acceptedBefore": [
+              "e60dc8177a19517648c0e0d0e79a179aec502707ee36db9203494986642b3ac3",
+              "6e5d91df7a299be463fae837f31cebdff47036d431f81f0f770e23f95412a6d0"
+            ]
+          }
+        ],
+        "limitations": [
+          "No live X API or DB verification",
+          "No target project or production application",
+          "Recent Search is 7 days; backlog beyond range requires free bulk import",
+          "Full production typecheck/build performed by deployment against actual live source",
+          "Individual missing-author cause pending usernames/logs"
+        ]
+      },
+      "deploymentConfirmation": {
+        "release": "hybrid-xapi24-20261011",
+        "recordedDate": "2026-10-11",
+        "evidence": "user-provided server output",
+        "evidenceSha256": "a80b778008501b71514b6293d1acba1e27499cd64640de1e1470547a6f5e6a4d",
+        "production": "deployment completed; public endpoint and existing cron checks passed",
+        "local": "not confirmed",
+        "paidApiCollection": "not executed during installation; actual collection not confirmed",
+        "individualMissingAuthors": "not confirmed; usernames and status pending",
+        "runtimeBackup": "/home/rbxfxmfd/xclip-before-hybrid-xapi24-20261011.tlXJaO/runtime",
+        "originalProposedReleaseStatus": "historical creation-time status retained; deploymentConfirmation supersedes for production only",
+        "distributedArtifacts": [
+          {
+            "name": "xclip-hybrid-xapi24-deploy-20261011.sh",
+            "sha256": "03755ddd5c2e4220d385662e69de90bc66f6f38a1e9b7b80a194d1f1787a59bf"
+          },
+          {
+            "name": "xclip-hybrid-xapi24-local-20261011.ps1",
+            "sha256": "cf7e23b7e9df40f232fc696cbf79342db6129316ef7e3d2150e44aa9b2f3ea0e"
+          },
+          {
+            "name": "xclip-hybrid-xapi24-source-20261011.zip",
+            "sha256": "30aa888afb775153ad53a451e06d62afccb66c54f2a1717ff84422421919fb72"
+          }
+        ]
+      },
+      "unifiedAuthorsRelease": {
+        "id": "unified-authors-20261011",
+        "status": "created and mocked-tested; production and local not applied",
+        "base": "hybrid-xapi24-20261011 production confirmed by user log",
+        "productionTargets": [
+          {
+            "path": "lib/free-curated-metrics.ts",
+            "sha256": "7d128ce238140a30862b4a0f2cdbbf5d70094b00590dd94ee7c475e022a1702a",
+            "acceptedBefore": [
+              "46c6c6aeee3bcdb25861851fca1791674591b51ebc63bf94f718e781f22cfaa2",
+              "7d128ce238140a30862b4a0f2cdbbf5d70094b00590dd94ee7c475e022a1702a",
+              "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+            ]
+          },
+          {
+            "path": "lib/free-curated-server-store.ts",
+            "sha256": "66c4649ea7eba584a54199ef9bceb69e52c93619cae56394bcd51b0339840696",
+            "acceptedBefore": [
+              "29e4e697467296a4231b8acdc50b67ef48dc6aa8ede0bec3a2bc3e2436f50ac1",
+              "56d1f86fd5aa0de6b047dd164b465af01c41e2e5e2466c3bfbd0e34337d9d65e",
+              "66c4649ea7eba584a54199ef9bceb69e52c93619cae56394bcd51b0339840696",
+              "83c78ae5373e58391f6381fe1add8f8cc1d3804c97429f7e84f4186b05bce050",
+              "c75bef7dcee742409065db7994fdf0ad9efd02ee0c8e78b049f4840dbca2ea52",
+              "d12fb37bc871a03588362f89bb059ccc4b0c3732da9fc306eb97f927c05d5058",
+              "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+            ]
+          },
+          {
+            "path": "lib/free-curated-scan.ts",
+            "sha256": "56c8784c00775685d5d010207d547c975c10f627fc60fb08aa64c2b351ed2c33",
+            "acceptedBefore": [
+              "2185ec8ddee010d6c4ba0cc1fa208a322650d7825ff43ad4567fe1be0adc351a",
+              "223abcfc93106cf4d60a52d40f544e808eeb10f955c437a3a200ec1004c86a57",
+              "33e810157da4a8f2a2cb67045b3635fb45d7813b3150cf1575a502843b27f842",
+              "56c8784c00775685d5d010207d547c975c10f627fc60fb08aa64c2b351ed2c33",
+              "7d1c4d6058da4e5377ef18f73bdae9a57261eaef994dacb10d7d9546b8f90da2",
+              "a0db8b706be4ad4737b0e39e3c08ffa72b9585c75bc5133d7836d3817cf32cd5",
+              "cd9d9d59b725924440423de2c5e59b5b54598b31c39f7d91b9d6d611746f735e",
+              "deeca848ee31340bd947309541435ef3fa277e85ea6f178aab8e35fe4731e70b",
+              "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+              "f6a78cf20359902616ce8d136b576517d10190ae53006fab07b95ba176f83a66"
+            ]
+          },
+          {
+            "path": "lib/free-curated-dashboard.ts",
+            "sha256": "0a9a86e42dffa4bed09c4bc25476341ffd9feb9bc6c38b01da25ca1e66ec2af1",
+            "acceptedBefore": [
+              "0a9a86e42dffa4bed09c4bc25476341ffd9feb9bc6c38b01da25ca1e66ec2af1",
+              "47b989d508aafeabe9d2ae984f57f6c5dac9e9115751deba71d8411965da15b9",
+              "d30d7d841235b56048a99159567152c77f45b63ddab3767c738d583ddd49345b",
+              "e1c53ed3483d099e69a97f922aa7646df24903a36a14d7df92ee272a6cd41b4e",
+              "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+            ]
+          },
+          {
+            "path": "lib/free-curated-sync.ts",
+            "sha256": "fd3174b445c9d4a01c2e69ec0e4763d0c1f75daf92e695f07be41534eb57ae04",
+            "acceptedBefore": [
+              "01ef4efa60bbb5acbd999205dd381a6556ab4de69f32a928738b1b2f607aadaa",
+              "1aed1f01bf7cc0437a09debc673b7b5344f9e68f02dabe00bbb82df0f1a91222",
+              "81594fbd099f1add0ee4b7e06a6a3d0e9ec3855140f529158204174f68dba6fa",
+              "cb90a23a71c1c93b4be2be55ef7785f096b82cc51e1b01c051f720e108323834",
+              "d7fbfa3cd48fde3dd23ba38915946896f6b2b74af71da82e12f911a61e5362d1",
+              "ddbacb6cda90a46ed9e62045ec4a79e60cbb987a5850dba18f501eac9893c5b7",
+              "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+              "fd3174b445c9d4a01c2e69ec0e4763d0c1f75daf92e695f07be41534eb57ae04"
+            ]
+          },
+          {
+            "path": "scripts/test-free-curated-dashboard.cjs",
+            "sha256": "def0469ba7129f036980e07b39fe43c2c60b22a1b7bbd076286f2b738f127d4a",
+            "acceptedBefore": [
+              "0c6c7283ed7dc3501a311d8c985af74dbd84a17f5a8d8165ee987213aad44698",
+              "45b8b68795bd5c7e93fafee724cfb0589fd088e02a3f0c992c24696c1cacf20c",
+              "7c64aecd6bcbf7277b7fc2f9e5b69062e986760addb64dd251e77eb4e7ca0cec",
+              "def0469ba7129f036980e07b39fe43c2c60b22a1b7bbd076286f2b738f127d4a",
+              "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+              "f176a8d504409b737a92bfa33c7479dfe641ab8e2e8c8a74cf3eb77c958af352",
+              "f86d4265f38547d55c7d654eea7a7b74e9aafc3c5bb04ac44acdf460d775c422"
+            ]
+          },
+          {
+            "path": "lib/post-status.ts",
+            "sha256": "cefbc7955dfd9101edad3f8a7e1f5cfbbb09301350319c4f7717f9cafba43c81",
+            "acceptedBefore": [
+              "2d474e830b56548e2953ce7dfc959f9c014c24594ee2c7b394ca6641df4b1e8a",
+              "6ebe5a5bd135c2957ea65abb37de4282220da8e2a6b41bc7ca99b58e66f85e89",
+              "97faf182cc2f34e9185e75227a9458c976ebf49bb9cc756553c6ec11ad4f0531",
+              "cefbc7955dfd9101edad3f8a7e1f5cfbbb09301350319c4f7717f9cafba43c81",
+              "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+              "f98053058ca61d0b293aebc5c30601ab62c84c82211bc1b4e255b895c830457f"
+            ]
+          },
+          {
+            "path": "scripts/test-free-curated-production.cjs",
+            "sha256": "37a3389001ede44437b0173560c3571da3b5f798678c9a1e4f1dd59d6aef8ad3",
+            "acceptedBefore": [
+              "25960edd13d66e4fe602455845868006a8df61a1ba249471f744d266eeb90104",
+              "37a3389001ede44437b0173560c3571da3b5f798678c9a1e4f1dd59d6aef8ad3",
+              "921fe541425687385842e45bdce1e9542b71ed88cf0ae335eb5693e8781fdb84",
+              "a30fcb4b953c75f285188ce6978730339cbe8fc80431bcce816b8170cbbd6ea6",
+              "d6274336536b61be7998d3dbd86e2682cc2c4dd553ec9507757b39cf69c7f7bb",
+              "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+              "e626a15ca5ff3566e666b88eaa0f5cffbdf52f0e106e705b5c0609ad707202e6",
+              "f435182d01b4539e89f1d8dd11825c3c4e6b32a381102dc90b5ed3f565c8cb2e"
+            ]
+          },
+          {
+            "path": "lib/availability-scan.ts",
+            "sha256": "aa1c31479cf3b308e7cea314ea12913fce718a8c80544ced49cc25545f7f0253",
+            "acceptedBefore": [
+              "104a5aabd39cdabb5bcb16ff6ab632fb8233aed7fae391ee55edd57c2a479f62",
+              "8c9d1aff160cffb06f8fad1044f6739eb21dfb5ef06311750c52e781d4264e54",
+              "aa1c31479cf3b308e7cea314ea12913fce718a8c80544ced49cc25545f7f0253",
+              "d99ee035d84d2a38f83ab4a6e135a3b02e44747772afaf45ff638935e781e4f9",
+              "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+              "e64fe49cbabefb15565cec0e1f7128385a74bb1785456604957197b1979d777e"
+            ]
+          },
+          {
+            "path": "scripts/test-availability-curated-regression.cjs",
+            "sha256": "686b9b06556052f137d4d9bf7f0523475f74fbcda4fd5841d2c29425f0a31ee2",
+            "acceptedBefore": [
+              "686b9b06556052f137d4d9bf7f0523475f74fbcda4fd5841d2c29425f0a31ee2",
+              "d204641effff94da2faa0654353722b85c8daf089c6b9c2d9340497594df07b8",
+              "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+            ]
+          },
+          {
+            "path": "scripts/test-availability-monitor.cjs",
+            "sha256": "5269f53d75dfc985dd09d26b8c0b8ca060a426c1cfd92bc87f9a3a53ba2c2b04",
+            "acceptedBefore": [
+              "34a3ac94df4f5a85d40a9353c1790642513df64eb0375a0ee1740820d94ee2a9",
+              "5269f53d75dfc985dd09d26b8c0b8ca060a426c1cfd92bc87f9a3a53ba2c2b04",
+              "74df1cfc333aa86e783a4ef4279446f3ab33c0e6bda378db806579f9fcf6d3d2",
+              "9c52690d5e8109c64798735fa68954b9e46d7e76b7c08b538f86726719ff43b3",
+              "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+            ]
+          },
+          {
+            "path": "scripts/test-free-curated-cursors.cjs",
+            "sha256": "1e0c2315e28bf7d2ee7455987e2bae4d9692beed5ca2eb7b8415d952e040eaba",
+            "acceptedBefore": [
+              "082df00aec184a7e5c920daf12a4af5adcabb5a5563b2c10787b97b47a937545",
+              "1e0c2315e28bf7d2ee7455987e2bae4d9692beed5ca2eb7b8415d952e040eaba",
+              "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+            ]
+          },
+          {
+            "path": "lib/fxtwitter-curated.ts",
+            "sha256": "e2174eec5358424bc146a3dc8fb01041eb1a1289cb636e1b93c12be88d309876",
+            "acceptedBefore": [
+              "0a4418c620937f0eb1d5aac7be1fde690147095c41ac00349e9d59df7314aedf",
+              "1ad0c78f9ae6d2fb8ed7a38d3b825213d541c26b1d38cfef18a71c5ce7575ac8",
+              "35850633f11cd238cc0e98d8591796db166f6e4a27cd58a49948b889aad5415c",
+              "5c13fd3c2fe01bc8c8f796744ddb36b3e3785e0dba94ef28242e46c45d0f307f",
+              "7da548054d3d523b3ca4284f301e9da03193fbf591b63634ee5a5cd9bbda4566",
+              "8c0e7d13b7176dc1ab2351d584a59b9f6dcd031c5748c4ded9b56788a43bbc29",
+              "bc16acf2eade80b19b98e24fa9d4c0d7864815568f75e2f80187859c1ed30560",
+              "c43561a7cb0fe9874222b7711968e7773e9b3418fa8cb94c45006836d25b4440",
+              "e2174eec5358424bc146a3dc8fb01041eb1a1289cb636e1b93c12be88d309876",
+              "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+            ]
+          },
+          {
+            "path": "lib/x-curated-state.ts",
+            "sha256": "a44eb46949f1f21f83d63847b04046a3a76a99c34ac6e065ffca9e3e95e1ad74",
+            "acceptedBefore": [
+              "a44eb46949f1f21f83d63847b04046a3a76a99c34ac6e065ffca9e3e95e1ad74",
+              "c57930ca78bf3f454ac525d5b5f80afee9ae2b0a67cf7d44646ca045f7ff4dda",
+              "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+            ]
+          },
+          {
+            "path": "lib/x-curated-search.ts",
+            "sha256": "90d41fadb981e46ea33bf7abee1aacc4c5422dadae9ac9f28055956d32465daf",
+            "acceptedBefore": [
+              "90d41fadb981e46ea33bf7abee1aacc4c5422dadae9ac9f28055956d32465daf",
+              "a36835a6117d0a43dca4b3d5afebf4cc5f3f51fc22dd53b664d039c2fca8c50e",
+              "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+            ]
+          },
+          {
+            "path": "lib/x-curated-scan.ts",
+            "sha256": "3219ca753b95574c4f04166bc4d5a2770e4fc9acfe9537bdc219dafa322fa767",
+            "acceptedBefore": [
+              "3219ca753b95574c4f04166bc4d5a2770e4fc9acfe9537bdc219dafa322fa767",
+              "3788732c94040adc01beac9d1647e9cf266382dc5701e6e0845f3463b865e1ae",
+              "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+            ]
+          },
+          {
+            "path": "scripts/test-x-curated-hybrid.cjs",
+            "sha256": "7bce639deea965649e642adb43d5bffaa5324a9bd5164e4745fe8bad3fb1f8c2",
+            "acceptedBefore": [
+              "0a0c66788e936180a7dfdeeaeb0d41f9ca6a8d39ced274b3a1dff66effd1846a",
+              "7bce639deea965649e642adb43d5bffaa5324a9bd5164e4745fe8bad3fb1f8c2",
+              "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+              "e9ee8f850373328f0059008442b3c7eb314e149eeb98f1c29abcf8465d144cce"
+            ]
+          },
+          {
+            "path": "app/api/free-curated-sync/route.ts",
+            "sha256": "674b3ed4124b44ecb244eb673d6bf886edd168dd0434bd932a090e50003be56b",
+            "acceptedBefore": [
+              "07ddec69720786472c2ceef2df66fb67e05f415c5d5b5cd9c3d7fec3dede9bac",
+              "159d63a04a5a4652a8ab2982e3b696832374c792102ccba5f2b0b5fcabe42ab9",
+              "674b3ed4124b44ecb244eb673d6bf886edd168dd0434bd932a090e50003be56b",
+              "86a9d14c940457914c0fd8553f0c2281f0f7becde0722928243552aca255f3bf",
+              "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+              "e3da2a3874162bf9b795b42f91225d6256619724e6e486c7b34f8259452b273e"
+            ]
+          },
+          {
+            "path": "app/api/collect-curated-batch/route.ts",
+            "sha256": "c5e2828c5654bbc918dc36f5b17cf7d448e54ac0918ec8b44b3b8213263641e5",
+            "acceptedBefore": [
+              "2072e9cfd72df6705f7dc36c7107daa6a3a677e99c19c83e54866574f7084008",
+              "4319f9ff090f98d14b7dbd571a9376923f299ad84ae59104770c581f72ed025f",
+              "68e25d2c92a53f32e91312beb3337d0788f41cc815d67bbc3af1c052d8d2412f",
+              "8cd0a5e9ad6dc8d1db38c68df38fb0ed34fcfbb9f439aa0d5cd693f5779b8432",
+              "ad37a3af5bf80e47bb99f78228b106a1507611f27f752347c5ec32fde3373d05",
+              "c5e2828c5654bbc918dc36f5b17cf7d448e54ac0918ec8b44b3b8213263641e5"
+            ]
+          },
+          {
+            "path": "scripts/scan-free-curated.cjs",
+            "sha256": "7f60776a039678011c075facbc267a2ea210460206cf6184babe001bde3bfebd",
+            "acceptedBefore": [
+              "516ae44a08f4454179f87c33a60496cdd73b748c585fcbee7b4e35185130bcae",
+              "54e161df4048d78b57e5017d962c31908806a131c61cbff864c85bdb5a52a7e2",
+              "62eb7007bcd6495e4a48ece008edd43c7bc0513b00fb724a7c792177146f463a",
+              "7f60776a039678011c075facbc267a2ea210460206cf6184babe001bde3bfebd",
+              "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+            ]
+          },
+          {
+            "path": "lib/curated-common.ts",
+            "sha256": "13fc29b481944ba14bf37cd50514569a5d2d5b21d2ac2053b841cca20ab8963a",
+            "acceptedBefore": [
+              "13fc29b481944ba14bf37cd50514569a5d2d5b21d2ac2053b841cca20ab8963a",
+              "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+            ]
+          },
+          {
+            "path": "lib/curated-removals.ts",
+            "sha256": "146091b0fbb71f74d81315253637245de5279e593a0fe661f18c395929774959",
+            "acceptedBefore": [
+              "146091b0fbb71f74d81315253637245de5279e593a0fe661f18c395929774959",
+              "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+            ]
+          },
+          {
+            "path": "lib/availability-dashboard.ts",
+            "sha256": "d8718daf1b48b094b924ea1176509164e1f77fe3057ce5a720828b8632f0a37e",
+            "acceptedBefore": [
+              "d8718daf1b48b094b924ea1176509164e1f77fe3057ce5a720828b8632f0a37e",
+              "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+            ]
+          },
+          {
+            "path": "lib/post-status-store.ts",
+            "sha256": "78b6c548039702d14fccf898493c8f8c2c5340739662f214187dbc8473542176",
+            "acceptedBefore": [
+              "78b6c548039702d14fccf898493c8f8c2c5340739662f214187dbc8473542176",
+              "ba327e54550d9cf0a8c7ff97a46b277d661671d9c96a604d2be22378a5f62cf2",
+              "ce29417def13360b62122b9176604b5298cf8d2f418fe633fc0dc90cde086d62",
+              "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+            ]
+          },
+          {
+            "path": "lib/author-status-scan.ts",
+            "sha256": "1edc4bf7765cfcbf90936f89cd98b13e71cb817f651fb17e4c4b65e010cf8b85",
+            "acceptedBefore": [
+              "1edc4bf7765cfcbf90936f89cd98b13e71cb817f651fb17e4c4b65e010cf8b85",
+              "2a3bc0913671d5992d2a5457ebd9abd192157a9d17f70f9f46f614bf87e14504",
+              "40a3d339fdefa83b5aec4f927d665357e19465cf7acaaebfdef3184c0e42738c",
+              "b275124807755745c6ce98198793fdb565c51659cf3f9fbf305b26499b95bc0c",
+              "d52a78825ffcfeeb11a21e2b181dd5a70132325d01f2fc6eaee1b2e2f3b2a659",
+              "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+            ]
+          },
+          {
+            "path": "lib/free-curated-publish.ts",
+            "sha256": "2246b0546df14004a95e9acfe3ef2b6904ea4dc3dd0a93c6f105c2afb4d738f4",
+            "acceptedBefore": [
+              "2246b0546df14004a95e9acfe3ef2b6904ea4dc3dd0a93c6f105c2afb4d738f4",
+              "9c4e9f8e78c4884c6ef85e91233a28329c99ecf85a77d3b2a198310df1f055ad",
+              "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+              "f5b4c5bdcca03f8567becb5bf933b7ced2d743b6b0394f2e870748c74449e071"
+            ]
+          },
+          {
+            "path": "scripts/test-curated-common.cjs",
+            "sha256": "8ae83e059e4d863d77eec2601288b2e29cdd6073d79df3419ee7375e9117e1d7",
+            "acceptedBefore": [
+              "8ae83e059e4d863d77eec2601288b2e29cdd6073d79df3419ee7375e9117e1d7",
+              "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+            ]
+          },
+          {
+            "path": "scripts/test-author-status.cjs",
+            "sha256": "915c4b5babc1dccc3382499c0579e7c5b0a438d27c9c40b4bd53f7dcf965a73a",
+            "acceptedBefore": [
+              "2877499f5993c09944e20f9e33e55248b47ae64bee1bc04e75591a1b2dfb903a",
+              "608da4924e75c1853d7455a06e9b40605f6593d3206ff8dadf37042ef0277674",
+              "915c4b5babc1dccc3382499c0579e7c5b0a438d27c9c40b4bd53f7dcf965a73a",
+              "9365f85e99f284c9241f161a37b3a198cb9522742918cbe2200b042bbe742124",
+              "d506e461e068b6ccf77ef0796afb81ce65506f373fe285b07d623a20a3f8091d",
+              "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+            ]
+          },
+          {
+            "path": "scripts/migrate-curated-common.cjs",
+            "sha256": "a5ec5cb29d43904fb39e102cf33680e06921a672887a3be10a0a22b7eed5a0b2",
+            "acceptedBefore": [
+              "a5ec5cb29d43904fb39e102cf33680e06921a672887a3be10a0a22b7eed5a0b2",
+              "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+            ]
+          },
+          {
+            "path": "docs/releases/XCLIP_UNIFIED_AUTHORS_20261011.md",
+            "sha256": "7c222a6b2f6d5cd777f8523b9c3e0b7d9d489d059433c44760828b001f0c6d5d",
+            "acceptedBefore": [
+              "7c222a6b2f6d5cd777f8523b9c3e0b7d9d489d059433c44760828b001f0c6d5d",
+              "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+            ]
+          }
+        ],
+        "localTargets": [
+          {
+            "path": "lib/fxtwitter-curated.ts",
+            "sha256": "e2174eec5358424bc146a3dc8fb01041eb1a1289cb636e1b93c12be88d309876",
+            "acceptedBefore": [
+              "0a4418c620937f0eb1d5aac7be1fde690147095c41ac00349e9d59df7314aedf",
+              "1ad0c78f9ae6d2fb8ed7a38d3b825213d541c26b1d38cfef18a71c5ce7575ac8",
+              "35850633f11cd238cc0e98d8591796db166f6e4a27cd58a49948b889aad5415c",
+              "5c13fd3c2fe01bc8c8f796744ddb36b3e3785e0dba94ef28242e46c45d0f307f",
+              "7da548054d3d523b3ca4284f301e9da03193fbf591b63634ee5a5cd9bbda4566",
+              "8c0e7d13b7176dc1ab2351d584a59b9f6dcd031c5748c4ded9b56788a43bbc29",
+              "bc16acf2eade80b19b98e24fa9d4c0d7864815568f75e2f80187859c1ed30560",
+              "c43561a7cb0fe9874222b7711968e7773e9b3418fa8cb94c45006836d25b4440",
+              "e2174eec5358424bc146a3dc8fb01041eb1a1289cb636e1b93c12be88d309876",
+              "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+            ]
+          },
+          {
+            "path": "lib/fxtwitter-curated-store.ts",
+            "sha256": "655034dbd06926d5515a82276409e576476f5a258e8b2be774209eaadaa6f305",
+            "acceptedBefore": [
+              "64eb4f59c266f6cdd1434e5e76160a80c2bcae0cf2778348d5124e08d2f88e41",
+              "655034dbd06926d5515a82276409e576476f5a258e8b2be774209eaadaa6f305",
+              "e9437357aa968348598866cc3a2cebcccb7b1266fc96278195e2bb2027b7e631",
+              "ec77a249fcee30c950969da04ad40120d54b9fa8e5a44b09ed818a62470ee582"
+            ]
+          },
+          {
+            "path": "lib/fxtwitter-curated-save.ts",
+            "sha256": "f64c8942cc81f6932492dc1b39bc1666224538c63b42c28747f0da4bce7c376e",
+            "acceptedBefore": [
+              "3911856aa50be423bf73ccfb72e078c24604fd1577e58c0251413c9d0d95045f",
+              "3e0ef0e63922e55196829df6f6481131e7c9b7a533ce6ce6353868d0510127aa",
+              "f64c8942cc81f6932492dc1b39bc1666224538c63b42c28747f0da4bce7c376e"
+            ]
+          },
+          {
+            "path": "lib/fxtwitter-curated-tier.ts",
+            "sha256": "7d71a34ecdaba52971125669e71c637b2aebb5f1a8519cc16c155d9327d7548d",
+            "acceptedBefore": [
+              "2b0afa1ac6ac7ddbbb6f1dea2781d0f038e9669df19281269b416824b688df2e",
+              "53fac7b5c4765f283e4c5b61e0b766fb574f155a51297811c42aafa3c9587aa3",
+              "7d71a34ecdaba52971125669e71c637b2aebb5f1a8519cc16c155d9327d7548d",
+              "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+            ]
+          },
+          {
+            "path": "lib/fxtwitter-local-access.ts",
+            "sha256": "5728717bae5c27b20123c6afd39e743fa9f1a0ce16c0bda9b4bf7abf5651bdf5",
+            "acceptedBefore": [
+              "4f37134efcf51d83f914871fbe20f5ff216f8acf9fe744063a37a4fe5ad4a68d",
+              "5728717bae5c27b20123c6afd39e743fa9f1a0ce16c0bda9b4bf7abf5651bdf5"
+            ]
+          },
+          {
+            "path": "app/api/fxtwitter-authors/route.ts",
+            "sha256": "5ad03827347bac7253d3159e744781a53b67a72586e111cfa3ed38513e930816",
+            "acceptedBefore": [
+              "2d3dd282eed9b2c2641b501646b2a2c55f3027513ac1fb1f31094f0a0f72295b",
+              "4393607e53693957bcf7e2b99e85d096f4b2e97e1da0791ff6e2ac72e651e719",
+              "44c75cf6abc14eecb70d058903a48eda2a04f5ad19462ab9b46398d44899aabb",
+              "5ad03827347bac7253d3159e744781a53b67a72586e111cfa3ed38513e930816",
+              "8c53f6ea7baa797849b7764a826b62f7b849a51c6dd64b29ae0aa23e9efc3eb5",
+              "94bb284076649ad28d01f5043db6fc7a602d0f8b15f379b46ec8d3037e414263",
+              "b2c4857910ff958040dbeda88437abe747ec17dea6842bb7fb9b4bc4c7ed26c3"
+            ]
+          },
+          {
+            "path": "app/fxtwitter-authors/page.tsx",
+            "sha256": "442f8385c749345bbe3ce12dbb987443d680c7cb18032879bf138c93df52c8f9",
+            "acceptedBefore": [
+              "442f8385c749345bbe3ce12dbb987443d680c7cb18032879bf138c93df52c8f9",
+              "85f7092a4517af26249947de90b735605984efaccf0a546bcabffc708a0e518f"
+            ]
+          },
+          {
+            "path": "app/fxtwitter-authors/FreeAuthorsPanel.tsx",
+            "sha256": "8682a58571d01750fdd0453360ca05cb4a22979789866d0ea8550c25a581972a",
+            "acceptedBefore": [
+              "045df8ec8d0dcc4299d2af98d5098919467893d3febad3c54f5fab1ba0616c63",
+              "0a8cc5818f4ce06ca572d36313af0ee6311e7fe1cae113317d563918e3e31bac",
+              "45521cfda5336cc944e2aea0b281b6cf6d8790dc70ac26d1295235f9b256d9dd",
+              "5aca70ee38f9e5f3d70bb7e959027a9673b24c372c896b229f4c7a04523a6a70",
+              "6eb77a7c4ed093b361e0597c3a9f0d19e66070ac9bd135cc08452a4538a8bb9e",
+              "8682a58571d01750fdd0453360ca05cb4a22979789866d0ea8550c25a581972a",
+              "aaa870323a3cc1aa2c1a80035b5975b60c18822bb2581e9d71eadee26d4b06d8"
+            ]
+          },
+          {
+            "path": "scripts/test-fxtwitter-curated.cjs",
+            "sha256": "fb743132909881337b8511e03418befc2bfd6fd154f7f9376ea9079a6099ab90",
+            "acceptedBefore": [
+              "1b8e9c42eeedef230992c5a59e52d20b25810fd7f5552229fcc92b46f779e636",
+              "3df17d74c7f1338e0e301c9b4540c099f8070e6926ca449d1a27218f538468b6",
+              "c81f010819b833f03805546f14286cdd430baef12d3f0dcc34589ea378133aff",
+              "fb743132909881337b8511e03418befc2bfd6fd154f7f9376ea9079a6099ab90"
+            ]
+          },
+          {
+            "path": "lib/free-curated-client.ts",
+            "sha256": "37c93e21642640f61e07882b3be42a9bc8f295f7245d5f7e6b9dd0e3ea14ef7a",
+            "acceptedBefore": [
+              "36945935294ebf5a95db94eee20a783510cb00c03fb46411f9068fbca51a00bf",
+              "37c93e21642640f61e07882b3be42a9bc8f295f7245d5f7e6b9dd0e3ea14ef7a",
+              "652ea7128e22e74f1f694bd66f2aefb9282dba944d477c00fd70c79b60d20b42",
+              "9e479036d0d98c5929dc4a2e5e75d6235f88d79929ba9880d0fb551a572b1383",
+              "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+              "ece527416f7a77657f7e75bdf8018afdd4bfae79c0efefbf8d77c6d1f1e43d60"
+            ]
+          },
+          {
+            "path": "lib/free-curated-registration.ts",
+            "sha256": "34e5e9554d86a2445b25abe66db0ebdd2688a728ec17b40ebd92b5aeddd14d26",
+            "acceptedBefore": [
+              "34e5e9554d86a2445b25abe66db0ebdd2688a728ec17b40ebd92b5aeddd14d26",
+              "868db3fe54c51849f5524591264f1486d75061006c000369f07dcb53f9bd6f20",
+              "e39a456505b96291218093cf03a30ce65ed88bfb23f38e2af2403c47dbe2a586",
+              "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+              "fc53daf89687b8034284ef021bc9859eb369ce4f244790a5bff5c11f2a83561e"
+            ]
+          },
+          {
+            "path": "scripts/test-free-curated-registration.cjs",
+            "sha256": "83334bb39d95a93da09abab6d89e44270437d3b1f1ac477a662618878a9a32f5",
+            "acceptedBefore": [
+              "83334bb39d95a93da09abab6d89e44270437d3b1f1ac477a662618878a9a32f5",
+              "9cc5af5c0407ddfe675a5b4ab8cb8071ba8c384cffac2f96f7cada8840f0ef9f",
+              "ca4edbda96baacc58fddd9486dbd61e18d237ec857642bf815d0df0e82f6f150",
+              "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+            ]
+          },
+          {
+            "path": "lib/free-curated-metrics.ts",
+            "sha256": "7d128ce238140a30862b4a0f2cdbbf5d70094b00590dd94ee7c475e022a1702a",
+            "acceptedBefore": [
+              "46c6c6aeee3bcdb25861851fca1791674591b51ebc63bf94f718e781f22cfaa2",
+              "7d128ce238140a30862b4a0f2cdbbf5d70094b00590dd94ee7c475e022a1702a",
+              "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+            ]
+          },
+          {
+            "path": "app/fxtwitter-monitor/page.tsx",
+            "sha256": "204bf735f3cc9f4513207226e211492efd43190c27f5ee7dab20ecf0050ca6d2",
+            "acceptedBefore": [
+              "204bf735f3cc9f4513207226e211492efd43190c27f5ee7dab20ecf0050ca6d2",
+              "b7a994a41a171ab66f4bd44aa64fa4e14599e43ca632b2863a4b9bbbcb21ad92",
+              "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+            ]
+          },
+          {
+            "path": "app/fxtwitter-monitor/MonitorPanel.tsx",
+            "sha256": "bb4d3356dca8fb4e736321922b9e4dddec65a252145ea9ef756ea4dfaa025157",
+            "acceptedBefore": [
+              "2ecb296bcdf73ab2f0aef3c330a3143611f5f17d2b8f636ad0900b876895e7a9",
+              "32d215cf5e8b5e10a5bf7eeb6b78e031e6336b392e6585cee462264d7edd60d4",
+              "b6e7ef740f2f8d179cab9a6df491fe7bc93955b5fc4e54d6155307925a4197a3",
+              "bb4d3356dca8fb4e736321922b9e4dddec65a252145ea9ef756ea4dfaa025157",
+              "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+            ]
+          },
+          {
+            "path": "scripts/test-free-curated-cursors.cjs",
+            "sha256": "1e0c2315e28bf7d2ee7455987e2bae4d9692beed5ca2eb7b8415d952e040eaba",
+            "acceptedBefore": [
+              "082df00aec184a7e5c920daf12a4af5adcabb5a5563b2c10787b97b47a937545",
+              "1e0c2315e28bf7d2ee7455987e2bae4d9692beed5ca2eb7b8415d952e040eaba",
+              "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+            ]
+          },
+          {
+            "path": "scripts/test-registration-recovery.cjs",
+            "sha256": "fc045c2e909948ef48f7143257313321d4c901bdad55155e53fcc242bfaa875e",
+            "acceptedBefore": [
+              "31c001e99a062277c70634a6cd776d01ec3fb68754d197b613ff6b772dc690ef",
+              "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+              "fc045c2e909948ef48f7143257313321d4c901bdad55155e53fcc242bfaa875e"
+            ]
+          },
+          {
+            "path": "app/api/curated-manager/route.ts",
+            "sha256": "4287130d91f5ba2f00d8e64c783e9480d69317dd0039057812365ec00f3a0c70",
+            "acceptedBefore": [
+              "4287130d91f5ba2f00d8e64c783e9480d69317dd0039057812365ec00f3a0c70",
+              "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+            ]
+          },
+          {
+            "path": "app/curated-manager/page.tsx",
+            "sha256": "c827df52db15ea27901997388784c3a9775e8b140768b83f5dbcbe2b967bedd8",
+            "acceptedBefore": [
+              "c827df52db15ea27901997388784c3a9775e8b140768b83f5dbcbe2b967bedd8",
+              "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+            ]
+          },
+          {
+            "path": "app/curated-manager/Panel.tsx",
+            "sha256": "25863de46a79bca7161cc2bb01f47c7d08e084e415adc002cba323a012152d1c",
+            "acceptedBefore": [
+              "25863de46a79bca7161cc2bb01f47c7d08e084e415adc002cba323a012152d1c",
+              "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+            ]
+          },
+          {
+            "path": "app/availability-monitor/page.tsx",
+            "sha256": "adf7de382a9cf4063d5d86db1e7dacc98827807ab139886765715c7a6c031f89",
+            "acceptedBefore": [
+              "adf7de382a9cf4063d5d86db1e7dacc98827807ab139886765715c7a6c031f89",
+              "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+            ]
+          },
+          {
+            "path": "app/availability-monitor/Panel.tsx",
+            "sha256": "cafb18c616d99d0190c6701bf8b3e4f87f13d3a075abd8e8b00d92646d5eddfa",
+            "acceptedBefore": [
+              "cafb18c616d99d0190c6701bf8b3e4f87f13d3a075abd8e8b00d92646d5eddfa",
+              "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+            ]
+          },
+          {
+            "path": "app/curated-authors/page.tsx",
+            "sha256": "a0e046586a10ed39c6c2b0734e9bddc83547f449e3b2393c4dc6c06af3f3a9f3",
+            "acceptedBefore": [
+              "a0e046586a10ed39c6c2b0734e9bddc83547f449e3b2393c4dc6c06af3f3a9f3",
+              "e34eccd1b1b858f1b9254229ef060214ec56bcba8a2f9e5a12735deea32c6a46",
+              "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+            ]
+          },
+          {
+            "path": "scripts/test-curated-manager-local.cjs",
+            "sha256": "f9f662618761a10e43d88a277763475cabdba42f025e340a3af3baeb0ee460a7",
+            "acceptedBefore": [
+              "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+              "f9f662618761a10e43d88a277763475cabdba42f025e340a3af3baeb0ee460a7"
+            ]
+          },
+          {
+            "path": "docs/XCLIP_UPDATE_HISTORY.md",
+            "sha256": "7c222a6b2f6d5cd777f8523b9c3e0b7d9d489d059433c44760828b001f0c6d5d",
+            "acceptedBefore": [
+              "0c70482e78d4c7b03e407d2d016d3790107fbf2719b9cb650e8d5983ba1c9ac5",
+              "6e5d91df7a299be463fae837f31cebdff47036d431f81f0f770e23f95412a6d0",
+              "7c222a6b2f6d5cd777f8523b9c3e0b7d9d489d059433c44760828b001f0c6d5d",
+              "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+              "e60dc8177a19517648c0e0d0e79a179aec502707ee36db9203494986642b3ac3"
+            ]
+          }
+        ],
+        "dbMigration": "shared authors flags only; no schema changes; no quota/cursor reset; no provider requests",
+        "deletion": "soft removal, publication exclusion, durable tombstone; no DB row deletion",
+        "rollback": "runtime/settings and local source; DB common migration flags and manual removals are not automatically undone",
+        "verification": "mocked DB/HTTP, scoped typecheck, installer fixtures; full production build occurs on user execution"
+      }
+    }
+  },
+  "codeChanged": false,
+  "productionAppliedByThisTurn": false,
+  "gitRecordedByThisTurn": false,
+  "taskCount": 42,
+  "taskCountsByPriority": {
+    "P0": 2,
+    "P1": 21,
+    "P2": 17,
+    "P3": 2
+  },
+  "files": [
+    {
+      "name": "Xclip-運営タスク一覧-20261011.md",
+      "sha256": "b93e2438369797c11f8086fec120f3abb6e92978d5af6e81512c4f7a4914ecfe"
+    },
+    {
+      "name": "Xclip-運営タスク一覧-20261011.csv",
+      "sha256": "7b9e5a228f1b2b151234462fb54dc79d86b41273cfc4faca899c29b80871d428"
+    },
+    {
+      "name": "Xclip-運営タスク一覧-20261011.txt",
+      "sha256": "f42613a4aa04a0f28cb950085ced71bcdd34dbd22a7d2f84d90cf0edd2c75051"
+    },
+    {
+      "name": "Xclip-更新履歴-運営計画版-20261011.md",
+      "sha256": "7e5f3d75cbedaf46fb1879578a7ccb59b77847f3a5a0940048bcec5ee8baff77"
+    }
+  ],
+  "sourceLimitations": [
+    "過去ChatGPT会話本文の取得制限。旧資料・既存ローカルタスクで照合し、未照合分はG11に残す。"
+  ]
+}

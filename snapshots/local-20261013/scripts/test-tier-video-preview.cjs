@@ -1,0 +1,29 @@
+const assert=require('node:assert/strict'),fs=require('node:fs'),os=require('node:os'),path=require('node:path'),ts=require('typescript');
+const root=fs.mkdtempSync(path.join(os.tmpdir(),'xclip-preview-'));
+let rows=Array.from({length:60},(_,i)=>({id:i+1,x_post_id:String(i+100),author_id:'a',author_username:'user',video_url:'https://video.twimg.com/'+i+'.mp4',preview_image_url:null,adult_tier:'B',manual_tier:null,manual_category:null,moderation_blocked:false,review_required:false,content_category:'PASS',is_visible:true}));
+const failures=Array.from({length:15},(_,i)=>({post_id:String(i+1000),feature_spec:'spec',error:'VIDEO_TOO_LARGE'}));
+rows.push(...failures.map((f,i)=>({...rows[0],id:100+i,x_post_id:f.post_id,manual_tier:'S'})));
+rows.push({...rows[0],id:200,moderation_blocked:true});
+const original=JSON.stringify(rows),calls=[];
+const db={from(table){let filters=[],limit=Infinity;const q={select(){return q;},eq(k,v){filters.push(r=>r[k]===v);return q;},is(k,v){filters.push(r=>r[k]===v);return q;},not(k,op,v){filters.push(r=>op==='in'?!v.slice(1,-1).split(',').includes(r[k]):r[k]!==v);return q;},gt(k,v){filters.push(r=>r[k]>v);return q;},order(){return q;},limit(n){limit=n;return q;},in(k,v){filters.push(r=>v.includes(r[k]));return q;},then(a,b){return Promise.resolve({data:(table==='posts'?rows:failures).filter(r=>filters.every(f=>f(r))).slice(0,limit),error:null}).then(a,b);},async maybeSingle(){return {data:failures.find(r=>filters.every(f=>f(r)))??null,error:null};}};return q;}};
+const model={revision:1,seedsHash:'hash',previewOnly:true,head:{samples:20},featureSpec:'spec',evaluationSpec:'eval',trainingAuthors:[],trainedAt:'today'};
+const stubs={
+ './supabase-admin':{supabaseAdmin:()=>db},
+ './tier-personal-store':{personalState:async k=>k==='manual-preview-model'?model:k==='revision'?{value:1}:'hash',personalFeatures:async(input,extract,options)=>{calls.push({input,options});return [1];}},
+ './tier-personal-core':{PERSONAL_FEATURE_SPEC:'spec',validPersonalHead:()=>true,predictPersonal:()=>({label:'S',confidence:.9}),safeAutomaticTier:l=>l,personalDecision:()=>({label:'S',confidence:.9,applied:true,tier:'S',reason:'visual'})},
+ './tier-personal-evaluation':{PERSONAL_EVALUATION_SPEC:'eval',featureFailureCode:e=>e??'unknown',rankingTeacherLabel:s=>s.label==='X'?(s.reviewReason==='weak_content'?'D':null):s.label,scoreRanking:r=>({total:r.length})},
+ './tier-personal-video':{ensureVideoTools:async()=>{}}
+};
+const m={exports:{}};new Function('require','module','exports','process',ts.transpileModule(fs.readFileSync('lib/tier-video-preview.ts','utf8'),{compilerOptions:{module:ts.ModuleKind.CommonJS,target:ts.ScriptTarget.ES2022,esModuleInterop:true}}).outputText)(n=>stubs[n]??require(n),m,m.exports,{cwd:()=>root});
+(async()=>{const api=m.exports;await api.runVideoPreview('start');let s=await api.videoPreviewStatus();const id=s.job.id;for(let i=0;i<65;i++)await api.runVideoPreview('step',{id});s=await api.videoPreviewStatus();assert.equal(s.samples.length,50);assert.equal(calls.length,50);assert.equal(s.job.done,true);assert.equal(s.samples[0].before,'B');assert.equal(s.samples[0].proposed,'S');assert(!JSON.stringify(s).includes('features'));assert(!JSON.stringify(s).includes('weights'));
+ await api.runVideoPreview('review',{id,postId:s.samples[0].id,tier:'S'});s=await api.videoPreviewStatus();assert.equal(s.job.blindedQualityReviews,1);
+ await api.runVideoPreview('review',{id,postId:s.samples[0].id,tier:'A'});s=await api.videoPreviewStatus();assert.equal(s.job.blindedQualityReviews,0,'edited review saw previous prediction');
+ await api.runVideoPreview('reveal',{id,postId:s.samples[1].id});await api.runVideoPreview('review',{id,postId:s.samples[1].id,tier:'S'});s=await api.videoPreviewStatus();assert.equal(s.job.blindedQualityReviews,0,'revealed predictions excluded');
+ rows.find(r=>r.id===s.samples[2].id).moderation_blocked=true;s=await api.videoPreviewStatus();assert.equal(s.samples.length,49,'safety rechecked');rows.find(r=>r.moderation_blocked&&r.id!==200).moderation_blocked=false;
+ await api.runLargeVideoRescue('rescue-start');s=await api.videoPreviewStatus();assert.equal(s.rescue.ids.length,10);for(let i=0;i<10;i++)await api.runLargeVideoRescue('rescue-step',s.rescue.id);assert.equal(calls.filter(c=>c.options?.maxBytes===256*1024*1024).length,10);
+ await api.runLargeVideoRescue('rescue-start');s=await api.videoPreviewStatus();assert.equal(s.rescue.ids.length,5,'processed IDs not repeatedly downloaded');assert.equal(JSON.stringify(rows),original,'posts never mutated');
+ const oldIds=new Set((await api.videoPreviewStatus()).samples.map(v=>v.id));await api.runVideoPreview('start');s=await api.videoPreviewStatus();assert.equal(s.job.pool,10,'previously viewed50 excluded from next draw');for(let i=0;i<10;i++)await api.runVideoPreview('step',{id:s.job.id});s=await api.videoPreviewStatus();assert(!s.samples.some(v=>oldIds.has(v.id)),'fresh review sample has no prior videos');
+ const route={exports:{}};new Function('require','module','exports','process',ts.transpileModule(fs.readFileSync('app/api/tier-video-preview/route.ts','utf8')+'\nexport {localPreview};',{compilerOptions:{module:ts.ModuleKind.CommonJS,target:ts.ScriptTarget.ES2022}}).outputText)(n=>n==='next/server'?{}:api,route,route.exports,{env:{NODE_ENV:'development'}});
+ const req=(h,o,site)=>({headers:{get:k=>({host:h,origin:o,'sec-fetch-site':site})[k]},nextUrl:{host:h}});assert(route.exports.localPreview(req('localhost:3004','http://localhost:3004','same-origin')));assert(!route.exports.localPreview(req('xcliprank.com')));assert(!route.exports.localPreview(req('localhost:3004','https://evil.example','cross-site')));
+ console.log('PASS: max50, readonly Tier, safety recheck, blind reviews, 10 bounded retries, no repeated rescue, localhost guard');
+})().finally(()=>fs.rmSync(root,{recursive:true,force:true})).catch(e=>{console.error(e);process.exitCode=1;});

@@ -1,0 +1,227 @@
+{
+  "release": "unified-authors-20261011",
+  "local": [
+    {
+      "path": "lib/fxtwitter-curated.ts",
+      "sha256": "e2174eec5358424bc146a3dc8fb01041eb1a1289cb636e1b93c12be88d309876"
+    },
+    {
+      "path": "lib/fxtwitter-curated-store.ts",
+      "sha256": "655034dbd06926d5515a82276409e576476f5a258e8b2be774209eaadaa6f305"
+    },
+    {
+      "path": "lib/fxtwitter-curated-save.ts",
+      "sha256": "f64c8942cc81f6932492dc1b39bc1666224538c63b42c28747f0da4bce7c376e"
+    },
+    {
+      "path": "lib/fxtwitter-curated-tier.ts",
+      "sha256": "7d71a34ecdaba52971125669e71c637b2aebb5f1a8519cc16c155d9327d7548d"
+    },
+    {
+      "path": "lib/fxtwitter-local-access.ts",
+      "sha256": "5728717bae5c27b20123c6afd39e743fa9f1a0ce16c0bda9b4bf7abf5651bdf5"
+    },
+    {
+      "path": "app/api/fxtwitter-authors/route.ts",
+      "sha256": "5ad03827347bac7253d3159e744781a53b67a72586e111cfa3ed38513e930816"
+    },
+    {
+      "path": "app/fxtwitter-authors/page.tsx",
+      "sha256": "442f8385c749345bbe3ce12dbb987443d680c7cb18032879bf138c93df52c8f9"
+    },
+    {
+      "path": "app/fxtwitter-authors/FreeAuthorsPanel.tsx",
+      "sha256": "8682a58571d01750fdd0453360ca05cb4a22979789866d0ea8550c25a581972a"
+    },
+    {
+      "path": "scripts/test-fxtwitter-curated.cjs",
+      "sha256": "fb743132909881337b8511e03418befc2bfd6fd154f7f9376ea9079a6099ab90"
+    },
+    {
+      "path": "lib/free-curated-client.ts",
+      "sha256": "37c93e21642640f61e07882b3be42a9bc8f295f7245d5f7e6b9dd0e3ea14ef7a"
+    },
+    {
+      "path": "lib/free-curated-registration.ts",
+      "sha256": "34e5e9554d86a2445b25abe66db0ebdd2688a728ec17b40ebd92b5aeddd14d26"
+    },
+    {
+      "path": "scripts/test-free-curated-registration.cjs",
+      "sha256": "83334bb39d95a93da09abab6d89e44270437d3b1f1ac477a662618878a9a32f5"
+    },
+    {
+      "path": "lib/free-curated-metrics.ts",
+      "sha256": "7d128ce238140a30862b4a0f2cdbbf5d70094b00590dd94ee7c475e022a1702a"
+    },
+    {
+      "path": "app/fxtwitter-monitor/page.tsx",
+      "sha256": "204bf735f3cc9f4513207226e211492efd43190c27f5ee7dab20ecf0050ca6d2"
+    },
+    {
+      "path": "app/fxtwitter-monitor/MonitorPanel.tsx",
+      "sha256": "bb4d3356dca8fb4e736321922b9e4dddec65a252145ea9ef756ea4dfaa025157"
+    },
+    {
+      "path": "scripts/test-free-curated-cursors.cjs",
+      "sha256": "1e0c2315e28bf7d2ee7455987e2bae4d9692beed5ca2eb7b8415d952e040eaba"
+    },
+    {
+      "path": "scripts/test-registration-recovery.cjs",
+      "sha256": "fc045c2e909948ef48f7143257313321d4c901bdad55155e53fcc242bfaa875e"
+    },
+    {
+      "path": "app/api/curated-manager/route.ts",
+      "sha256": "4287130d91f5ba2f00d8e64c783e9480d69317dd0039057812365ec00f3a0c70"
+    },
+    {
+      "path": "app/curated-manager/page.tsx",
+      "sha256": "c827df52db15ea27901997388784c3a9775e8b140768b83f5dbcbe2b967bedd8"
+    },
+    {
+      "path": "app/curated-manager/Panel.tsx",
+      "sha256": "25863de46a79bca7161cc2bb01f47c7d08e084e415adc002cba323a012152d1c"
+    },
+    {
+      "path": "app/availability-monitor/page.tsx",
+      "sha256": "adf7de382a9cf4063d5d86db1e7dacc98827807ab139886765715c7a6c031f89"
+    },
+    {
+      "path": "app/availability-monitor/Panel.tsx",
+      "sha256": "cafb18c616d99d0190c6701bf8b3e4f87f13d3a075abd8e8b00d92646d5eddfa"
+    },
+    {
+      "path": "app/curated-authors/page.tsx",
+      "sha256": "a0e046586a10ed39c6c2b0734e9bddc83547f449e3b2393c4dc6c06af3f3a9f3"
+    },
+    {
+      "path": "scripts/test-curated-manager-local.cjs",
+      "sha256": "f9f662618761a10e43d88a277763475cabdba42f025e340a3af3baeb0ee460a7"
+    },
+    {
+      "path": "docs/XCLIP_UPDATE_HISTORY.md",
+      "sha256": "7c222a6b2f6d5cd777f8523b9c3e0b7d9d489d059433c44760828b001f0c6d5d"
+    }
+  ],
+  "production": [
+    {
+      "path": "lib/free-curated-metrics.ts",
+      "sha256": "7d128ce238140a30862b4a0f2cdbbf5d70094b00590dd94ee7c475e022a1702a"
+    },
+    {
+      "path": "lib/free-curated-server-store.ts",
+      "sha256": "66c4649ea7eba584a54199ef9bceb69e52c93619cae56394bcd51b0339840696"
+    },
+    {
+      "path": "lib/free-curated-scan.ts",
+      "sha256": "56c8784c00775685d5d010207d547c975c10f627fc60fb08aa64c2b351ed2c33"
+    },
+    {
+      "path": "lib/free-curated-dashboard.ts",
+      "sha256": "0a9a86e42dffa4bed09c4bc25476341ffd9feb9bc6c38b01da25ca1e66ec2af1"
+    },
+    {
+      "path": "lib/free-curated-sync.ts",
+      "sha256": "fd3174b445c9d4a01c2e69ec0e4763d0c1f75daf92e695f07be41534eb57ae04"
+    },
+    {
+      "path": "scripts/test-free-curated-dashboard.cjs",
+      "sha256": "def0469ba7129f036980e07b39fe43c2c60b22a1b7bbd076286f2b738f127d4a"
+    },
+    {
+      "path": "lib/post-status.ts",
+      "sha256": "cefbc7955dfd9101edad3f8a7e1f5cfbbb09301350319c4f7717f9cafba43c81"
+    },
+    {
+      "path": "scripts/test-free-curated-production.cjs",
+      "sha256": "37a3389001ede44437b0173560c3571da3b5f798678c9a1e4f1dd59d6aef8ad3"
+    },
+    {
+      "path": "lib/availability-scan.ts",
+      "sha256": "aa1c31479cf3b308e7cea314ea12913fce718a8c80544ced49cc25545f7f0253"
+    },
+    {
+      "path": "scripts/test-availability-curated-regression.cjs",
+      "sha256": "686b9b06556052f137d4d9bf7f0523475f74fbcda4fd5841d2c29425f0a31ee2"
+    },
+    {
+      "path": "scripts/test-availability-monitor.cjs",
+      "sha256": "5269f53d75dfc985dd09d26b8c0b8ca060a426c1cfd92bc87f9a3a53ba2c2b04"
+    },
+    {
+      "path": "scripts/test-free-curated-cursors.cjs",
+      "sha256": "1e0c2315e28bf7d2ee7455987e2bae4d9692beed5ca2eb7b8415d952e040eaba"
+    },
+    {
+      "path": "lib/fxtwitter-curated.ts",
+      "sha256": "e2174eec5358424bc146a3dc8fb01041eb1a1289cb636e1b93c12be88d309876"
+    },
+    {
+      "path": "lib/x-curated-state.ts",
+      "sha256": "a44eb46949f1f21f83d63847b04046a3a76a99c34ac6e065ffca9e3e95e1ad74"
+    },
+    {
+      "path": "lib/x-curated-search.ts",
+      "sha256": "90d41fadb981e46ea33bf7abee1aacc4c5422dadae9ac9f28055956d32465daf"
+    },
+    {
+      "path": "lib/x-curated-scan.ts",
+      "sha256": "3219ca753b95574c4f04166bc4d5a2770e4fc9acfe9537bdc219dafa322fa767"
+    },
+    {
+      "path": "scripts/test-x-curated-hybrid.cjs",
+      "sha256": "7bce639deea965649e642adb43d5bffaa5324a9bd5164e4745fe8bad3fb1f8c2"
+    },
+    {
+      "path": "app/api/free-curated-sync/route.ts",
+      "sha256": "674b3ed4124b44ecb244eb673d6bf886edd168dd0434bd932a090e50003be56b"
+    },
+    {
+      "path": "app/api/collect-curated-batch/route.ts",
+      "sha256": "c5e2828c5654bbc918dc36f5b17cf7d448e54ac0918ec8b44b3b8213263641e5"
+    },
+    {
+      "path": "scripts/scan-free-curated.cjs",
+      "sha256": "7f60776a039678011c075facbc267a2ea210460206cf6184babe001bde3bfebd"
+    },
+    {
+      "path": "lib/curated-common.ts",
+      "sha256": "13fc29b481944ba14bf37cd50514569a5d2d5b21d2ac2053b841cca20ab8963a"
+    },
+    {
+      "path": "lib/curated-removals.ts",
+      "sha256": "146091b0fbb71f74d81315253637245de5279e593a0fe661f18c395929774959"
+    },
+    {
+      "path": "lib/availability-dashboard.ts",
+      "sha256": "d8718daf1b48b094b924ea1176509164e1f77fe3057ce5a720828b8632f0a37e"
+    },
+    {
+      "path": "lib/post-status-store.ts",
+      "sha256": "78b6c548039702d14fccf898493c8f8c2c5340739662f214187dbc8473542176"
+    },
+    {
+      "path": "lib/author-status-scan.ts",
+      "sha256": "1edc4bf7765cfcbf90936f89cd98b13e71cb817f651fb17e4c4b65e010cf8b85"
+    },
+    {
+      "path": "lib/free-curated-publish.ts",
+      "sha256": "2246b0546df14004a95e9acfe3ef2b6904ea4dc3dd0a93c6f105c2afb4d738f4"
+    },
+    {
+      "path": "scripts/test-curated-common.cjs",
+      "sha256": "8ae83e059e4d863d77eec2601288b2e29cdd6073d79df3419ee7375e9117e1d7"
+    },
+    {
+      "path": "scripts/test-author-status.cjs",
+      "sha256": "915c4b5babc1dccc3382499c0579e7c5b0a438d27c9c40b4bd53f7dcf965a73a"
+    },
+    {
+      "path": "scripts/migrate-curated-common.cjs",
+      "sha256": "a5ec5cb29d43904fb39e102cf33680e06921a672887a3be10a0a22b7eed5a0b2"
+    },
+    {
+      "path": "docs/releases/XCLIP_UNIFIED_AUTHORS_20261011.md",
+      "sha256": "7c222a6b2f6d5cd777f8523b9c3e0b7d9d489d059433c44760828b001f0c6d5d"
+    }
+  ]
+}

@@ -1,0 +1,13 @@
+﻿Xclip 引き継ぎ：registration-recovery1000-20261014
+
+ユーザー指示：無断のPC/UI操作・本番/実ローカル適用をしない。配布リンクと実行コマンドはチャットに記載。更新ごとに以前の会話を含む累積履歴・照合台帳を作成。新着巡回の24時間24投稿者枠を維持。2026-10-12にSupabase DBパスワードをリセット済みで、今後のDB認証障害では旧パスワードの残存を案内。
+
+この更新は未適用候補。実ローカルC:\Projects\xcliprank、本番ColorfulBox xcliprank.com。古いVercelやDocuments内旧プロジェクトを現行元として扱わない。稼働runtime/DEPLOY_SOURCE/BUILD_ID/対象SHAを照合する。
+作業コピー：C:\Users\USER\Documents\Codex\2026-10-14\xclip-registration-recovery
+以前のChatGPT project sources/ は読み取り専用。秘密・実運用stateはGitへ保存しない。
+
+空ページ回復・部分取得/巡回準備を分離・登録1000・Fx/X位置1000・32MiB上限・180秒登録lease・応答喪失receipt・旧基準回復を実装。通常巡回24/8/24時間/5秒は不変。既存投稿・取得cursor・予約・手動削除・一時停止を維持。未確認0件は巡回へ進めない。
+本番19群、ローカル11群、型検証、実配布適用/再適用/復元/拒否/PowerShell、state隔離、HTTP検証器・ロック・構文を確認。実本番全体ビルド・公開確認はユーザー実行SHで必須。
+一括取得は完了10/途中7。pmp_mmmの後日6件のうち過去3件を確認。返信仕様差と古い基準欠落は確認済みだが、個別漏れ原因は未断定。返信方針や全登録の再収集を無断変更しない。
+
+累積履歴と台帳はZIP内。以前の配布は改変しない。最新版のGit保存結果はGITHUB_RECORD.json（提供されている場合）を確認。パッケージ内のgitRecorded/githubPushedは生成時点の値であり、本番/実ローカル適用状態とは別。

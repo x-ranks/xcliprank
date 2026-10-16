@@ -1,14 +1,12 @@
 import type { Metadata } from "next";
 import ReelsFeed from "./ReelsFeed";
-import StructuredData from "../components/StructuredData";
-import { rankingBreadcrumb, SITE_URL } from "../../lib/seo";
 
 export const dynamic = "force-dynamic";
 
 export const metadata: Metadata = {
   title: "X動画リール",
   description:
-    "選別済みのX動画を縦スワイプで連続再生。ランキングとは違う動画をランダムに探せる、X CLIP RANKのリールです。",
+    "Tier S〜Cの選別済みX動画を、縦スワイプのリール形式でランダムに楽しめます。",
   alternates: {
     canonical: "/reels",
   },
@@ -19,13 +17,13 @@ export const metadata: Metadata = {
   openGraph: {
     title: "X動画リール | X CLIP RANK",
     description:
-      "選別済みのX動画を縦スワイプで連続再生。ランキングとは違う動画をランダムに探せます。",
+      "選別済みのX動画を縦スワイプで連続再生。Tier S〜Cからランダムに表示します。",
     url: "/reels",
   },
   twitter: {
     card: "summary_large_image",
     title: "X動画リール | X CLIP RANK",
-    description: "選別済みのX動画を、縦スワイプのリール形式で楽しめます。",
+    description: "Tier S〜CのX動画をリール形式で楽しめます。",
   },
   other: {
     rating: "adult",
@@ -33,25 +31,5 @@ export const metadata: Metadata = {
 };
 
 export default function ReelsPage() {
-  return (
-    <>
-      <StructuredData data={{
-        "@context": "https://schema.org",
-        "@graph": [
-          {
-            "@type": "WebPage",
-            "@id": `${SITE_URL}/reels#webpage`,
-            url: `${SITE_URL}/reels`,
-            name: "X動画リール | X CLIP RANK",
-            description: "選別済みのX動画を縦スワイプで連続再生できます。",
-            inLanguage: "ja-JP",
-            isFamilyFriendly: false,
-            breadcrumb: { "@id": `${SITE_URL}/reels#breadcrumb` }
-          },
-          rankingBreadcrumb("X動画リール", "/reels")
-        ]
-      }} />
-      <ReelsFeed />
-    </>
-  );
+  return <ReelsFeed />;
 }

@@ -27,23 +27,15 @@ jobs:
       - name: Install dependencies
         run: npm ci
 
-      - name: Build
-        run: npm run build
+      - name: Verify canonical source
+        run: npm run check:source
 
-      - name: Offline curated recovery tests
-        run: node scripts/test-curated-recovery.cjs
+      - name: Isolated offline regressions
+        run: npm run test:offline
 
-      - name: Offline video metadata tests
-        run: node scripts/test-video-duration.cjs
+      - name: Isolated type check
+        run: node scripts/check-canonical.cjs types
 
-      - name: Offline ranking liquidity tests
-        run: node scripts/test-ranking-liquidity.cjs
+      - name: Isolated build without database or provider access
+        run: node scripts/check-canonical.cjs build
 
-      - name: Offline ranking API integration test
-        run: node scripts/test-ranking-liquidity-route.cjs
-
-      - name: Offline curated expiry tests
-        run: node scripts/test-curated-expiry.cjs
-
-      - name: Offline free expiry cleanup test
-        run: node scripts/test-curated-expiry-cleanup.cjs

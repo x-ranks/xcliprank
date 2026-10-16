@@ -1,0 +1,21 @@
+{
+  "HANDOFF-MANIFEST.json": "c9a3872b97cf713a0dc718c4ff3d572d8ea371ca5a63805eb9a08019e4d911f7",
+  "READ-FIRST.txt": "52ed299039c53b0fe0930c8e2f3c665a504de4a2b0fe77eae5e3ca50922f13f6",
+  "Xclip-別AI引き継ぎ-20261016.md": "7d6a4db2d64abbd2762d5c199b6a3f9bcf2eb7a65175ac0da99a1a4d01fc3ed6",
+  "Xclip-別AI引き継ぎ-20261016.txt": "7d6a4db2d64abbd2762d5c199b6a3f9bcf2eb7a65175ac0da99a1a4d01fc3ed6",
+  "Xclip-累積更新履歴-引き継ぎ作成-20261016.md": "a2d1c8c5d46efe6db7bd4e99cb91356c20c84047434433efafee96aaa2b60a3e",
+  "diagnostics/PRODUCTION-playback-reported-20261015.json": "6960960a251c2ca3bb443040ff78a259b201f9c77d88dabe644665ed266a1a99",
+  "diagnostics/xclip-playback-code-export-20261015.sh": "b439494aafa28124e70ffe07ce4b942be25b7be0592ab7a0dcd1deb445b1df53",
+  "diagnostics/xclip-playback-source-check-20261015.sh": "aeb00ff1806ee34ba94490f4731300f5f32ab1ca3c23cdbd28cad18c66dde375",
+  "operations/xclip-operations-tasks-20261015.csv": "7054657d64148745555af227017e7eeb8f4a52bb894bef3d3b43c2a8d6bf1e3b",
+  "operations/xclip-operations-tasks-20261015.json": "70259b95c66415921f210a8badef0a7d9e0051e8ef556fd38339785ac4df1f1f",
+  "operations/XCLIP_OPERATIONS_TASKS.md": "ef2c647110de38ea739f74746f6e64657c711003e52c88020626a5b8029ef122",
+  "reference/learning-poll-completion.json": "ac7939a3a9ccb1719b578657bd04e2a36a672fdb02a218b3d80f0d51654a8fa4",
+  "reference/playback-production-source-20261015.json": "f21c5bf28e654006247dc0259e3035416a64b7973292041decd335f300eee173",
+  "reference/PLAYBACK_PRODUCTION_SOURCE_20261015.md": "b98aef3b25f81dd407102d25ae4d8c3c124731275607d5d9666408b5b3f5ce8d",
+  "reference/registration1000-ranking-v2-completion.json": "e83c2f8e3e95e8c4f9915b9c0770073afb4c56a0bd5f914212a396027f60a337",
+  "reference/xclip-update-artifacts-before-handoff.json": "2f5017dbb9ff865a49861c1e3b329135437696c2f0b27989be1fff6dedf3d799",
+  "reference/XCLIP_CURRENT_STATUS.md": "e4762c5fc68e2eeac2383a6946f467bddd94a2ee6011c0be6675afcaddce048a",
+  "reference/XCLIP_UPDATE_HISTORY-before-handoff.md": "6047c7ab927691cfdc3c3a1082dd1e6944bebec3d863f3fd25f6fc79cddc7ab3",
+  "rules/UPDATE_RULES_20261012.txt": "d850ec699b084607c4d75ecd96ddb7e36b1648b561dc5d6adf70fb8585e16c79"
+}

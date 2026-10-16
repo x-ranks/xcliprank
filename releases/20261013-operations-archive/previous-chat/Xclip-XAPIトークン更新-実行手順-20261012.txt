@@ -1,0 +1,7 @@
+﻿X Developer Consoleの対象App > Keys and Tokens > Bearer Tokenを確認し、現在のApp-only tokenを取得。API KeyやAccess Tokenと取り違えない。チャットには送らない。
+xclip-xapi-token-update-20261012.shを/home/rbxfxmfdへアップロード。
+bash /home/rbxfxmfd/xclip-xapi-token-update-20261012.sh
+入力欄にtokenの値だけを貼り付けEnter（画面には表示しない）。Usage APIへのGET1回で200を確認してからruntime/sourceのtoken行を更新。投稿検索はしない。
+成功表示 XCLIP_XAPI_BEARER_UPDATED。JSONのrestartMarkerUpdated=trueならPassenger再起動を要求済み。falseならtoken反映済みで再起動要求だけ要確認。表示された結果を共有。
+privateバックアップに.env本文があるため共有しない。CRON_SECRETやDBパスワードは変更不要。
+通常Cronで新tokenを使用。予約・位置・失敗者24時間待機を保持し、巡回の強制実行はしない。検索権限と実際の掲載は次の通常巡回で確認。

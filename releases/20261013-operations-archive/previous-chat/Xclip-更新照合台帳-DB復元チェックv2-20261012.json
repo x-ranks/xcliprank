@@ -1,0 +1,108 @@
+{
+  "release": "snapshot-tools-20261012-v1",
+  "dateJst": "2026-10-12",
+  "tasks": [
+    "G01",
+    "O01"
+  ],
+  "status": "DB dump and encrypted-file roundtrip confirmed by user log; actual database restoration and remaining G01/O01 requirements pending",
+  "applicationCodeChanged": false,
+  "productionApplied": false,
+  "gitRecorded": false,
+  "baseline": "unified-authors-20261011 patch targets; cumulative history includes user normal-operation confirmation",
+  "compatibility": {
+    "local": "Node.js 22 or compatible; Windows PowerShell 5.1+; existing .git directory",
+    "production": "existing ColorfulBox layout/node22; flock; shared registry lock; no schema or quota change",
+    "database": "PostgreSQL client compatible with source server; password entered at execution; separate native test cluster requires full tools"
+  },
+  "limitations": [
+    "Supabase Storage bodies and role passwords require separate protection.",
+    "File and DB snapshots are not an atomic combined recovery point.",
+    "Actual production restore, managed Supabase service restoration and DB native-tool execution not verified."
+  ],
+  "files": [
+    {
+      "name": "xclip-snapshot-20261012.cjs",
+      "sha256": "ee30bde0ae6c67f7a98125ab2183973022063707e1eb25827f1058ddfddcb689"
+    },
+    {
+      "name": "xclip-baseline-20261012.json",
+      "sha256": "7cceac3a6d011238fdaecca7ff9b733ca81486b875c6efe9c0e226680a7288c4"
+    },
+    {
+      "name": "xclip-local-snapshot-20261012.ps1",
+      "sha256": "5a16c41f54186e7f4efeec562916bde36f372cd4de40b1f95545784c1ab6c252"
+    },
+    {
+      "name": "xclip-server-snapshot-20261012.sh",
+      "sha256": "68039f5276c1f5f762989121d02dd4194cf80acc839ef27b536cf318b6fe4189"
+    },
+    {
+      "name": "xclip-db-snapshot-20261012.ps1",
+      "sha256": "3d83b164a19ab1516802b9bc7f74e5c84ea577b4af5aff38925987ca1e123628"
+    },
+    {
+      "name": "xclip-db-restore-check-20261012.ps1",
+      "sha256": "e18e38ef331b8f6f66a5ce7874bb24a98b23eefce11b151d446539259fbf3c6b"
+    },
+    {
+      "name": "xclip-db-inventory-20261012.sql",
+      "sha256": "f488bf0cc5b4e90a04e4bb52ac8e835729e8e68b97e98630ad4a73eb5114e2d5"
+    },
+    {
+      "name": "Xclip-現行版保護とバックアップ-実行手順-20261012.txt",
+      "sha256": "b3b4cecc9b2484eaa2438153717c972f7ffb8d19ec3bce834515d70c02167cab"
+    },
+    {
+      "name": "Xclip-更新履歴-バックアップ準備-20261012.md",
+      "sha256": "62f4cbbde669d9b793a658dec352e144c88e2dfa9a72f7b3595ca4b33eaf72c4"
+    },
+    {
+      "name": "Xclip-運営タスク一覧-バックアップ準備-20261012.csv",
+      "sha256": "4958d22115f2521c5fbaeaf91b809e50a5e737dd4c9cf1cd23cb5de2538ab53d"
+    }
+  ],
+  "dbPasswordChange": {
+    "dateJst": "2026-10-12",
+    "evidence": "user reports resetting DB password and retrying backup",
+    "secretStored": false,
+    "executionResult": "Subsequent pg_dump/archive/encrypted-file-roundtrip success confirmed by user-supplied log; actual DB restore still pending.",
+    "futureGuidance": "Refer to this reset when troubleshooting DB password failures; check outdated credentials before concluding a cause."
+  },
+  "historyFile": "Xclip-更新履歴-DB復元チェックv2-20261012.md",
+  "documentationAdditions": [
+    {
+      "name": "xclip-db-restore-check-20261012-v2.ps1",
+      "sha256": "0ad376e3d477b1e514ca5413e090f9b6c9fe53e3a557dd63bf3622e65cafbc61"
+    },
+    {
+      "name": "Xclip-DB復元チェック-v2-修正記録-20261012.txt",
+      "sha256": "e77a139760d106ffef2f9c697c13704dd4e3b64bc94462e832e77b1829247c84"
+    },
+    {
+      "name": "Xclip-更新履歴-DB復元チェックv2-20261012.md",
+      "sha256": "a14954821fb7ed37f0ae6dd85baab5f09aade221ac553780366756053a7a9291"
+    }
+  ],
+  "backupExecution": {
+    "dateJst": "2026-10-12",
+    "evidence": "user-supplied completion log",
+    "localBackupDirectory": "C:\\Users\\USER\\Documents\\XclipBackups\\database-20261012-182101-7956ad",
+    "dump": "success reported",
+    "pgRestoreList": "success implied by script completion",
+    "encryptedFileRoundtrip": "success reported",
+    "actualDatabaseRestore": "pending",
+    "offsiteCopy": "unconfirmed",
+    "localAndServerSnapshots": "unconfirmed by this log",
+    "safeReportReceived": false
+  },
+  "restoreToolUpdate": {
+    "release": "db-restore-check-20261012-v2",
+    "supersedes": "xclip-db-restore-check-20261012.ps1 only for future restore-check executions; prior file not changed",
+    "reason": "Japanese locale text-search message was treated as NativeCommandError",
+    "verification": "Windows PowerShell 5.1 syntax and fixture-native warning/exit/argument/log tests passed; real DB execution pending",
+    "applicationCodeChanged": false,
+    "productionApplied": false,
+    "rollback": "No live change. Retain prior files and backup; isolated test folders are not live restore targets."
+  }
+}

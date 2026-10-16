@@ -1,3 +1,5 @@
+> 2026-10-11 現行運用への注記：以下のVercel公開手順は過去の運用記録です。現在の本番はColorfulBoxです。着手前に [更新履歴](XCLIP_UPDATE_HISTORY.md) と [更新照合台帳](xclip-update-artifacts.json) を確認し、公開中のruntime・DEPLOY_SOURCE・BUILD_IDに対応するコードを基準にしてください。作成・検証・ローカル適用・本番適用を区別し、各更新を履歴へ追記してください。固定作業先とローカルデータの保護事項は引き続き有効です。
+
 # Xcliprank ローカル開発・GitHub・Vercel運用
 
 ## 作業場所

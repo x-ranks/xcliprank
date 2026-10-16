@@ -1,35 +1,17 @@
-import { planCuratedSearchExpiry, persistCuratedSearchExpiry, type CuratedExpiryAudit } from "./curated-search-expiry";
+import { activePersonalBundle, applyPersonalTier } from "./tier-personal-store";
 import { calculateAdultScore, calculateCreatorScore, requiresSafetyReview } from "./adult-score";
 import { classifyContent } from "./content-filter";
 import { errorMessage } from "./error-message";
 import { rankingScore } from "./ranking";
 import { supabaseAdmin } from "./supabase-admin";
-import { nextCuratedSearchState, type CuratedPendingSearch } from "./curated-search-state";
 import {
   blendRuleAndLearnedTier,
   loadTierLearningModel,
   predictLearnedTier,
 } from "./tier-learning";
-import {
-  searchAllVideoPostPage,
-  searchRecentVideoPostBatch,
-  recentSearchStartTime,
-  type XVideoPost,
-} from "./x";
+import { fetchUserTimelineVideoPosts, searchRecentVideoPosts } from "./x";
 
 export type CuratedCollectionMode = "initial" | "incremental";
-export type CuratedInitialPostReadLimit = 50 | 100 | 150;
-
-const DEFAULT_INITIAL_POST_READ_LIMIT: CuratedInitialPostReadLimit = 50;
-const INCREMENTAL_POST_READ_LIMIT = 50;
-
-function normalizeInitialPostReadLimit(
-  value: number | undefined
-): CuratedInitialPostReadLimit {
-  return ([50, 100, 150] as const).includes(value as CuratedInitialPostReadLimit)
-    ? value as CuratedInitialPostReadLimit
-    : DEFAULT_INITIAL_POST_READ_LIMIT;
-}
 
 export type CuratedAuthor = {
   x_author_id: string;
@@ -44,10 +26,6 @@ export type CuratedAuthor = {
   curated_backfill_status: string | null;
   curated_expected_tier: "S" | "A" | null;
   curated_last_post_id: string | null;
-  curated_last_collected_at: string | null;
-  curated_last_attempt_at: string | null;
-  curated_pending_search: CuratedPendingSearch | null;
-  curated_search_expiry?: CuratedExpiryAudit | null;
   curated_total_fetched: number | null;
   curated_total_saved: number | null;
   curated_total_duplicates: number | null;
@@ -65,7 +43,7 @@ type PendingPost = {
   review_required: boolean;
 };
 
-function calculateTier(post: PendingPost, author: CuratedAuthor) {
+export function calculateTier(post: PendingPost, author: CuratedAuthor) {
   const sensitive = post.possibly_sensitive === true;
   const postAdultScore = Number(post.adult_score || 0);
   const postCreatorScore = Number(post.creator_score || 0);
@@ -92,7 +70,7 @@ function calculateTier(post: PendingPost, author: CuratedAuthor) {
   return { score: 0, tier: "NONE" };
 }
 
-function applyCuratedTierFloor(
+export function applyCuratedTierFloor(
   result: { score: number; tier: string },
   author: CuratedAuthor,
   contentCategory: string
@@ -116,154 +94,15 @@ function newestPostId(ids: string[]) {
   }, null);
 }
 
-function isEstimatedHighTier(post: XVideoPost, author: CuratedAuthor) {
-  const content = classifyContent(post.text ?? "");
-  if (content.category !== "PASS") return false;
-
-  const tier = applyCuratedTierFloor(calculateTier({
-    possibly_sensitive: post.possibly_sensitive,
-    adult_score: calculateAdultScore(post.text ?? "", post.possibly_sensitive),
-    creator_score: calculateCreatorScore(post.text ?? ""),
-    review_required: requiresSafetyReview(post.text ?? ""),
-  }, author), author, content.category);
-
-  return ["S", "A+", "A"].includes(tier.tier);
-}
-
-async function getInitialResumeState(authorId: string) {
-  const { data, count, error } = await supabaseAdmin()
-    .from("posts")
-    .select("x_post_id", { count: "exact" })
-    .eq("author_id", authorId)
-    .eq("collection_source", "curated")
-    .order("created_at", { ascending: true })
-    .limit(1);
-  if (error) throw error;
-  return {
-    storedCount: count ?? 0,
-    oldestPostId: data?.[0]?.x_post_id ? String(data[0].x_post_id) : null,
-  };
-}
-
-async function fetchInitialVideoPosts(
-  author: CuratedAuthor,
-  requestedLimit: CuratedInitialPostReadLimit
-) {
-  const resume = await getInitialResumeState(author.x_author_id);
-  const remainingTarget = Math.max(0, requestedLimit - resume.storedCount);
-  // X検索は1リクエスト最低10件。残りが10件未満なら追加課金を避けて完了扱いにする。
-  if (remainingTarget < 10) {
-    return {
-      posts: [] as XVideoPost[],
-      requestedLimit,
-      rawPostCount: 0,
-      highTierRate: 0,
-      resumedAfter: resume.storedCount,
-      recentSearchFallback: false,
-    };
-  }
-
-  const query = `from:${author.username} has:videos -is:retweet -is:reply`;
-  const posts: XVideoPost[] = [];
-  let nextToken: string | null = null;
-  let rawPostCount = 0;
-  let highTierCount = 0;
-
-  try {
-    do {
-      const remainingReads = remainingTarget - rawPostCount;
-      const pageSize = Math.min(25, remainingReads);
-      if (pageSize < 10) break;
-      const page = await searchAllVideoPostPage({
-        query,
-        maxResults: pageSize,
-        nextToken,
-        untilId: resume.oldestPostId,
-        authorFallback: {
-          id: author.x_author_id,
-          username: author.username,
-          name: author.username,
-        },
-      });
-      const received = page.posts;
-      posts.push(...received);
-      rawPostCount += page.rawPostCount;
-      highTierCount += received.filter((post) => isEstimatedHighTier(post, author)).length;
-      nextToken = page.nextToken;
-    } while (nextToken && rawPostCount < remainingTarget);
-
-    return {
-      posts,
-      requestedLimit,
-      rawPostCount,
-      highTierRate: posts.length > 0 ? highTierCount / posts.length : 0,
-      resumedAfter: resume.storedCount,
-      recentSearchFallback: false,
-    };
-  } catch (error) {
-    const archiveUnavailable = errorMessage(error, "").includes("X API 403");
-    if (!archiveUnavailable || rawPostCount > 0 || resume.oldestPostId) throw error;
-
-    // Full Archive Searchを利用できない契約ではRecent Searchへ安全に縮退する。
-    const recentResult = await searchRecentVideoPostBatch(
-      query,
-      remainingTarget,
-      {
-        authorFallback: {
-          id: author.x_author_id,
-          username: author.username,
-          name: author.username,
-        },
-        includeAuthorExpansion: false,
-      },
-      "curated_initial"
-    );
-    const recentHighTierCount = recentResult.posts.filter((post) => isEstimatedHighTier(post, author)).length;
-    return {
-      posts: recentResult.posts,
-      requestedLimit,
-      rawPostCount: recentResult.rawPostCount,
-      highTierRate: recentResult.posts.length > 0 ? recentHighTierCount / recentResult.posts.length : 0,
-      resumedAfter: 0,
-      recentSearchFallback: true,
-    };
-  }
-}
-
 async function existingValues(column: "x_post_id" | "media_key" | "video_url", values: string[]) {
   if (values.length === 0) return new Set<string>();
   const supabase = supabaseAdmin();
-  const existing = new Set<string>();
-  // PostgREST encodes IN values in the URL. Hundreds of full video URLs can
-  // exceed upstream URI limits; bound encoded size as well as item count.
-  const batches: string[][] = [];
-  let batch: string[] = [];
-  let encodedSize = 0;
-  for (const value of new Set(values)) {
-    const size = encodeURIComponent(value).length + 12;
-    if (size > 4000) throw new Error("Duplicate-check value exceeds safe URI length.");
-    if (batch.length && (batch.length >= 20 || encodedSize + size > 4000)) {
-      batches.push(batch); batch = []; encodedSize = 0;
-    }
-    batch.push(value); encodedSize += size;
-  }
-  if (batch.length) batches.push(batch);
-  for (const items of batches) {
-    const { data, error } = await supabase.from("posts").select(column).in(column, items);
-    if (error) throw new Error(`Duplicate check (${column}) failed: ${error.message}`);
-    for (const row of data ?? []) {
-      const value = String((row as Record<string, unknown>)[column] ?? "");
-      if (value) existing.add(value);
-    }
-  }
-  return existing;
+  const { data, error } = await supabase.from("posts").select(column).in(column, values);
+  if (error) throw error;
+  return new Set((data ?? []).map((row) => String((row as Record<string, unknown>)[column] ?? "")).filter(Boolean));
 }
 
-export async function collectCuratedAuthor(
-  author: CuratedAuthor,
-  mode: CuratedCollectionMode,
-  options?: { initialPostReadLimit?: number; incrementalPostReadLimit?: number; readBudget?: { remaining: number } }
-) {
+export async function collectCuratedAuthor(author: CuratedAuthor, mode: CuratedCollectionMode) {
   const supabase = supabaseAdmin();
   const now = new Date().toISOString();
   // 学習データの一時的な取得失敗で動画収集全体を止めない。
@@ -275,53 +114,21 @@ export async function collectCuratedAuthor(
     return null;
   });
 
-  const { error: attemptError } = await supabase.from("authors").update({
+  await supabase.from("authors").update({
     curated_backfill_status: mode === "initial" ? "running" : author.curated_backfill_status,
     curated_last_error: null,
-    curated_last_attempt_at: now,
   }).eq("x_author_id", author.x_author_id);
-  if (attemptError) throw attemptError;
 
   try {
-    const expiry = planCuratedSearchExpiry(mode === "incremental" ? author.curated_pending_search ?? null : null, author.curated_search_expiry, Date.parse(now));
-    await persistCuratedSearchExpiry(supabase, author, expiry);
-    const pending = expiry.pending;
-    const startTime = pending?.startTime ?? recentSearchStartTime(author.curated_last_collected_at);
-    const endTime = pending?.endTime ?? new Date(Date.parse(now) - 10_000).toISOString();
-    // 初回も動画検索だけを読み、以後は前回カーソル以降の新着動画だけを取得する。
-    const initialResult = mode === "initial"
-      ? await fetchInitialVideoPosts(
-          author,
-          normalizeInitialPostReadLimit(options?.initialPostReadLimit)
-        )
-      : null;
-    const incrementalResult = mode === "incremental"
-      ? await searchRecentVideoPostBatch(
-          `from:${author.username} has:videos -is:retweet -is:reply`,
-          options?.incrementalPostReadLimit ?? INCREMENTAL_POST_READ_LIMIT,
-          {
-            sinceId: author.curated_last_post_id,
-            lastSuccessfulSearchAt: author.curated_last_collected_at,
-            authorFallback: {
-              id: author.x_author_id,
-              username: author.username,
-              name: author.username,
-            },
-            includeAuthorExpansion: false,
-            startTime,
-            endTime,
-            untilId: pending?.untilId,
-            readBudget: options?.readBudget,
-            firstPageLimit: INCREMENTAL_POST_READ_LIMIT,
-          },
+    // 初回はタイムラインの最新200投稿、以後は前回以降の動画を最大200件取得する。
+    const fetched = mode === "initial"
+      ? await fetchUserTimelineVideoPosts(author.x_author_id, 200, "curated_initial")
+      : await searchRecentVideoPosts(
+          `from:${author.username} has:videos -is:retweet`,
+          200,
+          { sinceId: author.curated_last_post_id },
           "curated_incremental"
-        )
-      : null;
-    const fetched = initialResult?.posts ?? incrementalResult?.posts ?? [];
-    // A capped search has unprocessed older pages. Save the fetched posts,
-    // but keep both cursors unchanged so the gap cannot be silently skipped.
-    const incomplete = incrementalResult?.hasMore ?? false;
-    const apiReadPosts = initialResult?.rawPostCount ?? incrementalResult?.rawPostCount ?? 0;
+        );
     const postIds = fetched.map((post) => post.x_post_id);
     const mediaKeys = fetched.map((post) => post.media_key).filter((value): value is string => Boolean(value));
     const videoUrls = fetched.map((post) => post.video_url).filter((value): value is string => Boolean(value));
@@ -349,8 +156,10 @@ export async function collectCuratedAuthor(
       return true;
     });
 
+    const personalModel = await activePersonalBundle();
     let learnedTierApplied = 0;
-    const rows = unique.map((post) => {
+    const rows = [];
+    for (const post of unique) {
       const adultScore = calculateAdultScore(post.text ?? "", post.possibly_sensitive ?? false);
       const creatorScore = calculateCreatorScore(post.text ?? "");
       const reviewRequired = requiresSafetyReview(post.text ?? "");
@@ -370,11 +179,14 @@ export async function collectCuratedAuthor(
           })
         : null;
       if (learnedPrediction) learnedTierApplied += 1;
-      const tier = content.category === "PASS"
+      const metadataTier = content.category === "PASS"
         ? blendRuleAndLearnedTier(ruleTier, learnedPrediction)
         : ruleTier;
 
-      return {
+      const tier = content.category === "PASS" && !reviewRequired
+        ? await applyPersonalTier(metadataTier, {id: post.x_post_id, video: post.video_url ?? null}, personalModel, consumeVisualBudget())
+        : metadataTier;
+      rows.push({
         ...post,
         adult_score: adultScore,
         creator_score: creatorScore,
@@ -394,8 +206,8 @@ export async function collectCuratedAuthor(
           replies: post.replies,
           createdAt: post.created_at,
         }),
-      };
-    });
+      });
+    }
 
     if (rows.length > 0) {
       const { error: postError } = await supabase.from("posts").upsert(rows, { onConflict: "x_post_id" });
@@ -416,21 +228,11 @@ export async function collectCuratedAuthor(
     const contentExcluded = rows.filter((post) => !["PASS", "SAFETY_REVIEW"].includes(post.content_category)).length;
     const accepted = rows.filter((post) => post.content_category === "PASS" && ["S", "A+", "A", "B+", "B", "C"].includes(post.adult_tier)).length;
     const latestId = newestPostId(postIds);
-    const searchState = mode === "incremental" ? nextCuratedSearchState({
-      pending, startTime, endTime, incomplete,
-      oldestPostId: incrementalResult?.oldestPostId ?? null,
-      newestPostId: incrementalResult?.newestPostId ?? null,
-      previousPostId: author.curated_last_post_id,
-    }) : null;
     const { error: authorError } = await supabase.from("authors").update({
       curated_backfill_status: mode === "initial" ? "completed" : author.curated_backfill_status,
       curated_backfill_completed_at: mode === "initial" ? now : undefined,
-      curated_last_collected_at: incomplete ? author.curated_last_collected_at : searchState?.completedAt ?? now,
-      // Do not advance either cursor when the 50-post budget hides older pages.
-      curated_last_post_id: searchState ? searchState.lastPostId : newestPostId(
-        [author.curated_last_post_id, latestId].filter((value): value is string => Boolean(value))
-      ),
-      curated_pending_search: searchState?.pending ?? null,
+      curated_last_collected_at: now,
+      curated_last_post_id: latestId,
       curated_total_fetched: Number(author.curated_total_fetched || 0) + fetched.length,
       curated_total_saved: Number(author.curated_total_saved || 0) + rows.length,
       curated_total_duplicates: Number(author.curated_total_duplicates || 0) + duplicates,
@@ -439,16 +241,14 @@ export async function collectCuratedAuthor(
       curated_total_accepted: Number(author.curated_total_accepted || 0) + accepted,
       curated_unavailable_failure_count: 0,
       curated_unavailable_since: null,
-      curated_last_error: incomplete ? "Recent Search read budget reached; older pages queued for resume." : null,
-      last_checked_at: incomplete ? undefined : now,
+      curated_last_error: null,
+      last_checked_at: now,
     }).eq("x_author_id", author.x_author_id);
     if (authorError) throw authorError;
 
     return {
       author: author.username,
       mode,
-      apiReadPosts,
-      incomplete,
       fetched: fetched.length,
       saved: rows.length,
       duplicates,
@@ -460,17 +260,7 @@ export async function collectCuratedAuthor(
       tierLearningSamples: tierLearningModel?.samples.length ?? 0,
       tierLearningRefreshedAt: tierLearningModel?.trainedAt ?? null,
       latestPostId: latestId,
-      initialRequestedLimit: initialResult?.requestedLimit ?? null,
-      initialHighTierRate: initialResult
-        ? Number(initialResult.highTierRate.toFixed(4))
-        : null,
-      initialResumedAfter: initialResult?.resumedAfter ?? null,
-      recentSearchFallback: initialResult?.recentSearchFallback ?? false,
       completedAt: now,
-      resumed: Boolean(pending),
-      expiryAction: expiry.event?.action ?? null,
-      expirySkippedRange: expiry.event ? { from: expiry.event.skippedFrom, until: expiry.event.skippedUntil } : null,
-      pendingUntilId: searchState?.pending?.untilId ?? null,
     };
   } catch (error) {
     const message = errorMessage(error, "Collection failed");
@@ -507,9 +297,16 @@ export const CURATED_AUTHOR_SELECT = [
   "cumulative_posts", "cumulative_video_posts", "video_ratio", "review_required",
   "is_curated", "curated_status", "curated_expected_tier", "curated_added_at",
   "curated_backfill_status", "curated_backfill_completed_at", "curated_last_collected_at",
-  "curated_last_attempt_at", "curated_pending_search", "curated_search_expiry",
   "curated_last_post_id", "curated_total_fetched", "curated_total_saved",
   "curated_total_duplicates", "curated_total_safety_excluded", "curated_total_content_excluded",
   "curated_total_accepted", "curated_last_error", "curated_unavailable_failure_count",
   "curated_unavailable_since"
 ].join(",");
+
+let visualBudgetUntil = 0, visualBudgetRemaining = 0;
+function consumeVisualBudget() {
+  if (process.env.XCLIP_VISUAL_COLLECTION !== "1") return false;
+  if (Date.now() > visualBudgetUntil) { visualBudgetUntil = Date.now() + 60000; visualBudgetRemaining = 4; }
+  if (visualBudgetRemaining <= 0) return false;
+  visualBudgetRemaining--; return true;
+}

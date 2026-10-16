@@ -1,0 +1,4 @@
+1f3dcd7e3f4b2d0700ecb6f76bc9feb0f0dc1a112fd078c6315d3264b38c7bf0  xclip-xapi-token-update-20261012.sh
+a9a065a12223b8b703aca3ed34672483ce024e4ace34fa26dd330f96fbf88d07  Xclip-更新履歴-XAPI認証拒否確認とトークン更新準備-20261012.md
+80dac28a6d8c34bf8abb35375337d5bbca4d4aa271d23a433a56f100ba370eac  Xclip-更新照合台帳-XAPI認証拒否確認とトークン更新準備-20261012.json
+044b996113a5f9cbb393e3d805c0c27e71984ada9d8d37290b10fc337116d5e9  Xclip-XAPIトークン更新-実行手順-20261012.txt

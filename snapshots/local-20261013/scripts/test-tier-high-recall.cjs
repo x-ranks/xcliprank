@@ -1,0 +1,24 @@
+const assert=require('node:assert/strict'),fs=require('node:fs'),path=require('node:path'),ts=require('typescript');
+const modules=new Map();function load(id){if(modules.has(id))return modules.get(id).exports;const m={exports:{}};modules.set(id,m);new Function('require','module','exports',ts.transpileModule(fs.readFileSync(id+'.ts','utf8'),{compilerOptions:{module:ts.ModuleKind.CommonJS,target:ts.ScriptTarget.ES2022}}).outputText)(n=>n.startsWith('.')?load(path.posix.normalize(path.posix.join(path.posix.dirname(id),n))):require(n),m,m.exports);return m.exports;}
+const c=load('lib/tier-personal-core'),e=load('lib/tier-personal-evaluation');
+const features=x=>[x,...Array(1023).fill(0)];
+const raw={mean:Array(1024).fill(0),scale:Array(1024).fill(1),weights:[6,2,0,0,0,0].map(x=>features(x)),bias:[.4,.3,.1,.15,.05,1e-8].map(Math.log),samples:200};
+const old={...raw,policy:{temperature:1,confidenceMin:.6,sMin:.85,sMargin:.15}};
+const next={...old,policy:{...old.policy,highTierMin:.65,highTierMargin:.15}};
+assert(c.validPersonalHead(next));
+assert.equal(c.personalDecision(features(0),old,'C').tier,'C');
+assert.equal(c.personalDecision(features(0),next,'C').tier,'A','combined A/S evidence can recover a low-confidence A candidate');
+assert.equal(c.personalDecision(features(-2),next,'C').tier,'C','low A/S probability cannot trigger recovery');
+assert.equal(c.personalDecision(features(2),next,'C').tier,'S','strong S retains guarded S');
+const moderate={...next,bias:[.70,.10,.05,.10,.05,1e-8].map(Math.log)};
+assert.equal(c.personalDecision(features(0),moderate,'C').tier,'A','rejected S may become A, never an unguarded S');
+assert(!c.validPersonalHead({...next,policy:{...next.policy,highTierMin:NaN}}));
+assert(!c.validPersonalHead({...next,policy:{...next.policy,highTierMargin:undefined}}));
+const tuning=Array.from({length:45},(_,i)=>({id:String(i),actual:['S','A','C'][i%3],baseline:i%3===0?'S':'C',features:features([2,0,-2][i%3])}));
+const tuned=e.tuneHighTierRecovery(raw,tuning),base=e.scoreRanking(tuning,e.tunePersonalPolicy(raw,tuning)),result=e.scoreRanking(tuning,tuned);
+assert(tuned.policy.highTierMin!==undefined);
+assert(result.highRecallAfter>base.highRecallAfter);assert(result.falseHighAfter<=base.falseHighAfter);assert(result.sFalseHigh<=base.sFalseHigh);assert(result.exactAfter>=base.exactAfter);
+const unsafeTuning=tuning.map(r=>({...r,actual:r.actual==='A'?'C':r.actual}));
+assert.equal(e.tuneHighTierRecovery(raw,unsafeTuning).policy.highTierMin,undefined,'unsupported tuning class cannot relax policy');
+assert.equal(e.tuneHighTierRecovery(raw,tuning.slice(0,20)).policy,undefined,'too few rows cannot tune recovery');
+console.log('PASS: A/S recall recovery; low-tier and S guard retained; tuning-only safety constraints; unsupported policy unchanged; model validation');

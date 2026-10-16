@@ -1,0 +1,14 @@
+# 2026-10-13 JST：新着500件canonical修正v2（公開前停止からの修正）
+
+- ユーザー実行ログ：xclip-newest500-deploy-20261013.sh、旧公開source=/home/rbxfxmfd/xclip-fx-context-fix-20261013.ghbj6F/source、作業先=/home/rbxfxmfd/xclip-newest500-20261013.XMnj9v。18テスト群のPASSを確認。スクリプトの実行順序から全体tsc・Nextビルドが通過し、隔離HTTP検証まで到達したと判断する。2ページ目のcanonical期待値検査で失敗し、公開runtime移動・公開切替の前で停止。本番の新着500件は未適用。旧サイトの変更・DBスキーマ/巡回/予約の変更なし。ランキングIDの耐久キャッシュは隔離HTTP検証で作成され得るが、巡回状態とは別。起動直後のcurl connection refusedは待機ループの再試行で通過した一時的なログ。途中のRANKINGS ERRORは異常系の模擬テストにより意図的に出たもので、停止原因は最後のcanonical検査。
+- 原因の再現：手元のNext15.5.23実装resolveAbsoluteUrlWithPathnameは、metadataBaseあり・pathname=/のURLをoriginに変換し、そのqueryを落とす。旧generateMetadataが返す/?page=2を実resolveAlternatesへ通すとhttps://xcliprank.comとなり、ページ2の検査を満たさない。同じルートの完全URL文字列/URLインスタンスに置き換えるだけでも再現する。実サーバーのHTML本文・Nextの正確な版は未取得で、このコード経路を手元で再現して修正した。旧テストは生成前のmetadata値だけを確認しており、フレームワーク内の変換を見落とした。
+- 修正：新着ページに限り、canonicalとOpenGraph URLをSITE_URLを含む完全URL文字列として返し、同ページのmetadataBaseをnullにする。相対URLがないため親のbaseを経由せず、/?page=nを保持できる。page1はhttps://xcliprank.com/、2〜10はhttps://xcliprank.com/?page=n。editionはcanonicalへ含めない。500件・補完・daily85枠・weekly選別・重複除外・50件内の投稿者分散・耐久edition・安全除去のアルゴリズムには変更なし。Next/依存の更新や全体設定の変更なし。
+- 検査：canonical判定を緩めない。HTML内の実link要素を抽出し、canonicalが1件だけ・期待する完全URLとページ番号が正しいことを必須にする。script/comment内の文字列、別ページ、欠落/重複、edition付きURLは拒否。失敗時は未知のqueryや認証情報を伏せ、公開URLの構造だけを表示。起動待ちの接続拒否だけを非表示にし、起動失敗/timeout/公開検査エラーは引き続き停止する。
+- 検証：v2の生成metadataを実際のNext resolverへ通し、1〜10ページのcanonicalを確認。別の隔離Nextアプリへ実変更Home/RankingClient/SEO/ページ関数をコピーし、模擬データ・未変更の不足部品だけ置換してproduction build/startを実行。通常UAとHTML限定bot UAで1/2/10ページのHTML・bot向けhead内canonical、50カード、不正11ページ404を確認。HTTPは127.0.0.1だけで本番DB/providerへのアクセスなし。公開版の完全なビルド/確認はv2更新スクリプトで改めて必須実行する。
+- 配布物：v1を差し替えず本番/ローカルのv2、差分ソースZIP、累積履歴・照合台帳・SHAを別名で作成。実ダウンロード埋込パッチ・PowerShellラッパーを隔離コピーへ適用/再適用/未知編集拒否/復旧/後編集保護し、14回帰群・対象型・ローカル型/SSR/プロキシが成功。実ラッパーでのローカルv1からv2への更新、未知編集/後編集拒否、復元、既存状態保持も確認済み。sh/ps1構文・埋込hashを確認し、最終ZIP/SHA照合を行う。元の実版と既知のv1コードだけを互換対象にし、未知編集を許可しない。ローカルにv1が入っている場合も既知hashからv2へ更新できる。
+- 状態：v2は作成・隔離検証・配布。本番/実ローカル未適用、Git/GitHub未反映。アシスタントによるPC/UI操作・実プロジェクト編集・SSH・実DB/providerアクセスはなし。ユーザーはv2本番成功後にv2ローカルを適用する。以前の累積履歴を下記へ継承する。
+
+
+最新累積履歴: Xclip-更新履歴-新着500件canonical修正-v2-20261013.md
+最新照合台帳: Xclip-更新照合台帳-新着500件canonical修正-v2-20261013.json
+v1は公開前canonical検査で停止、旧本番を維持。v2未適用。原版配布物とsourcesは変更しない。

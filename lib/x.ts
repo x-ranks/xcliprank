@@ -39,81 +39,6 @@ type XApiPage = {
   meta?: { next_token?: string };
 };
 
-export type XVideoPost = {
-  x_post_id: string;
-  author_id: string | null;
-  author_username: string | null;
-  author_name: string | null;
-  text: string;
-  possibly_sensitive: boolean;
-  created_at: string;
-  x_url: string;
-  media_key: string | null;
-  media_type: string | null;
-  preview_image_url: string | null;
-  video_url: string | null;
-  video_bitrate: number | null;
-  views: number;
-  likes: number;
-  reposts: number;
-  replies: number;
-  quotes: number;
-  bookmarks: number;
-};
-
-export type XVideoPostSearchResult = {
-  posts: XVideoPost[];
-  rawPostCount: number;
-  hasMore: boolean;
-  newestPostId: string | null;
-  oldestPostId: string | null;
-};
-
-type SearchRecentVideoPostOptions = {
-  sinceId?: string | null;
-  lastSuccessfulSearchAt?: string | null;
-  authorFallback?: XUserLookup;
-  includeAuthorExpansion?: boolean;
-  // Fixed bounds and an exclusive older-page cursor for curated recovery.
-  startTime?: string;
-  endTime?: string;
-  untilId?: string | null;
-  readBudget?: { remaining: number };
-  firstPageLimit?: number;
-};
-
-// Recent Search only accepts a since_id from its seven-day window.
-// Leave one day of margin so a delayed cron never sends a stale cursor.
-export function validRecentSearchSinceId(
-  sinceId: string | null | undefined,
-  now = Date.now()
-): string | null {
-  if (!sinceId || !/^\d+$/.test(sinceId)) return null;
-  try {
-    const createdAt = Number((BigInt(sinceId) >> 22n) + 1288834974657n);
-    return createdAt >= now - 6 * 24 * 60 * 60 * 1000 &&
-      createdAt <= now ? sinceId : null;
-  } catch {
-    return null;
-  }
-}
-
-// A stale Post ID cannot be sent as since_id. Search only since the last
-// completed check, with a short overlap for indexing delays. Clamp to the
-// Recent Search window after outages and leave one day of API margin.
-export function recentSearchStartTime(
-  lastSuccessfulSearchAt: string | null | undefined,
-  now = Date.now()
-): string {
-  const last = lastSuccessfulSearchAt ? Date.parse(lastSuccessfulSearchAt) : NaN;
-  const earliest = now - 6 * 24 * 60 * 60 * 1000;
-  const overlap = 15 * 60 * 1000;
-  const start = Number.isFinite(last) && last <= now
-    ? Math.max(earliest, last - overlap)
-    : earliest;
-  return new Date(start).toISOString();
-}
-
 export type XApiUsageSource =
   | "discovery"
   | "priority"
@@ -166,14 +91,10 @@ function normalizeTotalResults(value: number) {
   return Math.max(10, Math.min(Math.floor(value), MAX_TOTAL_RESULTS));
 }
 
-function addResponseFields(params: URLSearchParams, includeAuthorExpansion = true) {
+function addResponseFields(params: URLSearchParams) {
   params.set("tweet.fields", TWEET_FIELDS);
-  params.set(
-    "expansions",
-    includeAuthorExpansion ? "author_id,attachments.media_keys" : "attachments.media_keys"
-  );
-  if (includeAuthorExpansion) params.set("user.fields", "id,username,name");
-  else params.delete("user.fields");
+  params.set("expansions", "author_id,attachments.media_keys");
+  params.set("user.fields", "id,username,name");
   params.set("media.fields", MEDIA_FIELDS);
 }
 
@@ -183,9 +104,7 @@ async function fetchXPages(
   totalLimit: number,
   paginationParameter: "next_token" | "pagination_token",
   logLabel: string,
-  usageSource: XApiUsageSource,
-  readBudget?: { remaining: number },
-  firstPageLimit?: number
+  usageSource: XApiUsageSource
 ) {
   const token = process.env.X_BEARER_TOKEN;
   if (!token) throw new Error("Missing X_BEARER_TOKEN.");
@@ -196,16 +115,7 @@ async function fetchXPages(
 
   do {
     const remaining = totalLimit - fetchedCount;
-    const pageLimit = Math.min(
-      100, remaining,
-      pages.length === 0 ? firstPageLimit ?? 100 : 100,
-      readBudget?.remaining ?? 100
-    );
-    // Never round a remaining budget below the API minimum up to ten.
-    if (pageLimit < 10) break;
-    params.set("max_results", String(pageLimit));
-    // Reserve before issuing a paid request, including requests that fail.
-    if (readBudget) readBudget.remaining -= pageLimit;
+    params.set("max_results", String(Math.min(100, Math.max(10, remaining))));
     if (nextToken) params.set(paginationParameter, nextToken);
     else params.delete(paginationParameter);
 
@@ -249,11 +159,7 @@ async function fetchXPages(
   return pages;
 }
 
-function formatVideoPosts(
-  pages: XApiPage[],
-  rawPostLimit: number,
-  fallbackAuthor?: XUser
-): XVideoPost[] {
+function formatVideoPosts(pages: XApiPage[], rawPostLimit: number) {
   const usersById = new Map<string, XUser>();
   const mediaByKey = new Map<string, XMedia>();
 
@@ -266,7 +172,7 @@ function formatVideoPosts(
     .flatMap((page) => page.data ?? [])
     .slice(0, rawPostLimit)
     .map((post) => {
-      const author = post.author_id ? usersById.get(post.author_id) ?? fallbackAuthor : fallbackAuthor;
+      const author = post.author_id ? usersById.get(post.author_id) : undefined;
       const attachedMedia = (post.attachments?.media_keys ?? [])
         .map((key) => mediaByKey.get(key))
         .filter((item): item is XMedia => Boolean(item));
@@ -345,44 +251,18 @@ export async function lookupXUserByUsername(username: string): Promise<XUserLook
   return user;
 }
 
-function snowflakeTimeBoundary(time: string, inclusiveLower: boolean): string {
-  const timestamp = Date.parse(time);
-  if (!Number.isFinite(timestamp) || timestamp <= 1288834974657) {
-    throw new Error("Invalid Recent Search time boundary.");
-  }
-  const boundary = (BigInt(timestamp) - 1288834974657n) << 22n;
-  // since_id is exclusive: include every ID from the first millisecond.
-  return (inclusiveLower ? boundary - 1n : boundary).toString();
-}
-
-export async function searchRecentVideoPostBatch(
+export async function searchRecentVideoPosts(
   customQuery?: string,
   requestedMaxResults: number = DEFAULT_MAX_RESULTS,
-  options?: SearchRecentVideoPostOptions,
+  options?: { sinceId?: string | null },
   usageSource: XApiUsageSource = "discovery"
-): Promise<XVideoPostSearchResult> {
+) {
   const query = customQuery?.trim() || process.env.X_SEARCH_QUERY?.trim() || DEFAULT_QUERY;
   const totalLimit = normalizeTotalResults(requestedMaxResults);
   const params = new URLSearchParams({ query });
-  if (options?.lastSuccessfulSearchAt !== undefined) params.set("sort_order", "recency");
-  addResponseFields(params, options?.includeAuthorExpansion ?? true);
-  const sinceId = validRecentSearchSinceId(options?.sinceId);
-  const startTime = options?.startTime ??
-    (options?.lastSuccessfulSearchAt !== undefined
-      ? recentSearchStartTime(options.lastSuccessfulSearchAt) : undefined);
-  // The live API rejects mixing either ID bound with either time bound.
-  // Convert the pinned lower time to its Snowflake boundary when resuming,
-  // retaining the original window without resetting to the newest page.
-  if (options?.untilId) {
-    params.set("until_id", options.untilId);
-    if (startTime) params.set("since_id", snowflakeTimeBoundary(startTime, true));
-    else if (sinceId) params.set("since_id", sinceId);
-  } else if (options?.startTime || !sinceId) {
-    if (startTime) params.set("start_time", startTime);
-    if (options?.endTime) params.set("end_time", options.endTime);
-  } else {
-    params.set("since_id", sinceId);
-    if (options?.endTime) params.set("until_id", snowflakeTimeBoundary(options.endTime, false));
+  addResponseFields(params);
+  if (options?.sinceId && /^\d+$/.test(options.sinceId)) {
+    params.set("since_id", options.sinceId);
   }
 
   const pages = await fetchXPages(
@@ -391,104 +271,11 @@ export async function searchRecentVideoPostBatch(
     totalLimit,
     "next_token",
     "X SEARCH RESULT",
-    usageSource,
-    options?.readBudget,
-    options?.firstPageLimit
-  );
-  const videoPosts = formatVideoPosts(pages, totalLimit, options?.authorFallback);
-  const rawPostCount = pages.reduce((sum, page) => sum + (page.data?.length ?? 0), 0);
-  console.log("X SEARCH VIDEO RESULT:", { query, rawPostCount, videoPosts: videoPosts.length });
-  const rawIds = pages.flatMap(page => (page.data ?? []).map(post => post.id));
-  const sortedIds = [...rawIds].sort((a, b) => BigInt(a) < BigInt(b) ? -1 : BigInt(a) > BigInt(b) ? 1 : 0);
-  return {
-    posts: videoPosts, rawPostCount,
-    hasMore: Boolean(pages[pages.length - 1]?.meta?.next_token),
-    newestPostId: sortedIds.at(-1) ?? null,
-    oldestPostId: sortedIds[0] ?? null,
-  };
-}
-
-export async function searchRecentVideoPosts(
-  customQuery?: string,
-  requestedMaxResults: number = DEFAULT_MAX_RESULTS,
-  options?: SearchRecentVideoPostOptions,
-  usageSource: XApiUsageSource = "discovery"
-) {
-  const result = await searchRecentVideoPostBatch(
-    customQuery,
-    requestedMaxResults,
-    options,
     usageSource
   );
-  return result.posts;
-}
-
-export async function searchAllVideoPostPage(input: {
-  query: string;
-  maxResults?: number;
-  nextToken?: string | null;
-  untilId?: string | null;
-  authorFallback: XUserLookup;
-}) {
-  const token = process.env.X_BEARER_TOKEN;
-  if (!token) throw new Error("Missing X_BEARER_TOKEN.");
-
-  const endpoint = "https://api.x.com/2/tweets/search/all";
-  const maxResults = Math.max(10, Math.min(100, Math.floor(input.maxResults ?? 25)));
-  const params = new URLSearchParams({
-    query: input.query.trim(),
-    max_results: String(maxResults),
-  });
-  addResponseFields(params, false);
-  if (input.nextToken) params.set("next_token", input.nextToken);
-  if (input.untilId && /^\d+$/.test(input.untilId)) params.set("until_id", input.untilId);
-
-  const startedAt = Date.now();
-  let response: Response;
-  try {
-    response = await fetch(`${endpoint}?${params.toString()}`, {
-      method: "GET",
-      headers: { Authorization: `Bearer ${token}` },
-      cache: "no-store",
-    });
-  } catch (error) {
-    await recordXApiUsage({
-      source: "curated_initial",
-      endpoint,
-      status: 0,
-      durationMs: Date.now() - startedAt,
-      error: String(error),
-    });
-    throw error;
-  }
-
-  if (!response.ok) {
-    const body = await response.text();
-    await recordXApiUsage({
-      source: "curated_initial",
-      endpoint,
-      status: response.status,
-      durationMs: Date.now() - startedAt,
-      error: body,
-    });
-    throw new Error(`X API ${response.status}: ${body}`);
-  }
-
-  const page = (await response.json()) as XApiPage;
-  await recordXApiUsage({
-    source: "curated_initial",
-    endpoint,
-    status: response.status,
-    posts: page.data?.length ?? 0,
-    users: 0,
-    durationMs: Date.now() - startedAt,
-  });
-
-  return {
-    posts: formatVideoPosts([page], maxResults, input.authorFallback),
-    rawPostCount: page.data?.length ?? 0,
-    nextToken: page.meta?.next_token ?? null,
-  };
+  const videoPosts = formatVideoPosts(pages, totalLimit);
+  console.log("X SEARCH VIDEO RESULT:", { query, videoPosts: videoPosts.length });
+  return videoPosts;
 }
 
 export async function fetchUserTimelineVideoPosts(

@@ -31,7 +31,7 @@ const LEARNABLE_TIERS = ["S", "A", "B", "C", "D"] as const;
 const MIN_TRAINING_SAMPLES = 100;
 const MAX_TRAINING_SAMPLES = 1000;
 const NEIGHBOR_COUNT = 25;
-const MODEL_CACHE_MS = 60 * 60 * 1000;
+const MODEL_CACHE_MS = 30 * 1000;
 
 const TIER_VALUE: Record<LearnableTier, number> = {
   S: 5,
@@ -73,9 +73,9 @@ function distance(a: TierLearningInput, b: TierLearningInput) {
   );
 }
 
-export async function loadTierLearningModel(): Promise<TierLearningModel | null> {
+export async function loadTierLearningModel(forceRefresh = false): Promise<TierLearningModel | null> {
   const now = Date.now();
-  if (cachedAt > 0 && now - cachedAt < MODEL_CACHE_MS) return cachedModel;
+  if (!forceRefresh && cachedAt > 0 && now - cachedAt < MODEL_CACHE_MS) return cachedModel;
 
   const { data, error } = await supabaseAdmin()
     .from("posts")

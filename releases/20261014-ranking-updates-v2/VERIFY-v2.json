@@ -1,0 +1,160 @@
+{
+  "passed": true,
+  "v2ShippedScenarios": {
+    "passed": true,
+    "scenarios": [
+      {
+        "scope": "production",
+        "scenario": "missing",
+        "passed": true
+      },
+      {
+        "scope": "production",
+        "scenario": "empty",
+        "passed": true
+      },
+      {
+        "scope": "local",
+        "priorV1": false,
+        "passed": true
+      },
+      {
+        "scope": "local",
+        "priorV1": true,
+        "passed": true
+      }
+    ],
+    "v1FailureReproduced": true,
+    "productionMonitorNeverCreatedOrOverwritten": true,
+    "productionUnrelatedRegistrationPreserved": true,
+    "localMonitorTestAssertionsRetained": true,
+    "actualPowerShell": true,
+    "private101QuotaPositionRemovalBytesUnchanged": true,
+    "liveHttpRequests": 0,
+    "liveDbCalls": 0
+  },
+  "releaseGuards": {
+    "passed": true,
+    "verifier": "actual shipped; all HTTP mocked; positive and capacity/version refusals",
+    "shell": "worker/state lock order, ownership cleanup, build and rollback guards"
+  },
+  "v1ApplicationRegressionCoverage": {
+    "passed": true,
+    "tests": [
+      {
+        "scope": "production",
+        "test": "test-ranking-update-ui.cjs",
+        "passed": true
+      },
+      {
+        "scope": "production",
+        "test": "test-newest500.cjs",
+        "passed": true
+      },
+      {
+        "scope": "production",
+        "test": "test-newest500-pages.cjs",
+        "passed": true
+      },
+      {
+        "scope": "production",
+        "test": "test-ranking-liquidity-route.cjs",
+        "passed": true
+      },
+      {
+        "scope": "production",
+        "test": "test-registration-session.cjs",
+        "passed": true
+      },
+      {
+        "scope": "production",
+        "test": "test-fx-curated-patrol.cjs",
+        "passed": true
+      },
+      {
+        "scope": "production",
+        "test": "test-patrol-continuation.cjs",
+        "passed": true
+      },
+      {
+        "scope": "production",
+        "test": "test-free-curated-dashboard.cjs",
+        "passed": true
+      },
+      {
+        "scope": "production",
+        "test": "test-free-curated-production.cjs",
+        "passed": true
+      },
+      {
+        "scope": "production",
+        "test": "test-availability-monitor.cjs",
+        "passed": true
+      },
+      {
+        "scope": "production",
+        "test": "test-monitor-state-isolation.cjs",
+        "passed": true
+      },
+      {
+        "scope": "production",
+        "test": "test-direct-download.cjs",
+        "passed": true
+      },
+      {
+        "scope": "production",
+        "test": "test-stream-component.cjs",
+        "passed": true
+      },
+      {
+        "scope": "local",
+        "test": "test-ranking-update-ui.cjs",
+        "passed": true
+      },
+      {
+        "scope": "local",
+        "test": "test-newest500-local.cjs",
+        "passed": true
+      },
+      {
+        "scope": "local",
+        "test": "test-newest500-pages.cjs",
+        "passed": true
+      },
+      {
+        "scope": "local",
+        "test": "test-registration-progress.cjs",
+        "passed": true
+      },
+      {
+        "scope": "local",
+        "test": "test-free-curated-registration.cjs",
+        "passed": true
+      },
+      {
+        "scope": "local",
+        "test": "test-curated-manager-local.cjs",
+        "passed": true
+      },
+      {
+        "scope": "local",
+        "test": "test-direct-download.cjs",
+        "passed": true
+      },
+      {
+        "scope": "local",
+        "test": "test-stream-component.cjs",
+        "passed": true
+      }
+    ],
+    "localFullTypecheck": true,
+    "realProviderRequests": 0,
+    "realDbCalls": 0
+  },
+  "applicationCodeUnchangedFromV1": true,
+  "fullProductionBuild": "mandatory by user-run SH on actual matching source",
+  "productionApplied": false,
+  "actualLocalApplied": false,
+  "v2ImplementationLiveProviderRequests": 0,
+  "v2ImplementationLiveDatabaseCalls": 0
+}

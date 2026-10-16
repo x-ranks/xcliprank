@@ -1,0 +1,17 @@
+﻿2026-10-12（日本時間）DB publicスキーマ隔離復元成功
+
+根拠：ユーザー提供のv5実行ログ。全6工程とXCLIP_PUBLIC_SCHEMA_RESTORE_CHECK_OKを確認。
+動画（public.posts）：9,959件。投稿者（public.authors）：2,406件。
+確認対象のdump：C:/Users/USER/Documents/XclipBackups/database-20261012-182101-7956ad/database.dump
+隔離復元先：C:/Users/USER/Documents/XclipBackups/db-restore-test-598d8fc6f352413cb5dc5736a6c9d2c7
+検証版：xclip-db-restore-check-20261012-v5.ps1。
+確認範囲：新規ローカルPostgreSQLクラスタの識別、publicスキーマの復元処理、主要2テーブルの件数確認、試験クラスタ停止。成功ログを根拠とし、こちらから実DBの読み取り・操作はしていない。
+DBの取得・暗号化・ファイル復元照合は以前のユーザーログで成功確認済み。今回、DBとしてのpublic復元も成功確認。
+
+制限：この件数は復元したバックアップ時点の件数で、現在の本番と再照合した件数ではない。個別データ全件の一致を別途検証した意味ではない。所有者・権限を省略したpublic復元試験であり、Supabase管理スキーマ・サービス設定・Storageファイル実体・本番と同等の照合順序の復旧を保証しない。SAFE-REPORT.jsonとdump本体のSHA-256は今回未受領。
+パスワードの値は記録しない。2026-10-12のDBパスワード変更履歴は今後の認証不具合の切り分けに維持。
+
+タスク状態：O01のうちDB取得・暗号化・ファイル復元照合・public隔離復元を確認済みに更新。O01全体とG01を最終完了にはしない。
+残り：ローカルとColorfulBoxのファイルバックアップ・現行版照合報告の確認、暗号化バックアップの別媒体保存、Storage利用有無と必要な別保存の確認、復旧範囲の最終整理。local/server実行結果は今回のDBログから推測しない。
+次に共有するもの：ローカルとColorfulBoxのSAFE-REPORT.json、および今回の隔離復元先のSAFE-REPORT.json。パスワード・dump・restore-test・秘密のログは共有しない。
+本番アプリ・実プロジェクト・DB設定・Gitへの変更は今回行っていない。既存の配布コード・バックアップはそのまま保持。

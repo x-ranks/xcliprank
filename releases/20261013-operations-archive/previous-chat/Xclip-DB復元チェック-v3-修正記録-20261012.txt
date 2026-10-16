@@ -1,0 +1,13 @@
+﻿2026-10-12 DB隔離復元チェック v3
+
+根拠：ユーザーのログ一覧はinitdb出力後、start-privateの時刻から進まずidentity/restore/countsが未作成。実コード確認で、Start-Process -Waitが起動したPostgreSQLの子孫プロセスの終了まで待つ問題を発見。ログ一覧だけでPostgreSQLの起動成功までは断定しない。
+訂正：単に待てば完了するという前回案内は不正確だった。v2には標準エラー処理の修正はあるが、長時間稼働する子プロセスの待機検証が不足していた。
+修正：Start-Process -Waitを使わず、Process.WaitForExitの有限タイムアウト付きオーバーロードで起動コマンド自身の終了のみを待つ。終了コード判定と非公開ログ分離を維持。各工程の進捗を表示し、成功表示はテスト用DBの停止後に出す。
+検証：Windows PowerShell 5.1でダミーの親プロセスが子プロセスを5秒稼働させたまま終了する試験を追加。ラッパーは約0.2秒で返り、子孫の終了待ちをしないことを確認。警告+exit0、exit7停止、引用符・スペース・末尾バックスラッシュ・日本語・空引数の受け渡しも再検証。実PostgreSQLによる復元は今回もユーザー実行待ち。
+切替：実行中のv2をCtrl+Cで中断し、前回の専用テストフォルダのclusterだけをpg_ctl -Dで停止してから、v3を実行する。全postgresプロセスの一括停止・フォルダ削除・本番への操作は行わない。停止時に稼働していないと表示された場合、その試験クラスタは停止済みまたは未起動。
+前回フォルダ：C:/Users/USER/Documents/XclipBackups/db-restore-test-f4bc95feef6b447dbbf4527c3e4a9e51/cluster
+v3は毎回新規フォルダを使用。取得済みdatabase.dump、暗号化バックアップ、DBパスワードは変更・再取得しない。旧配布ファイルも保存したまま別名で配布。
+復元範囲はpublicスキーマのみ。locale=C、所有者・権限の省略などv2の制限は維持。Supabase全体の復旧証明とはしない。
+ユーザーの2026-10-12のDBパスワード変更とDB取得成功は既存履歴どおり。G01/O01の最終完了は保留。こちらから本番・実プロジェクト・実DBへの操作やGit操作は行っていない。
+成功表示：XCLIP_PUBLIC_SCHEMA_RESTORE_CHECK_OK。
+公式仕様：https://learn.microsoft.com/en-us/powershell/module/microsoft.powershell.management/start-process?view=powershell-5.1

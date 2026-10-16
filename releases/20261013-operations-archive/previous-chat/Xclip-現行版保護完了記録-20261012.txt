@@ -1,0 +1,19 @@
+﻿2026-10-12 ColorfulBox SAFE-REPORT確認・G01完了
+
+ユーザー添付の本番側SAFE-REPORT.jsonを読み取り確認。
+作成時刻：2026-10-12 18:01:53 JST。保存・復元照合：2,616ファイル、PASS。
+最新unified-authorsパッチ対象：30ファイル一致、差分0。missingOptionalは空。
+runtime：/home/rbxfxmfd/xclip-video-card-20261004.DJKKID/runtime
+source：/home/rbxfxmfd/xclip-unified-authors-20261011.EUK9ml/source
+BUILD_ID：NBTFhCLivYLdIgsCJt9_a
+暗号化版保存先：/home/rbxfxmfd/xclip-backups/server-20261012T090140Z-177639/snapshot.xclipbk
+報告ハッシュ：bb46c2d4308a9b9d615a2d07c3a8ca72d1e4716c191c37ce6f7660f3066d40a1。実アーカイブをこちらで再ハッシュした値ではない。
+
+既に確認済みのローカル1,286ファイル・対象25ファイル一致・Git HEADと合わせて、ローカル/本番それぞれの基準版と復元可能なファイル保存を確認。G01「現行版を確定・保護」は完了と記録。
+照合の範囲は最新パッチの対象。ローカルと本番の全コードが同一という意味ではなく、それぞれの版と保存記録を対応付けたもの。Gitへの最新コード統合やpushは未実施でG04に残す。
+本番JSONのdbRestore=PENDINGはファイル保存時点の表示。後続のDB public隔離復元（動画9959件・投稿者2406件）成功を別記録で確認済み。再実行不要。
+
+O01「DB・巡回状態・ローカルデータのバックアップ」は保存と復元試験まで確認済み。ただし最終完了は保留。
+残りの確認：暗号化バックアップ3種（local/server/database）が元のPC・サーバーとは別の場所にも保存されたこと、Supabase Storageにファイル実体があるか（ある場合は別保存も必要）を確認する。SAFE-REPORTのコピーだけではバックアップ本体の別媒体保存とはしない。
+復旧方針：ファイルとDBは別時点のため、障害復旧時は書き込み元を停止し、バックアップ後の手動削除・利用予約・取得位置を照合する。自動の本番復元・再巡回・削除解除は行わない。public復元試験の所有者・権限・管理スキーマ等の制限は維持。
+今回の作業は添付報告の照合と履歴・タスク更新のみ。実プロジェクト・本番・DB・Gitへの操作なし。

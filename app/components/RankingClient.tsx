@@ -1,11 +1,18 @@
 "use client";
+import { readRankingUpdate, formatRankingTime, latestRankingHref, type RankingUpdate } from "../../lib/ranking-update";
+import type { RankingPagination } from "../../lib/ranking-pagination";
+import DirectPlaybackVideo from "./DirectPlaybackVideo";
+
+import { directPlaybackUrl } from "../../lib/browser-direct-playback";
+
+import VideoDownloadButton from "./VideoDownloadButton";
 
 import { useEffect, useMemo, useRef, useState } from "react";
-import VideoDurationBadge from "./VideoDurationBadge";
 import { trackEngagement } from "../../lib/engagement-client";
 
 export type RankPost = {
   x_post_id: string;
+  ranking_position?: number;
   author_username: string | null;
   author_name: string | null;
   x_url: string;
@@ -29,11 +36,14 @@ type RankingClientProps = {
   initialPosts?: RankPost[];
   range?: Range;
   fixedRange?: boolean;
+  pagination?: RankingPagination;
+  edition?: string;
+  initialUpdate?: RankingUpdate;
 };
 
 const INITIAL_COUNTS: Record<Range, number> = {
-  trending: 150,
-  daily: 100,
+  trending: 50,
+  daily: 50,
   weekly: 24
 };
 
@@ -47,11 +57,21 @@ export default function RankingClient({
   initialRange = "trending",
   initialPosts = [],
   range: controlledRange,
-  fixedRange = false
+  fixedRange = false,
+  pagination,
+  edition,
+  initialUpdate
 }: RankingClientProps = {}) {
   const [range, setRange] = useState<Range>(initialRange);
   const activeRange = controlledRange ?? range;
+  const query = new URLSearchParams({ range: activeRange });
+  if (pagination && activeRange === "trending") query.set("page", String(pagination.page));
+  const activeEdition = pagination?.edition ?? edition;
+  if (activeEdition) query.set("edition", activeEdition);
+  const rankingQuery = query.toString();
   const [posts, setPosts] = useState<RankPost[]>(initialPosts);
+  const [update, setUpdate] = useState<RankingUpdate>(() => initialUpdate ?? readRankingUpdate({edition: pagination?.edition ?? edition}));
+  const [refreshFailed, setRefreshFailed] = useState(false);
   const [loading, setLoading] = useState(initialPosts.length === 0);
   const [visibleCount, setVisibleCount] = useState(
     INITIAL_COUNTS[activeRange]
@@ -62,6 +82,7 @@ export default function RankingClient({
   const initialPostsUsedRef = useRef(false);
 
   useEffect(() => {
+    const controller = new AbortController();
     if (
       !initialPostsUsedRef.current &&
       initialPosts.length > 0 &&
@@ -72,15 +93,18 @@ export default function RankingClient({
     }
 
     setLoading(true);
+    setRefreshFailed(false);
     setVisibleCount(INITIAL_COUNTS[activeRange]);
 
-    fetch(`/api/rankings?range=${activeRange}`, {
-      cache: "no-store"
+    fetch(`/api/rankings?${rankingQuery}`, {
+      cache: "no-store", signal: controller.signal
     })
-      .then((r) => r.json())
-      .then((json) => setPosts(json.data ?? []))
-      .finally(() => setLoading(false));
-  }, [activeRange, initialPosts.length]);
+      .then(async (r) => { const json = await r.json(); if (!r.ok || json.ok !== true || !Array.isArray(json.data)) throw Error("RANKING_REFRESH_FAILED"); return json; })
+      .then((json) => { if (!controller.signal.aborted) { setPosts(json.data); setUpdate(readRankingUpdate(json)); } })
+      .catch(() => { if (!controller.signal.aborted) setRefreshFailed(true); })
+      .finally(() => { if (!controller.signal.aborted) setLoading(false); });
+    return () => controller.abort();
+  }, [activeRange, initialPosts.length, rankingQuery]);
 
   useEffect(() => {
     if (!selectedPost) return;
@@ -121,14 +145,21 @@ export default function RankingClient({
   }, [selectedPost, activeRange]);
 
   const visiblePosts = useMemo(
-    () => posts.slice(0, visibleCount),
-    [posts, visibleCount]
+    () => pagination ? posts : posts.slice(0, visibleCount),
+    [posts, visibleCount, pagination]
   );
+  const updatedAt = update.updatedAt ?? update.snapshotAt;
   return (
     <>
+      <div className="ranking-update" aria-live="polite" style={{display:"flex",flexWrap:"wrap",gap:"8px 18px",alignItems:"center",margin:"14px 0",fontSize:"14px"}}>
+        <span>{updatedAt ? <>{update.precise ? "一覧更新：" : "集計基準："}<time dateTime={updatedAt}>{formatRankingTime(updatedAt)}</time>（日本時間）</> : "一覧の更新日時：未確認"}</span>
+        <a href={latestRankingHref(activeRange)}>最新の一覧を表示</a>
+        {refreshFailed ? <span role="status">最新の確認に失敗しました。表示中の一覧を保持しています。</span> : null}
+      </div>
+      <div className="download-page-link"><a href="/download">↓ 投稿URLから動画を保存</a></div>
       {fixedRange ? (
         <div className="ranking-page-summary">
-          <span>{loading ? "集計中…" : `${posts.length}件を表示`}</span>
+          <span>{loading ? "集計中…" : pagination ? `${pagination.totalPosts}件中 ${pagination.page} / ${pagination.totalPages}ページ（このページ${posts.length}件）` : `${posts.length}件を表示`}</span>
         </div>
       ) : (
         <div className="tabs">
@@ -204,7 +235,7 @@ export default function RankingClient({
                     p.author_name ??
                     p.author_username ??
                     "Xユーザー"
-                  }の動画（ランキング${index + 1}位）`}
+                  }の動画（ランキング${p.ranking_position ?? index + 1}位）`}
                   className="thumb"
                   loading={index < 4 ? "eager" : "lazy"}
                   fetchPriority={index === 0 ? "high" : "auto"}
@@ -216,10 +247,21 @@ export default function RankingClient({
               )}
 
               <span className="rank-badge">
-                #{index + 1}
+                #{p.ranking_position ?? index + 1}
               </span>
 
-              {p.video_url && <VideoDurationBadge url={p.video_url} />}
+              <span className="score-badge">
+                {p.adult_tier ?? "-"} {p.score}
+              </span>
+
+              {p.video_url && (
+                <span
+                  className="video-ready-badge"
+                  title="サイト内再生可能"
+                >
+                  ▶
+                </span>
+              )}
 
               <div
                 className="play-button"
@@ -262,7 +304,7 @@ export default function RankingClient({
         ))}
       </div>
 
-      {!loading &&
+      {!pagination && !loading &&
         visibleCount < posts.length && (
           <div className="load-more-wrap">
             <button
@@ -278,6 +320,15 @@ export default function RankingClient({
             </button>
           </div>
         )}
+
+      {pagination && (
+        <nav className="ranking-pagination" aria-label="新着動画のページ送り">
+          {pagination.previousHref && <a href={pagination.previousHref}>前の50件</a>}
+          <span aria-current="page">{pagination.page} / {pagination.totalPages}</span>
+          {pagination.nextHref && <a className="load-more" href={pagination.nextHref}>さらに表示（次の50件）</a>}
+          <a href="/">最新の新着へ</a>
+        </nav>
+      )}
 
       {selectedPost && (
         <div
@@ -342,7 +393,7 @@ export default function RankingClient({
             {selectedPost.video_url &&
             !videoError ? (
               <div className="direct-video-wrap">
-                <video
+                <DirectPlaybackVideo postId={selectedPost.x_post_id} key={selectedPost.x_post_id} src={directPlaybackUrl(selectedPost.video_url)}
                   className="direct-video"
                   controls
                   playsInline
@@ -356,13 +407,8 @@ export default function RankingClient({
                     setVideoError(true)
                   }
                 >
-                  <source
-                    src={`/api/video?url=${encodeURIComponent(
-                      selectedPost.video_url
-                    )}`}
-                    type="video/mp4"
-                  />
-                </video>
+                  
+                </DirectPlaybackVideo>
               </div>
             ) : (
               <div className="video-fallback">
@@ -394,6 +440,7 @@ export default function RankingClient({
               </div>
             )}
 
+            {selectedPost.video_url && <VideoDownloadButton key={selectedPost.x_post_id} postId={selectedPost.x_post_id} />}
             <div className="modal-metrics">
               <span>
                 👁{" "}
@@ -445,4 +492,3 @@ function compact(value: number) {
     }
   ).format(value || 0);
 }
-

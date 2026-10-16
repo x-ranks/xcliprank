@@ -1,8 +1,6 @@
 {
-  "crons": [
-    {
-      "path": "/api/collect-curated-batch",
-      "schedule": "0 2 * * *"
-    }
-  ]
+  "$schema": "https://openapi.vercel.sh/vercel.json",
+  "git": {
+    "deploymentEnabled": false
+  }
 }

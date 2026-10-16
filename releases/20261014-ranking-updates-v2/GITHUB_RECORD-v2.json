@@ -1,0 +1,16 @@
+{
+  "release": "ranking-updates-v2-20261014",
+  "repository": "x-ranks/xcliprank",
+  "branch": "archive/operations-20261013",
+  "codeAndArtifactsCommit": "1fafee476b762708360aa8c7bd1a30cd8ec95caf",
+  "remoteHeadVerified": true,
+  "mainVerifiedUnchanged": "2bf1a1fca840fc4f3249e916fb1f6f92bbb13200",
+  "gitRecorded": true,
+  "githubPushed": true,
+  "productionApplied": false,
+  "actualLocalApplied": false,
+  "v1ProductionAttempt": "failed before public cutover",
+  "v1ArtifactsPreserved": true,
+  "packageFlagsMeaning": "generation-time flags; this receipt records subsequent GitHub completion",
+  "checkedAtUtc": "2026-10-14T13:12:44.474752+00:00"
+}

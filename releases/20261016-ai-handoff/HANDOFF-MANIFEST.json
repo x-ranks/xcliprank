@@ -1,0 +1,20 @@
+{
+  "release": "ai-operations-handoff-20261016",
+  "dateJst": "2026-10-16",
+  "scope": "Documentation and known diagnostic tools only",
+  "sourceArchiveCommit": "ee7ede6ccff7d0056d6e796bc59e5e4edccef6fe",
+  "sourceReportedProductionBuild": "H6KQokOwZZcvhnEQnY251",
+  "taskCount": 45,
+  "applicationChanged": false,
+  "productionApplied": false,
+  "localApplied": false,
+  "databaseQueries": 0,
+  "providerRequests": 0,
+  "productionPlaybackCodeReceived": false,
+  "playbackFixCreated": false,
+  "learningPollLocalAppliedByUserReport": true,
+  "learningUsageEffectMeasured": false,
+  "gitHubCanonicalRunnableLatestSourceIntegrated": false,
+  "secretsOrOperationalStateIncluded": false,
+  "validation": "45 unique tasks, 14 reported SHA, JSON parse, text secret-pattern scan, copy hashes and ZIP checked; no live audit"
+}

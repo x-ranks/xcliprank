@@ -1,0 +1,62 @@
+Xclip hybrid-xapi24-20261011
+作成・隔離コピーでの模擬検証済み。実際のローカルプロジェクト・本番は未適用です。
+
+今回の設定
+・投稿者追加と100/200/300投稿の一括取得：FxTwitter。
+・以後の新着動画巡回：X API。直近24時間で最大24投稿者、同一投稿者は24時間以上空ける。
+・3時間ごと最大8投稿者、1投稿者は1回最大100投稿。続きのページは保存して次の対象巡回で再開。
+・既存登録一覧、停止状態、取得境界、掲載済み動画を引き継ぐ。同じ巡回入口とロックを使用。
+・Recent Searchは過去7日。範囲外の未取得分は無料一括取得で補完する。
+・インストールでは有料API巡回を開始しない。次の既存Cronから動作する。
+
+1. 本番を先に更新
+ダウンロードした xclip-hybrid-xapi24-deploy-20261011.sh を、ご自身で本番の /home/rbxfxmfd/ へアップロード。
+本番のターミナルで実行：
+
+bash /home/rbxfxmfd/xclip-hybrid-xapi24-deploy-20261011.sh
+
+成功表示：XCLIP_HYBRID_XAPI24_DEPLOYMENT_COMPLETE
+既存の本番環境に X_BEARER_TOKEN が必要です。未設定は公開切替前に停止します。
+未知版は上書きせず停止します。実際の稼働ソースで型検査・ビルド・公開確認を行い、切替失敗時は旧runtime/settingsへ戻します。
+エラーの場合はローカル更新へ進まず、秘密の値を除いたエラー行をこのチャットへ貼ってください。
+
+2. ローカルを更新
+開発サーバーが起動している場合は停止。ps1をダウンロードフォルダへ保存し、PowerShellで実行：
+
+powershell -ExecutionPolicy Bypass -File "$env:USERPROFILE\Downloads\xclip-hybrid-xapi24-local-20261011.ps1" -Project "C:\Projects\xcliprank"
+
+成功表示：XCLIP_HYBRID_XAPI24_LOCAL_INSTALLED
+再適用時：XCLIP_HYBRID_XAPI24_LOCAL_ALREADY_INSTALLED
+表示された BACKUP= の保存先を控えてください。既存の登録データ・環境設定は保持します。Gitのブランチ切替・コミットはしません。
+
+3. 開発サーバーを起動
+
+Set-Location C:\Projects\xcliprank
+npm run dev -- --hostname 127.0.0.1 --port 3004
+
+登録画面：http://localhost:3004/fxtwitter-authors
+巡回管理：http://localhost:3004/fxtwitter-monitor
+
+4. 登録の本番反映を確認
+登録画面の「本番への反映を確認」を押します。この確認ではFxTwitter/X APIの動画取得を行いません。
+・本番の巡回一覧に未登録：「登録一覧を本番へ同期」。一覧全体が同期されるので、引き継ぐ全投稿者がローカル一覧に残っていることを確認。
+・取得・掲載の途中／赤字エラー：「続きを再開」。登録情報欠落のエラーは再同期して、取得済みページを再掲載します。
+・以前の登録で初回取得履歴なし：「動画を取得して本番掲載」。
+・掲載状況：各投稿者の「本番掲載」件数と巡回管理の「DB累計」を確認。
+
+通常の「登録」は本番同期→動画取得→掲載を自動で進めます。完了まで画面を開いたままにしてください。
+ローカル一覧に行があることだけでは、動画掲載完了を示しません。
+従来の選別投稿者画面では、FxTwitter専用一覧の投稿者が表示されない場合があります。
+「本番掲載」はDBへの保存・公開候補からの掲載成功件数です。投稿日時、評価・表示条件、キャッシュ更新周期によってサイトの表示位置が変わります。
+個別投稿者の未反映原因は、対象名や実際の本番ログが未受領のため未確定です。
+
+5. ローカルの復元が必要な場合
+インストール時の BACKUP= 保存先を、次の -RestoreBackup に指定します。
+
+powershell -ExecutionPolicy Bypass -File "$env:USERPROFILE\Downloads\xclip-hybrid-xapi24-local-20261011.ps1" -Project "C:\Projects\xcliprank" -RestoreBackup "インストール時に表示されたBACKUPの絶対パス"
+
+更新後に対象コードを編集している場合は、復元時の上書きを拒否します。登録データや掲載済み動画は復元対象外です。
+
+同梱物
+本番sh／ローカルps1／本番・ローカルを分けたソースZIP／累積更新履歴／照合台帳／SHA-256。
+ソースZIPは全アプリではありません。中身を全体へ一括上書きせず、配布インストーラーを使用してください。

@@ -1,0 +1,8 @@
+﻿1. 本番shを/home/rbxfxmfdへアップロードし、bash /home/rbxfxmfd/xclip-fx-patrol-deploy-20261012.sh を実行。
+成功表示 XCLIP_FX_PATROL_DEPLOYMENT_COMPLETE。途中失敗は完了扱いにせずログを共有。
+2. 本番成功後、管理画面と開発サーバーを終了。展開先で powershell -NoProfile -ExecutionPolicy Bypass -File .\xclip-fx-patrol-local-20261012.ps1 を実行。
+成功表示 XCLIP_FX_PATROL_LOCAL_INSTALLED または ALREADY_INSTALLED。開発サーバーを従来の手順で再起動。
+3. http://localhost:3004/fxtwitter-monitor を開き「本番の記録を更新」。現在の新着取得FxTwitter、24時間枠を確認。
+4. 次の通常Cronから稼働。予約済み投稿者の24時間待機を解除しない。インストール時に収集は実行しない。
+ローカル復元：同ps1へ -RestoreBackup "インストール成功時のBACKUPパス" を渡す。後から編集があれば拒否する。DB/登録stateを巻き戻さない。
+本番の失敗時は自動復旧ログを確認。将来X APIへ戻す際はFxの完了/未完了境界を照合した別更新を使い、古いv3を無確認で再適用しない。

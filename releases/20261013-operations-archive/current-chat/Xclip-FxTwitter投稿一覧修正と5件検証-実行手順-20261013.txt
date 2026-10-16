@@ -1,0 +1,11 @@
+﻿1. 本番shと5件検証shを/home/rbxfxmfdへアップロード。
+bash /home/rbxfxmfd/xclip-fx-timeline-fix-deploy-20261013.sh
+成功 XCLIP_FX_TIMELINE_FIX_DEPLOYMENT_COMPLETE。成功後に以下を実行。
+bash /home/rbxfxmfd/xclip-fx-patrol-verify-five-20261013.sh --wait
+待機は15分ごと・最大24時間。既存Cronの妨げにならないよう待機中はロックを解放。枠/間隔/24時間待機を解除しない。Ctrl+Cで待機を終了可能。
+XCLIP_FX_RANDOM_FIVE_PASSED=選んだ5件の取得/掲載処理すべて成功（新着0件でも正常取得なら成功）。FAILED=1件以上失敗、別の5件を自動再試行しない。WAITING=未実行、成功扱いにしない。結果JSONと最後の表示を共有。
+2. ローカル管理画面/開発サーバーを終了し、展開先で実行。
+powershell -NoProfile -ExecutionPolicy Bypass -File .\xclip-fx-timeline-fix-local-20261013.ps1
+成功 XCLIP_FX_TIMELINE_LOCAL_INSTALLED または ALREADY_INSTALLED。開発サーバー再起動後 /fxtwitter-monitor で本番の記録を更新。
+ローカル復元は同ps1に -RestoreBackup "表示されたBACKUPパス"。後編集があれば拒否。DB/取得位置/予約を巻き戻さない。
+本番更新失敗時は旧runtime/settingsへの自動復旧ログを確認。手動で旧版を再適用して運用stateを巻き戻さない。
