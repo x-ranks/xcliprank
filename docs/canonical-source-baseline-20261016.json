@@ -1,0 +1,916 @@
+{
+  "release": "canonical-local-source-20261016",
+  "source": "C:/Projects/xcliprank",
+  "sourceIsReadOnly": true,
+  "scope": "Latest local management application code; deployed ColorfulBox source is separately pending six exact code files",
+  "localApplicationSourceCopiedExactly": true,
+  "productionSourceComplete": false,
+  "differencesFromActualLocal": [
+    "portable test dependency root in two tests",
+    "explicit TypeScript source scope",
+    "canonical checks and docs",
+    "blank env template",
+    "exclude runtime/private state",
+    "disable legacy Vercel git deployment; no legacy Vercel Cron copied",
+    "legacy playback test follows current MP4/HLS imports",
+    "release-model test mocks projected status fields",
+    "teacher-analysis test uses POSIX fixture paths on both Windows and Linux"
+  ],
+  "uncommittedAndUntrackedCodeIncluded": true,
+  "secretsOrOperationalStateCopied": false,
+  "publicRepositoryConfirmedByUser": true,
+  "files": {
+    "app/globals.css": {
+      "sha256": "c41ee4c1f97a1b21fc9983faeacc2e6696811c6da6d265087504482da2ac3bfa",
+      "bytes": 30957
+    },
+    "app/layout.tsx": {
+      "sha256": "ae1059af74fc7eedc0aed9e5a335069faf3d1d3cc9eada95992a32f4222ba116",
+      "bytes": 1384
+    },
+    "app/page.tsx": {
+      "sha256": "e2fcca5d21f9e94b7d187b7b90eefa6f8df68ff24a1b599a325fa9ea5b357b1b",
+      "bytes": 5232
+    },
+    "app/robots.ts": {
+      "sha256": "023caf86a21cc3fbc27008f3d51ffbde025388bc4a855f409e67173926ff8b06",
+      "bytes": 722
+    },
+    "app/sitemap.ts": {
+      "sha256": "08eba6ab67795523ab18a55fc7c3cc79954641816890b2ba4f7382ad13420bfc",
+      "bytes": 551
+    },
+    "app/availability-monitor/page.tsx": {
+      "sha256": "adf7de382a9cf4063d5d86db1e7dacc98827807ab139886765715c7a6c031f89",
+      "bytes": 313
+    },
+    "app/availability-monitor/Panel.tsx": {
+      "sha256": "e7f27ae6ea072a080a7b60e160007bc2b48407a9dc303a06b416546bf81199c1",
+      "bytes": 5257
+    },
+    "app/combined-ranking-preview/page.tsx": {
+      "sha256": "a9314149643bad8aab16ef02caae97e6e4e94a8b18840c1b9656df05811a302b",
+      "bytes": 15749
+    },
+    "app/components/DedicatedRankingPage.tsx": {
+      "sha256": "b165fa7676354ff80212a7a2a7b8088f6973395e5b6886301b3ee03eb4b38c47",
+      "bytes": 3955
+    },
+    "app/components/DirectPlaybackVideo.tsx": {
+      "sha256": "c329d61e69861baddab9859abf7402523960a46af10c8eda8e2fc003770017a6",
+      "bytes": 5711
+    },
+    "app/components/EngagementVisitTracker.tsx": {
+      "sha256": "f9fc3709bfaa17dfcd809a2e3eaf9f1fe5b01c29c26afcb4e8acc24a4af897de",
+      "bytes": 528
+    },
+    "app/components/PersonalLearningWorker.tsx": {
+      "sha256": "23ba3e0772d52dd85785e4f1da4c7f9a41dffc08f327a1888ed96b54beb97283",
+      "bytes": 1941
+    },
+    "app/components/RankingClient.tsx": {
+      "sha256": "233a5c995829b32ddb0bb1b8b7558ce07519a9a674f4546a8d0bef3373d1e978",
+      "bytes": 15283
+    },
+    "app/components/StructuredData.tsx": {
+      "sha256": "420c48544efe5274f6242bf0401a085d72366aefca88c11ec771f306bbc27c48",
+      "bytes": 249
+    },
+    "app/components/TierPreviewVideo.tsx": {
+      "sha256": "cbfd99870726d6e9f03a8dd598d6b32f61c39c444fda0ce3401929a67b99dbbf",
+      "bytes": 3168
+    },
+    "app/components/TweetEmbed.tsx": {
+      "sha256": "1b27d2ea2dea1cfb3d7ce19660c8d4f50f6f5243572de206f80b8546ace03b4b",
+      "bytes": 1602
+    },
+    "app/components/VideoDownloadButton.tsx": {
+      "sha256": "abdae15d9cb939991432287c95c3c085ddcd994cd608fc4e60281c5bf3ec3c21",
+      "bytes": 9377
+    },
+    "app/content-filter-review/page.tsx": {
+      "sha256": "57e20a4a28c15bec5b61672338de0d7a7f1ef343e65c78faa12e52575db56135",
+      "bytes": 21512
+    },
+    "app/curated-authors/page.tsx": {
+      "sha256": "a0e046586a10ed39c6c2b0734e9bddc83547f449e3b2393c4dc6c06af3f3a9f3",
+      "bytes": 204
+    },
+    "app/curated-manager/page.tsx": {
+      "sha256": "c827df52db15ea27901997388784c3a9775e8b140768b83f5dbcbe2b967bedd8",
+      "bytes": 316
+    },
+    "app/curated-manager/Panel.tsx": {
+      "sha256": "25863de46a79bca7161cc2bb01f47c7d08e084e415adc002cba323a012152d1c",
+      "bytes": 5069
+    },
+    "app/download/DownloadForm.tsx": {
+      "sha256": "6212d4eb5104ef4a778db30463f8df5525e2a9872e0c5fe57950f684f629297a",
+      "bytes": 5484
+    },
+    "app/download/page.tsx": {
+      "sha256": "1e843ecc29d994f8e10a19f096efdc55b8c69ff8c6f24fef87cdf7e82d8610be",
+      "bytes": 475
+    },
+    "app/download-policy/page.tsx": {
+      "sha256": "6e5e9fe04ea9cd34baa5ecf6f5a27af00a708c8cfcb8157cabc2fdab310d5189",
+      "bytes": 3537
+    },
+    "app/engagement-admin/page.tsx": {
+      "sha256": "bf2404836292b33234d463074821dae686d8ad57f42e1580fa33d17268088cde",
+      "bytes": 12750
+    },
+    "app/fxtwitter-authors/FreeAuthorsPanel.tsx": {
+      "sha256": "460d551295d2631d8b622f84cecc7d4c692eb0ace9de6665494c6a92d1805370",
+      "bytes": 15354
+    },
+    "app/fxtwitter-authors/page.tsx": {
+      "sha256": "442f8385c749345bbe3ce12dbb987443d680c7cb18032879bf138c93df52c8f9",
+      "bytes": 388
+    },
+    "app/fxtwitter-monitor/MonitorPanel.tsx": {
+      "sha256": "5941f516f6d4f99e169b2d62ed9b5ce3457d85c8a072ebbd3b3a5a80a57cebc6",
+      "bytes": 15962
+    },
+    "app/fxtwitter-monitor/page.tsx": {
+      "sha256": "204bf735f3cc9f4513207226e211492efd43190c27f5ee7dab20ecf0050ca6d2",
+      "bytes": 337
+    },
+    "app/learning-tools/page.tsx": {
+      "sha256": "546846ba48a4907f8554f160adf942a40b23dca23a81bc47d87c690252ded1d4",
+      "bytes": 20117
+    },
+    "app/preference-model/page.tsx": {
+      "sha256": "9937b065031dd25eb64d896d146a9bb8438b2a13cc5207cab63757544d90a1ee",
+      "bytes": 28975
+    },
+    "app/ranking-admin/page.tsx": {
+      "sha256": "8e652992a02666815e8c4b54797412fe1f9f6c12ec79b64b64b39fa2e40c7dca",
+      "bytes": 8790
+    },
+    "app/reels/page.tsx": {
+      "sha256": "4fd7711dee2552e460e7bec78fe1db8510772bf24cce663ea1bee3d72862979c",
+      "bytes": 909
+    },
+    "app/reels/ReelsFeed.tsx": {
+      "sha256": "0262e8b1c6a054d3b31250732bbf95a577a1fce7d6c2d1e45fa4b9b18a12a937",
+      "bytes": 11653
+    },
+    "app/removal-request/page.tsx": {
+      "sha256": "10413567821b9b805fcf172c1b46bf4fc1dd2a16aab493d98137e0be1a4008db",
+      "bytes": 4609
+    },
+    "app/removal-requests-admin/page.tsx": {
+      "sha256": "33852bcc7e00279c291a01e7ba4b77c121990c01219be699d843b0808dd3c551",
+      "bytes": 8634
+    },
+    "app/review/page.tsx": {
+      "sha256": "93ae3eac0caddf9c8fbfde75950fd685e195c80cb5fb621172f016fc2a48b907",
+      "bytes": 19180
+    },
+    "app/site-visual-preference-review/page.tsx": {
+      "sha256": "f7f526f15e49d5c24dd45362c6934cd67e3c616039d012e9bd292d3646e35fd7",
+      "bytes": 16009
+    },
+    "app/site-visual-preference-review-2/page.tsx": {
+      "sha256": "df85baf7c3b4796cd2995e452cc4f4d15328f86c942f78dc9b22306c20a633c6",
+      "bytes": 16482
+    },
+    "app/site-visual-preference-review-3/page.tsx": {
+      "sha256": "9a224786515cf75da0d20e03ef12d8c2aa74b49dd738cce1934d26179927a498",
+      "bytes": 35442
+    },
+    "app/teacher-authors/page.tsx": {
+      "sha256": "d3758c652313176b469bcceb00c0118da56d761d5636fa90ac41b297d67b62ee",
+      "bytes": 20481
+    },
+    "app/tier-personal-model/layout.tsx": {
+      "sha256": "869c07996f51857775a90b2baeaea2375ea19c2101ab4ba0307d0b5a2085dac4",
+      "bytes": 192
+    },
+    "app/tier-personal-model/page.tsx": {
+      "sha256": "4be7c8cec71290aaf36eda3b6da948e6b33cc373cd793b050b81aa1b23873f8a",
+      "bytes": 11345
+    },
+    "app/tier-reevaluation/layout.tsx": {
+      "sha256": "935c6af81bd3d9a0fab0476e9c266eafafab94ab5fff5ad2563be18d07d53076",
+      "bytes": 243
+    },
+    "app/tier-reevaluation/page.tsx": {
+      "sha256": "567981340abe5c52eb6999bd5f185dd227b9f8a0bf504adf1221bdf49ffbc3aa",
+      "bytes": 7382
+    },
+    "app/tier-teacher-analysis/layout.tsx": {
+      "sha256": "fb348e2665225e7410d65e47e5f457230640658dd96298adf48e07e6c6630192",
+      "bytes": 235
+    },
+    "app/tier-teacher-analysis/page.tsx": {
+      "sha256": "4ec929216e827be546dcab0bb55c65f5bd67bb99b5ff0fffed2fae980e8ea3cb",
+      "bytes": 5222
+    },
+    "app/tier-video-preview/layout.tsx": {
+      "sha256": "5f1f7b593815cda9cd8d751bb7e4b2c16240385beaec154d28ebf832629acdab",
+      "bytes": 235
+    },
+    "app/tier-video-preview/page.tsx": {
+      "sha256": "a9888df66689e6a26049df62801d805118cd527d51b0f7a281893250580474ea",
+      "bytes": 9334
+    },
+    "app/visual-filter-preview/page.tsx": {
+      "sha256": "521d0e55712657e5fc89eebae409f86427934050d3182f2ea8122f1b2fa780d1",
+      "bytes": 20276
+    },
+    "app/visual-reference-review/page.tsx": {
+      "sha256": "b94c005b476c8a4a2576b8b77e26123b8d3f3899275f804f95a1c4a8abf7d50c",
+      "bytes": 24198
+    },
+    "app/x-api-usage/page.tsx": {
+      "sha256": "c0927b02f7a2a515630bf19d2e34380678d578eff1550569d316af351e6caf29",
+      "bytes": 3549
+    },
+    "app/x-promotion/page.tsx": {
+      "sha256": "c1395b41936396f557e225eed8724f929c5287814147f0c1d20c038be5d0e939",
+      "bytes": 14895
+    },
+    "app/api/adult-authors/route.ts": {
+      "sha256": "8967e7f174741f5fb73b366d28c82266af387447762f1f64cb641ac1f198de4f",
+      "bytes": 3426
+    },
+    "app/api/collect/route.ts": {
+      "sha256": "e30230dd80f442ac7e3dad1bc25fde2309df1456411dd40aa4c2f1eedfc10c89",
+      "bytes": 31080
+    },
+    "app/api/collect-curated-author/route.ts": {
+      "sha256": "c241570710ef209fe4eed5747ccdb07b97591e66174c7dc6f3751f14390fb1fa",
+      "bytes": 1792
+    },
+    "app/api/collect-curated-batch/route.ts": {
+      "sha256": "68e25d2c92a53f32e91312beb3337d0788f41cc815d67bbc3af1c052d8d2412f",
+      "bytes": 2027
+    },
+    "app/api/collect-priority/route.ts": {
+      "sha256": "784fb3330687ceef9d70f2ee806b6b535c16ca23a06a49330ea2e859d8309219",
+      "bytes": 14993
+    },
+    "app/api/collect-priority-batch/route.ts": {
+      "sha256": "bdb0459878dd24f9868a0478ce7a5a317bc3e61d977e95ff9c877a8bbbcff48c",
+      "bytes": 16050
+    },
+    "app/api/collect-test/route.ts": {
+      "sha256": "0a057eb2179df30bcadffb09b76f5a76996935e539c5fa663747e2783470a95c",
+      "bytes": 12012
+    },
+    "app/api/content-filter-backfill/route.ts": {
+      "sha256": "0b93b995d695a0413011429b810c6cee0da34fe623e3b16525962ffcec9b073b",
+      "bytes": 7033
+    },
+    "app/api/content-filter-preview/route.ts": {
+      "sha256": "1e98e7c2245ae3b6dd13b3b71613514ab2d29c4fc60f6d3583faa73878dd910d",
+      "bytes": 5038
+    },
+    "app/api/content-filter-review/route.ts": {
+      "sha256": "4959b48aeea10b9811e21407b9d120bfd0de2acc08d25b6f54f3028ec73af570",
+      "bytes": 9346
+    },
+    "app/api/curated-authors/route.ts": {
+      "sha256": "cc9374296de44849535c5e31e627e74c2c574b1b6f83da22585af2deb2d3a5a1",
+      "bytes": 4055
+    },
+    "app/api/curated-manager/route.ts": {
+      "sha256": "4287130d91f5ba2f00d8e64c783e9480d69317dd0039057812365ec00f3a0c70",
+      "bytes": 2203
+    },
+    "app/api/engagement/route.ts": {
+      "sha256": "e178333c158e12e02323de8ba8872aa10df0e52dafcfd05a49e186a4a908d516",
+      "bytes": 3440
+    },
+    "app/api/engagement-stats/route.ts": {
+      "sha256": "c054b932f8ac491250150bcfc3913051989a76e74191f86627cb90ccf1506397",
+      "bytes": 7544
+    },
+    "app/api/fxtwitter-authors/route.ts": {
+      "sha256": "48c6a758058bf8a59497aae0d275377a830bc4804893c1e6d5d2f304970202ec",
+      "bytes": 10258
+    },
+    "app/api/local-admin-status/route.ts": {
+      "sha256": "a90ca731cb59b7f1a49f771f0bc7e5bb6ecb0a685e0386ea63cec837ee48a5f6",
+      "bytes": 4072
+    },
+    "app/api/preference-feature-cache/route.ts": {
+      "sha256": "b01a91546deda18669134ad0cded97dfc5be51ba64d8611f3ee9fd434df93ec6",
+      "bytes": 5509
+    },
+    "app/api/preference-model/route.ts": {
+      "sha256": "8a96bc2b03b62a74dcd7b2a40f35e926da07a809b65209311722ab6cd2897825",
+      "bytes": 2452
+    },
+    "app/api/ranking-admin/route.ts": {
+      "sha256": "64703f59d7174e39768f084a2a49ee19e4a4df75d3055d0b8b704edace8d95e7",
+      "bytes": 4489
+    },
+    "app/api/rankings/route.ts": {
+      "sha256": "148dbe4fb13ea4e212f998c9b0b100db45ae00a516e187a6fe31f65db63351a6",
+      "bytes": 1958
+    },
+    "app/api/rebuild-author-signals/route.ts": {
+      "sha256": "549612ec3b7706264913b608ed4fac31c4a3bf6cf237c8a0f2e2429263858423",
+      "bytes": 11170
+    },
+    "app/api/recount-authors/route.ts": {
+      "sha256": "f14cbdf08e729179e31bf84fbcf3cb74d7f6b68eff35357575582f2c4ebe489c",
+      "bytes": 18716
+    },
+    "app/api/recount-effective-adult/route.ts": {
+      "sha256": "ecf8b3886b353409aff1e7bed0c1822294fa8351d0a6bd6bae16bd1f7c45febf",
+      "bytes": 13863
+    },
+    "app/api/recount-posts/route.ts": {
+      "sha256": "0256d185c2e073c605c7c1d9c6c8b41543add97bff54f417727f8a09cdae8ea7",
+      "bytes": 9061
+    },
+    "app/api/reels/route.ts": {
+      "sha256": "465c70bbe9a8395d8cde48f18d00112cd9d33319db670b1b69b85f4862d6eed4",
+      "bytes": 7888
+    },
+    "app/api/removal-requests/route.ts": {
+      "sha256": "45bb8b897cfd53108202e080aed37a869af8c957c24857a2259788ac5647af0c",
+      "bytes": 6412
+    },
+    "app/api/review/route.ts": {
+      "sha256": "e49373d4311acc6f0377fa6f1e6bde2e733550a11ce491d33b6f02c6b5de9bc1",
+      "bytes": 6749
+    },
+    "app/api/run-cycle/route.ts": {
+      "sha256": "01e563629aa7fcdfa94e5b6093dcf2ef0cf844f52dad24d700522a38383123bf",
+      "bytes": 3359
+    },
+    "app/api/teacher-authors/route.ts": {
+      "sha256": "4d6be89869ff9fb45283aeee8485367f5ecf7b77707231cec4b0159ee46254cc",
+      "bytes": 11876
+    },
+    "app/api/tier-personal-model/route.ts": {
+      "sha256": "00a0f25bb408075cfd72f5ecc437f11bc1a8ee9ce21ecfc3a3c1e03feb8e1e4c",
+      "bytes": 5791
+    },
+    "app/api/tier-preview-playback/route.ts": {
+      "sha256": "7e8dd7fa6ec88ea9fedeb1b1c5009bff5679d038373031574f12a05dc023c668",
+      "bytes": 1512
+    },
+    "app/api/tier-reevaluation/route.ts": {
+      "sha256": "2b5064bdbf4296f43be3c63c60c66de1ea76eb305806455ef0283bc348ed72f2",
+      "bytes": 2053
+    },
+    "app/api/tier-teacher-analysis/route.ts": {
+      "sha256": "e85e12347c03d9c67d0d16354ee8c3d63088b825b796fdb30998e74beec69357",
+      "bytes": 946
+    },
+    "app/api/tier-video-preview/route.ts": {
+      "sha256": "a75bba92d947c37c0ec91e1dbbaebc997c09835faf31252244ed74812de00567",
+      "bytes": 1757
+    },
+    "app/api/video/route.ts": {
+      "sha256": "ca9636659d7faaec116ee7ecf39ebeaa7c59a7052e6b2254196dbffd573517b2",
+      "bytes": 3011
+    },
+    "app/api/video-download/route.ts": {
+      "sha256": "18101fe4685cb21f5647c71b95beee044b1b17f738964f9e7777f8da724ef67e",
+      "bytes": 916
+    },
+    "app/api/video-playback-url/route.ts": {
+      "sha256": "3d63709513975c1415156e6e617cfa96784afef73ea63947d92f58760e4ffc90",
+      "bytes": 2531
+    },
+    "app/api/video-resolve/route.ts": {
+      "sha256": "68b72f70630345e15b25d629cd3ec2a23aa33d3f2fe1e039802751e593fa8e20",
+      "bytes": 3409
+    },
+    "app/api/visual-filter-image/route.ts": {
+      "sha256": "6b3cf40a5bf2d3b0698c93cea6cec6ef32854c43212d4d512818fd4c4497bbf4",
+      "bytes": 2384
+    },
+    "app/api/visual-filter-preview/route.ts": {
+      "sha256": "005d30d858816d3738055b92be85b0fc37bbb20c9e293a6dc4f19c371b24829b",
+      "bytes": 5624
+    },
+    "app/api/visual-preference-scores/route.ts": {
+      "sha256": "b46b7a984e9b7b501dc28f2304181b8e45dc9bc38a7709f859518a1a101be3af",
+      "bytes": 2661
+    },
+    "app/api/x-api-usage/route.ts": {
+      "sha256": "baf4811d5d382217c987d25bb98ba9624e168c39221b91b44736ec2bccae1d45",
+      "bytes": 2489
+    },
+    "app/api/x-promotion/route.ts": {
+      "sha256": "6fd409e4acf58796c1467214164a2d7ab3e68d524fec473dfef75352e7a081a1",
+      "bytes": 12438
+    },
+    "app/api/visual-filter-model/[file]/route.ts": {
+      "sha256": "53c5396149c40dc329c04eb7b753f53307d7c2f21249eeae844933bfb8b32088",
+      "bytes": 1248
+    },
+    "app/ranking/daily/page.tsx": {
+      "sha256": "8f311a463b53bdb26c4998721bdcd23c1a62b670a5a8a3e416138af8bb75207b",
+      "bytes": 1738
+    },
+    "app/ranking/weekly/page.tsx": {
+      "sha256": "d53124cb74df5df6e47a3b8d4c8c9292a087bae08617943d0b2286775e48a009",
+      "bytes": 1734
+    },
+    "lib/adult-score.ts": {
+      "sha256": "f3945af35340fd5aef7086a45d5980d0c1754ff661bdde4c120d9107847f4e09",
+      "bytes": 5767
+    },
+    "lib/browser-direct-download.ts": {
+      "sha256": "b7f89e71f1af94f9cb4e170a11a52b68b31dc3e13a1e641944f46bb3ea6c5ed5",
+      "bytes": 3316
+    },
+    "lib/browser-direct-playback.ts": {
+      "sha256": "32e3c27abbf62b180edb0f6a03665e71274640c94db8909b38dd9e8a259f2793",
+      "bytes": 1632
+    },
+    "lib/browser-playback-recovery.ts": {
+      "sha256": "ceb1f9e136b58b64f87d4d967b3b1f2cbfb0a5fa578aaf1bd7d694365fd259ba",
+      "bytes": 1459
+    },
+    "lib/browser-stream-playback.ts": {
+      "sha256": "eb1c8426b8a1f7503bf71e2881a07273eab3b31c1e5077fb8298f3e7599c0233",
+      "bytes": 4501
+    },
+    "lib/content-filter.ts": {
+      "sha256": "32702b77ed751395ef311dbf2402b708dea7f01341235c02c84c7eff7730bff5",
+      "bytes": 5327
+    },
+    "lib/cron-auth.ts": {
+      "sha256": "8a9e85861e294fc1e5338407039735663f7b60f0250389a5b10882f5d0954ac2",
+      "bytes": 611
+    },
+    "lib/curated-collector.ts": {
+      "sha256": "02e5526538a760b604d0a4131319638da1e7b124c1d12c44753d62768b2d6c3e",
+      "bytes": 13732
+    },
+    "lib/download-free.ts": {
+      "sha256": "78116a42bd94f796fc6c97766ef4e2d7f6bca4bd0026a6ef53146e1f0b5d9866",
+      "bytes": 7921
+    },
+    "lib/download-url-store.ts": {
+      "sha256": "324ef6eab6a1b1c35ba00c10d5212160ae06d8cdd686e43a1f1e05676ecabada",
+      "bytes": 5669
+    },
+    "lib/download-url.ts": {
+      "sha256": "70c8c2dd4906742f8a0a6fc7a3dd030605c9894b853c7d17cdb298afe9b20c9c",
+      "bytes": 4684
+    },
+    "lib/engagement-client.ts": {
+      "sha256": "44863379f1e6989e5158873daee0cd1d7b4deef90b9e566957b51458d3278422",
+      "bytes": 3071
+    },
+    "lib/error-message.ts": {
+      "sha256": "77c79aa9b0fd4a760c627fd0c98c2c724793048121eb2ac1dbc63c542b7b30cb",
+      "bytes": 351
+    },
+    "lib/free-curated-client.ts": {
+      "sha256": "37c93e21642640f61e07882b3be42a9bc8f295f7245d5f7e6b9dd0e3ea14ef7a",
+      "bytes": 1999
+    },
+    "lib/free-curated-limits.ts": {
+      "sha256": "284e0e6b949bdd997c8a297ab6b1946ace29d81bb8f342283294b5cf249562cd",
+      "bytes": 179
+    },
+    "lib/free-curated-metrics.ts": {
+      "sha256": "54d94177f281bdc4f5676128581a116f0eb52fe3b8758c15cce98ae51a2ceb29",
+      "bytes": 2336
+    },
+    "lib/free-curated-registration.ts": {
+      "sha256": "018834db2fc236aa8957a2c29108d0df041f602931899474494287b3ee4fe518",
+      "bytes": 16156
+    },
+    "lib/fxtwitter-curated-save.ts": {
+      "sha256": "f64c8942cc81f6932492dc1b39bc1666224538c63b42c28747f0da4bce7c376e",
+      "bytes": 5504
+    },
+    "lib/fxtwitter-curated-store.ts": {
+      "sha256": "e06873514e00bba57eccefc184aa1395312253f34d43c3d491f601f7fb74e0bd",
+      "bytes": 5778
+    },
+    "lib/fxtwitter-curated-tier.ts": {
+      "sha256": "7d71a34ecdaba52971125669e71c637b2aebb5f1a8519cc16c155d9327d7548d",
+      "bytes": 2837
+    },
+    "lib/fxtwitter-curated.ts": {
+      "sha256": "112e8bead9108d0d90566cb274f415862943e191c1caa745b547b7a3463f84df",
+      "bytes": 15551
+    },
+    "lib/fxtwitter-local-access.ts": {
+      "sha256": "5728717bae5c27b20123c6afd39e743fa9f1a0ce16c0bda9b4bf7abf5651bdf5",
+      "bytes": 1139
+    },
+    "lib/initial-ranking.ts": {
+      "sha256": "edde22e47b42ddccddc1292eeedc6144c727360d6b688cf3b28d36cd1de56ea0",
+      "bytes": 1324
+    },
+    "lib/personal-learning-poll.ts": {
+      "sha256": "74037ee76d16b07269c867bc5fc37a768b38f15283d0caf3ca73a7523896d948",
+      "bytes": 4086
+    },
+    "lib/playback-refresh.ts": {
+      "sha256": "09fb063c7e61e2a2e79a6f7a205e8031f7057fded9406a4d88d113896aaa00f7",
+      "bytes": 1715
+    },
+    "lib/ranking-pagination.ts": {
+      "sha256": "e0e1660b972ab262581ad687656eb8defe52a898f3b9c5987b7f569d00a0df9b",
+      "bytes": 906
+    },
+    "lib/ranking-update.ts": {
+      "sha256": "9fd5a559a14180044f570a1a891616b58f262f8c85a76cae1217106fe18ea492",
+      "bytes": 1423
+    },
+    "lib/ranking.ts": {
+      "sha256": "3eef807645941acdc114f6b9a12432ed9058b4f060b421eed5b9fc8d87b71c07",
+      "bytes": 627
+    },
+    "lib/seo.ts": {
+      "sha256": "cea942eecabda17a886e646d8833dccf9f1632c86721939806b6ff254e50ba15",
+      "bytes": 1197
+    },
+    "lib/supabase-admin.ts": {
+      "sha256": "f8b8ce736e78bc7ce0ded8dee0861921e6eeb90ffe93b070f9ba2c618fb502fe",
+      "bytes": 492
+    },
+    "lib/tier-learning.ts": {
+      "sha256": "d454f243a4cd80af6fbeb0095281542812e23488707af6b3c5294ea8759531f8",
+      "bytes": 5778
+    },
+    "lib/tier-model-release.ts": {
+      "sha256": "c317137ba45363c939f2691eb8d63141b3280c942f060b29d72674b1094c3e95",
+      "bytes": 5929
+    },
+    "lib/tier-new-video-worker.ts": {
+      "sha256": "4f8b98c267fec2b42ce2afc59b495c634e31a7001cdee5538d40851f87f654e3",
+      "bytes": 3083
+    },
+    "lib/tier-personal-core.ts": {
+      "sha256": "c57710c4fb870a9cb416d1cc12e0abd8e7ce9ed0815447331bd515aba900689b",
+      "bytes": 9747
+    },
+    "lib/tier-personal-engine.ts": {
+      "sha256": "bad0e2655e65e658e488c4bffa8c23d84e166bc31750ac14943c916a8f4202fd",
+      "bytes": 16049
+    },
+    "lib/tier-personal-evaluation.ts": {
+      "sha256": "e81c5cc08ad0f07aa8aa497c227abbb785a245e41c8eef0db91543a7a8c2cc3a",
+      "bytes": 12958
+    },
+    "lib/tier-personal-image.ts": {
+      "sha256": "832843380b391ae1068cdb37808f8e67abcc67eb4ed67652cb5aebecdba1b1ff",
+      "bytes": 2223
+    },
+    "lib/tier-personal-store.ts": {
+      "sha256": "1d924043e933f703bd2210e9ceb3131c8c95c3a9fe4a0e9a393bddc5d037fc01",
+      "bytes": 3909
+    },
+    "lib/tier-personal-video.ts": {
+      "sha256": "a6db1ba177d611f5fc3ff5c4895fbf9edc339e0807da13f9724a470a38623963",
+      "bytes": 4789
+    },
+    "lib/tier-preview-playback.ts": {
+      "sha256": "d401b0de1ea0367cd80f1ad1f3dc94d3d5e90cf9f2d7fdf984f0af425c8a81ee",
+      "bytes": 5211
+    },
+    "lib/tier-reevaluation.ts": {
+      "sha256": "d0ed57dbb77d58b224d0bec4955be7cff67b18133bf99296bef18bfd3ecfe481",
+      "bytes": 12149
+    },
+    "lib/tier-teacher-analysis.ts": {
+      "sha256": "e1ff7659f163c774b6cc8ab42febf048c0a2047adc1bbfe4a2ff8ea7a7f8812d",
+      "bytes": 8552
+    },
+    "lib/tier-video-preview.ts": {
+      "sha256": "9e2570c7e36ce1887a127be40134b8fb7269fd47be2cfee9840599f3143c2a66",
+      "bytes": 12551
+    },
+    "lib/tier-visual-comparison.ts": {
+      "sha256": "89e76c2d6f3511e810bc52efb4c82f512d658ba2978a507c51d56b3ee147bf8d",
+      "bytes": 5005
+    },
+    "lib/video-download.ts": {
+      "sha256": "9e0ae9501b50f32f5b84561c179af40db62f5c9f992eb5fecfe89efe35fba37c",
+      "bytes": 2980
+    },
+    "lib/x-image-safety.ts": {
+      "sha256": "bf98a41b248cf70246aa1453f6e92de8a70b11e1bcdcfc11ecdca1eb4926511c",
+      "bytes": 1068
+    },
+    "lib/x-publish.ts": {
+      "sha256": "c54b31fdadd84a7b92323345880b534b6854171be25c2d4d4c86f60b50587e93",
+      "bytes": 5084
+    },
+    "lib/x.ts": {
+      "sha256": "59dee9613ff5d392f963ebd7159dc91a2019fa00b6682b400699ef947cc4a58b",
+      "bytes": 9800
+    },
+    "lib/vendor/hls.d.mts": {
+      "sha256": "d2838b7e1d3da9ef999652736a78582b0d20d19480ef79d4b8c3141a49cf82cc",
+      "bytes": 202548
+    },
+    "lib/vendor/hls.mjs": {
+      "sha256": "11e668e41247b44b5807a10264f36e2edd9eaaa681167c46c9a681bd3757059b",
+      "bytes": 1484971
+    },
+    "lib/vendor/LICENSE.txt": {
+      "sha256": "ca8773cf798c7ed997d4dd7c8e23c348699f8d5b7462636694cc14de6cda12db",
+      "bytes": 1338
+    },
+    "scripts/test-curated-manager-local.cjs": {
+      "sha256": "f9f662618761a10e43d88a277763475cabdba42f025e340a3af3baeb0ee460a7",
+      "bytes": 3602
+    },
+    "scripts/test-direct-download.cjs": {
+      "sha256": "4f028284612febf771dd05ea56f6c7489bc49a5c94ec43ffde3a832b77e79da2",
+      "bytes": 5328
+    },
+    "scripts/test-direct-playback.cjs": {
+      "sha256": "70b0dbc259df734213c7cffaae7819adf3e393e727e11d4f9f66eed1b5264c86",
+      "bytes": 2493
+    },
+    "scripts/test-download-free.cjs": {
+      "sha256": "47801f744491f22154a77d3dc61893d416b8bb3a495751f945feaf746836091d",
+      "bytes": 10067
+    },
+    "scripts/test-download-url.cjs": {
+      "sha256": "80d7e3c8555a4378062c9fedf7ba9f06c02fe2683748048d1891deb8cab81e3f",
+      "bytes": 7144
+    },
+    "scripts/test-free-curated-cursors.cjs": {
+      "sha256": "1e0c2315e28bf7d2ee7455987e2bae4d9692beed5ca2eb7b8415d952e040eaba",
+      "bytes": 1270
+    },
+    "scripts/test-free-curated-registration.cjs": {
+      "sha256": "14e53b48de540608c3bc40eac59107243ccfb55fa8e7c4e55831b71cfcad84e9",
+      "bytes": 11792
+    },
+    "scripts/test-free-curated-timeline.cjs": {
+      "sha256": "c446448b8229a450c8ba0d1473dfef353a482712a71b4be7452809b3c2cf5ba5",
+      "bytes": 5703
+    },
+    "scripts/test-fxtwitter-curated.cjs": {
+      "sha256": "fb743132909881337b8511e03418befc2bfd6fd154f7f9376ea9079a6099ab90",
+      "bytes": 10573
+    },
+    "scripts/test-hls-loader.cjs": {
+      "sha256": "fefca727f4120ec0ffc6eaf9b8e6381c28aebabfebf0c1cd0547ab5e752827c2",
+      "bytes": 2336
+    },
+    "scripts/test-learning-poll.cjs": {
+      "sha256": "babbc1916b7cb426dec6d427a329071b732980758f36fd74e96fb7d827bcd52f",
+      "bytes": 8958
+    },
+    "scripts/test-learning-status.cjs": {
+      "sha256": "6c47b44a992e142c6104eb57b430e3cb997bcb7b71a2ecdd793cc600facbf997",
+      "bytes": 4297
+    },
+    "scripts/test-newest500-local.cjs": {
+      "sha256": "89bd722ad54bd4f5ad5d2beefc006f33781bb2329953204cc2612dae7f21e558",
+      "bytes": 2601
+    },
+    "scripts/test-newest500-pages.cjs": {
+      "sha256": "82879e19432f89e0ecb04fd4124e3a7c02c5350f467236e7d75650104b2a5684",
+      "bytes": 6359
+    },
+    "scripts/test-playback-component.cjs": {
+      "sha256": "ce0b8b07dee810e586a7a8566fd484f425ccd7db6be6265df904d30ecbc1d6c8",
+      "bytes": 3715
+    },
+    "scripts/test-playback-recovery.cjs": {
+      "sha256": "203c30a5003d28b1503f02d84825690782c2a63f050e4d3b1edec090c36af174",
+      "bytes": 3636
+    },
+    "scripts/test-ranking-update-ui.cjs": {
+      "sha256": "e99909fecaf00d9e8b5ebd7010c9441239c62a44b9660f3034aa285255fd796e",
+      "bytes": 6588
+    },
+    "scripts/test-registration-progress.cjs": {
+      "sha256": "6912421bb794fb2224774a912dc88b00dc54f6db314f486fee66ed8b062792d6",
+      "bytes": 7645
+    },
+    "scripts/test-registration-recovery.cjs": {
+      "sha256": "106ccbda62c31a5d8768557675b8de76fd1bbaf9e4d0149d387161880b82f0a1",
+      "bytes": 3668
+    },
+    "scripts/test-stream-component.cjs": {
+      "sha256": "2043cd39f55ab3e09429e11308803b1f709d0348f5c4095f479682691f6c4d6f",
+      "bytes": 5220
+    },
+    "scripts/test-stream-playback.cjs": {
+      "sha256": "b24e52726cb6ef219c8cf988d16912b3e5fc569918bc13423047fe6e16c579a0",
+      "bytes": 6406
+    },
+    "scripts/test-tier-compatible-playback.cjs": {
+      "sha256": "638bfaf5869f574285b91dbfd6b90387defa72b73d8537d96b65772fca1fb439",
+      "bytes": 3236
+    },
+    "scripts/test-tier-four-frames.cjs": {
+      "sha256": "df0b34a1672b4756ea6be08a42fee601e2851c9fdf2112017dd3f2b9b6179c84",
+      "bytes": 3665
+    },
+    "scripts/test-tier-high-recall.cjs": {
+      "sha256": "4fc21bb498f5f435c190bb06c7bd314595af5ce02ac22051ed096629151034ca",
+      "bytes": 2816
+    },
+    "scripts/test-tier-model-release.cjs": {
+      "sha256": "b7aeec8506b7e050d83b03408e113f277458e8b88ad06a386e9623afbec19732",
+      "bytes": 3779
+    },
+    "scripts/test-tier-new-video-worker.cjs": {
+      "sha256": "122eea4e319434381d2b175e9ff092405fd6ecc91f0a90ae83709f2aca8c7a00",
+      "bytes": 2979
+    },
+    "scripts/test-tier-ordinal-adjustment.cjs": {
+      "sha256": "b15fb979028fbd4a1be53138053b4a209c01bb08bcd54c8dae5521edc5bf0db6",
+      "bytes": 3287
+    },
+    "scripts/test-tier-personal-engine.cjs": {
+      "sha256": "77dbef676c6e72c00ce949d6ab6460f4221d282644d7114c2524d31147b25d8b",
+      "bytes": 6693
+    },
+    "scripts/test-tier-personal.cjs": {
+      "sha256": "5a99b37cacb95a88474d2fd39f1575f8df63d347054deffc0102893a0cedf4bf",
+      "bytes": 3124
+    },
+    "scripts/test-tier-preview-playback.cjs": {
+      "sha256": "4d09b1e509edd722b17425344c4c27e28d15f97e4ea0305363a021351e729700",
+      "bytes": 1962
+    },
+    "scripts/test-tier-reevaluation-auth.cjs": {
+      "sha256": "706e2c84778e707032c100788d6387332fb758ae1f8e5d37117b75bdc3c11045",
+      "bytes": 1842
+    },
+    "scripts/test-tier-reevaluation.cjs": {
+      "sha256": "fd4ab95605b0f6da4428c7d8631a5d3ff35a9426ce0a2cf279e50ea0ee434426",
+      "bytes": 5242
+    },
+    "scripts/test-tier-teacher-analysis.cjs": {
+      "sha256": "03bc246e3044bd929d061aad023623c5bb3f8886b53e1380e9ae6ff216e60093",
+      "bytes": 3069
+    },
+    "scripts/test-tier-teacher-improvements.cjs": {
+      "sha256": "8e391a0f1730debd66fb12f494d91c90e0c050c40c19179653608c79180e04d9",
+      "bytes": 3626
+    },
+    "scripts/test-tier-video-preview.cjs": {
+      "sha256": "b480f961ae540e43ea2987bbabe489109ff3288252762164d97c9bfa656fc99a",
+      "bytes": 5927
+    },
+    "scripts/test-tier-visual-comparison.cjs": {
+      "sha256": "d14e92d001554e885c35bbf90091041880d29719c53d7b82b19f5261f1e2f0f1",
+      "bytes": 2159
+    },
+    "scripts/test-url-resolve-fix.cjs": {
+      "sha256": "0bc35b9a3fd8028e9c64a1ed48019fda613e83e85e67a9073a21ef7111e07c5a",
+      "bytes": 3513
+    },
+    "scripts/test-video-download.cjs": {
+      "sha256": "4f028284612febf771dd05ea56f6c7489bc49a5c94ec43ffde3a832b77e79da2",
+      "bytes": 5328
+    },
+    "scripts/visual-preference-holdout-eval.py": {
+      "sha256": "c11bfbad7b76536c582d3c63018e37f867525047f8c4879afb18228e791361f4",
+      "bytes": 10137
+    },
+    "scripts/visual-preference-poc.py": {
+      "sha256": "3deae12a4af1238eb3cc4f284ebbc0336b03f11f247654609d7ddfed5b32773c",
+      "bytes": 13746
+    },
+    "sql/tier-personal-model.sql": {
+      "sha256": "e922a7c1b6fc4b8d9451f8c0c0f0577fb732cbeb94801126008ca389f982d19e",
+      "bytes": 3059
+    },
+    "supabase/curated-authors.sql": {
+      "sha256": "ad335704bb44382c5dce70d28cd15b9a251781d3fb0561367c9d769b92cab968",
+      "bytes": 2510
+    },
+    "supabase/engagement-events.sql": {
+      "sha256": "152b098f2bc3fd539d6646c0ab8571968ebe0df77eb07bcad1ae72647c2b3d23",
+      "bytes": 1134
+    },
+    "supabase/engagement-page-view-20260913.sql": {
+      "sha256": "33ef51a7074be53991285804de4cc18021957090b7f6cea218b04dc12ea4bf6b",
+      "bytes": 549
+    },
+    "supabase/ranking-moderation.sql": {
+      "sha256": "721b8b329045e554f096aea1f4d774489d0cc03a1036104fbf8ca67a4fd908f0",
+      "bytes": 804
+    },
+    "supabase/removal-requests.sql": {
+      "sha256": "61ca781198e4fae614d5a97415f7ef2d11ce0d8e9190c86e4cef706cb852f8af",
+      "bytes": 1033
+    },
+    "supabase/schema.sql": {
+      "sha256": "7a38a8cf634ca39c85dd5467fdbed81ce015e46ece2d1daf375c50fb805ed6d5",
+      "bytes": 1693
+    },
+    "supabase/x-api-usage.sql": {
+      "sha256": "8382cacde5da0fb19613f3cdae90a75944cc7891cca0123f874e50366e5e0b02",
+      "bytes": 842
+    },
+    "supabase/x-promotion-logs-20260913.sql": {
+      "sha256": "c25ab5f39c902464b1749a9ca75bb0d4c55b8743135c54cdec0d5291b1b8159e",
+      "bytes": 1583
+    },
+    "package.json": {
+      "sha256": "02cdf17b8dbba5943f9b77cc1d65312583dddf769a123ce35e8520dddd2fa394",
+      "bytes": 629
+    },
+    "package-lock.json": {
+      "sha256": "b20d20a42302e04e9bd0f1c2080e66953012f62314b690665d4967d9b8e86540",
+      "bytes": 66003
+    },
+    "middleware.ts": {
+      "sha256": "360364e47d0a338af98be50646d0a1ddaf2f01efaedd78c49fd9642daa65eb24",
+      "bytes": 1930
+    },
+    "next.config.ts": {
+      "sha256": "444ee3efe5873db0968931de2732caeb52906e02382902408ab7941f0f34a285",
+      "bytes": 212
+    },
+    "visual-filter-model/model.json": {
+      "sha256": "f12c449cf6ba0b4cd48d648468b8d955379ed13d6acb46b77de0aae30172ac09",
+      "bytes": 117932
+    },
+    "docs/20261006-parallel-roadmap.md": {
+      "sha256": "3a18651cd8d2100637e14f298a95c9360848b4fbb5344b88ff6d3921dc98a7cb",
+      "bytes": 3251
+    },
+    "docs/development-workflow.md": {
+      "sha256": "5989a9435645ca100a8affb96709b4d521502c65885711a478b242445b3b8fbc",
+      "bytes": 3225
+    },
+    "docs/tier-compatible-playback-20261008.md": {
+      "sha256": "0a808230c1659b8cfeac45678720297a3c26c4651aa0a9a21ab5394c77650406",
+      "bytes": 3181
+    },
+    "docs/tier-four-frames-20261007.md": {
+      "sha256": "10b1f25884dc519bee3d3d6b7bfdf0d398131bff54b8bff3cbb8b2051fb277dd",
+      "bytes": 4656
+    },
+    "docs/tier-high-recall-20261008.md": {
+      "sha256": "d868a2782f52e07d37a4e0ed56714b10cbc463de33dd77a1325a34e02360e890",
+      "bytes": 4034
+    },
+    "docs/tier-ordinal-adjustment-20261008.md": {
+      "sha256": "a2090e6f6cc5200098bc7f58d55e7907712f32d00b72fd87fa5f75fbeace19c6",
+      "bytes": 4985
+    },
+    "docs/tier-personal-model-20261006.md": {
+      "sha256": "14a4591d8fff16ec4738e1d040437ea6fa99b2d41cae3127118755a66ee76c78",
+      "bytes": 5951
+    },
+    "docs/tier-teacher-improvements-20261008.md": {
+      "sha256": "a7835ac2bd13a8bc20eeedc8fe09e7c6407751b3ffcf0cbd729f85f9bb4a07e6",
+      "bytes": 4122
+    },
+    "docs/tier-video-preview-20261008.md": {
+      "sha256": "ee312220c1fbbff4264c761e12b6244d7a89bd3899a703d3fa9319acb4001a1d",
+      "bytes": 5091
+    }
+  },
+  "obsoleteRootFilesRemoved": [
+    "app/advertising-disclosure/page.tsx",
+    "app/api/contact-requests/route.ts",
+    "app/components/AgeGate.tsx",
+    "app/components/LegalPage.tsx",
+    "app/components/SiteFooter.tsx",
+    "app/components/VideoDurationBadge.tsx",
+    "app/contact-requests-admin/page.tsx",
+    "app/contact/ContactForm.tsx",
+    "app/contact/page.tsx",
+    "app/copyright/page.tsx",
+    "app/privacy/page.tsx",
+    "app/terms/page.tsx",
+    "lib/curated-search-expiry.ts",
+    "lib/curated-search-state.ts",
+    "lib/ranking-liquidity.ts",
+    "lib/video-duration-format.ts",
+    "lib/video-duration.ts",
+    "scripts/cleanup-curated-expiry.cjs",
+    "scripts/test-curated-expiry-cleanup.cjs",
+    "scripts/test-curated-expiry.cjs",
+    "scripts/test-curated-recovery.cjs",
+    "scripts/test-ranking-liquidity-route.cjs",
+    "scripts/test-ranking-liquidity.cjs",
+    "scripts/test-video-duration.cjs",
+    "sql/20261004-curated-search-expiry.sql",
+    "supabase/contact-requests.sql",
+    "supabase/curated-search-resume-20261003.sql"
+  ],
+  "verification": {
+    "regressionPassCount": 36,
+    "optionalFfmpegTestsNotRun": 2,
+    "typeCheck": true,
+    "isolatedNextBuild": true,
+    "nodeVersion": "26.7.0",
+    "networkDeniedDuringChecks": true,
+    "realStateAccessDenied": true,
+    "realBrowserOrProviderTests": false,
+    "ciNode22Run": "pending GitHub workflow"
+  }
+}

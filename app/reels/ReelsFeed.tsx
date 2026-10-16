@@ -1,7 +1,11 @@
 "use client";
+import DirectPlaybackVideo from "../components/DirectPlaybackVideo";
+
+import { directPlaybackUrl } from "../../lib/browser-direct-playback";
+
+import VideoDownloadButton from "../components/VideoDownloadButton";
 
 import Link from "next/link";
-import { formatVideoDuration } from "../../lib/video-duration-format";
 import { useCallback, useEffect, useRef, useState } from "react";
 
 type ReelPost = {
@@ -36,7 +40,6 @@ function makeSeed() {
 }
 
 export default function ReelsFeed() {
-  const [durations, setDurations] = useState<Record<string, number>>({});
   const [posts, setPosts] = useState<ReelPost[]>([]);
   const [activeIndex, setActiveIndex] = useState(0);
   const [muted, setMuted] = useState(true);
@@ -199,6 +202,7 @@ export default function ReelsFeed() {
           {activeIndex + 1} / {posts.length}
         </span>
         <div className="reels-top-actions">
+          <Link href="/download" className="reels-download-link" aria-label="投稿URLから動画を保存" title="動画保存">↓</Link>
           <button
             type="button"
             onClick={() => setReloadKey((value) => value + 1)}
@@ -235,14 +239,14 @@ export default function ReelsFeed() {
             >
               <div className="reel-stage">
                 {nearActive && !failed ? (
-                  <video
+                  <DirectPlaybackVideo postId={post.x_post_id} recoverEnabled={isActive}
                     key={`${post.x_post_id}-loaded`}
                     ref={(element) => {
                       if (element) videoRefs.current.set(index, element);
                       else videoRefs.current.delete(index);
                     }}
                     className="reel-video"
-                    src={`/api/video?url=${encodeURIComponent(post.video_url)}`}
+                    src={directPlaybackUrl(post.video_url)}
                     poster={post.preview_image_url ?? undefined}
                     muted={muted}
                     playsInline
@@ -254,12 +258,6 @@ export default function ReelsFeed() {
                     onCanPlay={() => {
                       if (isActive) {
                         videoRefs.current.get(index)?.play().catch(() => setPlaying(false));
-                      }
-                    }}
-                    onLoadedMetadata={event => {
-                      const duration = event.currentTarget.duration;
-                      if (Number.isFinite(duration) && duration > 0) {
-                        setDurations(values => ({ ...values, [post.x_post_id]: duration }));
                       }
                     }}
                     onError={() => markFailed(post.x_post_id, index)}
@@ -294,11 +292,7 @@ export default function ReelsFeed() {
                 <div className="reel-gradient" aria-hidden="true" />
 
                 <div className="reel-details">
-                  {formatVideoDuration(durations[post.x_post_id]) && (
-                    <div className="reel-duration" aria-label="再生時間">
-                      {formatVideoDuration(durations[post.x_post_id])}
-                    </div>
-                  )}
+                  <div className="reel-tier">TIER {post.adult_tier}</div>
                   <strong className="reel-author">
                     {post.author_name ?? post.author_username ?? "X user"}
                   </strong>
@@ -315,6 +309,7 @@ export default function ReelsFeed() {
                 </div>
 
                 <div className="reel-side-actions">
+                  {post.video_url && <VideoDownloadButton postId={post.x_post_id} compact />}
                   <a
                     href={post.x_url}
                     target="_blank"
@@ -349,4 +344,3 @@ export default function ReelsFeed() {
     </main>
   );
 }
-

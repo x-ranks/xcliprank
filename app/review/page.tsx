@@ -1,5 +1,7 @@
 "use client";
 
+import PersonalLearningWorker from "../components/PersonalLearningWorker";
+
 import { useEffect, useMemo, useState } from "react";
 
 type ReviewPost = {
@@ -402,6 +404,7 @@ export default function ReviewPage() {
       }}
     >
       {/* ヘッダー */}
+      <PersonalLearningWorker />
 
       <div
         style={{

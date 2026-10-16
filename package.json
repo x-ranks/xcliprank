@@ -6,7 +6,10 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint"
+    "lint": "next lint",
+    "check:types": "tsc --noEmit",
+    "test:offline": "node scripts/check-canonical.cjs",
+    "check:source": "node scripts/verify-canonical-source.cjs"
   },
   "dependencies": {
     "@supabase/supabase-js": "^2.57.4",

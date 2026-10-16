@@ -1,93 +1,51 @@
-> **2026-10-13 保存用ブランチ**：最新版の設定・完了履歴・配布物は [現在の状況](docs/XCLIP_CURRENT_STATUS.md) を参照。現行ローカルは `snapshots/local-20261013/`、本番用の既知差分は `snapshots/production-known-files-20261013/`。以下のルートの旧アプリ説明から直接公開しないでください。
+# Xclip：最新ローカル管理ソース
 
-# X Video Rank MVP
+2026-10-16に実ローカル `C:\Projects\xcliprank` の未コミット・未追跡を含むコードを統合しました。リポジトリ直下の `app/`・`lib/` が現在のローカル管理版です。過去のZIPを順に適用する必要はありません。
 
-X API → Supabase → Ranking → X公式埋め込み、までをつないだテスト実装です。
+**本番ColorfulBoxの完全ソースは取得待ちです。直下をColorfulBoxへそのまま配置しないでください。** ローカルのランキングAPIは本番表示を読むプレビュー用で、公開サーバーの集計APIと異なります。`production/README.md` を参照してください。
 
-## 1. Supabase
-1. Supabaseで新規Projectを作成
-2. SQL Editorで `supabase/schema.sql` を実行
-3. Project URL / Publishable Key / Service Role Key を取得
+## 取得と起動
 
-## 2. X Developer
-X Developer PlatformでAppを作成しBearer Tokenを取得します。
+Node.js 22系とnpmを用意し、新しい作業フォルダへ取得します。既存の稼働フォルダへ上書きしないでください。
 
-このMVPは Recent Search:
-`GET https://api.x.com/2/tweets/search/recent`
-を使用します。
-
-`.env.local` の `X_SEARCH_QUERY` で収集条件を変更できます。
-
-初期値:
-`has:videos -is:retweet lang:ja`
-
-成人向けサイトとして運営する場合も、最初は「信頼できる投稿者のallowlist + has:videos」のように対象を限定し、未成年・非合意・違法コンテンツの掲載を防ぐ審査レイヤーを別途設けることを推奨します。
-
-## 3. 環境変数
-`.env.example` を `.env.local` にコピーして値を設定:
-
-```bash
-cp .env.example .env.local
+```powershell
+git clone https://github.com/x-ranks/xcliprank.git xcliprank-latest
+cd xcliprank-latest
+npm ci
+npm run check:source
+npm run test:offline
 ```
 
-## 4. 起動
-Node.js 20+ 推奨。
+管理者が既存の安全な保管先から `.env.local` と必要なローカルデータを復元してから起動します。設定名は `.env.example` にあります。値はGitHubやチャットへ保存しません。
 
-```bash
-npm install
-npm run dev
+```powershell
+npm run dev -- -p 3004
 ```
 
-ブラウザ:
-`http://localhost:3000`
+http://localhost:3004/learning-tools が管理機能への入口です。投稿者管理 `/curated-manager`、巡回記録 `/fxtwitter-monitor`、再生不可監視 `/availability-monitor`。
 
-### ローカル視覚判定モデル
+GitだけでDB・登録一覧・取得位置・予約枠・手動除去・教師データ・モデルを復元することはできません。DBは既存Supabaseを使用し、同じDBと本番連携先／CRON_SECRETを管理者が設定します。旧DBパスワードは2026-10-12にリセット済みです。
 
-`visual-filter-model/group1-shard1of1.bin` はローカルの確認画面だけで使用します。
-本番環境ではモデル配信APIが意図的に404を返すため、このバイナリはGitHubへ保存しません。
-固定ローカルフォルダでは既存ファイルをそのまま保持してください。リポジトリを新しくcloneした場合は、
-以前のプロジェクトから同ファイルを `visual-filter-model/` へコピーすると確認画面を利用できます。
+動画フレーム抽出にはFFmpeg／FFprobeが必要です。古いブラウザー判定ツールが使う `visual-filter-model/group1-shard1of1.bin` はGit対象外なので既存の正しい資材を別途復元してください。教師／学習済みモデルをGitへ追加しないでください。
 
-`data/teacher-authors.json` もローカルの教師評価履歴を含むためGitHubへ保存しません。
-固定ローカルフォルダでは既存ファイルを保持し、別PCへ移す場合のみ安全な経路で個別にコピーしてください。
+## 検証
 
-## 5. 収集を1回実行
-ブラウザまたはcurl:
-
-```bash
-curl -H "Authorization: Bearer YOUR_CRON_SECRET" \
-  http://localhost:3000/api/collect
+```powershell
+node scripts/check-canonical.cjs types
+node scripts/check-canonical.cjs build
 ```
 
-成功するとSupabaseの `posts` と `metric_snapshots` に保存されます。
+検証はコードを一時フォルダへコピーし、外部通信を拒否して実行します。実ローカル・本番・DB・providerへ適用しません。36回帰テスト、型検査、Next.jsビルド成功。FFmpegが必要な2テストは別実行です。実ブラウザーの再生・通常巡回の全投稿者成功は別途確認が必要です。
 
-## 6. ランキング
-- 急上昇: 直近6時間
-- 24時間: 直近24時間
-- 週間: 直近168時間
+`docs/canonical-source-baseline-20261016.json` に取得元とSHAを記録しています。`npm run check:source` はその固定版の照合です。今後アプリを変更したら、確認済み変更として台帳と基準SHAを更新してください。
 
-現時点では `score` の単純ソートです。
-`lib/ranking.ts` で重みを変更できます。
+## 運用と資料
 
-## 7. X埋め込み
-フロントはXの公式 widgets.js の `createTweet()` を使い、投稿IDから元投稿を埋め込みます。
-動画ファイル自体はこのアプリに保存しません。
+- 公開サイトはColorfulBox。新着巡回はFxTwitterへ一時切替済み。直近24h24投稿者／3h8投稿者／同一24h／5秒間隔、失敗も1枠。登録上限1,000と区別します。
+- 現在の状態：`docs/XCLIP_CURRENT_STATUS.md`。履歴：`docs/XCLIP_UPDATE_HISTORY.md`。全45タスク：`docs/XCLIP_OPERATIONS_TASKS.md`。
+- 別AIへの入口：`docs/XCLIP_AI_HANDOFF_20261016.md`。同資料の「ルート旧版」という説明はこのソース整理前の記録です。現在は本READMEと最新状態を優先します。
+- `snapshots/` と `releases/` は取得時点の保存資料です。古い配布物を現行コードに再適用しないでください。
+- GitHubはユーザー指定で公開を継続。秘密・実state・DB dump・教師／モデルは含めません。
+- 旧VercelへのGit自動デプロイは `vercel.json` の `git.deploymentEnabled=false` で無効化。旧Vercel Cronを現在の運用として使いません。設定根拠：https://vercel.com/docs/project-configuration/git-configuration
 
-## 8. Vercel
-GitHubへpushしてVercelへImportし、環境変数を設定してください。
-`vercel.json` に30分ごとのcron設定を含めています。
-
-注意: Vercel Cronの認証方法や利用可能な実行頻度はプラン/仕様変更の影響を受けるため、公開前にVercel公式ドキュメントで現行仕様を確認してください。
-
-## 追加すべき実運用機能
-- allowlist / blocklist
-- 管理画面
-- 投稿の手動非表示
-- 削除済みX投稿の自動除外
-- コンテンツ審査
-- 通報フォーム
-- 年齢ゲート
-- DMCA/権利者削除窓口
-- APIコスト監視
-- キャッシュ
-- スコアのvelocity化
+今後の本番統合は `production/` の不足情報を受領・検証してから進めます。現行サーバーをこの整理作業で更新するものではありません。

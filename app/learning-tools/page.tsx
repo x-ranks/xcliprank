@@ -1,5 +1,7 @@
 "use client";
 
+import PersonalLearningWorker from "../components/PersonalLearningWorker";
+
 import Link from "next/link";
 import { useEffect, useState } from "react";
 
@@ -42,6 +44,44 @@ type ToolCard = {
 
 // 新しい運営・管理画面を追加した場合は、必ずこの一覧へ登録します。
 const operationTools: ToolCard[] = [
+  {"href":"/availability-monitor","title":"再生不可動画の監視","description":"凍結・投稿削除・非表示の確認、確定除外・再確認待ち・手動削除","badge":"運用","tone":"blue"},
+  {"href":"/curated-manager","title":"選別投稿者の共通管理","description":"通常・FxTwitter登録の共通一覧、停止・再開・投稿者と動画の掲載除外","badge":"運用","tone":"blue"},
+  { href: "/fxtwitter-monitor", title: "選別投稿者の巡回管理", description: "本番の巡回対象・最終巡回・取得数・累計・待機理由を確認", badge: "運用", tone: "blue" },
+  {
+    href: "/fxtwitter-authors",
+    title: "FxTwitter 選別投稿者（無料）",
+    description: "無料用の投稿者登録、動画一覧のプレビュー、非公開候補のDB保存を行います。",
+    badge: "無料・ローカル検証",
+    tone: "green",
+  },
+  {
+    href: "/tier-video-preview",
+    title: "新Tierモデル・動画50件プレビュー",
+    description: "手動モデルによる変更前後を動画で確認。Tierは更新せず、容量超過の教師も再試行できます。",
+    badge: "動画で比較",
+    tone: "blue",
+  },
+  {
+    href: "/tier-personal-model",
+    title: "共通Tier学習・見た目の評価",
+    description: "手動Tierと既存の参考評価を統合し、4フレームの学習・精度検証・共通モデルへの採用を管理します。",
+    badge: "共通学習",
+    tone: "blue",
+  },
+  {
+    href: "/tier-teacher-analysis",
+    title: "教師データ・Tier学習比較",
+    description: "手動Tierと参考アカウント教師評価の接続を診断し、視覚特徴を使う候補の精度を比較します。",
+    badge: "精度改善",
+    tone: "blue",
+  },
+  {
+    href: "/tier-reevaluation",
+    title: "未評価動画の再評価・50件確認",
+    description: "最新の手動評価で未評価動画を再計算し、変更前後とランダム50件を確認します。X API収集は行いません。",
+    badge: "再評価",
+    tone: "blue",
+  },
   {
     href: "/engagement-admin",
     title: "流入・サイト内計測",
@@ -83,13 +123,6 @@ const operationTools: ToolCard[] = [
     href: "/removal-requests-admin",
     title: "削除要請管理",
     description: "受け付けた削除要請を確認し、対応状況と管理メモを更新します。",
-    badge: "要確認",
-    tone: "amber",
-  },
-  {
-    href: "/contact-requests-admin",
-    title: "問い合わせ管理",
-    description: "広告・提携・技術的な問題など、公開フォームから届いた問い合わせを確認します。",
     badge: "要確認",
     tone: "amber",
   },
@@ -218,6 +251,7 @@ export default function LearningToolsPage() {
 
   return (
     <main className="shell">
+      <PersonalLearningWorker />
       <header className="hero">
         <p className="eyebrow">OPERATIONS & LEARNING HUB</p>
         <h1>運営・学習管理</h1>

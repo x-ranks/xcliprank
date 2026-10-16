@@ -1,0 +1,21 @@
+"use client";
+import Link from "next/link";
+import {useEffect,useState} from "react";
+type Data={generatedAt:number;nextBatchAt:number;cooldownUntil:number;cycleStartedAt:number;cycleCompletedAt:number;lastPostCheckedAt:number;lastAuthorCheckedAt:number;counts:{posts:number;blocked:number;pending:number;suspended:number;manual:number};posts:{id:string;authorKey:string|null;checkedAt:number;nextCheckAt:number;missingSince:number;blocked:boolean}[];authors:{key:string;status:string;checkedAt:number;nextCheckAt:number}[];manual:{id:string;username:string;at:number}[]};
+const time=(n:number)=>n?new Date(n).toLocaleString("ja-JP",{timeZone:"Asia/Tokyo"}):"記録なし";
+export default function Panel(){const [data,setData]=useState<Data|null>(null),[busy,setBusy]=useState(false),[error,setError]=useState("");
+ async function refresh(){setBusy(true);setError("");try{const r=await fetch("/api/curated-manager",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({operation:"availability"}),cache:"no-store"});const d=await r.json();if(!r.ok||!d.ok)throw Error(d.error??"取得に失敗しました。");setData(d.availability);}catch(e){setError(e instanceof Error?e.message:"取得に失敗しました。");}finally{setBusy(false);}}
+ useEffect(()=>{let active=true;setBusy(true);void fetch("/api/curated-manager",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({operation:"availability"}),cache:"no-store"}).then(async r=>{const d=await r.json();if(!r.ok||!d.ok)throw Error(d.error??"取得に失敗しました。");if(active)setData(d.availability);}).catch(e=>{if(active)setError(e instanceof Error?e.message:"取得に失敗しました。");}).finally(()=>{if(active)setBusy(false);});return()=>{active=false;};},[]);
+ return <main><Link href="/learning-tools#operations">← 管理トップ</Link><h1>再生不可動画の監視</h1><p>本番の掲載済み動画について、凍結・投稿削除・非表示の確認記録を表示します。新着動画の取得巡回とは別です。画面の更新は記録の読み取りだけで、FxTwitter・X APIへアクセスしません。</p>
+ <p><Link href="/curated-manager">投稿者の共通管理・手動削除 →</Link> ／ <Link href="/fxtwitter-monitor">新着取得の巡回記録 →</Link></p>
+ <button disabled={busy} onClick={()=>void refresh()}>{busy?"確認中…":"本番の監視記録を更新"}</button><div aria-live="polite">{error?<p role="alert" className="error">{error}</p>:null}</div>
+ {data?<><p>記録取得：{time(data.generatedAt)} ／ 最終投稿確認：{time(data.lastPostCheckedAt)} ／ 最終アカウント確認：{time(data.lastAuthorCheckedAt)}</p>
+ <p>投稿の監視記録 {data.counts.posts}件 ／ 確定除外 {data.counts.blocked}件 ／ 再確認待ち {data.counts.pending}件 ／ 凍結記録 {data.counts.suspended}件 ／ 手動削除 {data.counts.manual}投稿者</p>
+ <p>次回バッチの最短時刻：{time(data.nextBatchAt)} ／ 休止期限：{time(data.cooldownUntil)} ／ 一巡完了：{time(data.cycleCompletedAt)}</p>
+ {!data.lastPostCheckedAt&&!data.lastAuthorCheckedAt?<p>本番の監視記録はまだありません。監視Cronの実行ログを確認してください。</p>:null}
+ <p>FxTwitter監視は3時間ごとの起動を0〜4分ずらし、各リクエストを8〜20秒のランダムな間隔で順次実行します。制限・障害時は待機します。削除・非表示は24時間以上離した再確認と正常な投稿の確認を経て除外します。不明な応答だけでは除外しません。以下は確認結果の最新状態で、全実行ログではありません。</p>
+ <h2>投稿の除外・再確認待ち（最新最大500件）</h2><div className="table"><table><thead><tr><th>投稿</th><th>投稿者</th><th>状態</th><th>最終確認</th><th>次回確認</th></tr></thead><tbody>{data.posts.map(p=><tr key={p.id}><td><a href={`https://x.com/i/status/${p.id}`} target="_blank" rel="noopener noreferrer">{p.id}</a></td><td>{p.authorKey??"不明"}</td><td>{p.blocked?"確定除外":"再確認待ち"}</td><td>{time(p.checkedAt)}</td><td>{time(p.nextCheckAt)}</td></tr>)}</tbody></table></div>
+ <h2>アカウントの監視（最新最大500件）</h2><div className="table"><table><thead><tr><th>投稿者キー</th><th>確認結果</th><th>最終確認</th><th>次回確認</th></tr></thead><tbody>{data.authors.map(a=><tr key={a.key}><td>{a.key}</td><td>{a.status==="suspended"?"凍結":a.status==="public"?"公開確認":"不明・保留"}</td><td>{time(a.checkedAt)}</td><td>{time(a.nextCheckAt)}</td></tr>)}</tbody></table></div>
+ <h2>手動削除</h2>{data.manual.map(a=><p key={a.id}>@{a.username} ／ {time(a.at)} ／ 自動復旧しません</p>)}</>:null}
+ <style jsx>{`main{max-width:1200px;margin:auto;padding:28px;color:#e5edf6}p{line-height:1.8}a{color:#9ed8ff}button{padding:12px;background:#173e5d;color:white;border:1px solid #567087;border-radius:8px;min-height:44px;cursor:pointer}button:disabled{opacity:.5}.error{color:#ffb4b4}.table{overflow:auto}table{width:100%;border-collapse:collapse;min-width:650px}th,td{padding:12px;text-align:left;border-bottom:1px solid #39516a}`}</style></main>;
+}

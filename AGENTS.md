@@ -1,21 +1,13 @@
-# Xclip 更新作業の引き継ぎ
+# Xclip 最新ソースの作業ルール
 
-- 着手前に `docs/XCLIP_CURRENT_STATUS.md`、`docs/XCLIP_UPDATE_HISTORY.md`、`docs/xclip-update-artifacts.json` を読む。
-- この保存用ブランチの直下コードは過去の基準。2026-10-14のユーザー報告により、登録1,000版とランキング表示v2は本番・実ローカルとも適用完了として記録済み。`docs/completions/20261014-registration1000-ranking-v2.json` を現在の完了状態の根拠とする。古いsnapshotや配布時点の未適用フラグと区別し、完全な最新版だと仮定しない。
-- 実ローカルは C:\Projects\xcliprank、本番はColorfulBox xcliprank.com。実コード・稼働元・BUILD_ID・対象SHAを確認し、未知編集を上書きしない。過去Vercel手順を現本番にそのまま適用しない。
-- ユーザーの明示指示なしにPC/UI操作や実環境への適用をしない。隔離したコード作成・模擬検証・ユーザー実行を分けて報告する。配布リンクと実行手順はチャット本文に記載する。
-- 全状態参照（登録、巡回枠、取得位置、監視、手動削除、学習）を隔離してテスト。実際に配布する埋め込みパッチを適用/再適用/復元/未知編集拒否まで確認する。
-- 更新ごとに以前の会話を含む累積履歴、対象SHA、作成/検証/適用/Git状態、互換性、復旧方法を記録。秘密・実運用状態・DBバックアップをGitへ保存しない。
-- Supabase DBパスワードは2026-10-12にリセット済み。今後のDB認証障害では旧パスワードが残っていないか確認を案内する。
-
-- 2026-10-14ランキング更新日時：v1は公開切替前の配布失敗として保管。完了版は `releases/20261014-ranking-updates-v2/`。登録上限1,000版も完了報告済み。巡回の起動/実取得/枠待機とランキング集計時刻を混同しない。ユーザー報告にない適用時刻・BUILD_ID・全過去動画取得完了を捏造しない。
-
-- 本番/ローカル分離の追加規則（ランキングv2）： 実本番に存在しない管理画面を更新対象/必須guard/本番回帰へ混ぜない。作業コピーの存在を本番の証明にせず、欠落条件を再現して実配布パッチを検証する。無関係な既存ファイルは保持し、未知ハッシュの追加で通さない。`releases/20261014-ranking-updates-v2/` を参照。
-
-- 2026-10-15 Supabase無料枠調査：超過は転送とログ、DB容量ではない。`docs/investigations/SUPABASE_USAGE_20261015.md` を読む。5分の候補全件読取と表示時全500件select(*)、管理件数HEADが候補。標本試算を実課金/ログ原因の確定として扱わない。通信削減アプリ改修・本番適用・DB移行は未実施。旧完了2件は維持。
-
-- 無料枠調査の優先順位更新：`docs/investigations/LEARNING_USAGE_20261015.md`。ログ最多はxclip_tier_state、複数タブの学習待機通信。ローカル専用候補は20261015-learning-poll-v1、未適用。モデル実処理は不変。config.enabledは本番モデル適用にも影響するため、学習停止ボタンを単なる通信節約策として案内しない。
-
-- 2026-10-15最新：学習待機通信削減v1はユーザーからローカル適用完了報告あり。`docs/completions/20261015-learning-poll.json` を旧未適用フラグより優先。無料継続と実削減効果は未確認。10/17 21:30頃の単発確認（xclip-48）あり。追加監視・PC/DB自動操作を行わない。
-
-- 運営タスクの現行一覧は `docs/XCLIP_OPERATIONS_TASKS.md`（2026-10-15改訂版、旧42件+通信3件）。GitHub保存と最新版ソース統合/タグ/CIの完了を混同しない。無料枠の実増分確認が最優先、X施策は解除待ち、遠隔化は対象外。
+- README.md、docs/XCLIP_CURRENT_STATUS.md、docs/XCLIP_UPDATE_HISTORY.md、docs/xclip-update-artifacts.json、docs/canonical-source-status-20261016.jsonを先に読む。
+- 2026-10-16整理後、直下app/libは最新ローカル管理コード。過去の「直下は旧main」という説明は整理前の履歴。本番版はproduction/README.mdの全source取得待ちであり、直下をColorfulBoxへ配布しない。
+- GitHubはユーザー指定で公開継続。秘密、.env、DB dump、実state、教師、学習済みモデルを追加しない。cloneで秘密・状態が復元されると説明しない。
+- 実ローカルC:\Projects\xcliprank、本番ColorfulBox。未知変更を上書きせず、実コード・runtime/DEPLOY_SOURCE/BUILD_ID/SHAを照合する。
+- 明示依頼のないPC/UI操作、実ローカル適用、本番デプロイ、課金API呼出は行わない。ユーザーへ配布リンクと実行方法をチャット本文で渡す。
+- 型・模擬テスト・ビルドはscripts/check-canonical.cjsで全状態を隔離。配布実ファイルの適用・再適用・復元・未知編集拒否も必要範囲で確認。
+- app/libの基準SHAはdocs/canonical-source-baseline-20261016.json。アプリを変更した際は確認済み差分として台帳を更新し、未知hashを無条件許可しない。
+- 累積履歴と適用根拠を保存し、作成・検証・local適用・本番適用・GitHub記録を区別する。10/14登録1,000／ランキングv2完了、10/15学習通信削減local完了。無料枠効果は未測定、再生改善は本番本文待ちで未作成。
+- 定期新着はFxTwitterへ一時切替、24h24／3h8、同一24h、5秒、失敗も1枠。Xへ無断復帰しない。監視の除去判定を緩めず、手動除去／停止／位置／予約を保持する。
+- Supabase DB passwordは2026-10-12にリセット済み。認証障害時に旧設定残存の可能性を案内する。値を要求しない。
+- 旧VercelへのGit自動deployは無効。現本番へVercel用Cron／公開手順を流用しない。

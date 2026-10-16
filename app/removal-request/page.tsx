@@ -40,7 +40,7 @@ export default function RemovalRequestPage() {
       </header>
 
       <div className="removal-notice">
-        当サイトは動画ファイルを保存・再アップロードせず、X上の元投稿を参照して表示しています。申請内容を確認後、当サイトのランキング表示からの除外を判断します。X上の投稿自体を削除する場合は、Xへの報告も行ってください。
+        当サイトはX上の公開投稿情報・動画URLを取得し、再生・端末への保存時に動画を中継します。動画本体を当サイトのサーバーに恒久保存・再アップロードするサービスではありません。申請内容を確認後、当サイトのランキング表示からの除外を判断します。X上の投稿自体を削除する場合は、Xへの報告も行ってください。
       </div>
 
       {message && <div className={`removal-message ${message.tone}`} role="status">{message.text}</div>}

@@ -1,0 +1,69 @@
+# Xclip：最新ローカル管理ソース
+
+2026-10-16に実ローカル `C:\Projects\xcliprank` の未コミット・未追跡を含むコードを統合しました。リポジトリ直下の `app/`・`lib/` が現在のローカル管理版です。過去のZIPを順に適用する必要はありません。
+
+**本番ColorfulBoxの完全ソースは取得待ちです。直下をColorfulBoxへそのまま配置しないでください。** ローカルのランキングAPIは本番表示を読むプレビュー用で、公開サーバーの集計APIと異なります。`production/README.md` を参照してください。
+
+## 取得と起動
+
+Node.js 22系とnpmを用意し、新しい作業フォルダへ取得します。既存の稼働フォルダへ上書きしないでください。
+
+```powershell
+git clone https://github.com/x-ranks/xcliprank.git xcliprank-latest
+cd xcliprank-latest
+npm ci
+npm run check:source
+npm run test:offline
+```
+
+管理者が既存の安全な保管先から `.env.local` と必要なローカルデータを復元してから起動します。設定名は `.env.example` にあります。値はGitHubやチャットへ保存しません。
+
+```powershell
+npm run dev -- -p 3004
+```
+
+http://localhost:3004/learning-tools が管理機能への入口です。投稿者管理 `/curated-manager`、巡回記録 `/fxtwitter-monitor`、再生不可監視 `/availability-monitor`。
+
+GitだけでDB・登録一覧・取得位置・予約枠・手動除去・教師データ・モデルを復元することはできません。DBは既存Supabaseを使用し、同じDBと本番連携先／CRON_SECRETを管理者が設定します。旧DBパスワードは2026-10-12にリセット済みです。
+
+動画フレーム抽出にはFFmpeg／FFprobeが必要です。古いブラウザー判定ツールが使う `visual-filter-model/group1-shard1of1.bin` はGit対象外なので既存の正しい資材を別途復元してください。教師／学習済みモデルをGitへ追加しないでください。
+
+## 検証
+
+```powershell
+node scripts/check-canonical.cjs types
+node scripts/check-canonical.cjs build
+```
+
+検証はコードを一時フォルダへコピーし、外部通信を拒否して実行します。実ローカル・本番・DB・providerへ適用しません。36回帰テスト、型検査、Next.jsビルド成功。FFmpegが必要な2テストは別実行です。実ブラウザーの再生・通常巡回の全投稿者成功は別途確認が必要です。
+
+`docs/canonical-source-baseline-20261016.json` に取得元とSHAを記録しています。`npm run check:source` はその固定版の照合です。今後アプリを変更したら、確認済み変更として台帳と基準SHAを更新してください。
+
+## 運用と資料
+
+- 公開サイトはColorfulBox。新着巡回はFxTwitterへ一時切替済み。直近24h24投稿者／3h8投稿者／同一24h／5秒間隔、失敗も1枠。登録上限1,000と区別します。
+- 現在の状態：`docs/XCLIP_CURRENT_STATUS.md`。履歴：`docs/XCLIP_UPDATE_HISTORY.md`。全45タスク：`docs/XCLIP_OPERATIONS_TASKS.md`。
+- 別AIへの入口：`docs/XCLIP_AI_HANDOFF_20261016.md`。同資料の「ルート旧版」という説明はこのソース整理前の記録です。現在は本READMEと最新状態を優先します。
+- `snapshots/` と `releases/` は取得時点の保存資料です。古い配布物を現行コードに再適用しないでください。
+- GitHubはユーザー指定で公開を継続。秘密・実state・DB dump・教師／モデルは含めません。
+- 旧VercelへのGit自動デプロイは `vercel.json` の `git.deploymentEnabled=false` で無効化。旧Vercel Cronを現在の運用として使いません。設定根拠：https://vercel.com/docs/project-configuration/git-configuration
+
+今後の本番統合は `production/` の不足情報を受領・検証してから進めます。現行サーバーをこの整理作業で更新するものではありません。
+
+
+# 本番ソースの統合状況：取得待ち
+
+ローカル版と本番版は役割が異なります。現リポジトリ直下は最新ローカル管理版です。本番としてビルド／配布する対象ではありません。
+
+最後の本番診断：runtime `/home/rbxfxmfd/xclip-video-card-20261004.DJKKID/runtime`、DEPLOY_SOURCE `/home/rbxfxmfd/xclip-ranking-updates-v2-20261014.aj9FwJ/source`、BUILD_ID `H6KQokOwZZcvhnEQnY251`。ユーザー実行結果で一致を確認。
+
+再生関連14ファイルのうち、既知の本番用コピーと6ファイルが相違／未配置です。これだけで現本番を完全に再現できると判断しないため、正確な全コード一覧・本文を取得する必要があります。
+
+1. `tools/xclip-github-production-source-export-20261016.sh` をColorfulBoxの `/home/rbxfxmfd/` に配置。
+2. `bash /home/rbxfxmfd/xclip-github-production-source-export-20261016.sh` をユーザーが実行。
+3. `XCLIP_GITHUB_PRODUCTION_SOURCE_EXPORT_OK` と `ATTACH_FILE=...` を確認。
+4. 出力JSONをダウンロードして、このチャットへ添付。
+
+app/lib/scripts/sql/supabase/publicと固定のビルド設定だけを対象に、実稼働sourceとbuildを照合し、プログラム・公開資材のSHAと本文を新規JSONへ保存します。秘密らしい文字列、リンク、所有者違い、途中の版変更では出力を拒否します。設定・DB・巡回state・モデル重み・ホームのCron本文／実Cron設定は含めず、アプリ変更・DB/provider通信はありません。
+
+JSON受領後、内容を検査して `production/` へ本番版を統合し、専用の型／ビルド／回帰、localとの相違表、取得方法を確定します。それまでは本番完全統合は未完了です。

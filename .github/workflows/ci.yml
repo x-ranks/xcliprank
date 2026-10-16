@@ -27,8 +27,17 @@ jobs:
       - name: Install dependencies
         run: npm ci
 
-      - name: Build
-        run: npm run build
+      - name: Verify canonical source
+        run: npm run check:source
+
+      - name: Isolated offline regressions
+        run: npm run test:offline
+
+      - name: Isolated type check
+        run: node scripts/check-canonical.cjs types
+
+      - name: Isolated build without database or provider access
+        run: node scripts/check-canonical.cjs build
 
       - name: Offline curated recovery tests
         run: node scripts/test-curated-recovery.cjs

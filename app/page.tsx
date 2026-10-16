@@ -1,14 +1,15 @@
 import type { Metadata } from "next";
+import { notFound, redirect } from "next/navigation";
+import { parseRankingPage, newestPageHref, rankingHref } from "../lib/ranking-pagination";
 import Link from "next/link";
 import RankingClient from "./components/RankingClient";
-import SiteFooter from "./components/SiteFooter";
 import StructuredData from "./components/StructuredData";
-import { loadInitialRanking } from "../lib/initial-ranking";
+import { loadRankingPage } from "../lib/initial-ranking";
 import { rankingItemList, SITE_NAME, SITE_URL } from "../lib/seo";
 
 export const dynamic = "force-dynamic";
 
-export const metadata: Metadata = {
+const homeMetadata: Metadata = {
   title: {
     absolute: "X動画ランキング｜新着・24時間・週間の人気動画"
   },
@@ -38,8 +39,29 @@ export const metadata: Metadata = {
   }
 };
 
-export default async function Home() {
-  const initialPosts = await loadInitialRanking("trending");
+type Search = Promise<{ page?: string | string[]; edition?: string | string[] }>;
+export async function generateMetadata({ searchParams }: { searchParams: Search }): Promise<Metadata> {
+  const query = await searchParams;
+  let page = 1;
+  try { page = parseRankingPage(typeof query.page === "string" ? query.page : query.page ? "invalid" : undefined); }
+  catch { return { ...homeMetadata, robots: { index: false, follow: true } }; }
+  const canonical = SITE_URL + newestPageHref(page);
+  // Next 15 can discard a root URL's query when metadataBase is set.
+  // This page supplies absolute URLs, so resolve them without the inherited base.
+  return { ...homeMetadata, metadataBase: null, alternates: { canonical }, openGraph: { ...homeMetadata.openGraph, url: canonical } };
+}
+export default async function Home({ searchParams }: { searchParams: Search }) {
+  const query = await searchParams;
+  let page: number;
+  try { page = parseRankingPage(typeof query.page === "string" ? query.page : query.page ? "invalid" : undefined); }
+  catch { notFound(); }
+  if (Array.isArray(query.edition)) notFound();
+  const result = await loadRankingPage("trending", page, query.edition);
+  if (result.status === 410) redirect("/");
+  if (result.status === 400 || result.status === 404) notFound();
+  if (result.status !== 200 || !result.pagination) throw Error("NEWEST_RANKING_LOAD_FAILED");
+  const initialPosts = result.posts;
+  const edition = result.edition;
   const structuredData = {
     "@context": "https://schema.org",
     "@graph": [
@@ -54,7 +76,7 @@ export default async function Home() {
       },
       rankingItemList(
         "X動画 新着ランキング",
-        "/",
+        newestPageHref(page),
         initialPosts
       )
     ]
@@ -68,14 +90,18 @@ export default async function Home() {
         <p>Xに投稿された動画をランキング形式で表示</p>
       </header>
       <nav className="ranking-page-nav" aria-label="ランキングを選択">
-        <Link href="/" className="active" aria-current="page">新着</Link>
-        <Link href="/ranking/daily">24時間</Link>
-        <Link href="/ranking/weekly">週間</Link>
+        <Link href={rankingHref("trending", edition)} className="active" aria-current="page">新着</Link>
+        <Link href={rankingHref("daily", edition)}>24時間</Link>
+        <Link href={rankingHref("weekly", edition)}>週間</Link>
         <Link href="/reels">リール</Link>
+        <Link href="/download">動画保存</Link>
       </nav>
       <RankingClient
+        key={`${edition}:${page}`}
         range="trending"
         initialPosts={initialPosts}
+        pagination={result.pagination}
+        initialUpdate={result.update}
         fixedRange
       />
       <section className="seo-info" aria-labelledby="about-ranking">
@@ -85,7 +111,10 @@ export default async function Home() {
           <Link href="/ranking/weekly">週間ランキング</Link>から確認できます。
         </p>
       </section>
-      <SiteFooter />
+      <footer>
+        <p>動画ファイル自体はすべてXのサービス上にあり、当サイトでは動画ファイルの保存・収集・再アップロードを行っていません。X上の元投稿を参照して表示しています。</p>
+        <p>削除・非公開化された投稿は表示されなくなります。違法または権利侵害と思われる投稿は、<Link href="/removal-request">削除要請フォーム</Link>からお知らせください。</p>
+      </footer>
     </main>
   );
 }
