@@ -51,3 +51,11 @@ node scripts/check-canonical.cjs build
 - 旧VercelへのGit自動デプロイは `vercel.json` の `git.deploymentEnabled=false` で無効化。旧Vercel Cronを現在の運用として使いません。設定根拠：https://vercel.com/docs/project-configuration/git-configuration
 
 今後の本番統合は `production/` の不足情報を受領・検証してから進めます。現行サーバーをこの整理作業で更新するものではありません。
+
+## 2026-10-17追加：ラベル管理と学習
+
+`http://localhost:3004/label-learning`でラベルを作成し、動画4枚を確認して該当/非該当/未確認を保存できます。学習用10動画以上から試作し、教材内のグループ分割検証と未使用動画での精度チェックを別表示します。ラベルごとに該当/非該当2件以上必要です。最初は少数のラベルで確認してください。
+
+画像/モデル/教師は`.local-admin/label-learning-v1`のPC内保存。既存Tier、既存ラベルJSON、本番掲載やDBの更新はしません。`npm run dev -- --hostname localhost -p 3004`で起動してください（production実行ではラベル機能を無効化）。FFmpeg/FFprobeと既存画像モデルの読込が必要で、動画準備は最大96MiB/本の通信とCPUを使用します。実環境へのインストールはユーザー実行待ちです。
+
+配布ZIPと累積履歴は`releases/20261017-label-learning-v1/`。既存C:\Projects\xcliprank向けZIPには現行SHAのガードがあり、Gitの新規取得へ重ねて適用する必要はありません。

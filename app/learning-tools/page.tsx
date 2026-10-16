@@ -44,6 +44,7 @@ type ToolCard = {
 
 // 新しい運営・管理画面を追加した場合は、必ずこの一覧へ登録します。
 const operationTools: ToolCard[] = [
+  { href: "/label-learning", title: "ラベル管理・4枚で学習", description: "ラベル作成、動画4枚で教師データ作成、10件から学習、未使用動画で精度確認。PC内だけに保存します。", badge: "ラベル学習", tone: "blue" },
   {"href":"/availability-monitor","title":"再生不可動画の監視","description":"凍結・投稿削除・非表示の確認、確定除外・再確認待ち・手動削除","badge":"運用","tone":"blue"},
   {"href":"/curated-manager","title":"選別投稿者の共通管理","description":"通常・FxTwitter登録の共通一覧、停止・再開・投稿者と動画の掲載除外","badge":"運用","tone":"blue"},
   { href: "/fxtwitter-monitor", title: "選別投稿者の巡回管理", description: "本番の巡回対象・最終巡回・取得数・累計・待機理由を確認", badge: "運用", tone: "blue" },

@@ -1,3 +1,13 @@
+# 2026-10-17：ラベル学習のローカル用コードを追加
+
+`/label-learning`：ユーザーのラベル作成、4画像の教師付け、10件以上からの独立したラベルモデル学習、投稿者/動画グループ分割評価、未使用動画の盲検精度確認。`/learning-tools`へ入口を追加。実ローカル/本番は未適用。本番公開ラベル/URLや既存Tierへの採用は行わない。
+
+状態は`.local-admin/label-learning-v1`に保存しGit対象外。DBは候補の限定読取のみで、モデル/教師/画像は保存しない。外部の生成AI APIやX/FxTwitter収集なし。画像準備時に動画CDNダウンロード・CPUと初回画像モデル読込が必要。10動画/各ラベル該当・非該当2件以上から試作、実精度は適用後に確認。
+
+追加差分SHAは`docs/features/label-learning-local-v1-20261017-source.json`。10/16の生バイト基準は保持し、確認済み差分をsource検査へ重ねる。配布は`releases/20261017-label-learning-v1`。本番完全source統合/再生改善の未完了は維持。
+
+---
+
 # 現在の運用・ソース状況（2026-10-16 JST）
 
 ローカル最新版のmain統合・タグ保存・通常clone確認・GitHub CI成功を確認済み。根拠：docs/completions/20261016-canonical-local-main.json。本番版の完全統合はコードJSON取得待ちで未完了。
