@@ -37,3 +37,4 @@
 /next.config.ts -text
 /visual-filter-model/model.json -text
 /tools/**/*.sh text eol=lf
+/.env.example text eol=lf

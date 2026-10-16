@@ -12,6 +12,6 @@ for(const [name,record]of Object.entries(manifest.files)){
 const ts=JSON.parse(fs.readFileSync(path.join(root,'tsconfig.json'),'utf8'));
 assert(ts.exclude.includes('snapshots')&&ts.exclude.includes('releases'));
 assert.equal(JSON.parse(fs.readFileSync(path.join(root,'vercel.json'),'utf8')).git.deploymentEnabled,false);
-for(const line of fs.readFileSync(path.join(root,'.env.example'),'utf8').split('\n'))if(line&&!line.startsWith('#'))assert(/^[A-Z0-9_]+=$/.test(line));
+for(const line of fs.readFileSync(path.join(root,'.env.example'),'utf8').split(/\r?\n/))if(line&&!line.startsWith('#'))assert(/^[A-Z0-9_]+=$/.test(line));
 console.log('CANONICAL_LOCAL_SOURCE_OK; '+checked+' exact source hashes; private configuration excluded; Vercel git deployment disabled.');
 console.log('PRODUCTION_SOURCE_PENDING: six differing playback files and full live-source inventory still required; root is the complete local management code.');
