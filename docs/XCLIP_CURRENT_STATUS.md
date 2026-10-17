@@ -1,3 +1,7 @@
+## 2026-10-17：ラベル機能のローカル適用完了
+
+ユーザー許可で実ローカルへ適用・再起動済み。localhost画面/APIと合成4枚抽出の検証成功。実動画の正解付けと実測精度は未確認。本番・個別URLは未変更。根拠：docs/completions/20261017-label-learning-local-applied.json。
+
 # 2026-10-17 JST：ラベル学習のGitHub最新版統合・CI確認
 
 - PR #13をmainへ統合。アプリ差分head=19e71f5c660a5ab73ea633ae419ed348a9eee57f、merge=442bc316832b13b957cb5f2e3afa3ebd27dd2fac。

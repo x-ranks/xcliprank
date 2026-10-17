@@ -1,0 +1,65 @@
+{
+  "release": "label-learning-local-v1-20261017",
+  "actualLocalApplied": true,
+  "productionApplied": false,
+  "installedPayloadFiles": 11,
+  "changedApplicationFiles": [
+    "app/api/label-learning/frame/route.ts",
+    "app/api/label-learning/route.ts",
+    "app/label-learning/LabelLearningPanel.tsx",
+    "app/label-learning/page.tsx",
+    "app/learning-tools/page.tsx",
+    "lib/label-learning-core.ts",
+    "lib/label-learning-http.ts",
+    "lib/label-learning-server.ts",
+    "lib/label-learning-service.ts",
+    "lib/label-learning-video.ts",
+    "scripts/test-label-learning.cjs"
+  ],
+  "dependencyGuardsMatched": true,
+  "protectedFilesUnchanged": 273,
+  "unrelatedApplicationFilesUnchanged": true,
+  "backup": "C:\\Projects\\xcliprank\\.local-admin\\label-learning-installs\\20261017T003455819Z-46d6d022-92ef-4cb6-9b77-e3a0dbee5d73",
+  "userAuthorization": "2026-10-17 explicit user request to apply locally",
+  "appliedAtJst": "2026-10-17T09:39:05+09:00",
+  "localUrl": "http://localhost:3004/label-learning",
+  "serverRestarted": true,
+  "checks": {
+    "localPageHttp": 200,
+    "localApiHttp": 200,
+    "apiNoStore": true,
+    "apiNoindex": true,
+    "postWithoutOriginHttp": 404,
+    "installedLabelRegression": "PASS; no provider/DB calls",
+    "syntheticFourSceneVideoExtraction": "PASS; 4 frames at 10/25/50/80 percent, ordered 1024-D features",
+    "configuredFfmpegAndFfprobeAvailable": true
+  },
+  "limitations": [
+    "No UI automation or browser-rendering inspection performed; HTTP HTML and JSON verified.",
+    "No real video downloaded or user labels created; real training accuracy remains unmeasured.",
+    "Use localhost:3004 as documented. The 127.0.0.1 alias page is HTTP200 but API is HTTP404 under the current Next development request host normalization.",
+    "Four-scene test loaded the existing pretrained image model; no X/Fx provider calls or real database calls made by verification."
+  ],
+  "toolSetup": {
+    "archiveSha256": "60f467265b1e312373dbcd92200c2618a74850f98d3d078e94296bb3fa2047ba",
+    "source": "https://www.gyan.dev/ffmpeg/builds/packages/ffmpeg-9.0.2-essentials_build.zip",
+    "toolDirectory": "C:\\Users\\USER\\Documents\\Codex\\Tools\\ffmpeg-9.0.2",
+    "toolsSha256": {
+      "ffmpeg.exe": "3256173f3f8bffd7df12227c68adf68025edb1832273a9530688a7bb1ed8edec",
+      "ffprobe.exe": "f0d36ecbbdd3bcfac3efa078c96c7271c2e68b3810595552ac3b7f17e9a65c52"
+    },
+    "environmentKeysAdded": [
+      "XCLIP_FFMPEG_PATH",
+      "XCLIP_FFPROBE_PATH"
+    ],
+    "existingEnvironmentBytesPreserved": true,
+    "systemPathModified": false
+  },
+  "existingEnvironmentValuesPreserved": true,
+  "environmentKeysAdded": [
+    "XCLIP_FFMPEG_PATH",
+    "XCLIP_FFPROBE_PATH"
+  ],
+  "systemPathModified": false,
+  "githubRecord": "recorded by this documentation commit; remote HEAD verified separately"
+}
