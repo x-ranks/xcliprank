@@ -1,0 +1,53 @@
+{
+  "release": "label-learning100-local-v2-20261017",
+  "scope": "local only",
+  "baseFeature": "label-learning-local-v1-20261017",
+  "files": {
+    "lib/label-learning-service.ts": {
+      "before": "8bb2b05e1c3274e25f81de6f205e6dc00d10b78b0144e23defd0b8e6e362f7c2",
+      "after": "869c09f676df6b4d3d6041dcfc05df196edebf39ff5bbb0fc7a66d0255de3e04"
+    },
+    "lib/label-learning-server.ts": {
+      "before": "1e84c19ac609bb06eaad88020a949b8bcc2bbca80507de56199cfe63f0af2357",
+      "after": "c5db4b16e2bd9a5cb5273b614c66e1850cf92477ac3bf0d87e326210e39354a5"
+    },
+    "lib/label-learning-http.ts": {
+      "before": "21970bd85d1a684603512f6e6b600874d7d97fc70d5f3c0a98e0f3497b1906ee",
+      "after": "5f61a566199b218dd8db13d3949e58b6dd64ad75d19a43edb1126bd709c71066"
+    },
+    "app/label-learning/LabelLearningPanel.tsx": {
+      "before": "1b01a93a52c6aa16e2d568b743f6166dc8e3c0ffa8787072c3c4d65acc09c6d0",
+      "after": "07f9745da00d6695028da3fb4506312469e7fd9c5b3a708667c10c5d0f11f151"
+    },
+    "scripts/test-label-learning.cjs": {
+      "before": "e44b4f7a15300d84e42b4b1a7c3849b66bb7242dd787af237fa944953969e2ab",
+      "after": "cf630f5bb088a59a0cd855bb62e3fc8e0d690a17d01458a372d83397b785ef29"
+    },
+    "lib/label-learning-batch.ts": {
+      "before": null,
+      "after": "8ffd1e34ff530328bb00df623420b450b160e337d76ed4eafc6d025f01b05401"
+    },
+    "scripts/test-label-learning100.cjs": {
+      "before": null,
+      "after": "b3d923f55eb96d8ae07c3e0133a944ddad2e1f3cc055770d95c11548373aa655"
+    },
+    "scripts/test-label-learning100-ui.cjs": {
+      "before": null,
+      "after": "28dc6f6699d832d3898f2d7b5a6b7daa3f99ec648de93b27d548beaed8bb1c63"
+    }
+  },
+  "guards": {
+    "lib/tier-personal-core.ts": "c57710c4fb870a9cb416d1cc12e0abd8e7ce9ed0815447331bd515aba900689b",
+    "lib/tier-personal-image.ts": "832843380b391ae1068cdb37808f8e67abcc67eb4ed67652cb5aebecdba1b1ff",
+    "lib/tier-personal-video.ts": "a6db1ba177d611f5fc3ff5c4895fbf9edc339e0807da13f9724a470a38623963",
+    "lib/supabase-admin.ts": "f8b8ce736e78bc7ce0ded8dee0861921e6eeb90ffe93b070f9ba2c618fb502fe",
+    "middleware.ts": "360364e47d0a338af98be50646d0a1ddaf2f01efaedd78c49fd9642daa65eb24",
+    "package.json": "02cdf17b8dbba5943f9b77cc1d65312583dddf769a123ce35e8520dddd2fa394",
+    "package-lock.json": "b20d20a42302e04e9bd0f1c2080e66953012f62314b690665d4967d9b8e86540",
+    "lib/label-learning-core.ts": "9b1e0730b1e1c0f350174048c358a0d03d873d75224ba893c146b121b9cf0866",
+    "lib/label-learning-video.ts": "437a79a4fec1311316bcb6525c871cbdd6b114ec8c2e8020f22ba982fbd1986c",
+    "app/api/label-learning/route.ts": "0044310ad84075743a82008fdc617310eca31c90c21b1015bdbda52f89f14728",
+    "app/api/label-learning/frame/route.ts": "5f23473da894a589d2209cde22e2376782064180eff2639bbdc4cbfc5677dc8c",
+    "app/label-learning/page.tsx": "aff83f029e4c4c8fb3a6427b5d863a6850b8abb2fb8d365bed4eff6630aeca41"
+  }
+}

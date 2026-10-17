@@ -3,15 +3,15 @@ const fs=require('node:fs'),path=require('node:path'),crypto=require('node:crypt
 const root=path.resolve(__dirname,'..');
 const manifest=JSON.parse(fs.readFileSync(path.join(root,'docs/canonical-source-baseline-20261016.json'),'utf8'));
 const exceptions=new Set(['package.json','scripts/test-learning-poll.cjs','scripts/test-learning-status.cjs','scripts/test-playback-component.cjs','scripts/test-tier-model-release.cjs','scripts/test-tier-teacher-analysis.cjs']);
-const overlay=JSON.parse(fs.readFileSync(path.join(root,'docs/features/label-learning-local-v1-20261017-source.json'),'utf8'));
-for(const [name,change]of Object.entries(overlay.files))if(change.before)assert.equal(manifest.files[name]?.sha256,change.before,'UNKNOWN_OVERLAY_BASE '+name);
+const overlays=['label-learning-local-v1-20261017-source.json','label-learning100-local-v2-20261017-source.json'].map(name=>JSON.parse(fs.readFileSync(path.join(root,'docs/features',name),'utf8')));
+const expected=new Map(Object.entries(manifest.files).map(([name,record])=>[name,record.sha256]));
+for(const overlay of overlays)for(const [name,change]of Object.entries(overlay.files)){assert.equal(expected.get(name)??null,change.before??null,'UNKNOWN_OVERLAY_BASE '+name);expected.set(name,change.after);}
 let checked=0;
-for(const [name,record]of Object.entries(manifest.files)){
+for(const [name,expectedHash]of expected){
  const p=path.join(root,name);assert(fs.existsSync(p),'MISSING_SOURCE '+name);
  if(exceptions.has(name))continue;
- const actual=crypto.createHash('sha256').update(fs.readFileSync(p)).digest('hex');assert.equal(actual,overlay.files[name]?.after??record.sha256,'SOURCE_MISMATCH '+name);checked++;
+ assert.equal(crypto.createHash('sha256').update(fs.readFileSync(p)).digest('hex'),expectedHash,'SOURCE_MISMATCH '+name);checked++;
 }
-for(const [name,change]of Object.entries(overlay.files))if(!manifest.files[name]){assert.equal(crypto.createHash('sha256').update(fs.readFileSync(path.join(root,name))).digest('hex'),change.after,'FEATURE_SOURCE_MISMATCH '+name);checked++;}
 const ts=JSON.parse(fs.readFileSync(path.join(root,'tsconfig.json'),'utf8'));
 assert(ts.exclude.includes('snapshots')&&ts.exclude.includes('releases'));
 assert.equal(JSON.parse(fs.readFileSync(path.join(root,'vercel.json'),'utf8')).git.deploymentEnabled,false);

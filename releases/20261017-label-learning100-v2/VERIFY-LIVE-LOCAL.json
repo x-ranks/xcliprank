@@ -1,0 +1,17 @@
+{
+  "pageHttp": 200,
+  "pageMentions100": true,
+  "apiHttp": 200,
+  "apiNoStore": "no-store",
+  "originlessPostHttp": 404,
+  "labels": 14,
+  "videos": 10,
+  "training": 10,
+  "revision": 42,
+  "existingModelRetained": true,
+  "existingModelNotStale": true,
+  "oldVideosRecognizedAsTraining": true,
+  "browserAutomation": false,
+  "realProviderCalls": 0,
+  "realDatabaseCalls": 0
+}

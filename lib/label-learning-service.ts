@@ -4,7 +4,7 @@ import path from "node:path";
 import { crossCheckLabels, Decisions, fitLabels, LabelDefinition, LabelModel, LabelSample, LABEL_FEATURE_SPEC, predictLabels, scoreLabels, validFeatures } from "./label-learning-core";
 export type LabelCandidate = { postId: string; author: string | null; authorKey?: string | null; url: string };
 type Review = { decisions: Decisions; role: "train" | "test"; blinded: boolean };
-type Video = LabelCandidate & { hash: string; features: number[]; times: number[]; review: Review | null; predictionSeen: boolean; prediction: ReturnType<typeof predictLabels> | null };
+type Video = LabelCandidate & { preparedFor?: "train" | "test"; hash: string; features: number[]; times: number[]; review: Review | null; predictionSeen: boolean; prediction: ReturnType<typeof predictLabels> | null };
 type Bundle = { id: string; fingerprint: string; trainedAt: string; head: LabelModel; crossCheck: ReturnType<typeof crossCheckLabels> };
 export type LabelState = { version: 1; revision: number; labels: LabelDefinition[]; videos: Video[]; attempted: string[]; everTrained: string[]; everTrainedAuthors: string[]; model: Bundle | null; testReport: ReturnType<typeof scoreLabels> | null };
 export type LabelDeps = { candidates: () => Promise<LabelCandidate[]>; find: (id: string) => Promise<LabelCandidate | null>; prepare: (url: string) => Promise<{ frames: Buffer[]; features: number[]; times: number[]; hash: string }> };
@@ -18,7 +18,7 @@ function validate(s: LabelState) {
   const ids = new Set<string>(), names = new Set<string>(), posts = new Set<string>();
   for (const l of s.labels) { if (!l || !uuid.test(l.id) || typeof l.name !== "string" || !l.name.trim() || l.name.length > 40 || typeof l.active !== "boolean" || ids.has(l.id) || names.has(l.name)) fail("LABEL_STATE_CORRUPT"); ids.add(l.id); names.add(l.name); }
   for (const v of s.videos) {
-    if (!v || !validCandidate(v) || posts.has(v.postId) || !sha.test(v.hash) || !validFeatures(v.features) || !Array.isArray(v.times) || v.times.length !== 4 || !v.times.every(t => Number.isFinite(t) && t >= 0) || typeof v.predictionSeen !== "boolean") fail("LABEL_STATE_CORRUPT"); posts.add(v.postId);
+    if (!v || !validCandidate(v) || posts.has(v.postId) || !sha.test(v.hash) || !validFeatures(v.features) || !Array.isArray(v.times) || v.times.length !== 4 || !v.times.every(t => Number.isFinite(t) && t >= 0) || typeof v.predictionSeen !== "boolean" || (v.preparedFor !== undefined && !["train", "test"].includes(v.preparedFor))) fail("LABEL_STATE_CORRUPT"); posts.add(v.postId);
     if (v.review && (!["train", "test"].includes(v.review.role) || typeof v.review.blinded !== "boolean" || !v.review.decisions || typeof v.review.decisions !== "object" || Array.isArray(v.review.decisions) || Object.entries(v.review.decisions).some(([k, value]) => !ids.has(k) || (value !== null && typeof value !== "boolean")))) fail("LABEL_STATE_CORRUPT");
   }
   if (s.model) {
@@ -63,7 +63,7 @@ export function createLabelService(root: string, deps: LabelDeps) {
   }
   function summary(s: LabelState) {
     const stale = Boolean(s.model && s.model.fingerprint !== fingerprint(s));
-    return { revision: s.revision, labels: s.labels, videos: s.videos.map(v => ({ postId: v.postId, author: v.author, times: v.times, review: v.review, prediction: stale ? null : v.prediction, everTrained: s.everTrained.includes(v.hash) || s.everTrainedAuthors.includes(authorKey(v) ?? ""), frames: v.times.map((_, i) => `/api/label-learning/frame?postId=${v.postId}&index=${i}`) })),
+    return { revision: s.revision, labels: s.labels, videos: s.videos.map(v => ({ postId: v.postId, author: v.author, preparedFor: v.review?.role ?? v.preparedFor ?? "train", times: v.times, review: v.review, prediction: stale ? null : v.prediction, everTrained: s.everTrained.includes(v.hash) || s.everTrainedAuthors.includes(authorKey(v) ?? ""), frames: v.times.map((_, i) => `/api/label-learning/frame?postId=${v.postId}&index=${i}`) })),
       trainingCount: training(s).length, model: s.model ? { id: s.model.id, trainedAt: s.model.trainedAt, samples: s.model.head.samples, stale, heads: s.model.head.heads.map(({ weights: _weights, bias: _bias, ...h }) => ({ ...h, ready: Boolean(_weights) })), crossCheck: s.model.crossCheck } : null, testReport: stale ? null : s.testReport };
   }
   async function frame(postId: string, index: number) {
@@ -85,30 +85,38 @@ export function createLabelService(root: string, deps: LabelDeps) {
       } else if (body.action === "prepare") {
         if (!s.labels.some(l => l.active)) fail("LABEL_CREATE_FIRST");
         if (s.videos.length >= 300) fail("LABEL_VIDEO_LIMIT");
+        const purpose = body.purpose ?? "train";
+        if (purpose !== "train" && purpose !== "test") fail("LABEL_INVALID_INPUT");
+        if (purpose === "test" && (!s.model || s.model.fingerprint !== fingerprint(s))) fail("LABEL_RETRAIN_REQUIRED");
+        const reservedTestAuthors = new Set(s.videos.filter(v => (v.review?.role ?? v.preparedFor) === "test").map(authorKey).filter((a): a is string => Boolean(a)));
+        const eligible = (c: LabelCandidate) => {
+          const author = authorKey(c);
+          return purpose === "test" ? Boolean(author && !s.everTrainedAuthors.includes(author)) : !author || !reservedTestAuthors.has(author);
+        };
         let candidate: LabelCandidate | null;
-        if (body.postId !== undefined) { if (typeof body.postId !== "string" || !post.test(body.postId)) fail("LABEL_INVALID_INPUT"); candidate = await deps.find(body.postId); }
+        if (body.postId !== undefined) { if (typeof body.postId !== "string" || !post.test(body.postId)) fail("LABEL_INVALID_INPUT"); candidate = await deps.find(body.postId); if (candidate && !eligible(candidate)) fail("LABEL_TEST_AUTHOR_NOT_UNSEEN"); }
         else {
           const candidates = await deps.candidates();
-          const available = candidates.filter(c => validCandidate(c) && !s.videos.some(v => v.postId === c.postId) && !s.attempted.includes(c.postId));
-          const authors = new Set(s.videos.map(v => v.author));
-          const pool = available.filter(c => !authors.has(c.author)); candidate = (pool.length ? pool : available)[0] ?? null;
+          const available = candidates.filter(c => validCandidate(c) && eligible(c) && !s.videos.some(v => v.postId === c.postId) && !s.attempted.includes(c.postId));
+          const authors = new Set(s.videos.map(authorKey));
+          const pool = available.filter(c => !authors.has(authorKey(c))); candidate = (pool.length ? pool : available)[0] ?? null;
         }
-        if (!candidate || !validCandidate(candidate)) fail("LABEL_NO_CANDIDATES");
+        if (!candidate || !validCandidate(candidate)) fail(purpose === "test" ? "LABEL_NO_UNSEEN_TEST_CANDIDATES" : "LABEL_NO_CANDIDATES");
         if (s.videos.some(v => v.postId === candidate!.postId)) fail("LABEL_ALREADY_PREPARED");
         // Store a bounded attempt receipt even on download failure, so a batch advances.
         if (!s.attempted.includes(candidate.postId)) s.attempted.push(candidate.postId); if (s.attempted.length > 2000) s.attempted.shift();
         try {
           const prepared = await deps.prepare(candidate.url);
           if (!validFeatures(prepared.features) || !sha.test(prepared.hash) || prepared.frames.length !== 4 || prepared.times.length !== 4 || !prepared.times.every(t => Number.isFinite(t) && t >= 0) || prepared.frames.some(f => f.length > 1024 * 1024 || f.length < 2 || f[0] !== 0xff || f[1] !== 0xd8)) fail("LABEL_INVALID_FRAMES");
-          if (s.videos.some(v => v.hash === prepared.hash)) fail("LABEL_DUPLICATE_VIDEO");
-          const current = await deps.find(candidate.postId); if (!current || current.url !== candidate.url) fail("LABEL_SOURCE_CHANGED");
+          if (s.videos.some(v => v.hash === prepared.hash) || (purpose === "test" && s.everTrained.includes(prepared.hash))) fail("LABEL_DUPLICATE_VIDEO");
+          const current = await deps.find(candidate.postId); if (!current || current.url !== candidate.url || authorKey(current) !== authorKey(candidate) || !eligible(current)) fail("LABEL_SOURCE_CHANGED");
           const folderPath = path.join(directory, "frames"); await folder(folderPath);
           for (let i = 0; i < 4; i++) {
             const p = path.join(folderPath, `${candidate.postId}-${prepared.hash}-${i}.jpg`); await regular(p);
             try { await writeFile(p, prepared.frames[i], { flag: "wx", mode: 0o600 }); }
             catch (e) { if ((e as NodeJS.ErrnoException).code !== "EEXIST") throw e; if (!prepared.frames[i].equals(await readFile(p))) fail("LABEL_FRAME_CONFLICT"); }
           }
-          s.videos.push({ ...candidate, ...prepared, review: null, predictionSeen: false, prediction: null } as Video);
+          s.videos.push({ ...candidate, ...prepared, preparedFor: purpose, review: null, predictionSeen: false, prediction: null } as Video);
           // Frames are files, never Base64 in status or model JSON.
           delete (s.videos.at(-1) as Video & { frames?: Buffer[] }).frames;
         } catch (e) { s.revision++; await save(s); throw e; }

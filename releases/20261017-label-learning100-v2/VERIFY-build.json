@@ -1,0 +1,10 @@
+{
+  "mode": "build",
+  "passed": [
+    "build"
+  ],
+  "skipped": [],
+  "failures": [],
+  "network": "denied",
+  "realState": "denied"
+}

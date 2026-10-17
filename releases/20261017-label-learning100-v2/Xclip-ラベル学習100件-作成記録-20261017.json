@@ -1,0 +1,40 @@
+{
+  "release": "label-learning100-local-v2-20261017",
+  "zipSha256": "8d76126d44a0335c30ecf9d9a3240ca8086dcab75e0e7b4382936341410504d9",
+  "files": {
+    "lib/label-learning-service.ts": {
+      "before": "8bb2b05e1c3274e25f81de6f205e6dc00d10b78b0144e23defd0b8e6e362f7c2",
+      "after": "869c09f676df6b4d3d6041dcfc05df196edebf39ff5bbb0fc7a66d0255de3e04"
+    },
+    "lib/label-learning-server.ts": {
+      "before": "1e84c19ac609bb06eaad88020a949b8bcc2bbca80507de56199cfe63f0af2357",
+      "after": "c5db4b16e2bd9a5cb5273b614c66e1850cf92477ac3bf0d87e326210e39354a5"
+    },
+    "lib/label-learning-http.ts": {
+      "before": "21970bd85d1a684603512f6e6b600874d7d97fc70d5f3c0a98e0f3497b1906ee",
+      "after": "5f61a566199b218dd8db13d3949e58b6dd64ad75d19a43edb1126bd709c71066"
+    },
+    "app/label-learning/LabelLearningPanel.tsx": {
+      "before": "1b01a93a52c6aa16e2d568b743f6166dc8e3c0ffa8787072c3c4d65acc09c6d0",
+      "after": "07f9745da00d6695028da3fb4506312469e7fd9c5b3a708667c10c5d0f11f151"
+    },
+    "scripts/test-label-learning.cjs": {
+      "before": "e44b4f7a15300d84e42b4b1a7c3849b66bb7242dd787af237fa944953969e2ab",
+      "after": "cf630f5bb088a59a0cd855bb62e3fc8e0d690a17d01458a372d83397b785ef29"
+    },
+    "lib/label-learning-batch.ts": {
+      "before": null,
+      "after": "8ffd1e34ff530328bb00df623420b450b160e337d76ed4eafc6d025f01b05401"
+    },
+    "scripts/test-label-learning100.cjs": {
+      "before": null,
+      "after": "b3d923f55eb96d8ae07c3e0133a944ddad2e1f3cc055770d95c11548373aa655"
+    },
+    "scripts/test-label-learning100-ui.cjs": {
+      "before": null,
+      "after": "28dc6f6699d832d3898f2d7b5a6b7daa3f99ec648de93b27d548beaed8bb1c63"
+    }
+  },
+  "actualLocalApplied": false,
+  "productionApplied": false
+}

@@ -1,0 +1,57 @@
+{
+  "mode": "test",
+  "passed": [
+    "test-curated-manager-local.cjs",
+    "test-direct-download.cjs",
+    "test-direct-playback.cjs",
+    "test-download-free.cjs",
+    "test-download-url.cjs",
+    "test-free-curated-cursors.cjs",
+    "test-free-curated-registration.cjs",
+    "test-free-curated-timeline.cjs",
+    "test-fxtwitter-curated.cjs",
+    "test-hls-loader.cjs",
+    "test-label-learning.cjs",
+    "test-label-learning100-ui.cjs",
+    "test-label-learning100.cjs",
+    "test-learning-poll.cjs",
+    "test-learning-status.cjs",
+    "test-newest500-local.cjs",
+    "test-newest500-pages.cjs",
+    "test-playback-component.cjs",
+    "test-playback-recovery.cjs",
+    "test-ranking-update-ui.cjs",
+    "test-registration-progress.cjs",
+    "test-registration-recovery.cjs",
+    "test-stream-component.cjs",
+    "test-stream-playback.cjs",
+    "test-tier-high-recall.cjs",
+    "test-tier-model-release.cjs",
+    "test-tier-new-video-worker.cjs",
+    "test-tier-ordinal-adjustment.cjs",
+    "test-tier-personal-engine.cjs",
+    "test-tier-personal.cjs",
+    "test-tier-preview-playback.cjs",
+    "test-tier-reevaluation-auth.cjs",
+    "test-tier-reevaluation.cjs",
+    "test-tier-teacher-analysis.cjs",
+    "test-tier-teacher-improvements.cjs",
+    "test-tier-video-preview.cjs",
+    "test-tier-visual-comparison.cjs",
+    "test-url-resolve-fix.cjs",
+    "test-video-download.cjs"
+  ],
+  "skipped": [
+    {
+      "name": "test-tier-compatible-playback.cjs",
+      "reason": "Requires external FFmpeg/FFprobe; run separately with installed tools"
+    },
+    {
+      "name": "test-tier-four-frames.cjs",
+      "reason": "Requires external FFmpeg/FFprobe; run separately with installed tools"
+    }
+  ],
+  "failures": [],
+  "network": "denied",
+  "realState": "denied"
+}

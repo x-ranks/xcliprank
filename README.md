@@ -1,6 +1,6 @@
 # Xclip：最新ローカル管理ソース
 
-最新版mainはラベル学習v1を含みます（PR #13）。GitHubのNode22検証成功。10/16時点の基準タグは`local-admin-20261016`。根拠：`docs/completions/20261017-label-learning-source.json`と10/16の保存記録。
+最新版mainはラベル学習100件v2を含みます。v1はPR #13でGitHub Node22検証成功、v2はローカル39回帰/型/隔離build/220 SHA確認済み。10/16時点の基準タグは`local-admin-20261016`。根拠：`docs/completions/20261017-label-learning-source.json`と10/16の保存記録。
 
 2026-10-16に実ローカル `C:\Projects\xcliprank` の未コミット・未追跡を含むコードを統合しました。リポジトリ直下の `app/`・`lib/` が現在のローカル管理版です。過去のZIPを順に適用する必要はありません。
 
@@ -56,6 +56,8 @@ node scripts/check-canonical.cjs build
 
 `http://localhost:3004/label-learning`でラベルを作成し、動画4枚を確認して該当/非該当/未確認を保存できます。学習用10動画以上から試作し、教材内のグループ分割検証と未使用動画での精度チェックを別表示します。ラベルごとに該当/非該当2件以上必要です。最初は少数のラベルで確認してください。
 
-画像/モデル/教師は`.local-admin/label-learning-v1`のPC内保存。既存Tier、既存ラベルJSON、本番掲載やDBの更新はしません。`npm run dev -- --hostname localhost -p 3004`で起動してください（production実行ではラベル機能を無効化）。FFmpeg/FFprobeと既存画像モデルの読込が必要で、動画準備は最大96MiB/本の通信とCPUを使用します。実環境へのインストールはユーザー実行待ちです。
+画像/モデル/教師は`.local-admin/label-learning-v1`のPC内保存。既存Tier、既存ラベルJSON、本番掲載やDBの更新はしません。`npm run dev -- --hostname localhost -p 3004`で起動してください（production実行ではラベル機能を無効化）。FFmpeg/FFprobeと既存画像モデルの読込が必要で、動画準備は最大96MiB/本の通信とCPUを使用します。2026-10-17にユーザー許可で実ローカルへv2を適用・再起動済み。保存済み14ラベル/10教材/モデルを保持し、実100教材と精度確認はこれからです。
 
-配布ZIPと累積履歴は`releases/20261017-label-learning-v1/`。既存C:\Projects\xcliprank向けZIPには現行SHAのガードがあり、Gitの新規取得へ重ねて適用する必要はありません。
+最新配布ZIPと累積履歴は`releases/20261017-label-learning100-v2/`（旧v1も保持）。既存C:\Projects\xcliprank向けZIPには現行SHAのガードがあり、Gitの新規取得へ重ねて適用する必要はありません。
+
+100件へ進む手順：画面で「学習用100件まで準備・再開」または「次の学習用10件を準備」→4枚を確認し正解保存→「保存済み○件すべてで学習する」。その後「新しいランダム10件を精度確認用に準備」→予測を見る前に正解保存→「正解と予測を比べて精度チェック」。ラベルは画面幅に合わせて横に折り返します。途中停止/画面終了後は同じボタンで保存済み件数から再開します。

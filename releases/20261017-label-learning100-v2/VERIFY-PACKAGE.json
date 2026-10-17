@@ -1,0 +1,11 @@
+{
+  "release": "label-learning100-local-v2-20261017",
+  "zipSha256": "8d76126d44a0335c30ecf9d9a3240ca8086dcab75e0e7b4382936341410504d9",
+  "payloadIdenticalToTestedSource": true,
+  "shippedInstallReapplyRollback": true,
+  "unknownEditRefusedBeforeWrite": true,
+  "laterEditRollbackRefused": true,
+  "100TeacherFixtureRetained": true,
+  "priorHistoryAndLedgerRetained": true,
+  "scope": "synthetic fixture only; actual local application recorded separately"
+}

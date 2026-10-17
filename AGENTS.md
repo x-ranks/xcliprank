@@ -1,3 +1,7 @@
+## 2026-10-17 ラベル学習100件 v2
+
+ラベル管理は100教材まで準備/再開、次の10件、横並び、新規ランダム10件の独立精度確認に対応し実ローカルへ適用済み。既存14ラベル/10教材/モデルを保持。実100件の教材作成と実精度は未完了。docs/completions/20261017-label-learning100-local-applied.json とv2 source overlayを参照。既存状態を初期化しない。
+
 # 2026-10-17 ユーザー指定の最優先課題
 
 - ラベル付け（L01）と個別URL `/p/[postId]`（M07）を開発の最優先とする。docs/XCLIP_TOP_PRIORITIES_20261017.md と docs/XCLIP_OPERATIONS_TASKS.md を必ず読む。

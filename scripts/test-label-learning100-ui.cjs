@@ -1,0 +1,13 @@
+'use strict';
+const path=require('node:path'),fs=require('node:fs'),assert=require('node:assert/strict'),Module=require('node:module');
+const root=path.resolve(__dirname,'..'),requireRoot=Module.createRequire(path.join(root,'package.json'));
+const ts=requireRoot('typescript'),React=requireRoot('react'),render=requireRoot('react-dom/server').renderToStaticMarkup;
+const oldLoad=Module._load,realState=React.useState;let calls=0,selectedFilter='unreviewed-train';
+const id='11111111-1111-1111-1111-111111111111';
+const fixture={revision:200,labels:[{id,name:'A',active:true}],trainingCount:90,model:null,testReport:null,videos:Array.from({length:100},(_,i)=>({postId:String(10000+i),author:'fixture'+i,preparedFor:'train',times:[1,2.5,5,8],frames:Array.from({length:4},(_,j)=>'/fixture/'+i+'/'+j+'.jpg'),review:i<90?{role:'train',blinded:true,decisions:{[id]:Boolean(i%2)}}:null,prediction:null,everTrained:i<90}))};
+Module._load=function(name,parent,main){if(name==='react')return{...React,useState(initial){const index=calls++;return realState(index===0?fixture:index===6?selectedFilter:initial);}};if(name==='next/link')return{__esModule:true,default:p=>React.createElement('a',p,p.children)};return oldLoad.apply(this,arguments);};
+for(const ext of ['.ts','.tsx'])Module._extensions[ext]=(m,f)=>m._compile(ts.transpileModule(fs.readFileSync(f,'utf8'),{compilerOptions:{module:ts.ModuleKind.CommonJS,target:ts.ScriptTarget.ES2022,esModuleInterop:true,jsx:ts.JsxEmit.ReactJSX}}).outputText,f);
+const Panel=require(path.join(root,'app/label-learning/LabelLearningPanel.tsx')).default;
+let html=render(React.createElement(Panel));assert(html.includes('学習用100件まで準備・再開'));assert(html.includes('次の学習用10件を準備'));assert(html.includes('保存済み90件すべてで学習する'));assert(html.includes('value="90"'));assert.equal((html.match(/<article/g)||[]).length,10);assert.equal((html.match(/<img/g)||[]).length,40);assert((html.match(/grid-template-columns:repeat\(auto-fit/g)||[]).length>=12);assert(!html.includes('投稿 10000</h3>'));assert(html.includes('投稿 10090</h3>'));
+fixture.videos.push(...Array.from({length:10},(_,i)=>({...fixture.videos[90+i],postId:String(20000+i),preparedFor:'test'})));calls=0;selectedFilter='unreviewed-test';html=render(React.createElement(Panel));assert.equal((html.match(/<article/g)||[]).length,10);assert(html.includes('<option value="test" selected="">精度確認用'));assert(!html.includes('投稿 10090</h3>'));
+console.log('PASS LABEL100 UI: real React rendering of 100+10 fixture videos, 10-card paging/40 images, horizontal label grids, cumulative progress, test-purpose defaults and separate unreviewed scopes. No browser/media/database requests.');
