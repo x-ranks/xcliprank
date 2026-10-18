@@ -1,5 +1,11 @@
 {
   "release": "public-labels-pages-v2-20261018",
+  "productionApplied": true,
+  "localApplicationReportReceived": false,
+  "labelPublicationReportReceived": false,
+  "record": "docs/completions/20261018-public-labels-pages-v2-production-applied.json",
+  "previousRecords": {
+  "release": "public-labels-pages-v2-20261018",
   "productionApplied": false,
   "previousProductionAttempt": "failed and rolled back; top/daily 200",
   "applicationPayloadUnchanged": true,
@@ -6239,6 +6245,7 @@
 }
 }
 
+}
 }
 }
 }

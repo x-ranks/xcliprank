@@ -1,3 +1,7 @@
+## 2026-10-18 最新状態：個別URL・ラベル公開基盤v2は本番適用済み
+
+ユーザー提供のv2完了ログ・公開HTTP200・API認証確認成功で本番適用を確認。`production/source` のアプリ本体とv2配布処理が現行。`snapshots/production-live-20261018` は適用前の保存版。今回ローカル更新と実ラベル公開の成功報告は未受領。根拠：docs/completions/20261018-public-labels-pages-v2-production-applied.json。以下の未適用/旧版復旧/未実装という説明は当時の履歴で、この状態を優先する。v1を再実行しない。モデル/教師/巡回状態をGitへ含めず、明示依頼のない実環境適用・PC操作を行わない。
+
 ## 2026-10-18 最新：本番配布v2（API許可一覧の修正）
 
 v1はユーザー実行時に公開確認401→403で失敗し、旧runtimeへ復旧済み（トップ/24時間HTTP200）。本番ラベル・個別URLは未適用。v2は `tools/xclip-public-labels-pages-deploy-20261018-v2.sh`。新APIだけApache許可一覧へ追加し、認証を維持、失敗時は設定も復旧します。未知設定は拒否。アプリ本体/ローカルPS1はv1と同一。`releases/20261018-public-labels-pages-v2` と累積履歴を参照し、v1を再実行しないでください。v2の本番成功は未確認です。

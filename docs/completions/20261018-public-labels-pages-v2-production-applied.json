@@ -1,0 +1,28 @@
+{
+  "dateJst": "2026-10-18",
+  "release": "public-labels-pages-v2-20261018",
+  "evidence": "user-provided production installer success log in this chat",
+  "productionApplied": true,
+  "activeRuntime": "/home/rbxfxmfd/xclip-video-card-20261004.DJKKID/runtime",
+  "publicVersionHttp": 200,
+  "publicApplicationJsonGuardsVerified": true,
+  "successMarker": "XCLIP_PUBLIC_LABELS_PAGES_V2_DEPLOYMENT_COMPLETE",
+  "apacheApiAllowlist": "3 public APIs; application auth and origin checks enforced; mode 644",
+  "detailUrl": "/p/POST_ID",
+  "canonicalAndUniqueTitle": true,
+  "indexPolicy": "observed save or returned ranking; no text and no save => noindex; tags/authors => noindex",
+  "labelPublicationPolicy": "reviewed metadata only; no private models or teachers sent",
+  "cronQuotaCursorEnvDbSchemaTierAndRemovals": "unchanged per installer success log",
+  "localUpdateSuccessReportReceived": false,
+  "actualLabelPublicationReportReceived": false,
+  "installerPublishedLabels": false,
+  "installerSaveSimulations": false,
+  "installerCollectionOrCdnCalls": false,
+  "liveBuildId": "not included in supplied excerpt; not inferred",
+  "previousV1FailureAndRollback": "retained as history; superseded by this successful v2 activation",
+  "nextSteps": [
+    "If local update has not succeeded, install existing unchanged local PS1 and restart.",
+    "Open http://localhost:3004/label-publication; prepare existing manual truth, review, then publish.",
+    "Confirm publication count and actual detail page/save/related-video behavior manually."
+  ]
+}

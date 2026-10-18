@@ -1,3 +1,13 @@
+# 2026-10-18 JST：ラベル公開基盤・個別URL v2 本番適用成功
+
+- ユーザー提供ログの `XCLIP_PUBLIC_LABELS_PAGES_V2_DEPLOYMENT_COMPLETE` と公開版HTTP200、`PUBLIC_LABELS_PAGES_ENDPOINTS_V2_OK` を確認。本番runtime `/home/rbxfxmfd/xclip-video-card-20261004.DJKKID/runtime` に適用済み。旧版復旧後の適用待ち状態から更新する。新BUILD_IDと新sourceパスは今回の抜粋にないため推定しない。
+- 新しい3 APIのApache許可とアプリの認証/保存Originチェック、644を確認。個別URL `/p/投稿ID`、実リンク、固有title/自己canonical、保存またはランキング登場に基づくindex条件が有効。タグ・投稿者一覧と本文/保存実績とも欠損の動画はnoindex。
+- env/DBスキーマ/Cron/巡回枠/取得位置/Tier/削除状態は保持。適用処理は実ラベル公開、保存の模擬加算、動画収集/CDN取得を実行していない。学習済みモデル/教師はPC内保持。
+- ローカルの今回更新成功と実ラベル公開の報告は未受領。次は必要なら既存ローカルPS1適用→再起動→ `/label-publication` で「学習時に付けた手動正解を準備」→内容確認→「確認済みラベルを本番へ反映（最大100件）」。関連動画の実ラベル利用と実ブラウザ保存確認は別途確認。個別URL/公開基盤の本番適用完了と、実ラベル反映/実動作確認を混同しない。
+- 根拠：docs/completions/20261018-public-labels-pages-v2-production-applied.json。v1失敗/復旧とv2作成時/検証時の未適用記録、既存配布アーカイブは履歴として保持する。
+
+---
+
 # 2026-10-18：配布v2 GitHub検証完了・本番再適用待ち
 
 ソース `9e2ce2fed97580a64bb29e0b2dff634acad1055b` をmainへ保存。GitHub Actions run39091052437はNode22でローカル版・本番版の回帰/型/buildと、Linux設定トランザクション13項目がすべて成功。配布ZIP/埋込tar/Gitの実bytesも一致。根拠は docs/completions/20261018-public-labels-pages-v2-github.json。v2本番・実ローカル適用と実ラベル公開は未確認。本番はv1失敗後の旧版復旧状態。配布済みv1/v2アーカイブは差し替えていない。
