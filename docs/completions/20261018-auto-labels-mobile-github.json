@@ -1,0 +1,29 @@
+{
+  "dateJst": "2026-10-18",
+  "release": "auto-labels-mobile-v1-20261018",
+  "sourceCommit": "a1a9fa49076802291d085dfe3174e0b9ba5848eb",
+  "githubRun": 39094335219,
+  "githubUrl": "https://github.com/x-ranks/xcliprank/actions/runs/39094335219",
+  "nodeVersion": 22,
+  "jobs": {
+    "build": "success",
+    "production": "success",
+    "deployment-package-v2": "success",
+    "auto-label-distribution": "success"
+  },
+  "localRegressions": 49,
+  "productionRegressions": 44,
+  "localSourceHashesVerified": 258,
+  "productionSnapshotHashesVerified": 208,
+  "productionCandidateHashesVerified": 241,
+  "privateModelInSource": false,
+  "realLocalCodeStillMatchesPreUpdate": true,
+  "actualLocalChecks": 255,
+  "localApplied": false,
+  "productionApplied": false,
+  "realAutomaticInferenceOrPublicationPerformed": false,
+  "browserAutomationPerformed": false,
+  "zipSha256": "0413abcf1863b14d9254f29eada7916de9509cbfe06994ddba561348d4e8c6be",
+  "deploySha256": "ccae08a055ad201c5ab8a1a8859a11da0607effaca7dab7ab7f8065f13a81219",
+  "scope": "current automatic/mobile candidate pending user installation; previous public-labels-pages v2 +local installed and manual81 confirmation retained"
+}
