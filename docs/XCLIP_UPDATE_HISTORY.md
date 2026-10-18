@@ -1,3 +1,9 @@
+# 2026-10-18：配布v2 GitHub検証完了・本番再適用待ち
+
+ソース `9e2ce2fed97580a64bb29e0b2dff634acad1055b` をmainへ保存。GitHub Actions run39091052437はNode22でローカル版・本番版の回帰/型/buildと、Linux設定トランザクション13項目がすべて成功。配布ZIP/埋込tar/Gitの実bytesも一致。根拠は docs/completions/20261018-public-labels-pages-v2-github.json。v2本番・実ローカル適用と実ラベル公開は未確認。本番はv1失敗後の旧版復旧状態。配布済みv1/v2アーカイブは差し替えていない。
+
+---
+
 # 2026-10-18 JST：本番ラベル・個別URL v1適用失敗と復旧、配布処理v2
 
 - ユーザーの実行ログ：v1は41回帰/型/ステージングHTTPに成功。公開側の確認で401想定が403となり自動復旧。旧runtime復元後、トップと24時間ランキングはHTTP200。バックアップ `/home/rbxfxmfd/xclip-before-public-labels-pages-20261018.5ZIkrg`。v1本番適用完了とは扱わない。実ラベル公開・ローカルv1適用の成功報告は未受領。

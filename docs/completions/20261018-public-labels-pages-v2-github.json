@@ -1,0 +1,23 @@
+{
+  "dateJst": "2026-10-18",
+  "release": "public-labels-pages-v2-20261018",
+  "sourceCommit": "9e2ce2fed97580a64bb29e0b2dff634acad1055b",
+  "githubRun": 39091052437,
+  "githubUrl": "https://github.com/x-ranks/xcliprank/actions/runs/39091052437",
+  "jobs": {
+    "build": "success",
+    "production": "success",
+    "deployment-package-v2": "success"
+  },
+  "nodeVersion": 22,
+  "linuxDeploymentChecksPassed": 13,
+  "includesRealLinuxOwnedMode644ApplyVerifyRestoreAndConcurrentEditTests": true,
+  "gitAndEmbeddedPackageBytesVerified": true,
+  "actualApacheVerification": "pending user execution",
+  "productionApplied": false,
+  "productionState": "v1 failed and rolled back; old top and daily HTTP200 confirmed by user",
+  "realLocalAppliedByAgent": false,
+  "labelsPublishedByAgent": false,
+  "zipSha256": "985fc6086f7e58b5c18ba23bbc1916be3edb70a3999ccf0e25b23042b4246d54",
+  "deploySha256": "a64cb7e2564319bb9c7af86de274b5abed292a0b35d62ec3e9b9e792447c65a9"
+}
