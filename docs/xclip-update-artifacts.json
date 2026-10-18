@@ -1,4 +1,10 @@
 {
+  "release": "public-labels-pages-v2-20261018",
+  "productionApplied": false,
+  "previousProductionAttempt": "failed and rolled back; top/daily 200",
+  "applicationPayloadUnchanged": true,
+  "record": "docs/completions/20261018-public-labels-pages-v2-source.json",
+  "previousRecords": {
   "dateJst": "2026-10-18",
   "release": "public-labels-pages-v1-20261018",
   "localSource": "repository root",
@@ -6233,5 +6239,6 @@
 }
 }
 
+}
 }
 }

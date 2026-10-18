@@ -62,3 +62,16 @@ jobs:
         run: node scripts/check-canonical.cjs types
       - name: Offline actual standalone build
         run: node scripts/build-production-offline.cjs
+
+  deployment-package-v2:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - name: Linux API allowlist transaction and HTTP verifier tests
+        run: node tools/public-labels-pages-v2/test-deployment.cjs
+      - name: Delivered deployment syntax
+        run: bash -n tools/xclip-public-labels-pages-deploy-20261018-v2.sh

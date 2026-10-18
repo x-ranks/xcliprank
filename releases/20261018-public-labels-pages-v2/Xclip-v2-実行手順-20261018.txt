@@ -1,0 +1,8 @@
+v1は公開HTTP確認で失敗し旧版復旧済み。v2を/home/rbxfxmfdへアップロードして実行します。
+bash /home/rbxfxmfd/xclip-public-labels-pages-deploy-20261018-v2.sh
+成功表示: XCLIP_PUBLIC_LABELS_PAGES_V2_DEPLOYMENT_COMPLETE
+未知のApache設定は切替前に停止します。失敗した場合は全出力を共有してください。秘密値/設定本文は不要です。
+本番成功後、未適用の場合だけローカル管理画面と開発サーバーを閉じ、ZIPを展開した場所で実行:
+powershell -NoProfile -ExecutionPolicy Bypass -File .\xclip-public-labels-pages-local-20261018.ps1
+ローカルPS1とlocal/はv1と同じです。既に成功していれば再適用不要。再起動後 http://localhost:3004/label-publication で手動正解の準備→確認→本番反映。
+この配布はモデル/教師/巡回状態を初期化しません。機能の適用と、実ラベルの公開は別です。

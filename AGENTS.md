@@ -1,3 +1,7 @@
+## 2026-10-18 最新：本番配布v2（API許可一覧の修正）
+
+v1はユーザー実行時に公開確認401→403で失敗し、旧runtimeへ復旧済み（トップ/24時間HTTP200）。本番ラベル・個別URLは未適用。v2は `tools/xclip-public-labels-pages-deploy-20261018-v2.sh`。新APIだけApache許可一覧へ追加し、認証を維持、失敗時は設定も復旧します。未知設定は拒否。アプリ本体/ローカルPS1はv1と同一。`releases/20261018-public-labels-pages-v2` と累積履歴を参照し、v1を再実行しないでください。v2の本番成功は未確認です。
+
 ## 2026-10-18：本番全文取得とラベル公開・個別URL候補
 
 100教材の学習完了をユーザー報告・ローカル件数で確認。実精度0件。直下は最新ローカル候補、production/sourceは本番208全文に今回機能を加えた候補。snapshots/production-live-20261018はユーザー添付で確認した実稼働ソース。従来の本番全文待ちは解消。今回機能の実ローカル/本番適用・実ラベル公開は未完了。docs/features/public-labels-pages-v1-20261018-source.json、production READMEと累積履歴を優先し、下記の古い未取得・未実装・100件未完了の説明は当時の状態として扱う。秘密・モデル・教師・状態をGitへ入れない。公開GitへのpushだけでColorfulBoxは更新されない。

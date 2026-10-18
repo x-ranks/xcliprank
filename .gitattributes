@@ -42,3 +42,5 @@
 # Exact reviewed production and new distribution bytes.
 /production/source/** -text
 /releases/20261018-public-labels-pages-v1/** -text
+/releases/20261018-public-labels-pages-v2/** -text
+/tools/public-labels-pages-v2/** -text

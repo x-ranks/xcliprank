@@ -1,0 +1,18 @@
+{
+  "dateJst": "2026-10-18",
+  "release": "public-labels-pages-v2-20261018",
+  "previousRelease": "public-labels-pages-v1-20261018",
+  "previousProductionAttempt": "FAILED_PUBLIC_HTTP_403_INSTEAD_OF_401",
+  "previousRollback": "CONFIRMED_BY_USER_LOG; top/daily HTTP200",
+  "previousBackup": "/home/rbxfxmfd/xclip-before-public-labels-pages-20261018.5ZIkrg",
+  "applicationPayloadUnchanged": true,
+  "localInstallerUnchanged": true,
+  "productionApplied": false,
+  "localApplicationReportReceived": false,
+  "labelsPublishedByAgent": false,
+  "actualApacheConfigurationRead": false,
+  "realServerCause": "inferred from old API deny rules and missing installer amendment; exact edge origin not confirmed",
+  "v2Policy": "strict structural patch; application JSON401/403 required; transactional runtime/config restore",
+  "linuxFilesystemVerification": "GitHub CI pending",
+  "verificationReport": "Xclip-v2-隔離HTTP検証-20261018.json"
+}

@@ -1,0 +1,15 @@
+{
+  "actualDeliveredPayload": true,
+  "unchangedProductionStandalone": true,
+  "directMiddlewareAndApiGuards": "passed",
+  "legacyAllowlist403Reproduced": true,
+  "patchedAllowlistToApplicationGuards": "passed",
+  "privateApiStillDenied": true,
+  "realApacheTested": false,
+  "linuxFilesystemTransactions": "GitHub CI separately",
+  "realCredentialsLoaded": false,
+  "databaseRequests": 0,
+  "providerRequests": 0,
+  "labelsPublished": false,
+  "saveRecordsWritten": 0
+}
