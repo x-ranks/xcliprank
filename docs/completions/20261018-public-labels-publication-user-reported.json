@@ -1,0 +1,18 @@
+{
+  "dateJst": "2026-10-18",
+  "release": "public-labels-pages-v2-20261018",
+  "evidence": "user reports local startup succeeded and manual truth preparation -> publish reviewed labels executed",
+  "productionApplied": true,
+  "localApplied": true,
+  "localRestartConfirmedByUser": true,
+  "labelPreparationActionReported": true,
+  "labelPublicationActionReported": true,
+  "labelPublicationResultCount": null,
+  "publicationErrorStatusProvided": false,
+  "actualPublishedMetadataIndependentlyRead": false,
+  "relatedVideosDisplayVerified": false,
+  "realBrowserSaveAndNavigationVerified": false,
+  "agentAccessedRealDatabaseOrProvider": false,
+  "agentChangedApplicationOrPrivateState": false,
+  "nextConfirmation": "UI published count/error status; then a labeled public detail page and related videos"
+}

@@ -2,6 +2,15 @@
   "release": "public-labels-pages-v2-20261018",
   "productionApplied": true,
   "localApplied": true,
+  "localRestartConfirmed": true,
+  "labelPublicationReportReceived": true,
+  "labelPublicationResultCount": null,
+  "labelPublicationVerified": false,
+  "record": "docs/completions/20261018-public-labels-publication-user-reported.json",
+  "previousRecords": {
+  "release": "public-labels-pages-v2-20261018",
+  "productionApplied": true,
+  "localApplied": true,
   "localRestartConfirmed": false,
   "labelPublicationReportReceived": false,
   "record": "docs/completions/20261018-public-labels-pages-local-applied.json",
@@ -6252,6 +6261,7 @@
 }
 }
 
+}
 }
 }
 }
