@@ -1,5 +1,6 @@
 "use client";
 import Link from "next/link";
+import AutoLabelPanel from "./AutoLabelPanel";
 import { useEffect, useRef, useState } from "react";
 import type { createLabelPublication } from "../../lib/label-publication-service";
 type View = Awaited<ReturnType<ReturnType<typeof createLabelPublication>["status"]>>;
@@ -24,12 +25,13 @@ export default function LabelPublicationPanel() {
   async function inferTen() { if (running.current || !current.current) return; running.current = true; stop.current = false; setBusy(true); setError(""); try { for (let i = 0; i < 10 && !stop.current; i++) { setMessage(`新しい動画を推定中 ${i + 1}/10`); await request("infer"); } setMessage("推定したラベルを4枚の画像で確認してから反映してください。"); } catch (e) { setError((e as Error).message); await refresh().catch(() => undefined); } finally { running.current = false; if (alive.current) setBusy(false); } }
   const rows = view?.rows ?? [], last = Math.max(0, Math.ceil(rows.length / 10) - 1), selected = Math.min(page, last);
   return <main style={{ maxWidth: 1120, margin: "0 auto", padding: 24 }}><Link href="/label-learning">← ラベル学習</Link><h1>学習したラベルを本番へ反映</h1>
-    <p>モデル・教師・動画画像はこのPCに置き、確認済みのラベル名と投稿IDだけを本番へ送ります。Tier・新着巡回・掲載可否は変更しません。</p>
+    <p>モデル・教師・動画画像はこのPCに置き、ラベル名と投稿IDなどの反映情報を本番へ送り、手動ラベルと自動推定を区別します。Tier・新着巡回・掲載可否は変更しません。</p>
     {error ? <p role="alert">{error}</p> : null}<p role="status" aria-live="polite">{message}</p><button disabled={busy} onClick={() => void refresh().catch(e => setError(e.message))}>記録を更新</button>
-    {view ? <><section style={box}><p>学習教材{view.modelSamples}動画 ／ 独立した精度確認{view.independentTestVideos}動画 ／ 準備{rows.length}件 ／ 反映済み{rows.filter(r => r.published).length}件</p>
+    <AutoLabelPanel />
+    {view ? <><section style={box}><h2>手動確認したラベルの反映</h2><p>学習教材{view.modelSamples}動画 ／ 独立した精度確認{view.independentTestVideos}動画 ／ 準備{rows.length}件 ／ 反映済み{rows.filter(r => r.published).length}件</p>
       <p>①「手動正解を準備」→②確認済みラベルを本番へ反映。新しい動画は③10件ずつ推定→④4枚を見てラベルを確定→⑤本番へ反映、の順に進みます。</p>
       <div style={grid}><button disabled={busy} onClick={() => void run("stage-manual")}>学習時に付けた手動正解を準備</button><button disabled={busy} onClick={() => void inferTen()}>新しい10動画のラベルを推定</button><button disabled={busy || !rows.some(r => r.published)} onClick={() => void run("clear-published")}>反映済みの確認一覧を整理</button><button disabled={busy || !rows.some(r => r.approved && !r.published && !r.stale)} onClick={() => void run("publish")}>確認済みラベルを本番へ反映（最大100件）</button></div>
-      {busy ? <button onClick={() => { stop.current = true; }}>この動画が終わったら停止</button> : null}<p>独立した精度確認が少ない間、推定だけで自動公開しません。0.9以上のスコアを候補にしていますが、これは正解率90％という意味ではありません。</p></section>
+      {busy ? <button onClick={() => { stop.current = true; }}>この動画が終わったら停止</button> : null}<p>この手動確認用の10件推定は、4枚を見て確定してから反映します。目視なしで進める場合は上の「全動画を自動ラベル付け」を使用してください。手動確認用の候補スコア0.9も、実際の正解率90％を意味する値ではありません。</p></section>
       <nav aria-label="確認する動画"><button disabled={busy || selected === 0} onClick={() => setPage(selected - 1)}>前の10件</button> {selected + 1}/{last + 1}ページ <button disabled={busy || selected >= last} onClick={() => setPage(selected + 1)}>次の10件</button></nav>
       {rows.slice(selected * 10, selected * 10 + 10).map(r => <Row key={`${r.id}-${r.videoHash}-${r.modelRevision}`} row={r} view={view} busy={busy} run={run} />)}
     </> : <p>学習モデルを確認しています…</p>}</main>;

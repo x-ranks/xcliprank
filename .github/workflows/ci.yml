@@ -75,3 +75,16 @@ jobs:
         run: node tools/public-labels-pages-v2/test-deployment.cjs
       - name: Delivered deployment syntax
         run: bash -n tools/xclip-public-labels-pages-deploy-20261018-v2.sh
+
+  auto-label-distribution:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - name: Deployment syntax and exact embedded payload hashes
+        run: |
+          bash -n tools/xclip-auto-labels-mobile-deploy-20261018.sh
+          python3 tools/verify-auto-label-distribution.py

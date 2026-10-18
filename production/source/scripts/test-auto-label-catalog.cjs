@@ -1,0 +1,26 @@
+'use strict';
+const fs=require('node:fs'),path=require('node:path'),os=require('node:os'),assert=require('node:assert/strict'),crypto=require('node:crypto'),Module=require('node:module'),ts=require('typescript');
+Module._extensions['.ts']=(m,f)=>m._compile(ts.transpileModule(fs.readFileSync(f,'utf8'),{compilerOptions:{module:ts.ModuleKind.CommonJS,target:ts.ScriptTarget.ES2022,esModuleInterop:true}}).outputText,f);
+const {createPublicCatalog}=require('../lib/public-catalog-store.ts'),{createPublicVideoService}=require('../lib/public-video-service.ts'),{videoMetadata}=require('../lib/public-video-core.ts');
+const tmp=fs.mkdtempSync(path.join(os.tmpdir(),'xclip-auto-catalog-')),sha=s=>crypto.createHash('sha256').update(s).digest('hex'),label={id:crypto.randomUUID(),name:'合成ラベルA',active:true},model=sha('auto-model');
+const video=id=>({id,authorId:'10',handle:'fixture',authorName:'fixture',text:'synthetic',videoUrl:'https://video.twimg.com/'+id+'.mp4',posterUrl:null,createdAt:null,sourceHash:sha('url'+id),eligible:true});
+async function main(){
+ const c=createPublicCatalog(path.join(tmp,'catalog'));let rows=[video('1001'),video('1002'),video('1003'),video('1004')];
+ const service=createPublicVideoService({catalog:c,posts:async ids=>rows.filter(v=>ids.includes(v.id)),authorVideos:async()=>[],candidates:async()=>[],secret:async()=>'',scanPage:async()=>({videos:rows,nextCursor:'1004',upper:'1001',done:true,scanned:4})});
+ await c.labels({revision:0,labels:[label],posts:[{id:'1001',sourceHash:rows[0].sourceHash,labelIds:[label.id],basis:'manual',modelRevision:null},{id:'1002',sourceHash:rows[1].sourceHash,labelIds:[],basis:'model_reviewed',modelRevision:sha('reviewed')}]});
+ const request=id=>({labels:[label],modelRevision:model,post:{id,sourceHash:rows.find(v=>v.id===id).sourceHash,labelIds:[label.id]}});
+ assert.equal((await service.autoPublish(request('1001'))).result,'protected');assert.equal((await service.autoPublish(request('1002'))).result,'protected');let catalog=await c.read();assert.equal(catalog.records['1001'].basis,'manual');assert.deepEqual(catalog.records['1002'].labelIds,[]);
+ assert.equal((await service.autoPublish(request('1003'))).result,'published');catalog=await c.read();assert.equal(catalog.records['1003'].basis,'model_auto');assert.equal(videoMetadata(rows[2],catalog.records['1003']).index,false,'auto labels never grant indexing');assert.equal((await service.detail('1003')).labelBasis,'model_auto');
+ let p=await service.autoPage(null,null,model);assert.equal(p.protected,2);assert.equal(p.already,1);assert.deepEqual(p.items.map(v=>v.id),['1004']);assert(!JSON.stringify(p).includes('weights'));
+ p=await service.autoPage(null,null,sha('new policy'));assert.equal(p.protected,2);assert.equal(p.already,0);assert.deepEqual(p.items.map(v=>v.id),['1003','1004']);
+ rows[3].eligible=false;assert.equal((await service.autoPublish(request('1004'))).result,'unavailable');rows[3].eligible=true;const stale=request('1004');rows[3].sourceHash=sha('new url');assert.equal((await service.autoPublish(stale)).result,'unavailable');
+ // A manual edit wins even if it races the automatic catalog read.
+ const before=c.labels;let raced=false;c.labels=async(input)=>{if(!raced){raced=true;await before({revision:(await c.read()).revision,labels:[label],posts:[{id:'1004',sourceHash:rows[3].sourceHash,labelIds:[],basis:'manual',modelRevision:null}]});}return before(input);};assert.equal((await service.autoPublish(request('1004'))).result,'protected');assert.equal((await c.read()).records['1004'].basis,'manual');c.labels=before;
+ const guarded=createPublicVideoService({catalog:c,posts:async()=>{throw Error('DB_MUST_NOT_BE_CALLED');},authorVideos:async()=>[],candidates:async()=>[],secret:async()=>'',automaticReady:async()=>false});await assert.rejects(guarded.autoPage(null,null,model),/PUBLIC_DEPLOYMENT_BUSY/);await assert.rejects(guarded.autoPublish(request('1001')),/PUBLIC_DEPLOYMENT_BUSY/);
+ // Traverse beyond the old 2,000 candidate cap; each page retains raw cursor.
+ const all=Array.from({length:2103},(_,i)=>video(String(99999-i))),seen=[];
+ const large=createPublicVideoService({catalog:c,posts:async()=>[],authorVideos:async()=>[],candidates:async()=>[],secret:async()=>'',scanPage:async(cursor,upper)=>{const start=cursor===null?0:all.findIndex(v=>v.id===cursor)+1;const part=all.slice(start,start+50);return{videos:part,nextCursor:part.at(-1)?.id??cursor,upper:upper??all[0].id,done:part.length<50,scanned:part.length};}});
+ let cursor=null,upper=null,done=false,pages=0;while(!done){const page=await large.autoPage(cursor,upper,model);pages++;seen.push(...page.items.map(v=>v.id));cursor=page.nextCursor;upper=page.upper;done=page.done;assert(pages<50);}assert.equal(seen.length,2103);assert.equal(new Set(seen).size,2103);assert.equal(pages,43);
+ console.log('PASS AUTO PUBLICATION: manual and reviewed labels win atomically, empty manual truth protected, auto provenance/noindex, source and eligibility recheck, stale revision retry, changed policy rescan, >2000 keyset pages without duplicates. Mocked DB only.');
+}
+main().catch(e=>{console.error(e);process.exitCode=1;}).finally(()=>{assert.equal(path.dirname(path.resolve(tmp)),path.resolve(os.tmpdir()));assert(path.basename(tmp).startsWith('xclip-auto-catalog-'));fs.rmSync(tmp,{recursive:true,force:true});});

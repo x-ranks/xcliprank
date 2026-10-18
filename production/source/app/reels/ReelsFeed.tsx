@@ -8,6 +8,7 @@ import { directPlaybackUrl } from "../../lib/browser-direct-playback";
 import VideoDownloadButton from "../components/VideoDownloadButton";
 
 import Link from "next/link";
+import PublicPostLink from "../components/PublicPostLink";
 import { formatVideoDuration } from "../../lib/video-duration-format";
 import { useCallback, useEffect, useRef, useState } from "react";
 
@@ -343,7 +344,7 @@ export default function ReelsFeed() {
                 </div>
 
                 <div className="reel-side-actions">
-                  <Link href={`/p/${post.x_post_id}`} aria-label="動画の個別ページを開く">↗<small>詳細・保存</small></Link>
+                  <PublicPostLink id={post.x_post_id} returnTo="/reels" ariaLabel="動画の個別ページを開く">↗<small>詳細・保存</small></PublicPostLink>
                   {post.video_url && <VideoDownloadButton postId={post.x_post_id} compact />}
                   <a
                     href={post.x_url}

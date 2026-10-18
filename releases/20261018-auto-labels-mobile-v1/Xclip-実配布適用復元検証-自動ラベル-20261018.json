@@ -1,0 +1,15 @@
+{
+  "release": "auto-labels-mobile-v1-20261018",
+  "localApply": true,
+  "localReapply": true,
+  "localRollback": true,
+  "unknownLocalEditRefused": true,
+  "productionStagingMarkerRequired": true,
+  "productionApply": true,
+  "productionAfterGuard": true,
+  "unknownProductionEditRefused": true,
+  "syntheticPrivateModelAndTeacherPreserved": true,
+  "syntheticQuotaCursorPauseRemovalAndEnvPreserved": true,
+  "realApplicationApplied": false,
+  "networkCalls": 0
+}

@@ -1,3 +1,6 @@
+import { promises as fs } from "node:fs";
+import os from "node:os";
+import path from "node:path";
 // Production adapter: must be checked against the actual exported live source.
 import { createHash } from "node:crypto";
 import { supabaseAdmin } from "./supabase-admin";
@@ -25,7 +28,7 @@ export function productionPublicBackend() {
     }
     return { active, blocked: await blockedPromise };
   }
-  function query() { return supabaseAdmin().from("posts").select(fields).eq("is_visible", true).eq("moderation_blocked", false).eq("review_required", false).eq("content_category", "PASS"); }
+  function query(selectFields = fields) { return supabaseAdmin().from("posts").select(selectFields).eq("is_visible", true).eq("moderation_blocked", false).eq("review_required", false).eq("content_category", "PASS"); }
   async function videos(rows: Record<string, any>[]) {
     const p = await permissions(rows);
     return rows.flatMap(row => {
@@ -58,5 +61,19 @@ export function productionPublicBackend() {
     }
     return result.slice(0, limit);
   }
-  return { service: createPublicVideoService({ catalog, posts, authorVideos, candidates, secret: publicSaveSecret }), catalog };
+  async function scanPage(cursor: string | null, upper: string | null) {
+    const selectFields = "x_post_id,author_id,author_username,video_url,is_visible,moderation_blocked,review_required,content_category,adult_tier,manual_tier";
+    let q = query(selectFields).order("x_post_id", { ascending: false }).limit(50);
+    if (cursor !== null) q = q.lt("x_post_id", cursor);
+    if (upper !== null) q = q.lte("x_post_id", upper);
+    const r = await q; if (r.error) throw Error("PUBLIC_DATABASE_UNAVAILABLE");
+    const rows = (r.data ?? []) as unknown as Record<string, any>[];
+    if (rows.some(row => !publicPostId(row.x_post_id))) throw Error("PUBLIC_INVALID_SCAN");
+    return { videos: await videos(rows), nextCursor: rows.length ? String(rows.at(-1)!.x_post_id) : cursor, upper: upper ?? (rows.length ? String(rows[0].x_post_id) : null), done: rows.length < 50, scanned: rows.length };
+  }
+  async function automaticReady() {
+    try { await fs.lstat(path.join(os.homedir(), ".xclip-production-deploy.lock")); return false; }
+    catch (e) { if ((e as NodeJS.ErrnoException).code === "ENOENT") return true; throw Error("PUBLIC_DEPLOYMENT_BUSY"); }
+  }
+  return { service: createPublicVideoService({ catalog, posts, authorVideos, candidates, scanPage, automaticReady, secret: publicSaveSecret }), catalog };
 }

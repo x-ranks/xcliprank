@@ -1,5 +1,8 @@
 "use client";
 import Link from "next/link";
+import PublicPostLink from "./PublicPostLink";
+import PublicListRestore from "./PublicListRestore";
+import { newestPageHref, rankingHref } from "../../lib/ranking-pagination";
 import { readRankingUpdate, formatRankingTime, latestRankingHref, type RankingUpdate } from "../../lib/ranking-update";
 import type { RankingPagination } from "../../lib/ranking-pagination";
 import useSuspendedAuthors from "./useSuspendedAuthors";
@@ -220,13 +223,14 @@ export default function RankingClient({
         </div>
       )}
 
+      <PublicListRestore ids={posts.map(p => p.x_post_id).join(",")} reveal={setVisibleCount} />
       <div className="video-grid">
         {visiblePosts.map((p, index) => (
           <article
             className="video-card"
             key={p.x_post_id}
           >
-            <Link href={`/p/${p.x_post_id}`} style={{display:"block",color:"inherit",textDecoration:"none"}}>
+            <PublicPostLink id={p.x_post_id} returnTo={activeRange === "trending" ? newestPageHref(pagination?.page ?? 1, activeEdition) : rankingHref(activeRange, activeEdition)} style={{display:"block",color:"inherit",textDecoration:"none"}}>
             <div className="thumb-wrap">
               {p.preview_image_url ? (
                 <img
@@ -289,7 +293,7 @@ export default function RankingClient({
                 </span>
               </div>
             </div>
-            </Link>
+            </PublicPostLink>
           </article>
         ))}
       </div>

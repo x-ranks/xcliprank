@@ -1,0 +1,15 @@
+管理画面・学習処理を止めてから実行してください。モデル/教師は保持します。
+1. 本番shを/home/rbxfxmfdへアップロード:
+bash /home/rbxfxmfd/xclip-auto-labels-mobile-deploy-20261018.sh
+成功表示: XCLIP_AUTO_LABELS_MOBILE_V1_DEPLOYMENT_COMPLETE
+2. ZIPを展開し、ローカル開発サーバーをCtrl+Cで止めてから:
+powershell -NoProfile -ExecutionPolicy Bypass -File .\xclip-auto-labels-mobile-local-20261018.ps1
+成功表示: XCLIP_AUTO_LABELS_MOBILE_LOCAL_INSTALLED
+3. 再起動:
+Set-Location C:\Projects\xcliprank
+npm run dev -- --hostname 127.0.0.1 --port 3004
+4. http://127.0.0.1:3004/label-publication の「全動画を自動ラベル付け」で「自動反映を開始・続きから再開」。標準0.7、必要なら広め0.5/厳しめ0.9。初回の目視確認は不要。学習できていないラベルや候補なしは無理に付けません。
+処理中は画面を開いたままにしてください。閉じると今の1件後に進行を止め、再開できます。PCで動画を一時取得し4枚から解析します。個別失敗は次へ、認証/通信等は保存して停止します。
+終了後、新着/失敗分を含めるには新しい一周を開始。既存手動ラベルは保護されます。本番のラベルは自動推定として表示します。閾値は実正解率ではありません。
+個別ページの×は元一覧のpage/edition/位置へ戻り、直アクセスは新着へ戻ります。公開canonical/index条件は維持。
+ローカル復元が必要な場合は停止後、同PS1の -Rollback に表示されたバックアップ名を渡します。自動処理が実際に動く前の本番切替失敗はruntime/.htaccessを自動復旧します。開始後の公開カタログにはmodel_autoがあるため、古い本番コードへ手動で戻す場合は対応状況を先に確認してください。

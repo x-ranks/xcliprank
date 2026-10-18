@@ -1,0 +1,17 @@
+{
+  "actualStandaloneHttp": true,
+  "actualDeliveredVerifier": true,
+  "syntheticCatalogBaselineManualRecords": 81,
+  "privateFixtureTeachers": 100,
+  "privateFixturePending": 19,
+  "quotaFixturePreserved": 24,
+  "authenticatedAutomaticCapability": true,
+  "deployLockBlocksWritesBeforeDb": true,
+  "syntheticAutoPublication": true,
+  "manualCatalogAndSaveMetricsPreserved": true,
+  "actualSsrCloseSafeReturnCanonicalNoindexAndAutoNote": true,
+  "realDbRequests": 0,
+  "realProviderOrCdnRequests": 0,
+  "realEnvironmentLoaded": false,
+  "browserAutomation": false
+}

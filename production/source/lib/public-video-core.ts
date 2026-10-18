@@ -3,7 +3,7 @@ export const PUBLIC_SITE = "https://xcliprank.com";
 export const publicPostId = (v: unknown): v is string => typeof v === "string" && /^[1-9][0-9]{1,24}$/.test(v);
 export type PublicLabel = { id: string; name: string; active: boolean };
 export type PublicVideo = { id: string; authorId: string | null; handle: string | null; authorName: string | null; text: string | null; posterUrl: string | null; videoUrl: string; createdAt: string | null; sourceHash: string; eligible: boolean };
-export type CatalogRecord = { id: string; labelIds: string[]; basis: "manual" | "model_reviewed" | null; modelRevision: string | null; sourceHash: string | null; labelPublishedAt: string | null; saves: number; firstSavedAt: string | null; firstRankedAt: string | null; receipts: { id: string; expires: number }[] };
+export type CatalogRecord = { id: string; labelIds: string[]; basis: "manual" | "model_reviewed" | "model_auto" | null; modelRevision: string | null; sourceHash: string | null; labelPublishedAt: string | null; saves: number; firstSavedAt: string | null; firstRankedAt: string | null; receipts: { id: string; expires: number }[] };
 export type PublicCatalog = { version: 1; revision: number; labels: PublicLabel[]; records: Record<string, CatalogRecord> };
 export const blankCatalog = (): PublicCatalog => ({ version: 1, revision: 0, labels: [], records: {} });
 export const blankRecord = (id: string): CatalogRecord => ({ id, labelIds: [], basis: null, modelRevision: null, sourceHash: null, labelPublishedAt: null, saves: 0, firstSavedAt: null, firstRankedAt: null, receipts: [] });

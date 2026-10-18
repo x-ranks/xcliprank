@@ -1,4 +1,10 @@
 {
+  "release": "auto-labels-mobile-v1-20261018",
+  "localApplied": false,
+  "productionApplied": false,
+  "realAutomaticRunPerformed": false,
+  "record": "docs/completions/20261018-auto-labels-mobile-source.json",
+  "previousRecords": {
   "release": "public-labels-pages-v2-20261018",
   "productionApplied": true,
   "localApplied": true,
@@ -6270,6 +6276,7 @@
 }
 }
 
+}
 }
 }
 }

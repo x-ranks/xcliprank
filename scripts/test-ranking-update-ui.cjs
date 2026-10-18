@@ -1,7 +1,19 @@
 const fs=require('node:fs'),path=require('node:path'),assert=require('node:assert/strict');
 const root=path.resolve(__dirname,'..'),deps=process.env.XCLIP_TEST_DEPENDENCY_ROOT||root,ts=require(deps+'/node_modules/typescript'),React=require(deps+'/node_modules/react'),{renderToStaticMarkup}=require(deps+'/node_modules/react-dom/server');
 function load(file,resolve=require){const m={exports:{}};new Function('require','module','exports',ts.transpileModule(fs.readFileSync(path.join(root,file),'utf8'),{compilerOptions:{module:ts.ModuleKind.CommonJS,target:ts.ScriptTarget.ES2022,esModuleInterop:true,jsx:ts.JsxEmit.ReactJSX}}).outputText)(resolve,m,m.exports);return m.exports;}
-const Link=({href,children,...props})=>React.createElement('a',{href,...props},children);
+
+// Render the actual new client children with React SSR; keep this test's parent hook harness.
+const mobileCache = new Map();
+function mobileResolve(n) {
+ if(n==='react'||n==='react/jsx-runtime')return require(n);
+ if(n==='next/link')return Link;
+ if(n==='next/navigation')return {useRouter:()=>({replace:()=>{throw Error('SSR_NAVIGATION_FORBIDDEN');}})};
+ if(n.endsWith('public-return-navigation'))return load('lib/public-return-navigation.ts');
+ throw Error('UNEXPECTED_MOBILE_IMPORT '+n);
+}
+function mobileComponent(name) {if(!mobileCache.has(name))mobileCache.set(name,load('app/components/'+name+'.tsx',mobileResolve).default);return mobileCache.get(name);}
+
+const Link=({href,children,prefetch,...props})=>React.createElement('a',{href,...props},children);
 const timing=load('lib/ranking-update.ts');
 assert.deepEqual(timing.readRankingUpdate({}),{updatedAt:null,snapshotAt:null,precise:false});
 assert.equal(timing.readRankingUpdate({rankingUpdatedAt:'2026-99-99T00:00:00Z'}).updatedAt,null);
@@ -15,7 +27,7 @@ const Client=load('app/components/RankingClient.tsx',n=>{
  if(n.endsWith('ranking-update'))return timing;if(n.endsWith('useSuspendedAuthors'))return ()=>blocked;
  if(n.endsWith('post-status'))return {isUnavailablePost:()=>false};if(n.endsWith('browser-direct-playback'))return {directPlaybackUrl:x=>x};
  if(n.endsWith('engagement-client'))return {trackEngagement:()=>{throw Error('UNEXPECTED_EFFECT')}};
- if(/DirectPlaybackVideo|VideoDownloadButton|VideoDurationBadge/.test(n))return ()=>null;if(n==='next/link')return Link;throw Error('Unexpected import '+n);
+ if(/DirectPlaybackVideo|VideoDownloadButton|VideoDurationBadge/.test(n))return ()=>null;if(/(?:PublicPostLink|PublicListRestore|PublicPostClose)$/.test(n))return mobileComponent(n.split('/').at(-1));if(n.endsWith('public-return-navigation'))return load('lib/public-return-navigation.ts');if(n.endsWith('ranking-pagination'))return load('lib/ranking-pagination.ts');if(n==='next/link')return Link;throw Error('Unexpected import '+n);
 }).default;
 function render(props){h.reset();return renderToStaticMarkup(Client(props));}
 (async()=>{try{
@@ -24,12 +36,12 @@ function render(props){h.reset();return renderToStaticMarkup(Client(props));}
  // Execute the actual component's response-failure branch; retain the last successful list time.
  blocked=['id:fixture'];global.fetch=async()=>{requests++;throw Error('PRIVATE_FAILURE')};render({range:'daily',fixedRange:true});await h.flush();html=render({range:'daily',fixedRange:true});assert(html.includes('2026/10/14 18:35'));assert(html.includes('最新の確認に失敗しました'));assert(!html.includes('PRIVATE_FAILURE'));
  // SSR receives the same metadata used by successful client loading, without another fetch.
- const ssr=harness();const ServerClient=load('app/components/RankingClient.tsx',n=>{if(n==='react')return ssr.hooks;if(n==='react/jsx-runtime')return require(deps+'/node_modules/react/jsx-runtime');if(n.endsWith('ranking-update'))return timing;if(n.endsWith('useSuspendedAuthors'))return ()=>[];if(n.endsWith('post-status'))return {isUnavailablePost:()=>false};if(n.endsWith('browser-direct-playback'))return {directPlaybackUrl:x=>x};if(n.endsWith('engagement-client'))return {trackEngagement:()=>{}};if(/DirectPlaybackVideo|VideoDownloadButton|VideoDurationBadge/.test(n))return ()=>null;if(n==='next/link')return Link;throw Error('Unexpected import '+n);}).default;
+ const ssr=harness();const ServerClient=load('app/components/RankingClient.tsx',n=>{if(n==='react')return ssr.hooks;if(n==='react/jsx-runtime')return require(deps+'/node_modules/react/jsx-runtime');if(n.endsWith('ranking-update'))return timing;if(n.endsWith('useSuspendedAuthors'))return ()=>[];if(n.endsWith('post-status'))return {isUnavailablePost:()=>false};if(n.endsWith('browser-direct-playback'))return {directPlaybackUrl:x=>x};if(n.endsWith('engagement-client'))return {trackEngagement:()=>{}};if(/DirectPlaybackVideo|VideoDownloadButton|VideoDurationBadge/.test(n))return ()=>null;if(/(?:PublicPostLink|PublicListRestore|PublicPostClose)$/.test(n))return mobileComponent(n.split('/').at(-1));if(n.endsWith('public-return-navigation'))return load('lib/public-return-navigation.ts');if(n.endsWith('ranking-pagination'))return load('lib/ranking-pagination.ts');if(n==='next/link')return Link;throw Error('Unexpected import '+n);}).default;
  const htmlSSR=renderToStaticMarkup(ServerClient({range:'weekly',fixedRange:true,initialUpdate:timing.readRankingUpdate({rankingUpdatedAt:'2026-10-14T09:35:00Z'}),initialPosts:[]}));assert(htmlSSR.includes('2026/10/14 18:35'));assert(htmlSSR.includes('href="/ranking/weekly"'));assert.equal(requests,2);
  // Render the real monitor with a recorded skip and quota, without running any effects or HTTP.
  const run=Date.parse('2026-10-14T09:47:03Z'),attempt=Date.parse('2026-10-14T03:47:04Z');
  const data={provider:'fxtwitter',dailyAuthorsUsed:24,dailyAuthorLimit:24,generatedAt:run,intervalHours:3,authorMinHours:24,batchLimit:8,nextCronNote:'47 */3',nextBatchAt:attempt+3*3600000,nextPossibleAt:run+6*3600000,collectorCooldownUntil:0,availabilityCooldownUntil:0,authors:[{id:'123',username:'fixture',name:'Fixture',source:'free',paused:false,lastAttemptAt:attempt,nextEligibleAt:run+6*3600000,databaseVideoTotal:1,metrics:null}],lastRun:{at:run,outcome:'skipped',reason:'daily_author_limit',saved:0,processed:0,failed:0}};
- const monitor=harness([data]);const Panel=load('app/fxtwitter-monitor/MonitorPanel.tsx',n=>n==='react'?monitor.hooks:n==='react/jsx-runtime'?require(deps+'/node_modules/react/jsx-runtime'):n==='next/link'?({href,children,...props})=>React.createElement('a',{href,...props},children):require(n)).default;
+ const monitor=harness([data]);const Panel=load('app/fxtwitter-monitor/MonitorPanel.tsx',n=>n==='react'?monitor.hooks:n==='react/jsx-runtime'?require(deps+'/node_modules/react/jsx-runtime'):n==='next/link'?({href,children,prefetch,...props})=>React.createElement('a',{href,...props},children):require(n)).default;
  const view=renderToStaticMarkup(Panel());assert(view.includes('24時間枠の空き待ち'));assert(view.includes('待機判定を含む'));assert(view.includes('投稿者への最終取得'));assert(view.includes('18:47:03'));assert(view.includes('12:47:04'));assert(view.includes('次回巡回の最短時刻'));assert.equal(requests,2);
  console.log('PASS UPDATE UI: actual successful/failed fetch branches; stable saved timestamps/JST rollover; SSR same data; legacy/invalid metadata; latest link strips old edition; actual monitor separates attempts/skips/quota; mocked HTTP only');
  }finally{global.fetch=originalFetch;}})().catch(e=>{console.error(e);process.exitCode=1});

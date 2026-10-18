@@ -1,0 +1,20 @@
+{
+  "release": "auto-labels-mobile-v1-20261018",
+  "localRegressions": 49,
+  "productionRegressions": 44,
+  "finalAdditionalTests": "manual private training protection +deployment guard +StrictMode scroll replay passed",
+  "localTypesAndBuild": "passed; clean isolated home/network-denied fixture",
+  "productionTypesAndStandaloneBuild": "passed; physical clean production dependencies; network denied",
+  "actualHttp": "synthetic 81 manual catalog +100 teacher/19 pending/24 quota fixture preserved; signed admin capability; actual auto roundtrip; source/eligibility/manual priority; SSR X/safe return/canonical/noindex/auto note",
+  "packageInstallReapplyRollbackUnknownEdit": "passed; actual code and synthetic private state unchanged outside fixture",
+  "syntax": "bash -n and PowerShell parser passed",
+  "privateModelsOrTeachersInDistribution": false,
+  "realLocalOrProductionApplied": false,
+  "realLabelPublicationOrVideoDownloadPerformed": false,
+  "browserAutomationPerformed": false,
+  "mobileVisualVerification": "CSS/SSR/interaction logic verified without browser automation; actual phone display remains user confirmation",
+  "optionalUnrunTests": [
+    "2 unchanged legacy FFmpeg tests; extractor unchanged and existing user training workflow reused"
+  ],
+  "githubNode22Ci": "pending"
+}

@@ -2,14 +2,30 @@ const fs=require('fs'),path=require('path'),assert=require('node:assert/strict')
 const root=path.resolve(__dirname,'..'),deps=process.env.XCLIP_TEST_DEPENDENCY_ROOT||root,ts=require(deps+'/node_modules/typescript');
 const React=require(deps+'/node_modules/react'),{renderToStaticMarkup}=require(deps+'/node_modules/react-dom/server');
 function load(file,resolve=require){const m={exports:{}};new Function('require','module','exports',ts.transpileModule(fs.readFileSync(root+'/'+file,'utf8'),{compilerOptions:{esModuleInterop:true,module:ts.ModuleKind.CommonJS,target:ts.ScriptTarget.ES2022,jsx:ts.JsxEmit.ReactJSX}}).outputText)(resolve,m,m.exports);return m.exports;}
+
+// Render the actual new client children with React SSR; keep this test's parent hook harness.
+const mobileCache = new Map();
+function mobileResolve(n) {
+ if(n==='react'||n==='react/jsx-runtime')return require(n);
+ if(/(?:PublicPostLink|PublicListRestore|PublicPostClose)$/.test(n))return mobileComponent(n.split('/').at(-1));if(n.endsWith('public-return-navigation'))return load('lib/public-return-navigation.ts');if(n.endsWith('ranking-pagination'))return load('lib/ranking-pagination.ts');
+ if(n==='next/link')return Link;
+ if(n==='next/navigation')return {useRouter:()=>({replace:()=>{throw Error('SSR_NAVIGATION_FORBIDDEN');}})};
+ if(n.endsWith('public-return-navigation'))return load('lib/public-return-navigation.ts');
+ throw Error('UNEXPECTED_MOBILE_IMPORT '+n);
+}
+function mobileComponent(name) {if(!mobileCache.has(name))mobileCache.set(name,load('app/components/'+name+'.tsx',mobileResolve).default);return mobileCache.get(name);}
+
 const pagination=load('lib/ranking-pagination.ts');
 const update=load('lib/ranking-update.ts');
 const posts=Array.from({length:50},(_,i)=>({x_post_id:String(10000+i),ranking_position:51+i,author_username:'fixture',author_name:'fixture',x_url:'https://x.com/fixture/status/'+(10000+i),preview_image_url:null,video_url:null,created_at:'2026-10-13T00:00:00Z',views:1,likes:0,replies:0,reposts:0,adult_tier:'A'}));
 const edition='1791894900000-aaaaaaaaaaaa';let status=200;const requests=[];
 const pageData={status:200,posts,edition,update:update.readRankingUpdate({rankingUpdatedAt:'2026-10-14T09:35:00.000Z',edition}),pagination:{page:2,pageSize:50,totalPosts:500,totalPages:10,edition,previousHref:pagination.newestPageHref(1,edition),nextHref:pagination.newestPageHref(3,edition)}};
 global.fetch=()=>{throw Error('SSR_MUST_NOT_CALL_PROVIDER');};
-const Link=({href,children,...props})=>React.createElement('a',{href,...props},children);
+const Link=({href,children,prefetch,...props})=>React.createElement('a',{href,...props},children);
 const Client=load('app/components/RankingClient.tsx',n=>{
+
+ if(/(?:PublicPostLink|PublicListRestore|PublicPostClose)$/.test(n))return mobileComponent(n.split(String.fromCharCode(47)).at(-1));
+ if(n.endsWith("ranking-pagination"))return pagination;
  if(n==='react'||n==='react/jsx-runtime')return require(deps+'/node_modules/'+n);
  if(n==='next/link')return Link;
  if(n.endsWith('useSuspendedAuthors'))return ()=>[];

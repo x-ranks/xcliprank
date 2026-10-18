@@ -44,3 +44,5 @@
 /releases/20261018-public-labels-pages-v1/** -text
 /releases/20261018-public-labels-pages-v2/** -text
 /tools/public-labels-pages-v2/** -text
+
+/releases/20261018-auto-labels-mobile-v1/** -text
