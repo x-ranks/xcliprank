@@ -1,16 +1,9 @@
-# 本番ソースの統合状況：取得待ち
+# ColorfulBox本番ソース（2026-10-18更新）
 
-ローカル版と本番版は役割が異なります。現リポジトリ直下は最新ローカル管理版です。本番としてビルド／配布する対象ではありません。
+`source/` はユーザー添付の実稼働208ファイルに「本番ラベル反映・個別URLv1」を組み込んだ更新候補。型/回帰/standalone buildを検証する。今回機能は未適用。確認した実稼働版そのものは `../snapshots/production-live-20261018/`。BUILD_IDと全SHAは `../docs/production-source-baseline-20261018.json`。従来の本番全文取得待ちは解消した。
 
-最後の本番診断：runtime `/home/rbxfxmfd/xclip-video-card-20261004.DJKKID/runtime`、DEPLOY_SOURCE `/home/rbxfxmfd/xclip-ranking-updates-v2-20261014.aj9FwJ/source`、BUILD_ID `H6KQokOwZZcvhnEQnY251`。ユーザー実行結果で一致を確認。
+リポジトリ直下はローカル管理用であり、本番用と交換しない。設定、DB、Cron、登録/巡回状態、教師/モデル、実保存記録はGitに含まれない。`source`で `npm ci` → `node scripts/check-canonical.cjs test` → `node scripts/check-canonical.cjs types` → `node scripts/build-production-offline.cjs`（新規取得で.envなし）を実行できる。
 
-再生関連14ファイルのうち、既知の本番用コピーと6ファイルが相違／未配置です。これだけで現本番を完全に再現できると判断しないため、正確な全コード一覧・本文を取得する必要があります。
+既存本番への適用は `../tools/xclip-public-labels-pages-deploy-20261018.sh`。実稼働source/BUILD_ID/SHAを照合し、ステージングでテスト・build・HTTP確認、workerと登録の排他を取ってruntimeを切替、失敗時に元runtimeへ戻す。既存env/DBスキーマ/Cron/巡回枠/取得位置/除去判定は変えない。適用後に公開サイトのDBを限定読取して実HTMLを確認するが、動画CDN取得・投稿収集・ラベル反映・偽の保存記録は実行しない。
 
-1. `tools/xclip-github-production-source-export-20261016.sh` をColorfulBoxの `/home/rbxfxmfd/` に配置。
-2. `bash /home/rbxfxmfd/xclip-github-production-source-export-20261016.sh` をユーザーが実行。
-3. `XCLIP_GITHUB_PRODUCTION_SOURCE_EXPORT_OK` と `ATTACH_FILE=...` を確認。
-4. 出力JSONをダウンロードして、このチャットへ添付。
-
-app/lib/scripts/sql/supabase/publicと固定のビルド設定だけを対象に、実稼働sourceとbuildを照合し、プログラム・公開資材のSHAと本文を新規JSONへ保存します。秘密らしい文字列、リンク、所有者違い、途中の版変更では出力を拒否します。設定・DB・巡回state・モデル重み・ホームのCron本文／実Cron設定は含めず、アプリ変更・DB/provider通信はありません。
-
-JSON受領後、内容を検査して `production/` へ本番版を統合し、専用の型／ビルド／回帰、localとの相違表、取得方法を確定します。それまでは本番完全統合は未完了です。
+新しい承認ラベル・ランキング登場・保存観測・署名鍵はruntime外 `~/.xclip-public-catalog` に保持する（任意の絶対XCLIP_PUBLIC_CATALOG_DIR）。このフォルダーは非公開の暗号化バックアップ対象に追加し、Gitへ入れない。過去の保存実績は不明なので補填しない。OSの保存完了を測れると説明しない。

@@ -7,6 +7,9 @@ const REDIRECT_HOSTS = new Set([
 ]);
 
 const PUBLIC_EXACT_PATHS = new Set([
+  "/api/public-video",
+  "/api/public-label-admin",
+  "/api/public-save-event",
   "/",
   "/ranking/daily",
   "/ranking/weekly",
@@ -38,6 +41,7 @@ const NOINDEX_PATHS = new Set([
 ]);
 
 function isPublicPath(pathname: string) {
+  if (/^\/p\/[1-9][0-9]{1,24}\/?$/.test(pathname) || /^\/accounts\/[A-Za-z0-9_-]{1,68}\/?$/.test(pathname) || /^\/tags\/[^/]{1,500}\/?$/.test(pathname)) return true;
   if (PUBLIC_EXACT_PATHS.has(pathname)) {
     return true;
   }

@@ -309,6 +309,7 @@ export default function ReelsFeed() {
                 </div>
 
                 <div className="reel-side-actions">
+                  <Link href={`/p/${post.x_post_id}`} aria-label="動画の個別ページを開く">↗<small>詳細・保存</small></Link>
                   {post.video_url && <VideoDownloadButton postId={post.x_post_id} compact />}
                   <a
                     href={post.x_url}

@@ -88,6 +88,7 @@ export default function VideoDownloadButton({ postId, compact = false, token }: 
       anchor.href = localUrl; anchor.download = filename;
       document.body.appendChild(anchor); anchor.click(); anchor.remove();
       setStatus("received"); setMessage("受信が完了し、ブラウザへ保存を要求しました。ダウンロード一覧で確認してください。");
+      if (typeof result.saveReceipt === "string") void fetch("/api/public-save-event", { method: "POST", headers: { "content-type": "application/json" }, body: JSON.stringify({ id: postId, receipt: result.saveReceipt }), credentials: "same-origin", keepalive: true }).catch(() => undefined);
     } catch (error) {
       if (pendingRef.current !== controller) return;
       setStatus("error"); setMessage(controller.signal.aborted ? "受信を中止しました。" : error instanceof Error ? error.message : "直接保存に失敗しました。");

@@ -21,7 +21,7 @@ export function rankingItemList(
       name: `${post.ranking_position ?? index + 1}位 ${
         post.author_name ?? post.author_username ?? "X投稿者"
       }`,
-      url: post.x_url
+      url: `${SITE_URL}/p/${post.x_post_id}`
     }))
   };
 }

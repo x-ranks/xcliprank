@@ -1,10 +1,16 @@
+## 2026-10-18 最新候補：本番ラベル反映と個別URL
+
+学習100件完了を確認。`/label-publication` で手動正解を本番へ反映、新しい動画は4枚を見て推定を確定して反映できます。`/p/[投稿ID]` に保存/投稿者/同投稿者/ラベル関連リンクと固有title/自己canonicalを追加。保存またはランキング登場の記録があり、掲載条件を満たす動画だけインデックス対象。本文も保存実績もない動画はnoindex。教師/モデルはPC内に保持。
+
+ローカルは直下、本番の最新候補は `production/source/`、確認済み稼働版は `snapshots/production-live-20261018/`。今回機能はコード作成・検証の段階で、実環境への適用は未実施。配布物は `releases/20261018-public-labels-pages-v1/`。既存の100教材を上書き・Git登録しません。
+
 # Xclip：最新ローカル管理ソース
 
 最新版mainはラベル学習100件v2を含みます。v1はPR #13でGitHub Node22検証成功、v2はローカル39回帰/型/隔離build/220 SHA確認済み。10/16時点の基準タグは`local-admin-20261016`。根拠：`docs/completions/20261017-label-learning-source.json`と10/16の保存記録。
 
 2026-10-16に実ローカル `C:\Projects\xcliprank` の未コミット・未追跡を含むコードを統合しました。リポジトリ直下の `app/`・`lib/` が現在のローカル管理版です。過去のZIPを順に適用する必要はありません。
 
-**本番ColorfulBoxの完全ソースは取得待ちです。直下をColorfulBoxへそのまま配置しないでください。** ローカルのランキングAPIは本番表示を読むプレビュー用で、公開サーバーの集計APIと異なります。`production/README.md` を参照してください。
+**本番ColorfulBoxの全文を取得・照合し、`production/source` に本番用の最新候補を統合しました。直下をColorfulBoxへそのまま配置しないでください。** ローカルのランキングAPIは本番表示を読むプレビュー用で、公開サーバーの集計APIと異なります。`production/README.md` を参照してください。
 
 ## 取得と起動
 
@@ -50,7 +56,7 @@ node scripts/check-canonical.cjs build
 - GitHubはユーザー指定で公開を継続。秘密・実state・DB dump・教師／モデルは含めません。
 - 旧VercelへのGit自動デプロイは `vercel.json` の `git.deploymentEnabled=false` で無効化。旧Vercel Cronを現在の運用として使いません。設定根拠：https://vercel.com/docs/project-configuration/git-configuration
 
-今後の本番統合は `production/` の不足情報を受領・検証してから進めます。現行サーバーをこの整理作業で更新するものではありません。
+本番ソースの取得待ちは解消済みです。今回候補の実ローカル・本番適用とラベル公開はまだ行っていません。
 
 ## 2026-10-17追加：ラベル管理と学習
 

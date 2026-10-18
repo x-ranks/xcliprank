@@ -11,6 +11,7 @@ global.fetch=()=>{throw Error('SSR_MUST_NOT_CALL_PROVIDER');};
 const Link=({href,children,...props})=>React.createElement('a',{href,...props},children);
 const Client=load('app/components/RankingClient.tsx',n=>{
  if(n==='react'||n==='react/jsx-runtime')return require(deps+'/node_modules/'+n);
+ if(n==='next/link')return Link;
  if(n.endsWith('useSuspendedAuthors'))return ()=>[];
  if(n.endsWith('post-status'))return {isUnavailablePost:()=>false};
  if(n.endsWith('ranking-update'))return update;

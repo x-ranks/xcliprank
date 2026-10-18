@@ -1,0 +1,33 @@
+{
+  "dateJst": "2026-10-18",
+  "release": "public-labels-pages-v1-20261018",
+  "localSource": "repository root",
+  "productionSource": "production/source",
+  "deployedProductionSnapshot": "snapshots/production-live-20261018",
+  "productionExportVerified": true,
+  "localApplied": false,
+  "productionApplied": false,
+  "labelsPublished": false,
+  "privateTrainingVideos": 100,
+  "independentTestVideosObserved": 0,
+  "privateModelsIncluded": false,
+  "verification": {
+    "localRegressions": 45,
+    "productionRegressions": 41,
+    "localTypes": "passed as part of final build",
+    "productionTypes": "passed as part of final standalone build",
+    "localBuild": "passed",
+    "productionStandaloneBuild": "passed with clean production-only npm dependencies",
+    "actualStandaloneHttpGuards": "passed; only isolated loopback listener, no DB/API/CDN",
+    "packageApplyReapplyRollbackUnknownEditGuards": "passed with synthetic private 100-model, teachers, quota, cursor, pause, removals and env",
+    "privateDataInPackage": false,
+    "realLocalApplied": false,
+    "realProductionApplied": false,
+    "realLabelsPublished": false,
+    "externalNetworkInOfflineChecks": "denied",
+    "optionalUnrunChecks": [
+      "2 unchanged FFmpeg-specific legacy tests; no new extractor changes"
+    ],
+    "githubCi": "check the new commit run; local tools use Node26, GitHub uses Node22"
+  }
+}

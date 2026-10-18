@@ -1,0 +1,154 @@
+{
+  "release": "public-labels-pages-v1-20261018",
+  "scope": "local candidate, not applied",
+  "files": {
+    "middleware.ts": {
+      "before": "360364e47d0a338af98be50646d0a1ddaf2f01efaedd78c49fd9642daa65eb24",
+      "after": "1781e6f32aa5bf22441426a90f94db7f80bb67de54bac5cf186eb82deb3609e9"
+    },
+    "app/sitemap.ts": {
+      "before": "08eba6ab67795523ab18a55fc7c3cc79954641816890b2ba4f7382ad13420bfc",
+      "after": "653abddf16b612dddcf87beea6c12a23da59073e874799fa10150ce1f41aca15"
+    },
+    "lib/label-publication-server.ts": {
+      "before": null,
+      "after": "dd3d048e4191721b5cb3940df2d6383580515577a7518d1c0b48d2bf811bb1ea"
+    },
+    "lib/label-publication-service.ts": {
+      "before": null,
+      "after": "abcb218157fe5b8342328a941e56cc89dedabd1eace03514f4f698ee707eefce"
+    },
+    "lib/public-catalog-store.ts": {
+      "before": null,
+      "after": "2438f1362161e19f5e2ccfaaa4e4deb9d3c58d87b913d39a83a5625e55c1cb0a"
+    },
+    "lib/public-http.ts": {
+      "before": null,
+      "after": "0d6d266943e4859ffff35f46d7a74133eb6c45f40ae680641a80329eaeaa406c"
+    },
+    "lib/public-operation-lock.ts": {
+      "before": null,
+      "after": "daa82e971822e74504724cd1e32962ea13bf99467a0508038761f255a9de3cbd"
+    },
+    "lib/public-ranking-history.ts": {
+      "before": null,
+      "after": "150082f875016bbcfa0b2e5fdb250df56b8be7f6acaa05fa6f9aa5c0001f0173"
+    },
+    "lib/public-save-receipt.ts": {
+      "before": null,
+      "after": "939dc11783db214c30e805008f683201477fd5f07fdbad513601564a2349b7c6"
+    },
+    "lib/public-save-secret.ts": {
+      "before": null,
+      "after": "83d42fea93bbbdaa28e1d2c787762271155a7600137ce846e57d1b24fa7c9e45"
+    },
+    "lib/public-video-core.ts": {
+      "before": null,
+      "after": "d1c56c02479950bb9b7f0aba049af9a492e4d40b001e2f6d444ff12f9183a9d3"
+    },
+    "lib/public-video-server.ts": {
+      "before": null,
+      "after": "1060c47db9a8f7534c10403607f9b1d5159747ae0bff16d5def063e72c442ea0"
+    },
+    "lib/public-video-service.ts": {
+      "before": null,
+      "after": "b74eca402383b6d83ba9f6dbc7434fb88748ab776e29c7df94eb4850e5c242b2"
+    },
+    "lib/seo.ts": {
+      "before": "cea942eecabda17a886e646d8833dccf9f1632c86721939806b6ff254e50ba15",
+      "after": "ef00f33d32fa1ff500b6d7ef8a44362b4136bfa6e1b1dbd210c804b4ea8e3b47"
+    },
+    "lib/video-download.ts": {
+      "before": "9e0ae9501b50f32f5b84561c179af40db62f5c9f992eb5fecfe89efe35fba37c",
+      "after": "ae8f7c303c4c5d13a91fa2bbd226054e26586c06ff8af4e7699644d27a21ac52"
+    },
+    "scripts/test-label-publication.cjs": {
+      "before": null,
+      "after": "c457b21edbad4aee5b2d8510e953809e3282cb83edf388f8d8ae2b0903cbe8dd"
+    },
+    "scripts/test-newest500-pages.cjs": {
+      "before": "82879e19432f89e0ecb04fd4124e3a7c02c5350f467236e7d75650104b2a5684",
+      "after": "d1bcaaf563dd93430e3a01e209116bc2d55e3288da950ce294378b7fbc16d7db"
+    },
+    "scripts/test-public-catalog.cjs": {
+      "before": null,
+      "after": "2c65ce962510c5ab446f824f7dbef1c29f3707cc59950b643fd9288ca592f1de"
+    },
+    "scripts/test-public-download-observation.cjs": {
+      "before": null,
+      "after": "7344924b14d46ed7db72dbe21d3d6ce4eb4c81305abfcd0a3aca0d30ec497147"
+    },
+    "scripts/test-public-operation-lock.cjs": {
+      "before": null,
+      "after": "eb6d4efb480757b35119ca7ec960b7b1b366a6d07d2b03cdcef97a471fb70a0d"
+    },
+    "scripts/test-public-pages.cjs": {
+      "before": null,
+      "after": "eaee6dbb5a00d06917a8cd31673207a510bc3358704ff8a8a2c11e61c7866709"
+    },
+    "scripts/test-public-video-service.cjs": {
+      "before": null,
+      "after": "911a07f988d2290b110d454e4b9e8360691664fc1b86729b1adee0657149f617"
+    },
+    "scripts/test-ranking-update-ui.cjs": {
+      "before": "e99909fecaf00d9e8b5ebd7010c9441239c62a44b9660f3034aa285255fd796e",
+      "after": "f821fc210d0e3bec30fc0ba6f8f1cce9836259453cbcc8606545632fa559dc56"
+    },
+    "app/components/PublicVideoCards.tsx": {
+      "before": null,
+      "after": "ed1c325dbb26528c9b81428920eb6de0ef49c8e67d17095fa10594ff21d006a4"
+    },
+    "app/components/RankingClient.tsx": {
+      "before": "233a5c995829b32ddb0bb1b8b7558ce07519a9a674f4546a8d0bef3373d1e978",
+      "after": "14f5abb4bc0a1e28513ddeb59499e03d42619248273dc0a71726fd8a29510960"
+    },
+    "app/components/VideoDownloadButton.tsx": {
+      "before": "abdae15d9cb939991432287c95c3c085ddcd994cd608fc4e60281c5bf3ec3c21",
+      "after": "137d8383bac8726892f7612c145b503c474915d5a9aa28930ea47599961b0208"
+    },
+    "app/label-learning/LabelLearningPanel.tsx": {
+      "before": "07f9745da00d6695028da3fb4506312469e7fd9c5b3a708667c10c5d0f11f151",
+      "after": "6b3111f7880479c10c8f1124110d4a54fee0c16a351dbb7ad0424ae834b4d249"
+    },
+    "app/label-publication/LabelPublicationPanel.tsx": {
+      "before": null,
+      "after": "530e26303db72bcc397ee94256e26b6b0a1640b8ef4425dc1f806c18c782e29c"
+    },
+    "app/label-publication/page.tsx": {
+      "before": null,
+      "after": "5b32a786869a0d35d23c8944a0a869ae6e1807af14a7de4b1a481a40ba0371bc"
+    },
+    "app/reels/ReelsFeed.tsx": {
+      "before": "0262e8b1c6a054d3b31250732bbf95a577a1fce7d6c2d1e45fa4b9b18a12a937",
+      "after": "ca4d06197796eddf906fedc2984184d6ab5648a239cead927dcac436c38b58eb"
+    },
+    "app/accounts/[key]/page.tsx": {
+      "before": null,
+      "after": "6180d4bceab9a19d11a5df3c911d72e50581075ae24286d1f2a952a04d35b600"
+    },
+    "app/api/label-publication/route.ts": {
+      "before": null,
+      "after": "27b37557c2ca299177b9047e95d183a5c16cceff2d345f75c0b06d90f6cd861b"
+    },
+    "app/api/public-save-event/route.ts": {
+      "before": null,
+      "after": "461173d5d30e0e662e74bb89bc038f263483a89516fcd728fd2fb655fb194530"
+    },
+    "app/api/video-download/route.ts": {
+      "before": "18101fe4685cb21f5647c71b95beee044b1b17f738964f9e7777f8da724ef67e",
+      "after": "98197e4f2e925f69b236f14d1773ed7938d0f6a4782d92159ceb3cd72cbb343c"
+    },
+    "app/api/label-publication/frame/route.ts": {
+      "before": null,
+      "after": "bec72776dd02c3783e58f905a2e051abf11388d2a099d8337da7229ff1db7ef0"
+    },
+    "app/p/[id]/page.tsx": {
+      "before": null,
+      "after": "d546585428f889a340f7cd88b2078e6a8698aa4e0b5789987b1394299b8ef999"
+    },
+    "app/tags/[name]/page.tsx": {
+      "before": null,
+      "after": "6df999248ccd39f25d7ccc7947cc4d7387912412bed0491eb5047b6ed9622a00"
+    }
+  }
+}

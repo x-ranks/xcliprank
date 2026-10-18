@@ -1,0 +1,16 @@
+本番ラベル反映・個別URL v1 2026-10-18
+
+1. xclip-public-labels-pages-deploy-20261018.sh をColorfulBox /home/rbxfxmfd/へアップロード。
+   bash /home/rbxfxmfd/xclip-public-labels-pages-deploy-20261018.sh
+   XCLIP_PUBLIC_LABELS_PAGES_V1_DEPLOYMENT_COMPLETE を確認。失敗時は続行せず表示を共有する。
+2. ローカル開発サーバーをCtrl+Cで停止し、ZIP展開先で実行。
+   powershell -NoProfile -ExecutionPolicy Bypass -File .\xclip-public-labels-pages-local-20261018.ps1
+3. C:\Projects\xcliprank で起動。
+   npm run dev -- --hostname localhost -p 3004
+4. http://localhost:3004/label-publication へ。手動正解を準備→確認済みラベルを本番へ反映。
+   100教材のモデル・画像はPCに保持。反映対象外やURL変更は理由を表示して見送る。反映件数を確認。
+5. 新しい動画は「新しい10動画のラベルを推定」→各4枚で確認/修正/確定→本番反映。
+6. 本番ランキングのカードを開き /p/投稿ID、保存・元投稿・投稿者・関連の導線、戻る/共有を確認。
+   過去の保存数は不明。更新後の受信/保存要求を観測した記録のみ表示し、端末内の保存完了は保証しない。
+
+実環境への適用とラベル公開はインストール後の操作。GitHub保存だけでは反映されません。

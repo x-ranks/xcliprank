@@ -28,6 +28,7 @@ export function canDownloadPost(post: DownloadPost | null) {
 type Dependencies = {
   findPost: (id: string) => Promise<DownloadPost | null>;
   fetcher?: typeof fetch;
+  issueReceipt?: (id: string) => Promise<string | null>;
 };
 
 // Metadata only. Never fetch or stream CDN bytes on the Xclip server.
@@ -53,7 +54,8 @@ export async function downloadVideo(request: Request, deps: Dependencies): Promi
     const post = await deps.findPost(id);
     if (!canDownloadPost(post)) return fail(404, "この投稿は保存対象外、非公開、または除外済みです。");
     if (request.signal.aborted) return fail(499, "操作を中止しました。");
-    return Response.json({ ready: true, mode: "browser-direct", ...(checking ? {} : {
+    const receipt = !checking && deps.issueReceipt ? await deps.issueReceipt(id).catch(() => null) : null;
+    return Response.json({ ready: true, mode: "browser-direct", ...(receipt ? { saveReceipt: receipt } : {}), ...(checking ? {} : {
       url: post!.video_url, filename: `xclip-${id}.mp4`,
     }) }, { headers });
   } catch { return fail(502, "保存情報を取得できませんでした。時間をおいて再試行してください。"); }

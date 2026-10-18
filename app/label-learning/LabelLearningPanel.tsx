@@ -114,7 +114,7 @@ export default function LabelLearningPanel() {
   const testPrepared = preparedCount(view?.videos ?? [], "test");
   const testReady = view?.videos.filter(v => v.review?.role === "test" && v.review.blinded && !v.everTrained).length ?? 0;
   return <main style={{ maxWidth: 1120, margin: "0 auto", padding: 24 }}>
-    <Link href="/learning-tools">← 管理画面の入口</Link><h1>ラベル管理・4枚で学習</h1>
+    <Link href="/learning-tools">← 管理画面の入口</Link>　<Link href="/label-publication">学習済みラベルを本番へ反映 →</Link><h1>ラベル管理・4枚で学習</h1>
     <p>①ラベル作成 → ②学習用を100件まで準備し、4枚を見て正解保存 → ③累積した教材すべてで学習 → ④新しいランダム動画で精度チェック。</p>
     <p>ラベル・画像・モデルはこのPCの専用フォルダへ保存します。本番掲載、Tier評価、巡回、既存のラベルJSONは変更しません。</p>
     {error ? <p role="alert" style={{ color: "#ff9292" }}>{error}</p> : null}<p role="status" aria-live="polite">{message}</p>

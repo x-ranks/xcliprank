@@ -1,4 +1,5 @@
 "use client";
+import Link from "next/link";
 import { readRankingUpdate, formatRankingTime, latestRankingHref, type RankingUpdate } from "../../lib/ranking-update";
 import type { RankingPagination } from "../../lib/ranking-pagination";
 import DirectPlaybackVideo from "./DirectPlaybackVideo";
@@ -214,19 +215,8 @@ export default function RankingClient({
           <article
             className="video-card"
             key={p.x_post_id}
-            onClick={() => setSelectedPost(p)}
-            tabIndex={0}
-            role="button"
-            onKeyDown={(event) => {
-              if (
-                event.key === "Enter" ||
-                event.key === " "
-              ) {
-                event.preventDefault();
-                setSelectedPost(p);
-              }
-            }}
           >
+            <Link href={`/p/${p.x_post_id}`} style={{display:"block",color:"inherit",textDecoration:"none"}}>
             <div className="thumb-wrap">
               {p.preview_image_url ? (
                 <img
@@ -300,6 +290,7 @@ export default function RankingClient({
                 </span>
               </div>
             </div>
+            </Link>
           </article>
         ))}
       </div>

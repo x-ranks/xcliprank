@@ -1,0 +1,11 @@
+{
+  "productionStandaloneRuntime": true,
+  "actualMiddlewareAndApiGuards": true,
+  "localOnlyListener": true,
+  "externalNetworkDenied": true,
+  "realCredentialsLoaded": false,
+  "databaseRequests": 0,
+  "providerRequests": 0,
+  "labelsPublished": false,
+  "saveRecordsWritten": 0
+}

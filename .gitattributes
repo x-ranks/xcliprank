@@ -38,3 +38,7 @@
 /visual-filter-model/model.json -text
 /tools/**/*.sh text eol=lf
 /.env.example text eol=lf
+
+# Exact reviewed production and new distribution bytes.
+/production/source/** -text
+/releases/20261018-public-labels-pages-v1/** -text

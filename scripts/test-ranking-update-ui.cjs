@@ -1,6 +1,7 @@
 const fs=require('node:fs'),path=require('node:path'),assert=require('node:assert/strict');
 const root=path.resolve(__dirname,'..'),deps=process.env.XCLIP_TEST_DEPENDENCY_ROOT||root,ts=require(deps+'/node_modules/typescript'),React=require(deps+'/node_modules/react'),{renderToStaticMarkup}=require(deps+'/node_modules/react-dom/server');
 function load(file,resolve=require){const m={exports:{}};new Function('require','module','exports',ts.transpileModule(fs.readFileSync(path.join(root,file),'utf8'),{compilerOptions:{module:ts.ModuleKind.CommonJS,target:ts.ScriptTarget.ES2022,esModuleInterop:true,jsx:ts.JsxEmit.ReactJSX}}).outputText)(resolve,m,m.exports);return m.exports;}
+const Link=({href,children,...props})=>React.createElement('a',{href,...props},children);
 const timing=load('lib/ranking-update.ts');
 assert.deepEqual(timing.readRankingUpdate({}),{updatedAt:null,snapshotAt:null,precise:false});
 assert.equal(timing.readRankingUpdate({rankingUpdatedAt:'2026-99-99T00:00:00Z'}).updatedAt,null);
@@ -14,7 +15,7 @@ const Client=load('app/components/RankingClient.tsx',n=>{
  if(n.endsWith('ranking-update'))return timing;if(n.endsWith('useSuspendedAuthors'))return ()=>blocked;
  if(n.endsWith('post-status'))return {isUnavailablePost:()=>false};if(n.endsWith('browser-direct-playback'))return {directPlaybackUrl:x=>x};
  if(n.endsWith('engagement-client'))return {trackEngagement:()=>{throw Error('UNEXPECTED_EFFECT')}};
- if(/DirectPlaybackVideo|VideoDownloadButton|VideoDurationBadge/.test(n))return ()=>null;throw Error('Unexpected import '+n);
+ if(/DirectPlaybackVideo|VideoDownloadButton|VideoDurationBadge/.test(n))return ()=>null;if(n==='next/link')return Link;throw Error('Unexpected import '+n);
 }).default;
 function render(props){h.reset();return renderToStaticMarkup(Client(props));}
 (async()=>{try{
@@ -23,7 +24,7 @@ function render(props){h.reset();return renderToStaticMarkup(Client(props));}
  // Execute the actual component's response-failure branch; retain the last successful list time.
  blocked=['id:fixture'];global.fetch=async()=>{requests++;throw Error('PRIVATE_FAILURE')};render({range:'daily',fixedRange:true});await h.flush();html=render({range:'daily',fixedRange:true});assert(html.includes('2026/10/14 18:35'));assert(html.includes('最新の確認に失敗しました'));assert(!html.includes('PRIVATE_FAILURE'));
  // SSR receives the same metadata used by successful client loading, without another fetch.
- const ssr=harness();const ServerClient=load('app/components/RankingClient.tsx',n=>{if(n==='react')return ssr.hooks;if(n==='react/jsx-runtime')return require(deps+'/node_modules/react/jsx-runtime');if(n.endsWith('ranking-update'))return timing;if(n.endsWith('useSuspendedAuthors'))return ()=>[];if(n.endsWith('post-status'))return {isUnavailablePost:()=>false};if(n.endsWith('browser-direct-playback'))return {directPlaybackUrl:x=>x};if(n.endsWith('engagement-client'))return {trackEngagement:()=>{}};if(/DirectPlaybackVideo|VideoDownloadButton|VideoDurationBadge/.test(n))return ()=>null;throw Error('Unexpected import '+n);}).default;
+ const ssr=harness();const ServerClient=load('app/components/RankingClient.tsx',n=>{if(n==='react')return ssr.hooks;if(n==='react/jsx-runtime')return require(deps+'/node_modules/react/jsx-runtime');if(n.endsWith('ranking-update'))return timing;if(n.endsWith('useSuspendedAuthors'))return ()=>[];if(n.endsWith('post-status'))return {isUnavailablePost:()=>false};if(n.endsWith('browser-direct-playback'))return {directPlaybackUrl:x=>x};if(n.endsWith('engagement-client'))return {trackEngagement:()=>{}};if(/DirectPlaybackVideo|VideoDownloadButton|VideoDurationBadge/.test(n))return ()=>null;if(n==='next/link')return Link;throw Error('Unexpected import '+n);}).default;
  const htmlSSR=renderToStaticMarkup(ServerClient({range:'weekly',fixedRange:true,initialUpdate:timing.readRankingUpdate({rankingUpdatedAt:'2026-10-14T09:35:00Z'}),initialPosts:[]}));assert(htmlSSR.includes('2026/10/14 18:35'));assert(htmlSSR.includes('href="/ranking/weekly"'));assert.equal(requests,2);
  // Render the real monitor with a recorded skip and quota, without running any effects or HTTP.
  const run=Date.parse('2026-10-14T09:47:03Z'),attempt=Date.parse('2026-10-14T03:47:04Z');

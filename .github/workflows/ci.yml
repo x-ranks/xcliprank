@@ -39,3 +39,26 @@ jobs:
       - name: Isolated build without database or provider access
         run: node scripts/check-canonical.cjs build
 
+
+  production:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    defaults:
+      run:
+        working-directory: production/source
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+          cache-dependency-path: production/source/package-lock.json
+      - name: Verify live snapshot and reviewed candidate
+        run: node ../../scripts/verify-production-source.cjs
+      - run: npm ci
+      - name: Offline production regressions
+        run: node scripts/check-canonical.cjs test
+      - name: Offline production types
+        run: node scripts/check-canonical.cjs types
+      - name: Offline actual standalone build
+        run: node scripts/build-production-offline.cjs
