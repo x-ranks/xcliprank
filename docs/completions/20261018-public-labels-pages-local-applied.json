@@ -1,0 +1,18 @@
+{
+  "dateJst": "2026-10-18",
+  "featureRelease": "public-labels-pages-v2-20261018",
+  "localInstallerRelease": "public-labels-pages-v1-20261018; unchanged in v2",
+  "evidence": "user-provided PowerShell success log in this chat",
+  "localApplied": true,
+  "productionApplied": true,
+  "productionEvidence": "docs/completions/20261018-public-labels-pages-v2-production-applied.json",
+  "localSuccessMarker": "XCLIP_PUBLIC_LABELS_PAGES_LOCAL_INSTALLED",
+  "localBackup": "C:\\Projects\\xcliprank\\.local-admin\\public-labels-pages-installs\\20261018T025217136Z-817fadc6-4060-48a5-a449-bd551b336452",
+  "open": "http://localhost:3004/label-publication",
+  "dbEnvCronProviderChanges": "none per installer log",
+  "localRestartConfirmed": false,
+  "actualLabelPublicationReportReceived": false,
+  "realBrowserSaveAndNavigationVerificationReceived": false,
+  "privateModelsAndTeacherDataIncludedInGit": false,
+  "next": "restart local management, prepare manual truth, review, publish and confirm result count"
+}

@@ -1,3 +1,11 @@
+# 2026-10-18 JST：ラベル公開・個別URLの本番とローカル適用を確認
+
+ユーザー提供の `XCLIP_PUBLIC_LABELS_PAGES_LOCAL_INSTALLED` を確認。ローカルのバックアップは `.local-admin/public-labels-pages-installs/20261018T025217136Z-817fadc6-4060-48a5-a449-bd551b336452`。v1 ZIPのローカルPS1はv2同梱版と同一なので、本番v2との版齟齬はない。本番v2は直前の成功ログで適用確認済み。env/DB/Cron/providerの変更なし。モデル/教師は既存PC内保持。実プロジェクトへの追加操作は行っていない。
+
+残作業：ローカル管理画面の再起動→ `/label-publication` の「学習時に付けた手動正解を準備」→内容確認→「確認済みラベルを本番へ反映（最大100件）」→反映件数と関連表示の確認。今回ログで再起動完了・実ラベル公開・実保存動作まで確認したとは扱わない。適用は両環境完了、実ラベル公開は成功報告待ち。根拠：docs/completions/20261018-public-labels-pages-local-applied.json。以前のローカル未適用/未受領は当時の記録として保持。
+
+---
+
 # 2026-10-18 JST：ラベル公開基盤・個別URL v2 本番適用成功
 
 - ユーザー提供ログの `XCLIP_PUBLIC_LABELS_PAGES_V2_DEPLOYMENT_COMPLETE` と公開版HTTP200、`PUBLIC_LABELS_PAGES_ENDPOINTS_V2_OK` を確認。本番runtime `/home/rbxfxmfd/xclip-video-card-20261004.DJKKID/runtime` に適用済み。旧版復旧後の適用待ち状態から更新する。新BUILD_IDと新sourceパスは今回の抜粋にないため推定しない。
