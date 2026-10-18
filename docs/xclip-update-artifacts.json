@@ -2,6 +2,15 @@
   "release": "public-labels-pages-v2-20261018",
   "productionApplied": true,
   "localApplied": true,
+  "labelPublicationResultCount": 81,
+  "preparedCount": 100,
+  "unpublishedCount": 19,
+  "verificationBasis": "user screenshot header; public display and remaining reasons pending",
+  "record": "docs/completions/20261018-public-labels-publication81-observed.json",
+  "previousRecords": {
+  "release": "public-labels-pages-v2-20261018",
+  "productionApplied": true,
+  "localApplied": true,
   "localRestartConfirmed": true,
   "labelPublicationReportReceived": true,
   "labelPublicationResultCount": null,
@@ -6261,6 +6270,7 @@
 }
 }
 
+}
 }
 }
 }

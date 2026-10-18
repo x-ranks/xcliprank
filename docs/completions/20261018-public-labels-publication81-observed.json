@@ -1,0 +1,21 @@
+{
+  "dateJst": "2026-10-18",
+  "release": "public-labels-pages-v2-20261018",
+  "evidence": "user screenshot codex-clipboard-feb0b193-4af6-4bf3-a19e-1580b49e8450.png; header only",
+  "productionApplied": true,
+  "localApplied": true,
+  "localRestartConfirmed": true,
+  "modelSamplesDisplayed": 100,
+  "independentTestVideosDisplayed": 0,
+  "preparedDisplayed": 100,
+  "publishedDisplayed": 81,
+  "remainingUnpublishedDisplayed": 19,
+  "errorVisibleInProvidedCrop": false,
+  "fullPageErrorsChecked": false,
+  "exactReasonsForRemaining19": "not yet provided; not inferred as individual failures",
+  "codeChecked": "lib/label-publication-service.ts: publish skips ineligible or changed sourceHash; clear-published filters only local queue",
+  "publicLabelOrRelatedDisplayIndependentlyChecked": false,
+  "realDbOrProviderAccessByAgent": false,
+  "applicationOrPrivateStateChangedByAgent": false,
+  "next": "clear published confirmation rows, inspect remaining row messages; preserves remote catalog and original teaching data"
+}
