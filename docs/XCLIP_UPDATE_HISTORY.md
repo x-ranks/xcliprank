@@ -84,3 +84,13 @@
 - Git commit is authorized in this conversation. GitHub push is not performed. The commit ID is recorded in the downloadable Git receipt after commit creation.
 - User operating preference: do not operate the PC, apply local updates, or run commands without an explicit request. In ordinary update delivery, supply downloadable files, complete history and inline execution instructions for the user to execute. This Git recording and read-only feasibility review are the current explicitly requested operations.
 - Next request is feasibility verification only: FxTwitter for author addition/bulk import; official X API for subsequent new-video polling. No implementation or scheduled-provider change is included in this completion commit.
+
+## 2026-10-19：twizou SEO・index範囲更新の本番/ローカル適用完了
+
+- 目的：表示名をtwizouへ変更し、現行の掲載許可基準を維持したまま動画個別・投稿者ページのindex対象とサイトマップを広げる。対象はP0-A/B、C-1〜C-3、C-6、C-7。
+- 基準：本番のavailability-priority-v3を含むソースと対象ファイルをインストーラーが照合。Git HEADだけでは現行本番・ローカルの全変更を表さない。今回のGit記録は配布物と適用証跡であり、リポジトリ全ソースの同期完了とは区別する。
+- 本番：ユーザー提供ログで `TWIZOU_SEO_INDEX_V1_FIX2_DEPLOYMENT_COMPLETE`、ビルドID `bQqDGHe34ulE7VuZaMUxy` を確認。ステージ確認、サイトマップ動画2,924件・投稿者83件、個別ページmetadata確認に成功。Cronと監視ラッパーは変更なし。旧runtimeバックアップは `/home/rbxfxmfd/xclip-before-twizou-seo-index-v1-fix2.rdpt4W`。
+- ローカル：初回は `.next/types/validator.ts` のAppRoutes型エラーで自動復元。再実行で `LOCAL_SYNC_APPLIED files=46`。成功時バックアップは `C:\Projects\xcliprank-local-backups\twizou-seo-index-2026-10-19T11-31-02-192Z-8b68bd`。適用後に46/46ファイルが配布manifestのSHA-256と一致し、バックアップ記録が存在することを確認。成功時インストーラーは型チェックと関連4テストを通した。初回エラーはユーザーがローカルサーバー再起動との関係を推測しているが、原因は未確定。
+- 配布物：`releases/20261019-twizou-seo-index/` に本番差分zip、成功したfix2スクリプト、ローカル同期zip、SHA-256を保存。元zip内の本番スクリプトは修正前なので単独で実行しない。ファイル別の照合値は同梱manifest、適用証跡・復旧条件は `docs/completions/20261019-twizou-seo-index.json` に記録。
+- 未確認：Search Consoleの登録増加（事前報告4件）、本番の実データ全体・長期動作、ローカルのブラウザ動作。ユーザー提供ログに基づく本番適用と、こちらで実施したローカルファイル照合を区別する。
+- 今後：変更の作成・検証・本番適用・ローカル適用を別々に追跡し、適用結果を確認できたら対象コードまたは再現可能な配布物、照合値、成功表示、復旧先をGitへ記録してGitHubへpushする。適用結果が未報告なら、このチャットから確認を促し、推測で完了扱いにしない。

@@ -1,0 +1,52 @@
+{
+  "schemaVersion": 1,
+  "release": "twizou-seo-index-v1-20261019",
+  "recordedAtJst": "2026-10-19T20:35:35+09:00",
+  "purpose": "twizou表示名への変更、動画・投稿者のindex対象拡大、サイトマップと関連するページ変更を本番・ローカルへ反映した記録",
+  "sourceBaseline": "availability-priority-v3を含む本番ソース。適用時にCURRENT_SOURCE_V3_AND_TWIZOU_PAYLOAD_HASHES_MATCHで照合。Git HEAD単体は現行本番の完全な基準ではない",
+  "production": {
+    "status": "applied_user_log",
+    "evidence": [
+      "CURRENT_SOURCE_V3_AND_TWIZOU_PAYLOAD_HASHES_MATCH",
+      "STAGED_TARGET_BASELINES_MATCH",
+      "STAGED_PAYLOAD_FILES_COPIED=35",
+      "STAGED_MONITOR_SOURCE_CHECK_OK",
+      "SITEMAP_CHECK_OK posts=2924 accounts=83",
+      "POST_INDEX_METADATA_CHECK_OK",
+      "TWIZOU_SEO_INDEX_V1_FIX2_DEPLOYMENT_COMPLETE"
+    ],
+    "buildId": "bQqDGHe34ulE7VuZaMUxy",
+    "previousRuntimeBackup": "/home/rbxfxmfd/xclip-before-twizou-seo-index-v1-fix2.rdpt4W",
+    "cronAndMonitorWrappers": "unchanged",
+    "exactApplicationTimeJst": null,
+    "independentLiveRecheck": false
+  },
+  "local": {
+    "status": "applied_user_log_and_file_hash_check",
+    "candidateFiles": 46,
+    "firstAttempt": "TypeScript check failed on generated .next/types/validator.ts AppRoutes entries; installer reported LOCAL_SYNC_FAILED_PREVIOUS_FILES_RESTORED",
+    "firstAttemptBackup": "C:/Projects/xcliprank-local-backups/twizou-seo-index-2026-10-19T11-30-34-479Z-69f95c",
+    "successfulAttempt": "LOCAL_SYNC_APPLIED files=46",
+    "successfulAttemptBackup": "C:/Projects/xcliprank-local-backups/twizou-seo-index-2026-10-19T11-31-02-192Z-8b68bd",
+    "successfulAttemptBackupRecordExists": true,
+    "hashCheck": "46/46 applied files matched the local package manifest SHA-256 after user report",
+    "installerChecks": "TypeScript check and four related tests run by successful installer attempt",
+    "suspectedFirstFailureCause": "User reported local server restart during the first attempt; cause not independently confirmed",
+    "liveBrowserCheck": false
+  },
+  "artifacts": [
+    { "path": "releases/20261019-twizou-seo-index/twizou-seo-index-v1.zip", "sha256": "097e76b7a9d5939761ed9aae57e01197e6453576aa456353689c02c16a1afc1a" },
+    { "path": "releases/20261019-twizou-seo-index/apply-production-fix2.sh", "sha256": "abe4296453cf1d18f8202430107fcd9f7ede56db8169c32eb3a806064518f92b" },
+    { "path": "releases/20261019-twizou-seo-index/twizou-local-sync-v1.zip", "sha256": "913a4a8d8fb448a83cf9fcee90f748cbdb798d437739b177396f2a956392aac7" }
+  ],
+  "rollback": {
+    "production": "旧runtimeバックアップを保持。自動復元はインストーラー失敗時に行われる。成功後の手動切戻しは稼働ソースと設定を再照合して別途実施",
+    "local": "成功時バックアップと配布zip内のapply-local.cjs --rollbackを使用可能。ただし対象46ファイルが適用後から変更されていない場合のみ"
+  },
+  "notYetVerified": [
+    "Search Consoleのインデックス増加。事前報告値は登録済み4件",
+    "本番の実データと全ページの長期動作",
+    "最初のローカル型チェック失敗の確定原因"
+  ],
+  "recordScope": "配布物と適用証跡のみ。GitHubの既存ソースツリー全体を本番ビルドと一致させた記録ではない"
+}
