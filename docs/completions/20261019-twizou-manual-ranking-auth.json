@@ -1,0 +1,19 @@
+{
+  "schemaVersion": 1,
+  "release": "twizou-manual-ranking-auth-local-v1",
+  "dateJst": "2026-10-19",
+  "scope": "Local manual ranking authentication forwarding and admin key change; no production code changed",
+  "local": {
+    "status": "applied_user_log_and_file_hash_check",
+    "evidence": ["LOCAL_PRECHECK_OK files=3; no changes", "LOCAL_SYNC_APPLIED files=3"],
+    "backup": "C:/Projects/xcliprank-local-backups/twizou-manual-ranking-auth-2026-10-19T14-29-57-975Z-8760a0",
+    "matchedCandidateFiles": 3
+  },
+  "artifact": {
+    "path": "releases/20261019-twizou-manual-ranking-auth/twizou-manual-ranking-auth-local-v1.zip",
+    "sha256": "cc381e646546f68e17fb779541ace8a5befeb99925d04b9b19a041765dad5c6d"
+  },
+  "production": { "status": "no_change" },
+  "endToEnd": "not_verified; public /api/manual-ranking returns 403 HTML; bridge release pending",
+  "recordScope": "Distribution artifact, local application evidence and hashes; not full repository source synchronization"
+}

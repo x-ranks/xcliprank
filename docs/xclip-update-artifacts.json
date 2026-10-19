@@ -1598,5 +1598,13 @@
     "productionBuildId": "r1LEJwRjZ55ygRNWEgfC2",
     "localMatchedCandidateFiles": 38,
     "scope": "release artifacts and completion evidence; repository source tree not fully synchronized"
+  },
+  "twizouManualRankingAuthCompletion": {
+    "release": "twizou-manual-ranking-auth-local-v1",
+    "status": "local-applied; end-to-end-blocked-by-public-403",
+    "evidence": "docs/completions/20261019-twizou-manual-ranking-auth.json",
+    "artifacts": "releases/20261019-twizou-manual-ranking-auth/SHA256SUMS.txt",
+    "localMatchedCandidateFiles": 3,
+    "scope": "release artifacts and local application evidence; repository source tree not fully synchronized"
   }
 }

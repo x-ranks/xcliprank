@@ -103,3 +103,10 @@
 - ローカル：`LOCAL_SYNC_APPLIED files=38`、バックアップ `C:\Projects\xcliprank-local-backups\twizou-seo-followup-2026-10-19T14-18-31-472Z-507162`。適用後38/38ファイルが配布manifestのSHA-256と一致し、バックアップ記録を確認。
 - 配布物と照合値：`releases/20261019-twizou-seo-followup/`、詳細は`docs/completions/20261019-twizou-seo-followup.json`。GitHubのソースツリー全体を本番へ同期した記録ではない。
 - 既知の未完了：ローカル個別URL登録画面は認証エラーをユーザーが報告。原因は入力したキーを本番へ渡す前にローカルの`CRON_SECRET`で照合していたこと。ローカル専用修正版を準備中で、個別URLの実登録成功は未確認。Search Consoleの増加、本番全URL到達率、全ページ種別のHTML一覧照合も未実測。
+
+## 2026-10-19：個別URL登録のローカル認証修正
+
+- 管理画面で入力した管理キーをローカルの別設定と照合して弾いていた問題を修正。ローカルAPIは入力キーを本番へ転送し、管理画面からキーを変更できるようにした。
+- ユーザー提供ログで `LOCAL_PRECHECK_OK files=3`、`LOCAL_SYNC_APPLIED files=3` を確認。バックアップは `C:\Projects\xcliprank-local-backups\twizou-manual-ranking-auth-2026-10-19T14-29-57-975Z-8760a0`。適用後の3ファイルは配布manifestのSHA-256と一致。
+- 配布物は `releases/20261019-twizou-manual-ranking-auth/`、詳細証跡は `docs/completions/20261019-twizou-manual-ranking-auth.json`。本番コードの変更は含まない。
+- この修正後、公開サイトの `/api/manual-ranking` が403 HTMLとなる別問題を確認。したがって個別URL登録の実動作は未確認。公開側で通る既存APIを使う修正版を別リリースとして準備中であり、ローカル認証修正単体を機能完了とは扱わない。
