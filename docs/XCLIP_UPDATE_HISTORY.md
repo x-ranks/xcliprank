@@ -94,3 +94,12 @@
 - 配布物：`releases/20261019-twizou-seo-index/` に本番差分zip、成功したfix2スクリプト、ローカル同期zip、SHA-256を保存。元zip内の本番スクリプトは修正前なので単独で実行しない。ファイル別の照合値は同梱manifest、適用証跡・復旧条件は `docs/completions/20261019-twizou-seo-index.json` に記録。
 - 未確認：Search Consoleの登録増加（事前報告4件）、本番の実データ全体・長期動作、ローカルのブラウザ動作。ユーザー提供ログに基づく本番適用と、こちらで実施したローカルファイル照合を区別する。
 - 今後：変更の作成・検証・本番適用・ローカル適用を別々に追跡し、適用結果を確認できたら対象コードまたは再現可能な配布物、照合値、成功表示、復旧先をGitへ記録してGitHubへpushする。適用結果が未報告なら、このチャットから確認を促し、推測で完了扱いにしない。
+
+## 2026-10-19：twizou SEO追加実装・個別URL順位登録の本番/ローカル適用
+
+- 目的：`watasi_v3.md`のStep 0/A/T/B（共通index述語、タグ面、内部リンクとページ送り、メタ修正）と、ローカル管理の個別URL順位登録を反映。既存の掲載許可基準、`/p/` description、sitemapの`lastmod`は維持。
+- 作成・検証：本番42ファイル、ローカル38ファイル。隔離テスト49件、最適化ビルド、模擬データでsitemap対象319本の内部リンク到達を確認。模擬検証を本番全件実測とは扱わない。
+- 本番：初回は404 HTMLのhead内だけを数える検査が、Next.jsのストリーミングメタを見落として失敗。`PREVIOUS_RUNTIME_RESTORED`を確認。HTML全体ではtitle 1、robots 1、canonical 0。検査を修正した`apply-production-followup-fix1.sh`で`TWIZOU_SEO_FOLLOWUP_V1_DEPLOYMENT_COMPLETE`を確認。ビルドID `r1LEJwRjZ55ygRNWEgfC2`、sitemap動画2,926件・投稿者83件、旧runtimeバックアップ `/home/rbxfxmfd/xclip-before-twizou-seo-followup-v1-20261019.MHdQ2Y`。Cronと監視ラッパーは変更なし。
+- ローカル：`LOCAL_SYNC_APPLIED files=38`、バックアップ `C:\Projects\xcliprank-local-backups\twizou-seo-followup-2026-10-19T14-18-31-472Z-507162`。適用後38/38ファイルが配布manifestのSHA-256と一致し、バックアップ記録を確認。
+- 配布物と照合値：`releases/20261019-twizou-seo-followup/`、詳細は`docs/completions/20261019-twizou-seo-followup.json`。GitHubのソースツリー全体を本番へ同期した記録ではない。
+- 既知の未完了：ローカル個別URL登録画面は認証エラーをユーザーが報告。原因は入力したキーを本番へ渡す前にローカルの`CRON_SECRET`で照合していたこと。ローカル専用修正版を準備中で、個別URLの実登録成功は未確認。Search Consoleの増加、本番全URL到達率、全ページ種別のHTML一覧照合も未実測。

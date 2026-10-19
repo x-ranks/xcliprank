@@ -1589,5 +1589,14 @@
     "productionBuildId": "bQqDGHe34ulE7VuZaMUxy",
     "localMatchedCandidateFiles": 46,
     "scope": "release artifacts and completion evidence; repository source tree not fully synchronized"
+  },
+  "twizouSeoFollowupCompletion": {
+    "release": "twizou-seo-followup-v1-20261019",
+    "status": "production-and-local-applied; manual-ranking-auth-fix-pending",
+    "evidence": "docs/completions/20261019-twizou-seo-followup.json",
+    "artifacts": "releases/20261019-twizou-seo-followup/SHA256SUMS.txt",
+    "productionBuildId": "r1LEJwRjZ55ygRNWEgfC2",
+    "localMatchedCandidateFiles": 38,
+    "scope": "release artifacts and completion evidence; repository source tree not fully synchronized"
   }
 }
