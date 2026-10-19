@@ -120,3 +120,8 @@
 - ローカル：ユーザー提供ログで `LOCAL_PRECHECK_OK files=2`、`LOCAL_SYNC_APPLIED files=2` を確認。バックアップ `C:\Projects\xcliprank-local-backups\twizou-manual-ranking-bridge-2026-10-19T14-54-16-726Z-39961d`。適用後の2ファイルは配布manifestのSHA-256と一致し、バックアップ記録も確認。
 - 配布物と照合値：`releases/20261019-twizou-manual-ranking-bridge/`、詳細は `docs/completions/20261019-twizou-manual-ranking-bridge.json`。このGit記録は配布物と適用証跡であり、本番・ローカルのソースツリー全体をGitHubと同期したことを意味しない。
 - 未確認：有効な管理キーによる状態読み取りと実際のURL登録・ランキング反映。無効な管理キーの拒否は確認済みだが、成功経路を推測で完了扱いにしない。
+
+### 2026-10-20 追記：管理画面からの実動作確認
+
+- ユーザーが本番の `CRON_SECRET` を管理画面のキーとして設定し、認証が通ったと報告。
+- ユーザーが個別URLを1件登録し、指定したランキング順位への表示まで確認したと報告。これをユーザーによる実動作確認として記録する。登録URL、順位、登録日時、公開データの独立照合は行っていない。

@@ -1609,11 +1609,12 @@
   },
   "twizouManualRankingBridgeCompletion": {
     "release": "twizou-manual-ranking-bridge-v1-20261019",
-    "status": "production-and-local-applied; end-to-end-registration-unverified",
+    "status": "production-and-local-applied; user-confirmed-registration-and-ranked-display",
     "evidence": "docs/completions/20261019-twizou-manual-ranking-bridge.json",
     "artifacts": "releases/20261019-twizou-manual-ranking-bridge/SHA256SUMS.txt",
     "productionBuildId": "liCSzSpUlf0rPlnOfTmZJ",
     "localMatchedCandidateFiles": 2,
-    "scope": "release artifacts and application evidence; repository source tree not fully synchronized"
+    "scope": "release artifacts and application evidence; repository source tree not fully synchronized",
+    "userFunctionalVerification": "2026-10-20 user reported valid admin key, one URL registration and assigned ranking display"
   }
 }

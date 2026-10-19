@@ -30,7 +30,7 @@
     "backupRecordExists": true,
     "matchedCandidateFiles": 2,
     "installerChecks": "TypeScript check and manual ranking tests run by installer",
-    "liveBrowserCheck": false
+    "liveBrowserCheck": "user_reported_success_2026-10-20"
   },
   "predeploymentVerification": {
     "isolatedCanonicalTestsPassed": 50,
@@ -43,9 +43,13 @@
     { "path": "releases/20261019-twizou-manual-ranking-bridge/apply-production-manual-ranking-bridge-v1.sh", "sha256": "7640e9041d719e1072ba046af9123b1bd013ccce0befd989811d7f1f41efd360" },
     { "path": "releases/20261019-twizou-manual-ranking-bridge/twizou-manual-ranking-bridge-local-v1.zip", "sha256": "36541368192f076544d0f5fb8517bd43a184d925a5c7db7704b18e8a539693bf" }
   ],
-  "notYetVerified": [
-    "Valid admin key can read state through the public bridge",
-    "Actual URL registration succeeds and appears at assigned rankings"
-  ],
+  "userFunctionalVerification": {
+    "dateJst": "2026-10-20",
+    "adminKeyAccepted": "user_reported",
+    "urlRegistered": "user_reported_one_entry",
+    "appearedAtAssignedRanking": "user_reported",
+    "independentUrlAndRankCheck": false
+  },
+  "notYetVerified": ["Independent check of the registered URL, exact rank and persistence over time"],
   "recordScope": "Distribution artifacts, hashes, production and local application evidence; not full repository source synchronization"
 }
