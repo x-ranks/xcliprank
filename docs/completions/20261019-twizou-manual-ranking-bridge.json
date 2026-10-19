@@ -1,0 +1,51 @@
+{
+  "schemaVersion": 1,
+  "release": "twizou-manual-ranking-bridge-v1-20261019",
+  "dateJst": "2026-10-19",
+  "purpose": "Route local manual ranking reads and writes through public API paths that reach the app while retaining production admin authentication",
+  "production": {
+    "status": "applied_user_log",
+    "evidence": [
+      "CURRENT_SOURCE_AND_BRIDGE_PAYLOAD_HASHES_MATCH",
+      "STAGED_TARGET_BASELINES_MATCH",
+      "STAGED_PAYLOAD_FILES_COPIED=3",
+      "STAGED_MONITOR_SOURCE_CHECK_OK",
+      "SITEMAP_CHECK_OK posts=2926 accounts=83",
+      "POST_INDEX_METADATA_CHECK_OK",
+      "MISSING_POST_METADATA_CHECK_OK",
+      "MANUAL_RANKING_BRIDGE_AUTH_CHECK_OK; invalid token rejected; no write",
+      "TWIZOU_MANUAL_RANKING_BRIDGE_V1_DEPLOYMENT_COMPLETE"
+    ],
+    "stagingDirectory": "/home/rbxfxmfd/xclip-twizou-manual-ranking-bridge-v1-20261019.pcOycb",
+    "buildId": "liCSzSpUlf0rPlnOfTmZJ",
+    "previousRuntimeBackup": "/home/rbxfxmfd/xclip-before-twizou-manual-ranking-bridge-v1-20261019.jKs7gK",
+    "cronAndMonitorWrappers": "unchanged",
+    "exactApplicationTimeJst": null,
+    "independentLiveRecheck": false
+  },
+  "local": {
+    "status": "applied_user_log_and_file_hash_check",
+    "evidence": ["LOCAL_PRECHECK_OK files=2; no changes", "LOCAL_SYNC_APPLIED files=2"],
+    "backup": "C:/Projects/xcliprank-local-backups/twizou-manual-ranking-bridge-2026-10-19T14-54-16-726Z-39961d",
+    "backupRecordExists": true,
+    "matchedCandidateFiles": 2,
+    "installerChecks": "TypeScript check and manual ranking tests run by installer",
+    "liveBrowserCheck": false
+  },
+  "predeploymentVerification": {
+    "isolatedCanonicalTestsPassed": 50,
+    "isolatedProductionBuild": "passed",
+    "localInstallerApplyAndRollbackOnIsolatedCopy": "passed",
+    "productionPostcheck": "invalid bearer rejected for both read and write; no data mutation"
+  },
+  "artifacts": [
+    { "path": "releases/20261019-twizou-manual-ranking-bridge/twizou-manual-ranking-bridge-production-v1.zip", "sha256": "56fffcef1e1ef3040fcae45dc3ac258ac4516567042ef888c8d0d1582dcb6661" },
+    { "path": "releases/20261019-twizou-manual-ranking-bridge/apply-production-manual-ranking-bridge-v1.sh", "sha256": "7640e9041d719e1072ba046af9123b1bd013ccce0befd989811d7f1f41efd360" },
+    { "path": "releases/20261019-twizou-manual-ranking-bridge/twizou-manual-ranking-bridge-local-v1.zip", "sha256": "36541368192f076544d0f5fb8517bd43a184d925a5c7db7704b18e8a539693bf" }
+  ],
+  "notYetVerified": [
+    "Valid admin key can read state through the public bridge",
+    "Actual URL registration succeeds and appears at assigned rankings"
+  ],
+  "recordScope": "Distribution artifacts, hashes, production and local application evidence; not full repository source synchronization"
+}

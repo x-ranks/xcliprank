@@ -110,3 +110,13 @@
 - ユーザー提供ログで `LOCAL_PRECHECK_OK files=3`、`LOCAL_SYNC_APPLIED files=3` を確認。バックアップは `C:\Projects\xcliprank-local-backups\twizou-manual-ranking-auth-2026-10-19T14-29-57-975Z-8760a0`。適用後の3ファイルは配布manifestのSHA-256と一致。
 - 配布物は `releases/20261019-twizou-manual-ranking-auth/`、詳細証跡は `docs/completions/20261019-twizou-manual-ranking-auth.json`。本番コードの変更は含まない。
 - この修正後、公開サイトの `/api/manual-ranking` が403 HTMLとなる別問題を確認。したがって個別URL登録の実動作は未確認。公開側で通る既存APIを使う修正版を別リリースとして準備中であり、ローカル認証修正単体を機能完了とは扱わない。
+
+## 2026-10-19：個別URLランキング登録のAPI経路修正を本番・ローカルに適用
+
+- 背景：公開サイトの新設 `/api/manual-ranking` は403 HTMLで遮断される一方、既存の閲覧APIへのGETと操作記録APIへのPOSTはアプリまで届くことを、ユーザー提供の読み取り専用・空データ診断で確認した。
+- 変更：管理画面の状態読み取りを `GET /api/public-video?type=placement`、登録を `POST /api/engagement?type=placement` に接続。両方とも既存の本番管理キー認証へ委譲する。通常の閲覧・操作記録処理を維持。
+- 事前検証：隔離テスト50件と最適化ビルド、ローカルインストーラーの隔離適用・復元を確認。本番スクリプトはソース・配布ハッシュ照合、テスト、型検査、ビルド、切替後の公開経路確認を行い、失敗時は旧ランタイムへ復元する。
+- 本番：ユーザー提供ログで `CURRENT_SOURCE_AND_BRIDGE_PAYLOAD_HASHES_MATCH`、`STAGED_PAYLOAD_FILES_COPIED=3`、`SITEMAP_CHECK_OK posts=2926 accounts=83`、`MANUAL_RANKING_BRIDGE_AUTH_CHECK_OK; invalid token rejected; no write`、`TWIZOU_MANUAL_RANKING_BRIDGE_V1_DEPLOYMENT_COMPLETE` を確認。ビルドID `liCSzSpUlf0rPlnOfTmZJ`。旧runtimeバックアップ `/home/rbxfxmfd/xclip-before-twizou-manual-ranking-bridge-v1-20261019.jKs7gK`。Cronと監視ラッパーは変更なし。
+- ローカル：ユーザー提供ログで `LOCAL_PRECHECK_OK files=2`、`LOCAL_SYNC_APPLIED files=2` を確認。バックアップ `C:\Projects\xcliprank-local-backups\twizou-manual-ranking-bridge-2026-10-19T14-54-16-726Z-39961d`。適用後の2ファイルは配布manifestのSHA-256と一致し、バックアップ記録も確認。
+- 配布物と照合値：`releases/20261019-twizou-manual-ranking-bridge/`、詳細は `docs/completions/20261019-twizou-manual-ranking-bridge.json`。このGit記録は配布物と適用証跡であり、本番・ローカルのソースツリー全体をGitHubと同期したことを意味しない。
+- 未確認：有効な管理キーによる状態読み取りと実際のURL登録・ランキング反映。無効な管理キーの拒否は確認済みだが、成功経路を推測で完了扱いにしない。

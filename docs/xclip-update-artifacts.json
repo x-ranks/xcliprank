@@ -1606,5 +1606,14 @@
     "artifacts": "releases/20261019-twizou-manual-ranking-auth/SHA256SUMS.txt",
     "localMatchedCandidateFiles": 3,
     "scope": "release artifacts and local application evidence; repository source tree not fully synchronized"
+  },
+  "twizouManualRankingBridgeCompletion": {
+    "release": "twizou-manual-ranking-bridge-v1-20261019",
+    "status": "production-and-local-applied; end-to-end-registration-unverified",
+    "evidence": "docs/completions/20261019-twizou-manual-ranking-bridge.json",
+    "artifacts": "releases/20261019-twizou-manual-ranking-bridge/SHA256SUMS.txt",
+    "productionBuildId": "liCSzSpUlf0rPlnOfTmZJ",
+    "localMatchedCandidateFiles": 2,
+    "scope": "release artifacts and application evidence; repository source tree not fully synchronized"
   }
 }

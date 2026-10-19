@@ -1,0 +1,3 @@
+56fffcef1e1ef3040fcae45dc3ac258ac4516567042ef888c8d0d1582dcb6661  twizou-manual-ranking-bridge-production-v1.zip
+7640e9041d719e1072ba046af9123b1bd013ccce0befd989811d7f1f41efd360  apply-production-manual-ranking-bridge-v1.sh
+36541368192f076544d0f5fb8517bd43a184d925a5c7db7704b18e8a539693bf  twizou-manual-ranking-bridge-local-v1.zip
