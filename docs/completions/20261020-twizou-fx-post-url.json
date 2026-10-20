@@ -32,7 +32,7 @@
     "backupRecordExists": true,
     "matchedCandidateFiles": 4,
     "installerChecks": "TypeScript and three related tests passed during user-run installer",
-    "localBrowserCheck": "not_yet_reported"
+    "localBrowserCheck": "user_screenshot_reported_success_2026-10-20"
   },
   "predeploymentVerification": {
     "isolatedCanonicalTestsPassed": 51,
@@ -46,6 +46,16 @@
     { "path": "releases/20261020-twizou-fx-post-url/apply-production-fx-post-url-v1.sh", "sha256": "d4a1ff0e859f25f19cc20b067d6bc89f2d214ac7d220e7156c91e1f7a04ff293" },
     { "path": "releases/20261020-twizou-fx-post-url/twizou-fx-post-url-local-v1.zip", "sha256": "f4827d28da38cf5898e763765f21d197845f74dad5db2ea5cbb305284a6349a2" }
   ],
-  "notYetVerified": ["Valid-key registration of a real X post", "Resulting post and new author visible in production", "Subsequent automatic patrol of the added author"],
+  "userFunctionalVerification": {
+    "dateJst": "2026-10-20",
+    "evidence": "User screenshot of local FxTwitter post URL registration result",
+    "savedNewPost": 1,
+    "promoted": 0,
+    "excluded": 0,
+    "duplicates": 0,
+    "authorAddedToPatrol": "user_screenshot_success_message",
+    "independentDatabaseAndRankingCheck": false
+  },
+  "notYetVerified": ["Independent check of the resulting production post and ranking position", "Subsequent automatic patrol of the added author"],
   "recordScope": "Distribution artifacts, hashes, production and local application evidence; not full repository source synchronization"
 }

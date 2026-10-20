@@ -1619,11 +1619,12 @@
   },
   "twizouFxPostUrlCompletion": {
     "release": "twizou-fx-post-url-v1-20261020",
-    "status": "production-and-local-applied; real-post-registration-unverified",
+    "status": "production-and-local-applied; user-screenshot-reports-one-post-registration",
     "evidence": "docs/completions/20261020-twizou-fx-post-url.json",
     "artifacts": "releases/20261020-twizou-fx-post-url/SHA256SUMS.txt",
     "productionBuildId": "P9HoPwOpjNXNURcORYz3i",
     "localMatchedCandidateFiles": 4,
-    "scope": "release artifacts and application evidence; repository source tree not fully synchronized"
+    "scope": "release artifacts and application evidence; repository source tree not fully synchronized",
+    "userFunctionalVerification": "2026-10-20 screenshot reports one new post and author added to patrol; independent DB/ranking check pending"
   }
 }
