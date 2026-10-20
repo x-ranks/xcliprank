@@ -1,0 +1,42 @@
+{
+  "release": "twizou-ui-newest-v1-20261020",
+  "recordedDateJst": "2026-10-20",
+  "purpose": "Mobile post actions, save-count and related-video copy, indexable tag links, homepage copy, and newest-ranking priority",
+  "evidence": "User-provided production and local installer output in the Xclip 運営・開発 chat on 2026-10-20",
+  "production": {
+    "applied": true,
+    "successMarker": "TWIZOU_UI_NEWEST_V1_DEPLOYMENT_COMPLETE",
+    "sourceAndPayloadHashCheck": "CURRENT_SOURCE_AND_UI_NEWEST_PAYLOAD_HASHES_MATCH",
+    "baselineCheck": "STAGED_TARGET_BASELINES_MATCH",
+    "filesCopied": 16,
+    "sitemapCheck": { "posts": 3401, "accounts": 85 },
+    "postUiTagLinkCheck": "POST_UI_TAG_LINK_CHECK_OK",
+    "newestApiCheck": "NEWEST_API_CHECK_OK",
+    "buildId": "WgLOYM_BoG1Aiq3op5ufo",
+    "backup": "/home/rbxfxmfd/xclip-before-twizou-ui-newest-v1-20261020.eHApld",
+    "cronAndMonitorWrappers": "unchanged",
+    "liveBrowserAndNextEditionRankingVerified": false
+  },
+  "local": {
+    "applied": true,
+    "successMarker": "LOCAL_SYNC_APPLIED files=7",
+    "backup": "C:\\Projects\\xcliprank-local-backups\\twizou-ui-newest-2026-10-20T12-09-37-823Z-29ccf0",
+    "candidateFileHashesRecheckedAfterApplication": 7,
+    "candidateFileHashesMatched": 7,
+    "liveBrowserVerified": false
+  },
+  "artifactsSha256": {
+    "twizou-ui-newest-v1-20261020.sh": "d8926c3c236006cec4b6ba0cfff6374979b6d81979b470af8a1c5ef775364ef5",
+    "twizou-ui-newest-v1-20261020-production.zip": "06c53be4f5c3c84fc31fb74e71f8e77558f635b181ea89121856affe9509001b",
+    "twizou-ui-newest-v1-20261020-local.zip": "2f560e16acd69d65cf35cf877171f7cadef804609ad2aa0a01bb6222df8a066d"
+  },
+  "rollback": {
+    "production": "Restore the previous runtime from the backup path above; the production installer also restores it automatically when its post-switch checks fail.",
+    "local": "Run node apply-local.cjs --rollback with the local backup path above."
+  },
+  "limitations": [
+    "The newest-order behavior begins with the next ranking edition; this report verifies the installer and API check, not the next edition's displayed order.",
+    "Registration/patrol priority markers begin with posts newly inserted after this release.",
+    "The GitHub release archives preserve production and local source variants; the repository root source is older and is not declared to be the deployed runtime."
+  ]
+}
