@@ -125,3 +125,13 @@
 
 - ユーザーが本番の `CRON_SECRET` を管理画面のキーとして設定し、認証が通ったと報告。
 - ユーザーが個別URLを1件登録し、指定したランキング順位への表示まで確認したと報告。これをユーザーによる実動作確認として記録する。登録URL、順位、登録日時、公開データの独立照合は行っていない。
+
+## 2026-10-20：FxTwitter投稿URLから通常動画を登録する更新を本番・ローカルに適用
+
+- 目的：管理画面にX投稿URLを入れ、FxTwitterから投稿者・本文・ネイティブ動画を取得して通常の掲載条件で保存。未登録の投稿者は共通管理と後続の新着巡回にも追加する。個別URLの順位固定機能とは別。
+- 変更：本番5ファイル、ローカル4ファイル。通常の内容・Tier・停止/手動削除・重複保護を維持し、削除済み投稿者をURL経由で再追加しない。既存APIの `POST /api/engagement?type=fx-post` を使う。Cron設定と監視ラッパーは変更しない。
+- 事前検証：隔離テスト51件、型検査、最適化ビルド、ローカルインストーラーの隔離適用・復元、配布ZIPの展開とSHA-256照合。実FxTwitter応答とDB登録はこの段階では実行していない。
+- 本番：ユーザー提供ログで `CURRENT_SOURCE_AND_FX_POST_PAYLOAD_HASHES_MATCH`、`STAGED_PAYLOAD_FILES_COPIED=5`、`FX_POST_URL_AUTH_CHECK_OK`、`TWIZOU_FX_POST_URL_V1_DEPLOYMENT_COMPLETE` を確認。ビルドID `P9HoPwOpjNXNURcORYz3i`、旧runtimeバックアップ `/home/rbxfxmfd/xclip-before-twizou-fx-post-url-v1-20261020.y7JGyX`。無効キー拒否のみ確認し、実投稿の取得・登録は未実施。
+- ローカル：ユーザー提供ログで `LOCAL_PRECHECK_OK files=4`、`LOCAL_SYNC_APPLIED files=4` を確認。バックアップ `C:\Projects\xcliprank-local-backups\twizou-fx-post-url-2026-10-20T09-11-16-687Z-9e77ba`。適用後4/4ファイルが配布manifestのSHA-256と一致し、バックアップ記録の存在を確認。こちらの再実行は `LOCAL_SYNC_ALREADY_APPLIED` となり二重適用なし。
+- 配布物と照合値：`releases/20261020-twizou-fx-post-url/`、詳細は `docs/completions/20261020-twizou-fx-post-url.json`。Git記録は配布物と適用証跡であり、リポジトリの全ソース同期を意味しない。
+- 未確認：管理画面での実URLプレビュー・有効キーでの本番登録・公開ページへの表示、追加投稿者の次回巡回。成功を推測しない。

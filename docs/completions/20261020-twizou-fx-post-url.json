@@ -1,0 +1,51 @@
+{
+  "schemaVersion": 1,
+  "release": "twizou-fx-post-url-v1-20261020",
+  "dateJst": "2026-10-20",
+  "purpose": "Fetch a single X post through FxTwitter, publish its native video through ordinary curated rules, and register a new author for later patrol",
+  "production": {
+    "status": "applied_user_log",
+    "evidence": [
+      "CURRENT_SOURCE_AND_FX_POST_PAYLOAD_HASHES_MATCH",
+      "STAGED_TARGET_BASELINES_MATCH",
+      "STAGED_PAYLOAD_FILES_COPIED=5",
+      "STAGED_MONITOR_SOURCE_CHECK_OK",
+      "SITEMAP_CHECK_OK posts=2926 accounts=83",
+      "POST_INDEX_METADATA_CHECK_OK",
+      "MISSING_POST_METADATA_CHECK_OK",
+      "MANUAL_RANKING_BRIDGE_AUTH_CHECK_OK; invalid token rejected; no write",
+      "FX_POST_URL_AUTH_CHECK_OK; invalid token rejected; no FxTwitter or DB requests",
+      "TWIZOU_FX_POST_URL_V1_DEPLOYMENT_COMPLETE"
+    ],
+    "stagingDirectory": "/home/rbxfxmfd/xclip-twizou-fx-post-url-v1-20261020.INZEFz",
+    "buildId": "P9HoPwOpjNXNURcORYz3i",
+    "previousBuildId": "liCSzSpUlf0rPlnOfTmZJ",
+    "previousRuntimeBackup": "/home/rbxfxmfd/xclip-before-twizou-fx-post-url-v1-20261020.y7JGyX",
+    "cronAndMonitorWrappers": "unchanged",
+    "exactApplicationTimeJst": null,
+    "independentLiveRecheck": false
+  },
+  "local": {
+    "status": "applied_user_log_and_file_hash_check",
+    "evidence": ["LOCAL_PRECHECK_OK files=4; no changes", "LOCAL_SYNC_APPLIED files=4"],
+    "backup": "C:/Projects/xcliprank-local-backups/twizou-fx-post-url-2026-10-20T09-11-16-687Z-9e77ba",
+    "backupRecordExists": true,
+    "matchedCandidateFiles": 4,
+    "installerChecks": "TypeScript and three related tests passed during user-run installer",
+    "localBrowserCheck": "not_yet_reported"
+  },
+  "predeploymentVerification": {
+    "isolatedCanonicalTestsPassed": 51,
+    "isolatedProductionBuild": "passed",
+    "isolatedProductionTypeCheck": "passed",
+    "localInstallerApplyAndRollbackOnIsolatedCopy": "passed",
+    "productionPostcheck": "invalid bearer rejected; no actual FxTwitter fetch or DB write"
+  },
+  "artifacts": [
+    { "path": "releases/20261020-twizou-fx-post-url/twizou-fx-post-url-production-v1.zip", "sha256": "e44b5e47e89e356f58e06487273effec7aca590945cd472330ff26bac11bf6ba" },
+    { "path": "releases/20261020-twizou-fx-post-url/apply-production-fx-post-url-v1.sh", "sha256": "d4a1ff0e859f25f19cc20b067d6bc89f2d214ac7d220e7156c91e1f7a04ff293" },
+    { "path": "releases/20261020-twizou-fx-post-url/twizou-fx-post-url-local-v1.zip", "sha256": "f4827d28da38cf5898e763765f21d197845f74dad5db2ea5cbb305284a6349a2" }
+  ],
+  "notYetVerified": ["Valid-key registration of a real X post", "Resulting post and new author visible in production", "Subsequent automatic patrol of the added author"],
+  "recordScope": "Distribution artifacts, hashes, production and local application evidence; not full repository source synchronization"
+}
