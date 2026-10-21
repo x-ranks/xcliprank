@@ -1,0 +1,41 @@
+{
+  "release": "twizou-tag-player-fix-v1-20261021",
+  "recordedDateJst": "2026-10-21",
+  "purpose": "Keep playback errors inside the player with a dismiss button, revise tag wording, and use full-page navigation for tag browsing",
+  "evidence": "User-provided production and local installer output in the Xclip 運営・開発 chat on 2026-10-21",
+  "production": {
+    "applied": true,
+    "successMarker": "TWIZOU_TAG_PLAYER_FIX_V1_DEPLOYMENT_COMPLETE",
+    "sourceAndPayloadHashCheck": "CURRENT_SOURCE_AND_TAG_PLAYER_PAYLOAD_HASHES_MATCH",
+    "baselineCheck": "STAGED_TARGET_BASELINES_MATCH",
+    "filesCopied": 11,
+    "sitemapCheck": { "posts": 3450, "accounts": 86 },
+    "postUiTagLinkCheck": "POST_UI_TAG_LINK_CHECK_OK",
+    "tagPageNavigationCheck": "TAG_PAGE_NAVIGATION_CHECK_OK",
+    "buildId": "BgEanIn6bUycw2KDg8uJ4",
+    "backup": "/home/rbxfxmfd/xclip-before-twizou-tag-player-fix-v1-20261021.6D2sp7",
+    "cronAndMonitorWrappers": "unchanged",
+    "browserInteractionVerified": false
+  },
+  "local": {
+    "applied": true,
+    "successMarker": "LOCAL_SYNC_APPLIED files=11",
+    "backup": "C:\\Projects\\xcliprank-local-backups\\twizou-tag-player-fix-2026-10-21T11-59-25-939Z-896146",
+    "candidateFileHashesRecheckedAfterApplication": 11,
+    "candidateFileHashesMatched": 11,
+    "browserInteractionVerified": false
+  },
+  "artifactsSha256": {
+    "twizou-tag-player-fix-v1-20261021.sh": "203b94f1d46d2b42c1d2d1d0d8f026f760054622ea529895d7c7cf267bc0f5c2",
+    "twizou-tag-player-fix-v1-20261021-production.zip": "315fe3856dfe899aecad2acc38bd71d24eb61b49f619330ba67ce73c128bb5fa",
+    "twizou-tag-player-fix-v1-20261021-local.zip": "8a1e3c57ea059d9ad6af9cb967fe09c1c00623afdeec7e99139ad4bf8563224d"
+  },
+  "rollback": {
+    "production": "The production installer restores the previous runtime on post-switch validation failure; the backup path above is retained for a later manual rollback.",
+    "local": "Run node apply-local.cjs --rollback with the local backup path above."
+  },
+  "limitations": [
+    "The installer checked HTTP output for the post and a tag page. A person has not yet confirmed the tag click or dismiss button in a browser on desktop or mobile.",
+    "The repository root source remains older than the deployed runtime; the release archives preserve the production and local source variants."
+  ]
+}

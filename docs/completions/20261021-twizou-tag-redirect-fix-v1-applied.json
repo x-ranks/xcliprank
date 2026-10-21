@@ -1,0 +1,47 @@
+{
+  "release": "twizou-tag-redirect-fix-v1-20261021",
+  "recordedDateJst": "2026-10-21",
+  "purpose": "Stop same-URL 308 redirects for percent-encoded Japanese tag routes",
+  "evidence": "User-provided production and local installer output in the Xclip 運営・開発 chat on 2026-10-21, plus read-only HTTP checks of the two affected public tag URLs",
+  "production": {
+    "applied": true,
+    "successMarker": "TWIZOU_TAG_REDIRECT_FIX_V1_DEPLOYMENT_COMPLETE",
+    "sourceAndPayloadHashCheck": "CURRENT_SOURCE_AND_TAG_REDIRECT_PAYLOAD_HASHES_MATCH",
+    "baselineCheck": "STAGED_TARGET_BASELINES_MATCH",
+    "filesCopied": 2,
+    "japaneseTagCheck": "JAPANESE_TAG_REDIRECT_CHECK_OK",
+    "sitemapCheck": { "posts": 3450, "accounts": 86 },
+    "buildId": "OvXwXJ_RaKpqrbERlbax4",
+    "backup": "/home/rbxfxmfd/xclip-before-twizou-tag-redirect-fix-v1-20261021.EOrKhW",
+    "cronAndMonitorWrappers": "unchanged"
+  },
+  "independentHttpVerification": {
+    "checkedUrls": [
+      "https://xcliprank.com/tags/%E3%82%AA%E3%83%8A%E3%83%8B%E3%83%BC",
+      "https://xcliprank.com/tags/%E5%80%8B%E4%BA%BA%E6%92%AE%E5%BD%B1"
+    ],
+    "statusForBoth": 200,
+    "redirectLocationForBoth": null,
+    "videoLinksForEach": 100
+  },
+  "local": {
+    "applied": true,
+    "successMarker": "LOCAL_SYNC_APPLIED files=2",
+    "backup": "C:\\Projects\\xcliprank-local-backups\\twizou-tag-redirect-fix-2026-10-21T12-17-49-547Z-33c85a",
+    "candidateFileHashesRecheckedAfterApplication": 2,
+    "candidateFileHashesMatched": 2
+  },
+  "artifactsSha256": {
+    "twizou-tag-redirect-fix-v1-20261021.sh": "2afc54a95f030c6dc4d2db14ee2fa44141947ec92555620b72f90599e5253064",
+    "twizou-tag-redirect-fix-v1-20261021-production.zip": "9b33d1f3bad3796b5650682c203cf5bb6829ec0c5335d8b5f2d244ba221f7f5c",
+    "twizou-tag-redirect-fix-v1-20261021-local.zip": "7541e662fb6c07d70158284328ee01da609ed683f13831332cdd24010df351bf"
+  },
+  "rollback": {
+    "production": "The installer restores the previous runtime automatically if post-switch validation fails; retain the backup path above for later manual rollback.",
+    "local": "Run node apply-local.cjs --rollback with the local backup path above."
+  },
+  "limitations": [
+    "The two public URLs were independently checked by HTTP after deployment; PC and mobile browser clicks have not yet been reported by the user.",
+    "The repository root source remains older than the deployed runtime; the release archives preserve production and local source variants."
+  ]
+}
