@@ -1,4 +1,31 @@
 {
+  "release": "twizou-domain-move-v1-20261021",
+  "localApplied": true,
+  "productionApplied": true,
+  "record": {
+    "release": "twizou-domain-move-v1-20261021",
+    "status": "production-and-local-applied",
+    "productionApplied": true,
+    "localApplied": true,
+    "baseProductionBuildId": "OvXwXJ_RaKpqrbERlbax4",
+    "newProductionBuildId": "Fx2tcddxuDKSsQFoBPRt6",
+    "productionBackup": "/home/rbxfxmfd/xclip-before-twizou-domain-move-v1-20261021.yr5SqZ",
+    "htaccessBackup": "/home/rbxfxmfd/xclip-twizou-domain-move-v1-20261021.zqOCxo/htaccess.before",
+    "localBackup": "C:\\Projects\\xcliprank-local-backups\\twizou-domain-move-2026-10-21T13-54-23-217Z-7eff18",
+    "localHashFilesVerified": 25,
+    "productionArtifact": {
+      "path": "releases/20261021-twizou-domain-move/twizou-domain-move-v1-20261021-fix1.sh",
+      "sha256": "552b6d871f6d633927560e54e5e6a03f684bbec85ad099086136e26acda90989"
+    },
+    "localArtifact": {
+      "path": "releases/20261021-twizou-domain-move/twizou-domain-move-v1-20261021-local.zip",
+      "sha256": "29445a66f67f233b37266d399ce6565db8fa0d1ab7f7afc663da6d9ea22bd2d7"
+    },
+    "evidence": "User-supplied production and local apply logs; independent public HTTP verification; local manifest SHA-256 check",
+    "searchConsoleMigrationComplete": false,
+    "notes": "Initial production attempt failed old-host 301 check and restored prior runtime; fix1 completed. The existing local checkout contains unrelated uncommitted work and was not staged or committed."
+  },
+  "previousRecords": {
   "release": "auto-labels-mobile-v1-20261018",
   "localApplied": false,
   "productionApplied": false,
@@ -6276,6 +6303,7 @@
 }
 }
 
+}
 }
 }
 }
