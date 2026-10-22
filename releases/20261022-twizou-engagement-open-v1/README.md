@@ -11,7 +11,7 @@
 - 本番 `--apply`：`STAGED_BUILD_AND_TESTS_OK`、`SITEMAP_CHECK_OK posts=3501`、`POST_PAGE_CHECK_OK`、`ENGAGEMENT_API_SMOKE_OK`、`TWIZOU_ENGAGEMENT_OPEN_V1_FIX1_DEPLOYMENT_COMPLETE`。ユーザー提供の実行ログによる確認。
 - 本番新BUILD_ID：`f6l2AFJY_Z04_PUGQJOAA`。前runtimeバックアップ：`/home/rbxfxmfd/xclip-before-twizou-engagement-open-v1.ErI455`。staging：`/home/rbxfxmfd/xclip-twizou-engagement-open-v1.1PgRWD`。
 - ローカル機能コードとテスト更新は適用済み。バックアップ：`C:\Projects\xcliprank-local-backups\twizou-engagement-open-20261022T101010119`、`C:\Projects\xcliprank-local-backups\twizou-engagement-open-test-fix-20261022T204639089`。型チェック、計測部品テスト、ページテスト成功。
-- 実ブラウザ操作後に集計値が増えることは、記録時点で**未確認**。公開ページ・版ファイルへのこちらからの直接アクセスも失敗したため、公開疎通は適用スクリプトの出力を根拠とする。
+- 本番適用後、ユーザーが twizou.net の動画を開いてローカル管理画面を再読込し、動画オープン数が増えたことを**確認済み**。前後の具体的な件数は未共有。公開ページ・版ファイルへのこちらからの直接アクセスは失敗したため、公開疎通は適用スクリプトの出力を根拠とする。
 
 ## 対象ファイル SHA-256
 
