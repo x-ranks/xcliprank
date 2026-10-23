@@ -1,0 +1,45 @@
+{
+    "files":  [
+                  {
+                      "path":  "lib/label-auto-service.ts",
+                      "baselineSha256":  "6d9ed02bac01fd6a3cce1cd986299b1e07707d4b4ca68495a8707fed556b038d",
+                      "candidateSha256":  "b40c7a34c0caac390e74e28c3579eb31394e3d1970119e6aef3efc0c762d6f12"
+                  },
+                  {
+                      "path":  "lib/label-auto-server.ts",
+                      "baselineSha256":  "1e75c5dabf48d3f75a7a0a72e664e3c4f5a9171b2b2efed5f32e4196495ff4d3",
+                      "candidateSha256":  "7582d1c6bf397e090bd6cce761331c42f8a22cf8b02786942d6d1901dd54c7ea"
+                  },
+                  {
+                      "path":  "lib/label-learning-video.ts",
+                      "baselineSha256":  "437a79a4fec1311316bcb6525c871cbdd6b114ec8c2e8020f22ba982fbd1986c",
+                      "candidateSha256":  "5c3489f8fb3a16fa99fde2826273127bb8c12ceaa83f493aa36b56fd483b0584"
+                  },
+                  {
+                      "path":  "app/label-publication/AutoLabelPanel.tsx",
+                      "baselineSha256":  "5fc4beeee97f49737ac27197ebf59426b1ba5db6cda04409f2631a2d4bcfdd8e",
+                      "candidateSha256":  "14649d91a13f607bef08c28500d15979f815a4988d02ced7554c9cea5173e45f"
+                  },
+                  {
+                      "path":  "scripts/run-auto-label-worker.cjs",
+                      "baselineSha256":  null,
+                      "candidateSha256":  "99b883d8a02ad56d3ee0e97a620297d205ee62e8d60c5bb06f2a4b4365a1a0d9"
+                  },
+                  {
+                      "path":  "scripts/install-auto-label-task.ps1",
+                      "baselineSha256":  null,
+                      "candidateSha256":  "22df68361cb6c97120a0bfe223c63d2ec54ec589e7e5573dfd3fdda6ac9f1805"
+                  },
+                  {
+                      "path":  "scripts/test-label-auto.cjs",
+                      "baselineSha256":  "79c2d4f5e2374c3ea28bb97c0f33233708994cf84b87236f07a8109027792292",
+                      "candidateSha256":  "c53fb1f846d052822a9d4a1f4020c3619c0738625495e7c76204713035f79881"
+                  },
+                  {
+                      "path":  "scripts/test-label-learning.cjs",
+                      "baselineSha256":  "cf630f5bb088a59a0cd855bb62e3fc8e0d690a17d01458a372d83397b785ef29",
+                      "candidateSha256":  "a0fb62e0ac0bc26b395b4933c07570cc38869e57ca13584598c7d6b7f96fc3df"
+                  }
+              ],
+    "release":  "twizou-auto-label-followup-v1-20261024-local"
+}

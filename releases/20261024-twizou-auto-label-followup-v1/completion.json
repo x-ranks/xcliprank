@@ -1,0 +1,31 @@
+{
+  "release": "twizou-auto-label-followup-v1-20261024-local",
+  "scope": "Local automatic label worker and Windows scheduled task",
+  "local_apply": {
+    "result": "LOCAL_SYNC_APPLIED",
+    "files": 8,
+    "backup": "twizou-auto-label-followup-2026-10-23T18-43-41-501Z-01a532"
+  },
+  "task_fix1": {
+    "result": "TASK_SCRIPT_FIX1_APPLIED",
+    "backup": "twizou-auto-label-task-fix1-2026-10-23T18-48-26-386Z-a53a3c"
+  },
+  "task": {
+    "result": "TASK_REGISTERED",
+    "name": "TwizouAutoLabelLocal",
+    "interval": "3h"
+  },
+  "observed_worker": {
+    "phase": "running",
+    "processed_before": 179,
+    "processed_after": 181,
+    "published_before": 116,
+    "published_after": 117,
+    "cycle_complete": false,
+    "public_display_verified": false
+  },
+  "artifacts": {
+    "package_zip_sha256": "60b08aba72773d7d6f7243548b6779db62f3b126cdf8b943e3a3d69676114a9c",
+    "task_fix1_zip_sha256": "795ea11966099eb7a1ac3a3ee261c2bcb37da7f19a4ff20d8f8f3786e566be1c"
+  }
+}
