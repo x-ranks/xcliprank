@@ -1,0 +1,28 @@
+{
+  "release": "twizou-growth-v1-20261024",
+  "scope": "Factual post-page summaries, tag-aware metadata, and fixed thumbnail dimensions",
+  "local": {
+    "applied": true,
+    "files": 4,
+    "backup": "backup-20261024T035930",
+    "checks": [
+      "test-public-pages.cjs",
+      "test-public-video-service.cjs",
+      "tsc --noEmit --incremental false"
+    ]
+  },
+  "production": {
+    "applied": true,
+    "previousBuildId": "KmAujm-8p13wg8jA4n9i2",
+    "newBuildId": "LEsxmu1hZQsDsGVeZnxcz",
+    "previousRuntimeBackup": "/home/rbxfxmfd/xclip-before-twizou-growth-v1.wgVS5n",
+    "checks": [
+      "SOURCE_AND_PAYLOAD_HASHES_MATCH",
+      "STAGED_BUILD_AND_TESTS_OK",
+      "POST_METADATA_AND_SITEMAP_CHECK_OK",
+      "TWIZOU_GROWTH_V1_DEPLOYMENT_COMPLETE"
+    ],
+    "independentPublicCheck": "unavailable from local environment; deployment smoke passed on server"
+  },
+  "packageSha256": "35c0d3530370001341a3c9ea804f4a7ca19dec38ede9c22fd0dd82a8a0ecc38e"
+}

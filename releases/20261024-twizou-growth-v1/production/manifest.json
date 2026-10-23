@@ -1,0 +1,25 @@
+{
+  "release": "twizou-growth-v1-20261024-production",
+  "files": [
+    {
+      "path": "lib/public-video-core.ts",
+      "baselineSha256": "d73dceb8a28cafc6ced833999a42e6e2f38d59bb37d30f1e478a2150517373aa",
+      "candidateSha256": "84298f46f4398c07f18910c4436fcd30bb2b72f0dce37e173f22544d83aa6a4c"
+    },
+    {
+      "path": "app/p/[id]/page.tsx",
+      "baselineSha256": "6959ae0549f518e70939b2a15006d578398722904d289fd5af2407bb245ef373",
+      "candidateSha256": "ec09eb09a03cc5196bc371888ea30efdd6173e1305da4cfbedb52f95538d524c"
+    },
+    {
+      "path": "app/components/PublicVideoCards.tsx",
+      "baselineSha256": "79a07d9f094b0b4071905bc7c257d25e89460c4ca337e426902f8bcef3eaad5d",
+      "candidateSha256": "11f4cc41cd27463918c25c3c279b40ccb5dbf1dfd7665a6d6c38f00661a279c2"
+    },
+    {
+      "path": "scripts/test-public-pages.cjs",
+      "baselineSha256": "9b141424409343e63210940e63cc88ea649e27771864fd39b5a8b7bc58ac8a14",
+      "candidateSha256": "7805aa3036e5e1256684d14210b66e2acc903a3c1de0dfd49bd8b3a573d8b371"
+    }
+  ]
+}
