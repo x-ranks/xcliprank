@@ -1,0 +1,19 @@
+{
+  "release": "twizou-account-reachability-v1-20261023",
+  "recordedDateJst": "2026-10-24",
+  "production": {
+    "status": "applied-user-log",
+    "successMarker": "TWIZOU_ACCOUNT_REACHABILITY_V1_FIX1_DEPLOYMENT_COMPLETE",
+    "buildId": "KmAujm-8p13wg8jA4n9i2",
+    "previousRuntimeBackup": "created; exact path retained in private deployment log",
+    "publicCheck": "YAZUP20_PAGE_LIST_SITEMAP_CHECK_OK",
+    "independentlyFetchedByRecorder": false
+  },
+  "local": {
+    "status": "applied-user-log-and-local-hash-match",
+    "successMarker": "LOCAL_SYNC_APPLIED files=5",
+    "backup": "created; exact path retained in private application log"
+  },
+  "initialAttempt": "failed-public-check-and-previous-runtime-restored",
+  "rollback": "production previous runtime preserved; local apply-local.cjs --rollback requires unchanged applied files"
+}

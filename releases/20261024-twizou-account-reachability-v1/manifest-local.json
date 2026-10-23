@@ -1,0 +1,30 @@
+{
+  "release": "twizou-account-reachability-v1-20261023-local",
+  "files": [
+    {
+      "path": "lib/indexability.ts",
+      "baselineSha256": "b16ed227ddd478e6ab321f570a85aa16f29a6d04e8167f9eb73a526dc03ac310",
+      "candidateSha256": "632956cf7406e51a22536674dc399132ccc342fb11fa97a6e72d5cdfadba2da2"
+    },
+    {
+      "path": "lib/public-video-service.ts",
+      "baselineSha256": "654142ec37254ba1411f0c9a97046241b9840cff82242e647397979b66344977",
+      "candidateSha256": "a9ee823e98d3ba6ab670e0713fb3ae5d00a61f31a7c5242f65e27e4ebc4dff02"
+    },
+    {
+      "path": "lib/public-video-production.ts",
+      "baselineSha256": "80f99d6ad5dff2ba829b0be11d161fb0defa3646151c0556ce3266c28c16ae31",
+      "candidateSha256": "e325c55a55d09d720110775cc0a5f81ee395e66226faf1aa143b4ab4314bfda8"
+    },
+    {
+      "path": "scripts/test-indexability.cjs",
+      "baselineSha256": "e153e975c758239f45c0cbae54a119ac28fe0af2afd9aa9fb7d48ff94aa90ee6",
+      "candidateSha256": "a6ef07fcae9eb4fd3b2b6f511e53edbaf4eb3c68530bb005c35909089eeaeb3d"
+    },
+    {
+      "path": "scripts/test-public-video-service.cjs",
+      "baselineSha256": "bb7abd77a7eed851eebe8c880adc14e9216665054969edcc7cabc0ad63c64e66",
+      "candidateSha256": "bc3880d74f8a2e59ea9d790eaf6454e78faff3826d7368b7dd0b131e46a0ad31"
+    }
+  ]
+}
