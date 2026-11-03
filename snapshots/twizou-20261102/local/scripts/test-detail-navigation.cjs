@@ -1,0 +1,6 @@
+'use strict';
+const fs=require('fs'),p=require('path'),assert=require('assert/strict'),ts=require('typescript'),code=ts.transpileModule(fs.readFileSync(p.join(__dirname,'../lib/public-detail-navigation.ts'),'utf8'),{compilerOptions:{module:ts.ModuleKind.CommonJS,target:ts.ScriptTarget.ES2022}}).outputText,m={exports:{}};new Function('exports',code)(m.exports);
+const {requestPublicDetail,PUBLIC_DETAIL_OPEN_EVENT}=m.exports;assert.equal(requestPublicDetail('123'),false);let count=0,accept=false;global.window={dispatchEvent(event){count++;assert.equal(event.type,PUBLIC_DETAIL_OPEN_EVENT);assert.equal(event.detail.id,'123');assert.equal(event.cancelable,true);if(accept)event.preventDefault();return !event.defaultPrevented;}};
+if(typeof CustomEvent==='undefined')global.CustomEvent=class extends Event{constructor(type,init){super(type,init);this.detail=init.detail;}};
+assert.equal(requestPublicDetail('../private'),false);assert.equal(count,0);assert.equal(requestPublicDetail('123'),false);accept=true;assert.equal(requestPublicDetail('123'),true);assert.equal(count,2);delete global.window;
+console.log('PASS DETAIL NAVIGATION: valid clean post ID only, cancellable viewer handshake, unmounted/SSR/unsupported fallback; no page or media prefetch');

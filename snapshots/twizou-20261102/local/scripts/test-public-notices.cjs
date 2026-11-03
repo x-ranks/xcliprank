@@ -1,0 +1,12 @@
+'use strict';
+const fs=require('fs'),path=require('path'),assert=require('assert/strict'),Module=require('module'),ts=require('typescript'),React=require('react'),render=require('react-dom/server').renderToStaticMarkup;
+const root=path.resolve(__dirname,'..'),mod=new Map();
+function load(rel){if(mod.has(rel))return mod.get(rel).exports;const m={exports:{}};mod.set(rel,m);new Function('require','module','exports',ts.transpileModule(fs.readFileSync(path.join(root,rel),'utf8'),{compilerOptions:{module:ts.ModuleKind.CommonJS,target:ts.ScriptTarget.ES2022,jsx:ts.JsxEmit.ReactJSX,esModuleInterop:true}}).outputText)(n=>n==='next/link'?{__esModule:true,default:p=>React.createElement('a',p,p.children)}:require(n),m,m.exports);return m.exports;}
+const notice='twizouではX（旧Twitter）の公開投稿情報と動画へのURL情報を掲載しています。動画はXの配信元から利用者の端末へ直接読み込まれており、当サイトでは動画の収集と再アップロードは一切行っておりません。申請内容を確認し、当サイトの掲載情報を表示対象から除外するか判断します。twizouからの除外ではX上の元投稿は削除されません。元投稿への対応が必要な場合は、Xの報告機能もご利用ください。';
+const footer='twizouは公開投稿と管理者が登録した動画URLのランキングを提供します。再生できる動画は元の配信元からお使いの端末へ直接読み込まれます。twizouでは動画の収集・アップロードは一切行っておりません。';
+const removal=render(React.createElement(load('app/removal-request/page.tsx').default)),html=render(React.createElement(load('app/components/SiteFooter.tsx').default));
+assert(removal.includes('<strong>削除要請には24時間以内に対応いたします。</strong>'));assert(removal.includes(notice));assert(removal.includes('name="reportedUrl"'));assert(removal.includes('name="contactEmail"'));assert(removal.includes('name="confirmed"'));assert(removal.includes('削除要請を送信'));
+assert(html.includes('<strong>18歳未満の方は利用できません。</strong>'));assert(html.includes(footer));assert(html.includes('<strong>児童ポルノ・リベンジポルノ・著作権侵害等のコンテンツは違法である為</strong>'));assert(html.includes('href="/removal-request"><strong>削除要請フォーム</strong></a>'));assert(html.includes('からお知らせくださいますようご協力をお願いします。'));
+for(const href of ['/browse','/accounts','/tags','/privacy','/terms','/copyright','/advertising-disclosure','/contact'])assert(html.includes('href="'+href+'"'));
+const source=fs.readFileSync(path.join(root,'app/removal-request/page.tsx'),'utf8');assert(source.includes('fetch("/api/removal-requests"'));assert(!source.includes('mailto:'));assert(!html.includes('gmail.com'));assert(!html.includes('X動画の保存補助機能も提供します。'));
+console.log('PASS PUBLIC NOTICES: exact requested Japanese text/24h wording/strong emphasis/removal link, form fields and submit API retained, navigation and private-address boundary retained. SSR only; no form submission.');

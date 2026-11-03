@@ -1,0 +1,3 @@
+# twizou source record, 2026-11-02
+
+local/ is a source-only copy of the locally applied code, excluding configuration, data, models and runtime state. production-payload/ is the 28-file verified production fix1 payload. production-reconstructed/ is the isolated build and test candidate assembled from known release sources: the full production source was not independently hashed, so exact equality to the live server is unverified. User reported that the active production build is 0igk4TPQwlVAMXqh19Obn and functionality works; the final deployment completion log and backup path were not captured. Existing repository root and production/source are not updated by this archive.

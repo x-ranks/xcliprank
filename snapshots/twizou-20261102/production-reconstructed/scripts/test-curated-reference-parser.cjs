@@ -1,0 +1,16 @@
+'use strict';
+const fs=require('fs'),path=require('path'),assert=require('assert/strict'),ts=require('typescript');
+const source=fs.readFileSync(path.resolve(__dirname,'../lib/fxtwitter-curated.ts'),'utf8'),m={exports:{}};
+new Function('module','exports',ts.transpileModule(source,{compilerOptions:{target:ts.ScriptTarget.ES2022,module:ts.ModuleKind.CommonJS}}).outputText)(m,m.exports);
+const a={id:'10001',username:'selected',name:'Selected',expectedTier:'A'},b={id:'20001',screen_name:'original',protected:false};
+const p={type:'status',provider:'twitter',id:'30001',author:b,text:'fixture',possibly_sensitive:false,created_timestamp:Math.floor(Date.now()/1000)-60,media:{videos:[{type:'video',format:'video/mp4',url:'https://video.twimg.com/fixture.mp4',publisher:b}]}};
+const own={...p,id:'40001',author:{...a,screen_name:a.username,protected:false}},quote={...own,media:undefined,quote:p};
+const parse=rows=>m.exports.parseFreeMediaPage({code:200,results:rows},a,true,true);
+assert.equal(parse([own]).posts.length,1);assert.equal(parse([own]).posts[0].author_id,a.id);
+assert.equal(parse([quote,p]).timeline.trusted,true);assert.equal(parse([quote,p]).referencedPosts[0].author.id,b.id);
+assert.equal(parse([{...p,reposted_by:{id:a.id}}]).referencedPosts[0].kind,'repost');
+assert.equal(parse([{...p,reposted_by:{id:'99999'}}]).timeline.trusted,false);
+assert.equal(parse([{...quote,quote:{...p,type:'tombstone'}}]).referencedPosts.length,0);
+assert.equal(parse([{...quote,quote:undefined,card:{url:'https://outside.invalid'}}]).referencedPosts.length,0);
+assert.equal(m.exports.parseFreeMediaPage({code:200,results:[quote]},a,true).referencedPosts.length,0);
+console.log('PASS REFERENCE PARSER: supplied native-embed shape, explicit quote/repost opt-in, attribution, tombstone/foreign/card refusal, unchanged bulk defaults; no network or state access');

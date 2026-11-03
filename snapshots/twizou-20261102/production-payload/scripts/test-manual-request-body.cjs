@@ -1,0 +1,11 @@
+'use strict';
+const fs=require('fs'),path=require('path'),assert=require('assert/strict'),ts=require('typescript');
+const m={exports:{}},s=fs.readFileSync(path.join(__dirname,'../lib/manual-request-body.ts'),'utf8');
+new Function('require','module','exports',ts.transpileModule(s,{compilerOptions:{module:ts.ModuleKind.CommonJS,target:ts.ScriptTarget.ES2022}}).outputText)(require,m,m.exports);
+(async()=>{const read=m.exports.readManualRequestBody;
+ assert.equal(await read(new Request('https://example.com',{method:'POST',body:'abc'})),'abc');
+ await assert.rejects(read(new Request('https://example.com',{method:'POST',headers:{'content-length':'5000000'},body:'abc'})),/TOO_LARGE/);
+ const stream=new ReadableStream({start(c){c.enqueue(new Uint8Array(4*1024*1024));c.enqueue(new Uint8Array(32769));c.close();}});
+ await assert.rejects(read(new Request('https://example.com',{method:'POST',body:stream,duplex:'half'})),/TOO_LARGE/);
+ console.log('PASS MANUAL REQUEST BODY: bounded actual streaming size and Content-Length without external requests');
+})().catch(e=>{console.error(e);process.exitCode=1});

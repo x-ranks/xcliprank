@@ -1,0 +1,8 @@
+'use strict';
+const fs=require('fs'),path=require('path');
+const root=path.resolve(process.argv[2]||'');if(!process.argv[2]||!fs.statSync(root).isDirectory())throw Error('RUNTIME_ROOT_REQUIRED');
+const target=path.join(root,'server.js'),source=path.join(__dirname,'public-response-cache.cjs'),marker="require('./twizou-public-response-cache.cjs').install();";
+const text=fs.readFileSync(target,'utf8');if(!text.includes("require('next')")||!text.includes('startServer({'))throw Error('EXPECTED_NEXT_STANDALONE_REQUIRED');
+fs.copyFileSync(source,path.join(root,'twizou-public-response-cache.cjs'));
+if(!text.includes(marker))fs.writeFileSync(target,text.replace("require('next')",marker+"\nrequire('next')"));
+console.log('PUBLIC_HTML_CACHE_ADAPTER_INSTALLED; public ranking routes only');

@@ -1,0 +1,23 @@
+const assert=require('node:assert/strict'),fs=require('node:fs'),path=require('node:path'),ts=require('typescript');
+const modules=new Map();function load(id){if(modules.has(id))return modules.get(id).exports;const m={exports:{}};modules.set(id,m);const code=ts.transpileModule(fs.readFileSync(id+'.ts','utf8'),{compilerOptions:{module:ts.ModuleKind.CommonJS,target:ts.ScriptTarget.ES2022,esModuleInterop:true}}).outputText;new Function('require','module','exports',code)(n=>n.startsWith('.')?load(path.posix.normalize(path.posix.join(path.posix.dirname(id),n))):require(n),m,m.exports);return m.exports;}
+const c=load('lib/tier-personal-core'),e=load('lib/tier-personal-evaluation');
+const labels=['D','C','B','A','S'];const features=rank=>Array.from({length:1024},(_,j)=>j<16?rank:0);
+const rows=Array.from({length:200},(_,i)=>({id:String(i),author:'a'+Math.floor(i/5),label:labels[i%5],features:features(i%5),source:'manual_db',image:null,video:null,adultScore:.5,creatorScore:.5,sensitive:false}));
+const ordinal=c.trainOrdinalPersonal(rows);assert(c.validPersonalHead(ordinal));
+const b=c.predictPersonal(features(2),ordinal),cc=c.predictPersonal(features(1),ordinal);
+assert.equal(b.label,'B');assert.equal(cc.label,'C','ordinal head distinguishes exact B/C fixtures');assert(b.probabilities[0]<c.predictPersonal(features(4),ordinal).probabilities[0],'S probability ordered');assert(c.predictPersonal(features(0),ordinal).probabilities[4]>c.predictPersonal(features(4),ordinal).probabilities[4]);
+const head={mean:Array(1024).fill(0),scale:Array(1024).fill(1),weights:Array.from({length:6},()=>Array(1024).fill(0)),bias:[2.4,0,0,0,0,-8],samples:200};
+assert.equal(c.personalDecision(Array(1024).fill(0),head,'B').tier,'S','legacy decision unchanged');
+const guarded={...head,policy:{temperature:1,confidenceMin:.45,sMin:.85,sMargin:.15}};
+assert.equal(c.personalDecision(Array(1024).fill(0),guarded,'B').tier,'B');assert.equal(c.personalDecision(Array(1024).fill(0),guarded,'B').reason,'s_guard');
+assert(!c.validPersonalHead({...ordinal,ordinal:{...ordinal.ordinal,thresholds:[2,1,3,4]}}));assert(!c.validPersonalHead({...guarded,policy:{...guarded.policy,temperature:NaN}}));
+const compareRows=rows.slice(150).map(r=>({id:r.id,actual:r.label,baseline:'C',features:r.features}));
+const experiment=e.compareTeacherSources(rows.slice(0,150),compareRows,compareRows);
+const perturbed=e.compareTeacherSources(rows.slice(0,150),compareRows,compareRows.map(r=>({...r,actual:'D'})));
+assert.equal(experiment.validation.selectedMode,perturbed.validation.selectedMode);assert.equal(experiment.validation.manualPreviewMode,perturbed.validation.manualPreviewMode);
+assert.deepEqual(experiment.head,perturbed.head,'final labels cannot select policy, temperature or weights');
+assert(experiment.validation.candidates.some(v=>v.mode==='manual_ordinal'&&v.tuning));
+assert(experiment.manualPreviewHead);
+assert.deepEqual(experiment.manualPreviewHead,perturbed.manualPreviewHead,'final labels cannot choose the recovery preview head');
+assert(experiment.validation.candidates.some(v=>v.mode==='manual_recall'));
+console.log('PASS: exact B/C ordinal separation, ordered class probabilities, conservative S guard, legacy unchanged, model validation, policy selection independent of final labels');

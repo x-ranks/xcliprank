@@ -1,0 +1,168 @@
+{
+  "release": "twizou-manual-registration-v1-20261102-production-fix1",
+  "expectedLiveBuildId": "npkcjX43kUHfSMfl7eVjy",
+  "tools": {
+    "schemaCheckSha256": "470f8e952b82b90ef1d313e94324ec6f16a6d0a024907a62229756af53068401",
+    "sqlSha256": "f1542908287d9c7db5c09c56e8320cb1e6303bf92d6ac14c83561fc3bead7558",
+    "rollbackSha256": "7e19118fedcc73ded2b1965b2a68568d996d2a89d3d00c7488c4702c722dd3e5",
+    "prewarmInstallerSha256": "174eff2837f1f7554eb920d88e490adb2a6e4c95c72df88836ecbdcf8f39d230",
+    "controlFiles": [
+      {
+        "path": "scripts/check-public-response-controls.cjs",
+        "sha256": "537e8edddd4e925b79d12f5d932c37199ea54efbddd3f95fd3d8e4c9121cfa89",
+        "sourceSha256": "537e8edddd4e925b79d12f5d932c37199ea54efbddd3f95fd3d8e4c9121cfa89",
+        "payloadSha256": "537e8edddd4e925b79d12f5d932c37199ea54efbddd3f95fd3d8e4c9121cfa89"
+      },
+      {
+        "path": "scripts/public-response-cache.cjs",
+        "sha256": "bf66bf165a0e1db73b4c9db3d1b1020dc472b2831014abbbfd3b221136ef617a",
+        "sourceSha256": "bf66bf165a0e1db73b4c9db3d1b1020dc472b2831014abbbfd3b221136ef617a",
+        "payloadSha256": "bf66bf165a0e1db73b4c9db3d1b1020dc472b2831014abbbfd3b221136ef617a"
+      }
+    ],
+    "monitorInstallerSha256": "7874734b453a3e9be5b7499afa78e46bad253ffdb0f18e816b6a21958dcb6973",
+    "discoveryMeasureSha256": "705d4b0995642382a922d113a044e37f5eaaba74e158f48455aadc65dfbc6c87"
+  },
+  "files": [
+    {
+      "path": "app/api/manual-ranking/route.ts",
+      "baselineSha256": "c4735010c5e944b29bf74c6ce64be2d57004de21edff8554a5a7662247c4032e",
+      "candidateSha256": "ccbb52f397d70e0d253043873925551f7ee09a165a9a99c148d2c9673d4e2f59"
+    },
+    {
+      "path": "app/api/public-video/route.ts",
+      "baselineSha256": "50f1c870ae9d0db26872ad855f3dfc0cd27b991f93c9ca5ce06a1f2e5cfc0da8",
+      "candidateSha256": "057c89d5737eae6440a3cb28a06575f24fa6732084815ff6ac5c8f2a1cec4ece"
+    },
+    {
+      "path": "app/api/rankings/route.ts",
+      "baselineSha256": "3aec5ab4b0e3599230c2bff95a1f55ef818b506362b64d7c50130bd81188ad0d",
+      "candidateSha256": "cc465bb78660e9d783fe367ffdb54c476bb487193c80e9429617ba0f74d961a4"
+    },
+    {
+      "path": "app/manual-ranking/ManualRankingClient.tsx",
+      "baselineSha256": "62cb4bc226c4d3aba2957b397acad9d8f5d66f5d726690f915e3eda9b6baa03d",
+      "candidateSha256": "52539b4a9fedc336e66ed0af9f96c46d909287c2d2801ef24cc1a43f1970d1b9"
+    },
+    {
+      "path": "lib/free-curated-publish.ts",
+      "baselineSha256": "145acab07db68abb239a30aa7704b823099fb449c846e24e1e716b6e4d008996",
+      "candidateSha256": "0d51f019a7946178da5352b57ad50afd29f98c175e26a23155ae19a281ece920"
+    },
+    {
+      "path": "lib/manual-ranking.ts",
+      "baselineSha256": "35c51ee0b9a87477484d0fd6a5b14e4d747cbdbde43f99266345d75b389e8cd0",
+      "candidateSha256": "f674c07a92c628e18445f220eaea515fd183274efff7c96ff46d549d1c203b35"
+    },
+    {
+      "path": "lib/public-video-production.ts",
+      "baselineSha256": "1bd9f105f65be709daec3227aa6583b2190faf359309bd03d62ce173a4f4166d",
+      "candidateSha256": "3176dd7e5fe5a2273f092edfb3c905b2dc4f746fe3bdbd3df7abd072f3e98c00"
+    },
+    {
+      "path": "lib/manual-request-body.ts",
+      "baselineSha256": null,
+      "candidateSha256": "af99f284e52162d6532939f3c7a54671a97389e4efa91820407297f3f24cc2ee"
+    },
+    {
+      "path": "lib/manual-thumbnail.ts",
+      "baselineSha256": null,
+      "candidateSha256": "757d5481ccf2e1a128ba319d6b8c34341fedbfb40a95479ab3ad13accd9426e7"
+    },
+    {
+      "path": "lib/manual-thumbnail-store.ts",
+      "baselineSha256": null,
+      "candidateSha256": "a0a80fcc180924d216b83de5d7d757d16172369c2f2e4e648c3d02ff7d9f89be"
+    },
+    {
+      "path": "lib/manual-x-candidate.ts",
+      "baselineSha256": null,
+      "candidateSha256": "0f1e5dc738c61ba4ac316eb1221b06d458c12d15f5cf47996af8f4b684e78f8c"
+    },
+    {
+      "path": "lib/manual-x-permissions.ts",
+      "baselineSha256": null,
+      "candidateSha256": "bdda30658da159dce8f6af1ddecb30a90c98e2ab5d2c8e3ade0c1d1073f00043"
+    },
+    {
+      "path": "scripts/check-canonical.cjs",
+      "baselineSha256": "23fe3822e9ce0127c5d912cbe2fd9992a6447dbdb9e295127983f93587fd0ca7",
+      "candidateSha256": "12b67d5910230ef1ad8be06e11c579fdfc34041972153cc80c105a739aaa6b8d"
+    },
+    {
+      "path": "scripts/test-curated-references.cjs",
+      "baselineSha256": "18544022010d5b6220dd44b138640b8c1f46ae553ca95b1404a01c161f65da26",
+      "candidateSha256": "aec0360fb0a26175d9e67277a946e851ba7a80a7ab2317a317ba045d44205e77"
+    },
+    {
+      "path": "scripts/test-free-curated-production.cjs",
+      "baselineSha256": "d5fd7418f92b82412992ea69112f48b1ff6ab655921ad7b1cd4379be6977b181",
+      "candidateSha256": "24b282f99abeef109627d16a885629ab540266e36090291589b95ba500ae2286"
+    },
+    {
+      "path": "scripts/test-manual-ranking-bridge.cjs",
+      "baselineSha256": "3192b5e47161a843ed52e282ad90cb671798e64aad82731fd06bc83b7b61dad9",
+      "candidateSha256": "9b0b3e79d4c4d00de322e24a6376f6d41841e312657e5faf7de9a87938706621"
+    },
+    {
+      "path": "scripts/test-newest500.cjs",
+      "baselineSha256": "0ba92b4aee3cdeef98ad147742223dc46984ae93f2e65d8be9862efd7a342ae5",
+      "candidateSha256": "8ac219fca6629816a7bee8400c9dd2f94a4057012746c7878430846930e7d532"
+    },
+    {
+      "path": "scripts/test-performance.cjs",
+      "baselineSha256": "0247dd69beb5f42d7ec7d06e0456fb3ab68191ea1a812d39f1fccd524c419649",
+      "candidateSha256": "d2e43ed8e9a7992fdfa53615631972f70817e4f982d8ea2ced0ebf7f83ddaf4a"
+    },
+    {
+      "path": "scripts/test-ranking-liquidity-route.cjs",
+      "baselineSha256": "29a1c52c1bae4d33c33ebc60fb42bb6bcf2a8fa2b5a69e4fa06d7e0e1c5a27de",
+      "candidateSha256": "59c2e1c8c7b72e81f267dfdf820a7915549f31a49791c23aea82bf50dbd1e182"
+    },
+    {
+      "path": "scripts/test-site-priority.cjs",
+      "baselineSha256": "e8caf046da604b277b1d84c8afba201d8b86a8c4d7eb1824284066883c56d5b4",
+      "candidateSha256": "6b3d683b34d6ef078999d5e148bb57cd83287effcc6e42afd3eea839d4ec9208"
+    },
+    {
+      "path": "scripts/test-speed-playback-v2.cjs",
+      "baselineSha256": "707c3b2a396562cf2b88ee371b2c637513aa69cccb161329f68966ec0cd2ea64",
+      "candidateSha256": "ad697b9ca29fc1adc30462de4b30d517bbfff953b125576704fd0aa4cfeed444"
+    },
+    {
+      "path": "scripts/test-manual-request-body.cjs",
+      "baselineSha256": null,
+      "candidateSha256": "94de75d2532a24de2e27c786e5a96dec6990edc96cdf7aed39df538e9babbb23"
+    },
+    {
+      "path": "scripts/test-manual-thumbnail.cjs",
+      "baselineSha256": null,
+      "candidateSha256": "d740167004f32796bd644bc4f0c4678223944a4433e126b7853c609d9862afe4"
+    },
+    {
+      "path": "scripts/test-manual-thumbnail-store.cjs",
+      "baselineSha256": null,
+      "candidateSha256": "a2706b3607a8f12527c27382f8fa3bd97e58f9063b3b8f0bc4abf12b3c4ef375"
+    },
+    {
+      "path": "scripts/test-manual-thumbnail-endpoint.cjs",
+      "baselineSha256": null,
+      "candidateSha256": "7be1cb79cdd89614b64b3cf4daf6e9d947d8aa87cdf8012f34f3d8706586bb05"
+    },
+    {
+      "path": "scripts/test-manual-x-candidate.cjs",
+      "baselineSha256": null,
+      "candidateSha256": "9e79f0e0c66631b5c3e566d8a7d3fcb2d513403aec11b7281e0c39f6ad596e7d"
+    },
+    {
+      "path": "scripts/test-manual-x-permission.cjs",
+      "baselineSha256": null,
+      "candidateSha256": "d8b3eb4bb5ed15f309c1d40a1f69009791d5c3d869b59c244f1bd048055dd2d2"
+    },
+    {
+      "path": "scripts/test-manual-x-registration.cjs",
+      "baselineSha256": null,
+      "candidateSha256": "9d30affeb1c01af2b3471bc56c1ac72442ab6850858132cd1d1e2214ae75c113"
+    }
+  ]
+}
