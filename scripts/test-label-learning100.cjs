@@ -39,8 +39,8 @@ async function main(){
  // Legacy v1 state needs no migration, no deletion, and no replacement of models.
  data.videos.forEach(v=>delete v.preparedFor);fs.writeFileSync(saved,JSON.stringify(data));service=createLabelService(path.join(tmp,'state'),deps);view=await service.status();assert.equal(view.trainingCount,100);assert.equal(view.model.samples,100);assert.equal(view.testReport.videos,10);assert.equal(batch.preparedCount(view.videos,'test'),10);
  assert.deepEqual(fs.readFileSync(outside),before);
- const partial=Array.from({length:37},()=>({review:null,preparedFor:'train'}));assert.equal(batch.preparationGoal(partial,'train',100),100);assert.equal(batch.remainingPreparation(partial,'train',100),63);assert.equal(batch.preparationGoal(partial,'train',10),47);
- assert.equal(batch.remainingPreparation(Array.from({length:300},()=>({review:null,preparedFor:'train'})),'test',10),0);
+ const partial=Array.from({length:37},()=>({review:null,preparedFor:'train'}));assert.equal(batch.preparationGoal(partial,'train',300),300);assert.equal(batch.remainingPreparation(partial,'train',300),263);assert.equal(batch.preparationGoal(partial,'train',10),47);
+ assert.equal(batch.remainingPreparation(Array.from({length:400},()=>({review:null,preparedFor:'train'})),'test',10),0);
  console.log('PASS LABEL100: 100 cumulative teachers, 10-to-100 retraining, restart/resume, 10 unseen-author blind random candidates, immutable identity rejection before download, old state/model retention, 100 grouped cross-check rows, protected state and bounded goals. Synthetic media/DB only; not real-world accuracy.');
 }
 main().catch(e=>{console.error(e);process.exitCode=1}).finally(()=>{const p=path.resolve(tmp);if(path.dirname(p)!==path.resolve(os.tmpdir())||!path.basename(p).startsWith('xclip-label100-'))throw Error('UNSAFE_CLEANUP');fs.rmSync(p,{recursive:true,force:true,maxRetries:3,retryDelay:50});});

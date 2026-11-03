@@ -81,7 +81,7 @@ export async function GET() {
 
     try {
       const response = await fetch(
-        "https://xcliprank.com/api/rankings?range=daily",
+        "https://twizou.net/api/rankings?range=daily",
         { cache: "no-store" }
       );
       const payload = await response.json();

@@ -5,8 +5,8 @@ import { readCuratedRemovals } from "./curated-removals";
 import { availabilityDashboard } from "./availability-dashboard";
 import { freeCuratedDashboard } from "./free-curated-dashboard";
 import { supabaseAdmin } from "./supabase-admin";
-import { FreeCuratedError, type FreeAuthor, type FreeCandidate } from "./fxtwitter-curated";
-import { withScheduledFreeState, writeScheduledFreeState, readScheduledFreeState } from "./free-curated-server-store";
+import { FreeCuratedError, fetchFreePostUrl, type FreeAuthor, type FreeCandidate } from "./fxtwitter-curated";
+import { withScheduledFreeState, writeScheduledFreeState, readScheduledFreeState, rememberNewRegistrations } from "./free-curated-server-store";
 import { newScheduledAuthor } from "./free-curated-scan";
 import { publishFreeCandidates } from "./free-curated-publish";
 
@@ -44,7 +44,7 @@ export async function synchronizeFreeCurated(body:any,options:{directory?:string
   if(body.action==="availability")return {availability:await availabilityDashboard({curatedDirectory:options.directory})};
   if(body.action==="dashboard")return {dashboard:await freeCuratedDashboard({directory:options.directory,database:options.database})};
   if(body.action==="status")return {state:await readScheduledFreeState(options.directory),databaseHost:databaseHost(),registrationAuthorLimit:FREE_CURATED_AUTHOR_LIMIT,registrationRecoveryVersion:1};
-  if(!["sync","publish","registration"].includes(body.action))throw new FreeCuratedError(400,"操作が正しくありません。");
+  if(!["sync","publish","registration","publish-post-url"].includes(body.action))throw new FreeCuratedError(400,"操作が正しくありません。");
   return withScheduledFreeState(async state=>{
     if(body.action==="sync"){
       if(!Array.isArray(body.authors)||body.authors.length>FREE_CURATED_AUTHOR_LIMIT)throw new FreeCuratedError(400,"登録一覧が正しくありません。");
@@ -66,6 +66,34 @@ export async function synchronizeFreeCurated(body:any,options:{directory?:string
       }
       await writeScheduledFreeState(state,options.directory);
       return {synced:authors.length,state,databaseHost:databaseHost(),registrationAuthorLimit:FREE_CURATED_AUTHOR_LIMIT,message:"本番へ登録一覧を同期しました。新着巡回はFxTwitterを使います（直近24時間で最大24投稿者）。"};
+    }
+    if(body.action==="publish-post-url"){
+      if(body.confirm!==true||!["S","A"].includes(body.expectedTier))throw new FreeCuratedError(400,"登録内容を確認してください。");
+      const fetched=await fetchFreePostUrl(body.url,body.expectedTier);
+      if((await readCuratedRemovals(options.directory)).some(e=>e.id===fetched.author.id))
+        throw new FreeCuratedError(409,"手動削除済みの投稿者は掲載できません。");
+      const existing=state.authors.find(a=>a.id===fetched.author.id);
+      if(!existing&&state.authors.length>=FREE_CURATED_AUTHOR_LIMIT)throw new FreeCuratedError(409,`本番登録の上限${FREE_CURATED_AUTHOR_LIMIT}投稿者です。`);
+      if(existing?.paused)throw new FreeCuratedError(409,"停止中の投稿者です。共通管理から再開してください。");
+      const author={...fetched.author,expectedTier:existing?.expectedTier??fetched.author.expectedTier};
+      const result=await(options.publish??publishFreeCandidates)(author,[fetched.candidate],{database:options.database??supabaseAdmin()});
+      if(!existing){
+        const added=newScheduledAuthor(author,"free",Date.now());
+        // The supplied post is the starting boundary. Later posts are scanned by the normal Cron.
+        // This does not claim that historical posts were bulk-imported.
+        added.latestId=fetched.candidate.x_post_id;added.initialBaselineId=fetched.candidate.x_post_id;
+        added.initialPending=false;added.initialReady=true;
+        state.authors.push(added);
+      }
+      const scheduled=existing??state.authors[state.authors.length-1];
+      scheduled.savedTotal+=result.saved+result.promoted;
+      rememberNewRegistrations(state,result.savedIds??[]);
+      await writeScheduledFreeState(state,options.directory);
+      return {published:result,postId:fetched.candidate.x_post_id,
+        author:{id:author.id,username:author.username,name:author.name,added:!existing},
+        databaseHost:databaseHost(),registrationAuthorLimit:FREE_CURATED_AUTHOR_LIMIT,
+        message:result.saved+result.promoted>0?"通常の掲載条件で動画を登録しました。ランキングは元の投稿日時と更新周期に従います。":
+          result.excluded>0?"投稿者を追加しましたが、この動画は通常の掲載条件外です。":"投稿者を確認しました。動画は既に登録済みか重複しています。"};
     }
     if((await readCuratedRemovals(options.directory)).some(e=>e.id===body.id))throw new FreeCuratedError(409,"手動削除済みの投稿者は掲載できません。");
     const author=state.authors.find(a=>a.id===body.id);
@@ -108,6 +136,11 @@ export async function synchronizeFreeCurated(body:any,options:{directory?:string
     const candidates=parseSyncCandidates(body.candidates,author);
     const previousHiddenSaveAt=typeof body.previousHiddenSaveAt==="string"&&Number.isFinite(Date.parse(body.previousHiddenSaveAt))?body.previousHiddenSaveAt:null;
     const result=candidates.length?await(options.publish??publishFreeCandidates)(author,candidates,{database:options.database??supabaseAdmin(),previousHiddenSaveAt}):{saved:0,promoted:0,excluded:0,duplicates:0,paid_x_requests:0};
+    if(scoped){
+      rememberNewRegistrations(state,"savedIds" in result && Array.isArray(result.savedIds) ? result.savedIds : []);
+      // Persist the publication marker before any later registration-completion step can fail.
+      await writeScheduledFreeState(state,options.directory);
+    }
     if(body.registrationComplete){
       if(scoped&&(!body.initialBaselineId||body.registrationScanned===0))throw new FreeCuratedError(409,"初回取得の基準がありません。巡回を開始しません。");
       const update=await(options.database??supabaseAdmin()).from("authors").update({curated_backfill_status:outcome==="partial"?"partial":"completed"}).eq("x_author_id",author.id);

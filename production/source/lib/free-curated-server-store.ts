@@ -11,7 +11,8 @@ export type ScheduledFreeAuthor = FreeAuthor & { source: "legacy" | "free"; paus
   latestId: string | null; pendingCursor: string | null; pendingLatestId: string | null; baselineId: string | null;
   savedTotal: number; lastError: string | null; metrics?: FreeScanMetrics; initialPending?: boolean; initialBaselineId?: string | null; initialReady?:boolean; initialPageConfirmed?:boolean; initialHistoryOutcome?:"complete"|"partial"; registrationLease?:RegistrationLease; registrationReceipt?:RegistrationReceipt };
 export type { FreeRun } from "./free-curated-metrics";
-export type ScheduledFreeState = { version: 1; nextBatchAt: number; cooldownUntil: number; authors: ScheduledFreeAuthor[]; lastRun?:FreeRun };
+export type ScheduledFreeState = { version: 1; nextBatchAt: number; cooldownUntil: number; authors: ScheduledFreeAuthor[]; lastRun?:FreeRun;
+  recentRegistrations?: { id: string; at: number }[]; recentPatrolPosts?: { id: string; at: number }[] };
 export const serverRegistryDirectory = () => process.env.XCLIP_FREE_CURATED_STATE_DIR || path.join(os.homedir(), ".xclip-free-curated");
 export const freshFreeState = (): ScheduledFreeState => ({ version: 1, nextBatchAt: 0, cooldownUntil: 0, authors: [] });
 const validId = (s: unknown) => s === null || typeof s === "string" && /^\d{2,20}$/.test(s);
@@ -22,6 +23,10 @@ export async function readScheduledFreeState(directory = serverRegistryDirectory
     const s = JSON.parse(await fs.readFile(file, "utf8")) as ScheduledFreeState;
     if (s?.version !== 1 || !Array.isArray(s.authors) || s.authors.length > FREE_CURATED_AUTHOR_LIMIT ||
       [s.nextBatchAt, s.cooldownUntil].some(n => !Number.isFinite(n) || n < 0) || new Set(s.authors.map(a => a.id)).size !== s.authors.length ||
+      (s.recentRegistrations !== undefined && (!Array.isArray(s.recentRegistrations) || s.recentRegistrations.length > 1000 ||
+        s.recentRegistrations.some(row => !row || !/^\d{2,20}$/.test(row.id) || !Number.isSafeInteger(row.at) || row.at < 0))) ||
+      (s.recentPatrolPosts !== undefined && (!Array.isArray(s.recentPatrolPosts) || s.recentPatrolPosts.length > 1000 ||
+        s.recentPatrolPosts.some(row => !row || !/^\d{2,20}$/.test(row.id) || !Number.isSafeInteger(row.at) || row.at < 0))) ||
       (s.lastRun!==undefined && (!s.lastRun || !["running","completed","skipped","paused","error"].includes(s.lastRun.outcome) ||
         [s.lastRun.at,s.lastRun.finishedAt,s.lastRun.processed,s.lastRun.fetched,s.lastRun.saved,s.lastRun.failed,s.lastRun.empty].some(n=>!Number.isSafeInteger(n)||n<0) ||
         (s.lastRun.reason!==null&&(typeof s.lastRun.reason!=="string"||s.lastRun.reason.length>80)))) ||
@@ -46,6 +51,26 @@ export async function writeScheduledFreeState(s: ScheduledFreeState, directory =
   const temp = path.join(directory, `state-${randomBytes(8).toString("hex")}.tmp`);
   try { await fs.writeFile(temp, JSON.stringify(s), { mode: 0o600, flag: "wx" }); await fs.rename(temp, path.join(directory, "state-v1.json")); }
   finally { await fs.rm(temp, { force: true }); }
+}
+function rememberRecentPosts(rows: { id: string; at: number }[] | undefined, ids: readonly string[], at: number) {
+  const recent = (rows ?? []).filter(row => at - row.at < 48 * 60 * 60 * 1000);
+  const byId = new Map(recent.map(row => [row.id, row]));
+  for (const id of ids) if (/^\d{2,20}$/.test(id)) byId.set(id, { id, at });
+  return [...byId.values()].sort((a, b) => b.at - a.at).slice(0, 1000);
+}
+export function rememberNewRegistrations(state: ScheduledFreeState, ids: readonly string[], at = Date.now()) {
+  state.recentRegistrations = rememberRecentPosts(state.recentRegistrations, ids, at);
+}
+export function rememberPatrolPosts(state: ScheduledFreeState, ids: readonly string[], at = Date.now()) {
+  state.recentPatrolPosts = rememberRecentPosts(state.recentPatrolPosts, ids, at);
+}
+export async function recentRegistrationTimes(since: number, directory = serverRegistryDirectory()) {
+  const state = await readScheduledFreeState(directory);
+  return new Map((state.recentRegistrations ?? []).filter(row => row.at >= since).map(row => [row.id, row.at]));
+}
+export async function recentPatrolTimes(since: number, directory = serverRegistryDirectory()) {
+  const state = await readScheduledFreeState(directory);
+  return new Map((state.recentPatrolPosts ?? []).filter(row => row.at >= since).map(row => [row.id, row.at]));
 }
 export async function withScheduledFreeState<T>(work: (s: ScheduledFreeState) => Promise<T>, directory = serverRegistryDirectory()) {
   await fs.mkdir(directory, { recursive: true, mode: 0o700 }); const lock = path.join(directory, "operation.lock");

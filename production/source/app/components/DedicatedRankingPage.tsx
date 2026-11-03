@@ -1,3 +1,5 @@
+import RankingNavLink from "./RankingNavLink";
+import SiteBrand from "./SiteBrand";
 import { rankingHref } from "../../lib/ranking-pagination";
 import Link from "next/link";
 import type { RankingUpdate } from "../../lib/ranking-update";
@@ -5,6 +7,7 @@ import RankingClient, { type RankPost } from "./RankingClient";
 import SiteFooter from "./SiteFooter";
 import StructuredData from "./StructuredData";
 import { rankingBreadcrumb, rankingItemList } from "../../lib/seo";
+import { INITIAL_RANKING_COUNTS } from "../../lib/ranking-display";
 
 type DedicatedRange = "daily" | "weekly";
 
@@ -13,8 +16,8 @@ const PAGE_COPY = {
     eyebrow: "DAILY RANKING",
     title: "24時間ランキング",
     description:
-      "直近24時間の動画と過去の選別動画を紹介します。",
-    seoTitle: "X動画の24時間ランキング",
+      "毎日入れ替わる動画を紹介！",
+    seoTitle: "Twitter動画の24時間ランキング・保存",
     seoDescription:
       "直近24時間の動画に過去の選別動画を加え、新着ランキングとは異なる動画を紹介しています。"
   },
@@ -22,8 +25,8 @@ const PAGE_COPY = {
     eyebrow: "WEEKLY RANKING",
     title: "週間ランキング",
     description:
-      "直近1週間の人気動画をランキング形式で表示します。",
-    seoTitle: "X動画の週間ランキング",
+      "直近1週間の人気動画を紹介！",
+    seoTitle: "Twitter動画の週間ランキング・保存",
     seoDescription:
       "直近1週間の人気動画をランキング形式で表示しています。"
   }
@@ -46,7 +49,7 @@ export default function DedicatedRankingPage({
     "@context": "https://schema.org",
     "@graph": [
       rankingBreadcrumb(copy.title, path),
-      rankingItemList(copy.seoTitle, path, initialPosts)
+      rankingItemList(copy.seoTitle, path, initialPosts.slice(0, INITIAL_RANKING_COUNTS[range]))
     ]
   };
 
@@ -54,32 +57,30 @@ export default function DedicatedRankingPage({
     <main>
       <StructuredData data={structuredData} />
       <header className="ranking-page-header">
-        <Link className="ranking-brand" href={rankingHref("trending", edition)}>
-          <span>X</span> CLIP RANK
-        </Link>
-        <p className="ranking-eyebrow">{copy.eyebrow}</p>
+        <SiteBrand />
         <h1 className="ranking-page-title">{copy.title}</h1>
         <p className="ranking-page-description">{copy.description}</p>
       </header>
 
       <nav className="ranking-page-nav" aria-label="ランキングを選択">
-        <Link href={rankingHref("trending", edition)}>新着</Link>
-        <Link
+        <RankingNavLink href="/rising">急上昇</RankingNavLink>
+        <RankingNavLink href={rankingHref("trending", edition)}>新着</RankingNavLink>
+        <RankingNavLink
           href={rankingHref("daily", edition)}
           className={range === "daily" ? "active" : undefined}
           aria-current={range === "daily" ? "page" : undefined}
         >
           24時間
-        </Link>
-        <Link
+        </RankingNavLink>
+        <RankingNavLink
           href={rankingHref("weekly", edition)}
           className={range === "weekly" ? "active" : undefined}
           aria-current={range === "weekly" ? "page" : undefined}
         >
           週間
-        </Link>
-        <Link href="/reels">リール</Link>
-        <Link href="/download">動画保存</Link>
+        </RankingNavLink>
+        <RankingNavLink href="/reels">リール</RankingNavLink>
+        <RankingNavLink href="/download">動画保存</RankingNavLink>
       </nav>
 
       <RankingClient
@@ -94,11 +95,11 @@ export default function DedicatedRankingPage({
         <h2 id={`${range}-ranking-info`}>{copy.seoTitle}</h2>
         <p>{copy.seoDescription}</p>
         <p className="seo-related-links">
-          <Link href={rankingHref("trending", edition)}>新着ランキング</Link>
+          <Link prefetch={false} href={rankingHref("trending", edition)}>新着ランキング</Link>
           {range === "daily" ? (
-            <Link href={rankingHref("weekly", edition)}>週間ランキング</Link>
+            <Link prefetch={false} href={rankingHref("weekly", edition)}>週間ランキング</Link>
           ) : (
-            <Link href={rankingHref("daily", edition)}>24時間ランキング</Link>
+            <Link prefetch={false} href={rankingHref("daily", edition)}>24時間ランキング</Link>
           )}
         </p>
       </section>

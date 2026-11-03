@@ -1,6 +1,6 @@
 const fs=require('node:fs'),path=require('node:path'),vm=require('node:vm'),assert=require('node:assert/strict'),crypto=require('node:crypto');
 const {createRequire}=require('node:module');
-const base=path.resolve(__dirname,'..'),deps=process.env.XCLIP_TEST_DEPENDENCY_ROOT||base;
+const base=path.resolve(__dirname,'..'),deps=process.env.XCLIP_TEST_DEPENDENCY_ROOT||'C:/Projects/xcliprank';
 const ts=createRequire(path.join(deps,'package.json'))('typescript');
 const bundle={featureSpec:'spec',trainedAt:'2026-10-15T00:00:00Z',revision:12,head:{samples:42,weights:Array(1024).fill(0.123456)},validation:{passed:true},mode:'manual_recall',adoption:{id:'fixture-adoption',at:'2026-10-15T00:00:00Z'}};
 const state={'config':{enabled:true},'worker-status':{finished:true},'active-model':bundle,'video-preparation':{enabled:false},'new-video-evaluation':{enabled:true,cursor:101}};

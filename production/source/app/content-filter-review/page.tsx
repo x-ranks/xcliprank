@@ -1,4 +1,5 @@
 "use client";
+import { directPlaybackUrl } from "../../lib/browser-direct-playback";
 
 import { FormEvent, useCallback, useEffect, useMemo, useState } from "react";
 
@@ -139,9 +140,9 @@ export default function ContentFilterReviewPage() {
   const accuracy = savedCount === 0 ? null : Math.round((correctCount / savedCount) * 1000) / 10;
   const progress = posts.length === 0 ? 0 : Math.min(100, Math.round((currentIndex / posts.length) * 100));
 
-  const proxyVideoUrl = useMemo(
+  const directVideoSource = useMemo(
     () => currentPost?.video_url
-      ? `/api/video?url=${encodeURIComponent(currentPost.video_url)}`
+      ? directPlaybackUrl(currentPost.video_url) ?? null
       : null,
     [currentPost],
   );
@@ -304,8 +305,8 @@ export default function ContentFilterReviewPage() {
       {currentPost && (
         <div className="reviewGrid">
           <section className="mediaPanel">
-            {proxyVideoUrl ? (
-              <video key={currentPost.id} src={proxyVideoUrl} poster={posterUrl ?? undefined} controls playsInline preload="metadata" />
+            {directVideoSource ? (
+              <video key={currentPost.id} src={directVideoSource} poster={posterUrl ?? undefined} controls playsInline preload="metadata" />
             ) : posterUrl ? (
               <img src={posterUrl} alt="投稿のプレビュー" />
             ) : (

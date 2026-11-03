@@ -103,8 +103,8 @@ export default function RemovalRequestsAdminPage() {
 
   useEffect(() => {
     document.title = counts.pending > 0
-      ? `(${counts.pending}) 新着の削除要請 | X CLIP RANK`
-      : "削除要請管理 | X CLIP RANK";
+      ? `(${counts.pending}) 新着の削除要請 | twizou`
+      : "削除要請管理 | twizou";
   }, [counts.pending]);
 
   function unlock() {

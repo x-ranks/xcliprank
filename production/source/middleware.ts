@@ -1,20 +1,30 @@
 import { NextRequest, NextResponse } from "next/server";
 
-const CANONICAL_HOST = "xcliprank.com";
+const CANONICAL_HOST = "twizou.net";
 const REDIRECT_HOSTS = new Set([
+  "xcliprank.com",
   "www.xcliprank.com",
+  "www.twizou.net",
   "x-video-rank-mvp.vercel.app"
 ]);
 
 const PUBLIC_EXACT_PATHS = new Set([
   "/api/public-video",
+  "/api/discovery",
+  "/discover",
+  "/favorites",
+  "/api/manual-ranking",
   "/api/public-label-admin",
   "/api/public-save-event",
   "/api/video-playback-url",
   "/",
   "/ranking/daily",
   "/ranking/weekly",
+  "/rising",
   "/reels",
+  "/browse",
+  "/accounts",
+  "/tags",
   "/api/rankings",
   "/api/reels",
   "/api/video",
@@ -76,15 +86,18 @@ export function middleware(request: NextRequest) {
   }
 
   if (REDIRECT_HOSTS.has(request.nextUrl.hostname)) {
+    // Keep legacy API callers working while moving public pages to twizou.net.
+    if (request.nextUrl.pathname.startsWith("/api/")) return NextResponse.next();
     const canonicalUrl = request.nextUrl.clone();
     canonicalUrl.protocol = "https";
     canonicalUrl.hostname = CANONICAL_HOST;
     canonicalUrl.port = "";
-    return NextResponse.redirect(canonicalUrl, 308);
+    return NextResponse.redirect(canonicalUrl, 301);
   }
 
   if (isPublicPath(request.nextUrl.pathname)) {
     const response = NextResponse.next();
+    response.headers.set("Referrer-Policy", "same-origin");
 
     if (
       request.nextUrl.pathname.startsWith("/api/") ||

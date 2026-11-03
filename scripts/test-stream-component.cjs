@@ -11,6 +11,10 @@ function harness(deps){
  };
  const m={exports:{}};
  new Function('require','module','exports',component)(name=>{
+  if(name.endsWith('engagement-client'))return {trackEngagement:()=>{throw Error('UNEXPECTED_TRACKING')}};
+  if(name.endsWith('engagement-navigation'))return {engagementRange:()=>undefined};
+  if(name.endsWith('public-return-navigation'))return {publicReturnForPost:()=>null,RETURN_STORAGE_KEY:'fixture'};
+  if(name.endsWith('engagement-playback'))return {createPlaybackCounter:()=>({reset(){},tick(){return false}})};
   if(name==='react')return hooks;
   if(name==='react/jsx-runtime')return {Fragment:'fragment',jsx:(type,props)=>({type,props}),jsxs:(type,props)=>({type,props})};
   if(name.includes('browser-direct-download'))return {fetchDirectVideo:deps.blob};
@@ -19,7 +23,7 @@ function harness(deps){
   throw Error(name);
  },m,m.exports);
  return {
-  render(props){index=0;pending=[];tree=m.exports.default(props);for(const effect of pending)effect();return tree.props.children[0];},
+  render(props,beforeEffects){index=0;pending=[];tree=m.exports.default(props);beforeEffects?.(tree.props.children[0]);for(const effect of pending)effect();return tree.props.children[0];},
   unmount(){for(const slot of slots)slot?.cleanup?.();},
  };
 }
@@ -29,10 +33,17 @@ const drain=()=>new Promise(resolve=>setImmediate(resolve));
  URL.createObjectURL=()=>`blob:test-${++created}`;URL.revokeObjectURL=url=>revoked.push(url);
  const props={src:'https://video.twimg.com/a.mp4',postId:'21',controls:true};
  try {
+  let paused=0,cleared=0,reloaded=0;
+  const directNode={error:null,play:async()=>{},pause(){paused++;},removeAttribute(name){assert.equal(name,'src');cleared++;},load(){reloaded++;}};
+  const native=harness({sources:async()=>{throw Error('no lookup for native video');},attach:async()=>{throw Error('no stream import');},blob:async()=>{throw Error('no blob import');}});
+  let nativeVideo=native.render(props,video=>video.props.ref(directNode));native.render(props);
+  // A ref callback changing during a render must not clear a still-mounted video.
+  nativeVideo.props.ref(null);nativeVideo.props.ref(directNode);await drain();assert.equal(cleared,0);
+  nativeVideo.props.ref(null);native.unmount();await drain();assert.equal(paused,1);assert.equal(cleared,1);assert.equal(reloaded,1);
   let attached=0,blobCalls=0,disposed=0;
   const h=harness({sources:async()=>({url:props.src,hlsUrl:'https://video.twimg.com/master.m3u8'}),
    attach:async(node,url,opts)=>{attached++;opts.onReady();return ()=>disposed++;},blob:async()=>{blobCalls++;throw Error('No whole-file receive for HLS');}});
-  let v=h.render(props);const node={error:{code:4},play:async()=>{}};v.props.ref(node);
+  let v=h.render(props);const node={error:{code:4},play:async()=>{},pause(){},removeAttribute(){},load(){}};v.props.ref(node);
   v.props.onError({currentTarget:node});v=h.render(props);await drain();v=h.render(props);
   assert.equal(attached,1);assert.equal(blobCalls,0,'HLS does not enter the 128MiB Blob path');assert.equal(created,0);assert.equal(v.props['data-xclip-playback'],'stream');assert.equal(v.props.src,undefined);
   h.unmount();assert.equal(disposed,1);
@@ -49,7 +60,16 @@ const drain=()=>new Promise(resolve=>setImmediate(resolve));
   v=delayed.render(props);v.props.ref(node);v.props.onError({currentTarget:node});delayed.render(props);delayed.unmount();delayedResolve({url:props.src,hlsUrl:'https://video.twimg.com/master.m3u8'});await drain();assert.equal(created,1);
   let excludedBlob=0;
   const excluded=harness({sources:async()=>{throw Error('excluded [HTTP 404]');},attach:async()=>{},blob:async()=>excludedBlob++});
-  v=excluded.render(props);v.props.ref(node);v.props.onError({currentTarget:node});excluded.render(props);await drain();v=excluded.render(props);assert.equal(excludedBlob,0);assert.equal(v.props['data-xclip-playback'],'failed');excluded.unmount();
+  v=excluded.render(props);v.props.ref(node);v.props.onError({currentTarget:node});excluded.render(props);await drain();v=excluded.render(props);assert.equal(excludedBlob,0);assert.equal(v.props['data-xclip-playback'],'failed');assert.equal(v.props.src,undefined,'Excluded media must not return to the stale native URL');excluded.unmount();
+  const transient=harness({sources:async()=>{throw Error('temporary [HTTP 503]');},attach:async()=>{},blob:async()=>{throw Error('no blob');}});
+  v=transient.render(props);assert.equal(v.props.crossOrigin,undefined,'Native playback must not require canvas CORS');v.props.ref(node);v.props.onError({currentTarget:node});transient.render(props);await drain();v=transient.render(props);assert.equal(v.props.src,props.src,'Transport failure retains a valid native video source');assert.equal(v.props['data-xclip-playback'],'failed');node.error=null;v.props.onLoadedData({currentTarget:node});v=transient.render(props);assert.equal(v.props['data-xclip-playback'],'direct','Successful native fallback clears the failed state');assert.equal(v.props.src,props.src);node.error={code:4};transient.unmount();
+  let refreshStreams=0,refreshBlobs=0;
+  const freshUrl='https://video.twimg.com/fresh.mp4';
+  const refreshed=harness({sources:async()=>({url:freshUrl,hlsUrl:'https://video.twimg.com/master.m3u8'}),attach:async(n,u,o)=>{refreshStreams++;o.onReady();return()=>{};},blob:async()=>{refreshBlobs++;throw Error('not expected');}});
+  v=refreshed.render(props);v.props.ref(node);v.props.onError({currentTarget:node});refreshed.render(props);await drain();v=refreshed.render(props);
+  assert.equal(v.props.src,freshUrl);assert.equal(v.props['data-xclip-playback'],'refreshed');assert.equal(refreshStreams,0);assert.equal(refreshBlobs,0);
+  assert.equal(v.props.crossOrigin,undefined,'Native playback does not force CORS');
+  v.props.onError({currentTarget:node});assert.equal(refreshStreams,0,'HLS must wait for the React commit that clears native src');v=refreshed.render(props);await drain();v=refreshed.render(props);assert.equal(refreshStreams,1,'HLS starts after refreshed native MP4 fails and React clears its src');assert.equal(refreshBlobs,0);refreshed.unmount();
   console.log('PASS STREAM COMPONENT: HLS skips whole-file/128MiB path; UI controls retained; inactive Reel no recovery; stop aborts; small-MP4 compatibility; Blob release; stale async discarded; excluded metadata never bypassed.');
  } finally {URL.createObjectURL=oldCreate;URL.revokeObjectURL=oldRevoke;}
 })().catch(error=>{console.error(error);process.exitCode=1;});

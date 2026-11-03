@@ -15,7 +15,7 @@ const EVENT_TYPES = [
   "ranking_change",
   "outbound_x",
 ] as const;
-const RANGES = ["trending", "daily", "weekly", "reels"] as const;
+const RANGES = ["trending", "daily", "weekly", "rising", "reels", "discover", "favorites", "browse", "accounts", "tags"] as const;
 
 type EngagementRow = {
   occurred_at: string;
@@ -120,6 +120,7 @@ export async function GET(request: NextRequest) {
     const sessionAcquisition = new Map<string, string>();
     const xContentSessionSets = new Map<string, Set<string>>();
     const daily = new Map<string, DailyBucket>();
+    const pageViewsByPath: Record<string, number> = Object.create(null);
     const eventCounts = Object.fromEntries(
       EVENT_TYPES.map((eventType) => [eventType, 0])
     ) as Record<string, number>;
@@ -132,6 +133,10 @@ export async function GET(request: NextRequest) {
       sessions.add(row.session_id);
       eventCounts[row.event_type] = (eventCounts[row.event_type] ?? 0) + 1;
 
+      if (row.event_type === "page_view") {
+        const page = row.metadata?.path;
+        if (typeof page === "string" && /^\/[^?#\u0000-\u001f]{0,159}$/.test(page)) pageViewsByPath[page] = (pageViewsByPath[page] ?? 0) + 1;
+      }
       const acquisition = acquisitionOf(row);
       if (!sessionAcquisition.has(row.session_id)) {
         sessionAcquisition.set(row.session_id, acquisition);
@@ -218,6 +223,7 @@ export async function GET(request: NextRequest) {
           outboundX: bucket.outboundX,
         })),
         rangeOpens,
+        pageViewsByPath,
         acquisitionSessions,
         xContentSessions: Object.fromEntries(
           Array.from(xContentSessionSets.entries()).map(([key, value]) => [

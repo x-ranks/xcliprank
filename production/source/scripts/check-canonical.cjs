@@ -13,7 +13,10 @@ const report={mode,passed:[],skipped:[],failures:[],network:'denied',realState:'
 try{
  for(const dir of ['app','lib','scripts','sql','supabase'])copy(dir);
  for(const file of ['package.json','package-lock.json','next-env.d.ts','tsconfig.json','next.config.ts','middleware.ts'])fs.copyFileSync(path.join(root,file),path.join(fixture,file));
- fs.symlinkSync(fs.realpathSync(deps),path.join(fixture,'node_modules'),process.platform==='win32'?'junction':'dir');
+ // Standalone tracing follows junctions on Windows and can try writing outside
+ // the temporary tree. Use a temporary physical copy there for a faithful build.
+ if(mode==='build'&&process.platform==='win32')fs.cpSync(fs.realpathSync(deps),path.join(fixture,'node_modules'),{recursive:true,dereference:true});
+ else fs.symlinkSync(fs.realpathSync(deps),path.join(fixture,'node_modules'),process.platform==='win32'?'junction':'dir');
  const home=path.join(fixture,'test-home');fs.mkdirSync(home);
  const protectedFiles={
   '.local-admin/fixtures/registration.json':{authors:Array.from({length:101},(_,i)=>({id:String(1000+i),paused:i===4}))},
@@ -26,6 +29,7 @@ try{
  for(const [rel,value]of Object.entries(protectedFiles)){const p=path.join(fixture,rel);fs.mkdirSync(path.dirname(p),{recursive:true});fs.writeFileSync(p,JSON.stringify(value));hashes.set(p,crypto.createHash('sha256').update(fs.readFileSync(p)).digest('hex'));}
  const env={};for(const k of ['PATH','Path','SystemRoot','WINDIR','COMSPEC','PATHEXT','TEMP','TMP'])if(process.env[k])env[k]=process.env[k];
  Object.assign(env,{HOME:home,USERPROFILE:home,NEXT_TELEMETRY_DISABLED:'1',XCLIP_TEST_DEPENDENCY_ROOT:fixture,
+  XCLIP_MANUAL_RANKING_DIR:path.join(os.tmpdir(),path.basename(fixture)+'-manual-state'),
   NODE_OPTIONS:'--require "'+path.join(fixture,'scripts/offline-guard.cjs').replaceAll('\\','/')+'"'});
  const run=args=>cp.spawnSync(process.execPath,args,{cwd:fixture,env,encoding:'utf8',windowsHide:true,timeout:mode==='test'?45000:240000,maxBuffer:2*1024*1024});
  if(mode==='test'){
@@ -45,7 +49,8 @@ try{
  console.log('CANONICAL_CHECK_REPORT='+JSON.stringify({mode,passed:report.passed.length,skipped:report.skipped,failures:report.failures.map(x=>({name:x.name,status:x.status,output:x.output?.slice(-1500)})),network:report.network,realState:report.realState}));
  if(report.failures.length)process.exitCode=1;
 }finally{
- const link=path.join(fixture,'node_modules');if(fs.existsSync(link))fs.unlinkSync(link);
+ const link=path.join(fixture,'node_modules');if(!inside(link)||!path.basename(fixture).startsWith('xclip-canonical-check-'))throw Error('UNSAFE_CLEANUP_TARGET');
+ if(fs.existsSync(link)){if(mode==='build'&&process.platform==='win32')fs.rmSync(link,{recursive:true,force:true,maxRetries:3,retryDelay:100});else fs.unlinkSync(link);}
  if(!inside(path.join(fixture,'app'))||!path.basename(fixture).startsWith('xclip-canonical-check-'))throw Error('UNSAFE_CLEANUP_TARGET');
  fs.rmSync(fixture,{recursive:true,force:true,maxRetries:3,retryDelay:100});
 }

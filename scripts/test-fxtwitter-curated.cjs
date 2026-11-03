@@ -65,7 +65,7 @@ const response = (data,status=200) => new Response(JSON.stringify(data),{status,
   const savedEnv={CRON_SECRET:process.env.CRON_SECRET,SUPABASE_URL:process.env.SUPABASE_URL};
   process.env.CRON_SECRET='TEST_ONLY';process.env.SUPABASE_URL='https://example.supabase.co';
   global.fetch=async(url,init)=>{
-    if(String(url)==='https://xcliprank.com/api/free-curated-sync'){assert.equal(init.headers.Authorization,'Bearer TEST_ONLY');return Response.json({ok:true,state:{authors:[]}});}
+    if(String(url)==='https://twizou.net/api/free-curated-sync'){assert.equal(init.headers.Authorization,'Bearer TEST_ONLY');return Response.json({ok:true,state:{authors:[]}});}
     assert.equal(new URL(url).origin,'https://api.fxtwitter.com');assert(!/authorization|cookie/i.test(JSON.stringify(init.headers)));
     return String(url).includes('/statuses?')?response({code:200,results:[post('12345'),post('23456')],cursor:{bottom:'older'}}):response({code:200,user:{type:'profile',id:'783214',screen_name:'X',protected:false}});
   };

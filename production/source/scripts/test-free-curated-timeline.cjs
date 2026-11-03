@@ -32,11 +32,16 @@ const parse=results=>parseFreeMediaPage({code:200,results},author,true);
  p=parse([grandparent,parentLink,ownReply,child]);assert.equal(p.timeline.counts.context,3);assert.equal(p.timeline.trusted,true);
  p=parse([parent,child]);assert.equal(p.timeline.trusted,false);assert.equal(p.timeline.counts.context,0); // no own anchor
  p=parse([ownReply,{...parent,replying_to:{status:'77777'}},{...child,replying_to:{status:'88888'}}]);assert.equal(p.timeline.trusted,false);assert.equal(p.timeline.counts.foreign,1);
+ p=parseFreeMediaPage({code:200,results:[ownReply,{...parent,replying_to:{status:'77777'}},{...child,replying_to:{status:'88888'}}]},author,true,true);
+ assert.equal(p.timeline.trusted,true,'scheduled collector tolerates unrelated well-formed foreign context only with an own anchor');
+ assert.deepEqual(p.timeline.ids,[own.id]);assert.equal(p.posts.length,1);assert.equal(p.timeline.counts.foreign,1);
+ assert.equal(parseFreeMediaPage({code:200,results:[parent,child]},author,true,true).timeline.trusted,false,'foreign-only page cannot move checkpoint');
+ assert.equal(parseFreeMediaPage({code:200,results:[own,{...own,provider:'unknown'}]},author,true,true).timeline.trusted,false,'malformed provider stays fatal');
  p=parse([ownReply,parent,{...parent,text:'conflict'}]);assert.equal(p.timeline.trusted,false); // conflicting ID cannot prove context
  // Exact production count shape, with verified reply links supplied synthetically.
  const originals=Array.from({length:5},(_,i)=>post(String(42000+i))),context=Array.from({length:4},(_,i)=>({...parent,id:String(43000+i),replying_to:i?{status:String(42999+i)}:null}));
  originals[0].replying_to={status:'43003'};
  const reposts=Array.from({length:16},(_,i)=>({...parent,id:String(44000+i),reposted_by:{id:author.id}}));
  p=parse([...originals,...context,...reposts]);assert.equal(p.rawCount,25);assert.equal(p.timeline.counts.own,5);assert.equal(p.timeline.counts.reposts,16);assert.equal(p.timeline.counts.context,4);assert.equal(p.timeline.counts.foreign,0);assert.equal(p.posts.length,5);
- console.log('PASS TIMELINE: attributed reposts and identical pinned duplicates; foreign/malformed/conflicting rows refused; fixed request host; own reply opt-in; legacy bulk/media behavior retained. All HTTP mocked.');
+ console.log('PASS TIMELINE: scheduled own-anchor foreign context ignored but never published or checkpointed; foreign-only/malformed/conflicting refused; fixed host, replies and legacy behavior retained. All HTTP mocked.');
 })().catch(e=>{console.error(e);process.exitCode=1});

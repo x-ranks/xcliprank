@@ -4,7 +4,7 @@ import LegalPage from "../components/LegalPage";
 
 export const metadata: Metadata = {
   title: "著作権・削除方針",
-  description: "X CLIP RANKの著作権・プライバシー侵害等に関する削除申請手順です。",
+  description: "twizouの著作権・プライバシー侵害等に関する削除申請手順です。",
   alternates: { canonical: "/copyright" },
   robots: { index: false, follow: true },
 };
@@ -14,7 +14,7 @@ export default function CopyrightPage() {
     <LegalPage title="著作権・削除方針" lead="権利侵害、違法な内容、同意のない掲載などが疑われる場合の対応方針です。">
       <section className="legal-section">
         <h2>当サイトでの表示</h2>
-        <p>Xclipが掲載するのは、X（旧Twitter）の公開投稿情報と動画へのURL情報です。動画はXの配信元から利用者の端末へ直接読み込まれ、Xclipでは動画ファイルの保管・再アップロードを行いません。著作権その他の権利は、投稿者または正当な権利者に帰属します。投稿の削除・非公開化、アカウントの状態、外部サービスの仕様変更により、動画を利用できなくなることがあります。</p>
+        <p>twizouが掲載するのは、X（旧Twitter）の公開投稿情報と管理者が登録した外部動画のURL情報です。再生できる動画は元の配信元から利用者の端末へ直接読み込まれ、twizouでは動画ファイルの保管・再アップロードを行いません。著作権その他の権利は、投稿者または正当な権利者に帰属します。投稿の削除・非公開化、アカウントの状態、外部サービスの仕様変更により、動画を利用できなくなることがあります。</p>
       </section>
       <section className="legal-section legal-callout">
         <h2>動画の保存について</h2>

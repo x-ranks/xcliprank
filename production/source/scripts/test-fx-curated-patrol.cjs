@@ -31,6 +31,20 @@ const run=f=>scan.scanFreeCurated(f.options);
  assert.equal((await xs.readXState(all.directory)).requests,0);assert.equal((await fxs.readFxState(all.directory)).attempts,24);
  cache.delete('lib/fx-curated-scan');all.time=START+DAY;assert.equal((await run(all)).processed,8);
  assert((await xs.readXState(all.directory)).reservations.some(r=>r.id==='1024'));
+ // Two urgent authors get the first slots, while six oldest regular authors
+ // retain their slots and every attempt still consumes the shared quota.
+ const prioritized=await fixture(Array.from({length:10},(_,i)=>author(500+i)));
+ let priorityState=await store.readScheduledFreeState(prioritized.directory);
+ const metrics=load('lib/free-curated-metrics');
+ priorityState.authors[9].metrics=metrics.newFreeMetrics(START-DAY);
+ priorityState.authors[9].metrics.consecutiveFailures=3;
+ await store.writeScheduledFreeState(priorityState,prioritized.directory);
+ let priorityFx=fxs.freshFxState();
+ priorityFx.positions['1508']={sinceId:priorityState.authors[8].latestId,cursor:'xclip-statuses-v1:NEXT',upperId:sid(START-1000),seenCursorHashes:[fxs.fxCursorHash('xclip-statuses-v1:NEXT')],checkedAt:START-DAY};
+ await fxs.writeFxState(priorityFx,prioritized.directory);
+ const priorityRun=await run(prioritized);
+ assert.equal(priorityRun.processed,8);assert.deepEqual(prioritized.calls.map(u=>decodeURIComponent(u.pathname).match(/id:(\d+)/)[1]),['1508','1509','1500','1501','1502','1503','1504','1505']);
+ assert.equal((await xs.readXState(prioritized.directory)).reservations.length,8);
  // Existing X reservations, lower-bound window, and cumulative paid metrics survive provider switching.
  const a=author(200),migration=await fixture([a]);let x=xs.freshXState();x.requests=7;x.rawPosts=11;x.cooldownUntil=START+DAY;
  const lower=sid(START-2*3600000),high=sid(START-60000),xp={sinceId:lower,nextToken:'X_MUST_NOT_LEAK',endTime:new Date(START).toISOString(),startTime:null,newestId:high,warning:'old coverage',checkedAt:START,savedTotal:1,rawTotal:11};
@@ -79,6 +93,12 @@ const run=f=>scan.scanFreeCurated(f.options);
  mp.options.fetcher=async()=>Response.json({code:200,results:[own,own,rp]});
  assert.equal((await run(mp)).saved,1);assert.deepEqual(mp.saved,[high]);
  assert.equal((await fxs.readFxState(mp.directory)).positions[ma.id].sinceId,high); // No foreign ID advancement.
+ const mixedForeign=await fixture([author(248)]),mf=mixedForeign.options;
+ const unrelated={...post(author(999),above),replying_to:{status:'12345'}};
+ mf.fetcher=async()=>Response.json({code:200,results:[post(author(248),high),unrelated,{...unrelated,id:sid(START-5000)}]});
+ assert.equal((await run(mixedForeign)).saved,1);
+ assert.deepEqual(mixedForeign.saved,[high]);
+ assert.equal((await fxs.readFxState(mixedForeign.directory)).positions['1248'].sinceId,high);
  // Linked foreign conversation posts cannot end an old-only page or contribute their IDs/media to publication.
  const ca=author(244),conversation=await fixture([ca]);let contextNext=false;
  const parent={...post(author(999),above)},ownOld={...post(ca,old),replying_to:{status:above}};
@@ -146,6 +166,17 @@ const run=f=>scan.scanFreeCurated(f.options);
  r=await run(notReady);assert.equal(r.verification.result,'WAITING');assert.equal(notReady.calls.length,0);
  const invalidNewest=await fixture([author(390)]);prior=fxs.freshFxState();prior.positions['1390']={sinceId:high,cursor:null,upperId:null,seenCursorHashes:[],checkedAt:0,newestId:high};
  await fxs.writeFxState(prior,invalidNewest.directory);await assert.rejects(run(invalidNewest),/STATE_INVALID/);assert.equal(invalidNewest.calls.length,0);
+
+ // Source post IDs never replace the selected author's timeline boundary.
+ const qa=author(420),quotes=await fixture([qa]),sourceAuthor={...author(999),id:'99999'};
+ const sourcePost=post(sourceAuthor,old),quoteRoot={...post(qa,high),media:undefined,quote:sourcePost};
+ quotes.options.fetcher=async()=>Response.json({code:200,results:[quoteRoot,sourcePost]});
+ const linked=[];quotes.options.publishReferences=async(a,refs)=>{linked.push(...refs);return {saved:refs.length,promoted:0,savedIds:refs.map(r=>r.candidate.x_post_id),excluded:0,duplicates:0,paid_x_requests:0,outcomes:{...stubs['lib/free-curated-publish'].emptyPublicationOutcomes()}};};
+ r=await run(quotes);assert.equal(r.saved,1);assert.equal(linked[0].candidate.author_id,sourceAuthor.id);assert.equal((await fxs.readFxState(quotes.directory)).positions[qa.id].sinceId,high);assert.equal(linked[0].candidate.x_post_id,old);
+ const rpAuthor=author(421),reposted=await fixture([rpAuthor]);reposted.options.fetcher=async()=>Response.json({code:200,results:[{...sourcePost,reposted_by:{id:rpAuthor.id}}]});
+ reposted.options.publishReferences=quotes.options.publishReferences;r=await run(reposted);assert.equal(r.saved,1);assert.equal((await fxs.readFxState(reposted.directory)).positions[rpAuthor.id].sinceId,rpAuthor.latestId);
+ const broken=await fixture([author(422)]);broken.options.fetcher=async()=>Response.json({code:200,results:[{...post(author(422),high),media:undefined,quote:sourcePost}]});broken.options.publishReferences=async()=>{throw Error('MOCK_REFERENCE_DB_FAILURE')};
+ assert.equal((await run(broken)).failed,1);assert.equal((await fxs.readFxState(broken.directory)).positions['1422'].sinceId,author(422).latestId);
  console.log('PASS FX PATROL: fixed Fx only/no credentials/no X; shared24 incl failures/batch8/24h/fairness; lower-bound and old pending upgrade; mixed repost/identical duplicate; unknown/conflicting refusal with counts; snapshot/repost-only pagination/DB retry; random five exact sample/same lock/quota/no-new success/wait/failure; pause/removal/import guards; corrupt/durability refusal. All HTTP and DB mocked.');
  }finally{for(const d of dirs){if(!d.startsWith(os.tmpdir()+path.sep)||!path.basename(d).startsWith('xclip-fx-patrol-'))throw Error('UNSAFE_FIXTURE_PATH');await fsp.rm(d,{recursive:true,force:true});}}
 })().catch(e=>{console.error(e);process.exitCode=1});

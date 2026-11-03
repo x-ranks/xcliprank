@@ -1,0 +1,24 @@
+'use strict';
+const fs=require('node:fs'),path=require('node:path'),assert=require('node:assert/strict'),ts=require('typescript');
+const {NextRequest}=require('next/server');
+const file=path.join(__dirname,'../middleware.ts'),loaded={exports:{}};
+const js=ts.transpileModule(fs.readFileSync(file,'utf8'),{compilerOptions:{module:ts.ModuleKind.CommonJS,target:ts.ScriptTarget.ES2022}}).outputText;
+new Function('require','module','exports',js)(require,loaded,loaded.exports);
+const previous=process.env.NODE_ENV;process.env.NODE_ENV='production';
+try{
+ for(const path of ['/browse','/browse?page=2','/accounts','/accounts?page=2','/tags','/tags/%E7%84%A1%E4%BF%AE%E6%AD%A3','/api/manual-ranking','/rising']){
+  const response=loaded.exports.middleware(new NextRequest('https://twizou.net'+path));
+  assert.equal(response.status,200,path);
+ }
+ for(const host of ['xcliprank.com','www.xcliprank.com','www.twizou.net']){
+  for(const path of ['/','/p/2111989753172345043','/tags/%E5%80%8B%E4%BA%BA%E6%92%AE%E5%BD%B1?from=old']){
+   const response=loaded.exports.middleware(new NextRequest('https://'+host+path));
+   assert.equal(response.status,301,host+path);
+   assert.equal(response.headers.get('location'),'https://twizou.net'+path);
+  }
+  const api=loaded.exports.middleware(new NextRequest('https://'+host+'/api/engagement'));
+  assert.equal(api.status,200,'legacy API remains reachable on '+host);
+ }
+ assert.equal(loaded.exports.middleware(new NextRequest('https://twizou.net/manual-ranking')).status,404);
+ console.log('PASS SEO MIDDLEWARE: new canonical host, path-preserving permanent redirects, legacy APIs, protected admin route');
+}finally{if(previous===undefined)delete process.env.NODE_ENV;else process.env.NODE_ENV=previous;}

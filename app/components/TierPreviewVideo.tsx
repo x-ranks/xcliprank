@@ -1,13 +1,14 @@
 "use client";
+import { directPlaybackUrl } from "../../lib/browser-direct-playback";
 import {useRef,useState} from "react";
 type Props={id:number;url:string;poster?:string|null};
 export default function TierPreviewVideo({id,url,poster}:Props){
   const player=useRef<HTMLVideoElement>(null);
-  const [direct,setDirect]=useState(false),[error,setError]=useState(""),[diagnostic,setDiagnostic]=useState(""),[checking,setChecking]=useState(false),[cached,setCached]=useState(false),[preparing,setPreparing]=useState(false);
-  const source=cached?`/api/tier-preview-playback?id=${id}`:direct?url:`/api/video?url=${encodeURIComponent(url)}`;
+  const [error,setError]=useState(""),[diagnostic,setDiagnostic]=useState(""),[checking,setChecking]=useState(false),[cached,setCached]=useState(false),[preparing,setPreparing]=useState(false);
+  const source=cached?`/api/tier-preview-playback?id=${id}`:directPlaybackUrl(url);
   function failed(){const code=player.current?.error?.code;setError(code===3?"動画のデコードに失敗しました。":code===2?"動画の通信に失敗しました。":"動画を読み込めませんでした。");}
   function retry(){setError("");setDiagnostic("");player.current?.load();}
-  async function check(){setChecking(true);setDiagnostic("");try{
+  async function check(){if(!source){setError("動画の配信元URLを確認できません。");return;}setChecking(true);setDiagnostic("");try{
     const r=await fetch(source,{headers:{Range:"bytes=0-0"},cache:"no-store",signal:AbortSignal.timeout(15000)});
     const type=r.headers.get("content-type")??"不明";await r.body?.cancel();
     setDiagnostic(`再生先 HTTP=${r.status} / ${type}${r.ok&&type.startsWith("video/")?"（動画応答あり）":""}`);
@@ -22,7 +23,7 @@ export default function TierPreviewVideo({id,url,poster}:Props){
         <button disabled={preparing} onClick={()=>void play()}>再生する</button>
         <button onClick={retry}>再読み込み</button>
         <button disabled={checking} onClick={()=>void check()}>{checking?"確認中…":"再生エラーを確認"}</button>
-        <button onClick={()=>{setCached(false);setDirect(v=>!v);setError("");setDiagnostic("");}}>{direct?"サイト経由に戻す":"直接再生を試す"}</button>
+        <button disabled={!cached} onClick={()=>{setCached(false);setError("");setDiagnostic("");}}>配信元から直接再生</button>
       </div>
     {diagnostic&&<p role="status">{diagnostic}</p>}
   </div>;

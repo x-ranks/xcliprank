@@ -15,21 +15,26 @@ const clock=liquidity.liquidityClock(),before=Date.parse(clock.since);
 const authors=Array.from({length:100},(_,i)=>({x_author_id:String(100+i),is_curated:true,curated_status:'active'}));
 const make=(i,days,tier)=>({x_post_id:String(100000+i),author_id:String(100+i%100),author_username:'a'+i%100,author_name:'fixture',adult_tier:tier,manual_tier:null,effective_adult_score:0.8,score:3000-i,created_at:new Date(clock.snapshot-days*86400000-i*1000).toISOString(),x_url:'https://x.com/fixture/status/'+(100000+i),video_url:'https://video.twimg.com/ext_tw_video/'+(900000+i)+'/pu/vid/test.mp4',preview_image_url:null,content_category:'PASS',is_visible:true,moderation_blocked:false,review_required:false,views:1,likes:0,reposts:0,replies:0,visual_preference_score:i%7});
 const rows=[...Array.from({length:230},(_,i)=>make(i,0.1,i%5===0?'B':'A')),...Array.from({length:1800},(_,i)=>make(300+i,3,i%3===0?'S':'A'))];
-let blocked=new Set(),queries=0,dbFailure=false;
+let blocked=new Set(),queries=0,dbFailure=false,registrationRows=[];
 function from(table){let data=table==='authors'?[...authors]:[...rows],orders=[];
  const q={select(){return q;},eq(k,v){data=data.filter(p=>p[k]===v);return q;},not(k,op,v){data=data.filter(p=>p[k]!==v);return q;},or(expr){const m=expr.match(/adult_tier.in.\(([^)]+)\)/);if(m)data=data.filter(p=>m[1].split(',').includes(p.adult_tier)||m[1].split(',').includes(p.manual_tier));const manual=expr.match(/manual_tier.is.null,manual_tier.in.\(([^)]+)\)/);if(manual)data=data.filter(p=>p.manual_tier==null||manual[1].split(',').includes(p.manual_tier));return q;},in(k,v){if(k==='x_post_id')assert(v.length<=100,'PostgREST ID batches stay bounded');data=data.filter(p=>v.includes(p[k]));return q;},gte(k,v){data=data.filter(p=>p[k]>=v);return q;},lt(k,v){data=data.filter(p=>p[k]<v);return q;},order(k,{ascending}){orders.push([k,ascending]);return q;},range(a,b){queries++;data.sort((a,b)=>{for(const[k,asc]of orders){const d=a[k]<b[k]?-1:a[k]>b[k]?1:0;if(d)return asc?d:-d;}return 0;});return Promise.resolve({data:data.slice(a,b+1),error:dbFailure?{message:'PRIVATE_DB_ERROR'}:null});},then(a,b){return Promise.resolve({data,error:dbFailure?{message:'PRIVATE_DB_ERROR'}:null}).then(a,b);}};return q;}
 function newRoute(){return load('app/api/rankings/route.ts',n=>{
+ if(n.endsWith('ranking-read-cache'))return load('lib/ranking-read-cache.ts',require);
+ if(n.endsWith('curated-video-references'))return {readCuratedReferences:async()=>[],eligibleCuratedReferences:async()=>[],referencePermitsPost:()=>false};
+ if(n.endsWith('manual-x-permissions'))return {eligibleManualXIds:async()=>new Set()};
  if(n==='next/server')return {NextRequest,NextResponse};
  if(n.endsWith('ranking-liquidity'))return liquidity;
  if(n.endsWith('ranking-editions'))return editions;
  if(n.endsWith('newest-feed'))return feed;
+ if(n.endsWith('free-curated-server-store'))return {readScheduledFreeState:async()=>({recentRegistrations:registrationRows,recentPatrolPosts:[]})};
  if(n.endsWith('ranking-pagination'))return pagination;
  if(n.endsWith('ranking-update'))return load('lib/ranking-update.ts',require);
  if(n.endsWith('post-status-store'))return {unavailableKeys:async()=>new Set(blocked)};
  if(n.endsWith('post-status'))return postStatus;
  if(n.endsWith('supabase-admin'))return {supabaseAdmin:()=>({from})};
  if(n.endsWith('content-filter'))return {classifyContent:text=>({category:text==='excluded'?'SAFETY_REVIEW':'PASS'})};
- if(n.endsWith('public-ranking-history'))return load('lib/public-ranking-history.ts',id=>id.endsWith('public-video-core')?load('lib/public-video-core.ts'):require(id));
+ if(n.endsWith('manual-ranking'))return {readManualState:async()=>({entries:[]}),applyManualPlacements:posts=>posts};
+ if(n.endsWith('public-ranking-history'))return load('lib/public-ranking-history.ts',id=>id.endsWith('public-video-core')?load('lib/public-video-core.ts',n=>n.endsWith('indexability')?load('lib/indexability.ts'):require(n)):require(id));
  if(n.endsWith('public-catalog-store'))return {createPublicCatalog:()=>({ranked:async()=>{}})};
  if(n.endsWith('public-save-secret'))return {publicCatalogDirectory:()=>'/isolated-mock-catalog'};
  throw Error('Unexpected module '+n);
@@ -45,6 +50,7 @@ async function get(query){const r=await route.GET(new NextRequest('http://intern
  assert.equal(n.data.filter(p=>!p.ranking_supplemented).length,n.liquidity.newRecent);
  assert(n.data.filter(p=>p.ranking_supplemented).every(p=>['S','A+','A'].includes(p.adult_tier)));
  const counts=new Map();n.data.forEach(p=>counts.set(p.author_id,(counts.get(p.author_id)||0)+1));assert([...counts.values()].every(v=>v<=20));
+ for(let start=0;start<n.data.length;start+=50){const pageCounts=new Map();for(const p of n.data.slice(start,start+50))pageCounts.set(p.author_id,(pageCounts.get(p.author_id)||0)+1);assert([...pageCounts.values()].every(v=>v<=3));assert(n.data.slice(start,start+50).some(p=>p.ranking_supplemented));}
  const pages=[];for(let p=1;p<=10;p++)pages.push(await get('range=trending&page='+p+'&edition='+n.edition));
  assert(pages.every(p=>p.count===50));assert(pages.every(p=>p.rankingUpdatedAt===n.rankingUpdatedAt));assert.deepEqual(pages.flatMap(p=>p.data.map(r=>r.x_post_id)),n.data.map(r=>r.x_post_id));
  assert.equal(pages[9].pagination.nextHref,null);assert.equal(pages[0].pagination.previousHref,null);assert.equal(pages[1].data[0].ranking_position,51);
@@ -71,5 +77,14 @@ async function get(query){const r=await route.GET(new NextRequest('http://intern
  assert.deepEqual(feed.spreadAuthors(oneAuthor,'seed'),spread);assert.notDeepEqual(feed.spreadAuthors(oneAuthor,'different'),spread);
  const sameMedia=[make(12000,0,'A'),{...make(12001,0,'A'),video_url:make(12000,0,'A').video_url+'?tag=12'}];assert.equal(feed.buildNewestFeed(sameMedia,[],new Set(),'seed').posts.length,1);
  assert.equal(feed.buildNewestFeed([],[],new Set(),'seed').shortfall,500);
+ const fresh=Array.from({length:5},(_,i)=>make(20000+i,3,'S')).filter(p=>!blocked.has('post:'+p.x_post_id));
+ rows.push(...fresh);registrationRows=fresh.map(p=>({id:p.x_post_id,at:clock.snapshot-60000}));
+ process.env.XCLIP_RANKING_FEED_STATE_DIR=path.join(scratch,'priority-editions');route=newRoute();
+ const prioritized=await get('range=trending');assert.equal(prioritized.status,200);assert.equal(prioritized.liquidity.newRegistrationPriority,5);
+ assert.deepEqual(new Set(prioritized.data.slice(0,5).map(p=>p.x_post_id)),new Set(fresh.map(p=>p.x_post_id)));
+ const priorityDaily=await get('range=daily&edition='+prioritized.edition),priorityWeekly=await get('range=weekly&edition='+prioritized.edition);
+ assert(priorityDaily.data.every(p=>!fresh.some(row=>row.x_post_id===p.x_post_id)));
+ assert(priorityWeekly.data.every(p=>!fresh.some(row=>row.x_post_id===p.x_post_id)));
+ for(let start=0;start<prioritized.data.length;start+=50){const page=prioritized.data.slice(start,start+50),perAuthor=new Map();for(const p of page)perAuthor.set(p.author_id,(perAuthor.get(p.author_id)||0)+1);assert([...perAuthor.values()].every(n=>n<=3));assert(page.some(p=>p.ranking_supplemented));}
  console.log('PASS NEWEST500: actual route with mocked DB; 500=recent+archive; daily85 preserved; weekly visual variants excluded; 10x50 unique; positions; author dispersion; pinned restart/order; current blocks/visibility/pause; media dedup; corrupt/race/error guards; zero live HTTP/DB.');
 })().catch(e=>{console.error(e);process.exitCode=1;});

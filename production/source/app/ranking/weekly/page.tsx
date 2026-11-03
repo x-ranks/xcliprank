@@ -6,27 +6,30 @@ import { loadRankingPage } from "../../../lib/initial-ranking";
 export const dynamic = "force-dynamic";
 
 export const metadata: Metadata = {
-  title: "X動画 週間ランキング",
+  title: "週間のTwitter動画ランキング・保存",
   description:
-    "直近1週間のX動画をランキング形式で紹介。新着・24時間ランキングとあわせて、今週の人気動画を探せます。",
+    "直近1週間のTwitter（X）動画をランキング形式で紹介。気になる動画の再生・保存や、投稿者の動画一覧を確認できます。",
   alternates: {
     canonical: "/ranking/weekly"
   },
   robots: {
     index: true,
-    follow: true
+    follow: true,
+    "max-image-preview": "large"
   },
   openGraph: {
-    title: "X動画 週間ランキング | X CLIP RANK",
+    title: "週間のTwitter動画ランキング・保存 | twizou",
     description:
       "直近1週間の人気動画をランキング形式で紹介します。",
-    url: "/ranking/weekly"
+    url: "/ranking/weekly",
+    images: ["/twizou-share.png"]
   },
   twitter: {
     card: "summary_large_image",
-    title: "X動画 週間ランキング | X CLIP RANK",
+    title: "週間のTwitter動画ランキング・保存 | twizou",
     description:
-      "直近1週間のX動画を紹介する週間ランキングです。"
+      "直近1週間のX動画を紹介する週間ランキングです。",
+    images: ["/twizou-share.png"]
   },
   other: {
     rating: "adult"

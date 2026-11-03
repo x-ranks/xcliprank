@@ -1,6 +1,6 @@
 import { FreeCuratedError } from "./fxtwitter-curated";
 
-export const FREE_PRODUCTION_ENDPOINT = "https://xcliprank.com/api/free-curated-sync";
+export const FREE_PRODUCTION_ENDPOINT = "https://twizou.net/api/free-curated-sync";
 export function localDatabaseHost() {try{return new URL(process.env.SUPABASE_URL??process.env.NEXT_PUBLIC_SUPABASE_URL??"").hostname;}catch{return null;}}
 export async function callFreeProduction(payload:object,fetcher:typeof fetch=fetch,signal?:AbortSignal){
   const secret=process.env.CRON_SECRET;

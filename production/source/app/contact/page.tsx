@@ -5,7 +5,7 @@ import ContactForm from "./ContactForm";
 
 export const metadata: Metadata = {
   title: "お問い合わせ",
-  description: "X CLIP RANKへのお問い合わせフォームです。",
+  description: "twizouへのお問い合わせフォームです。",
   alternates: { canonical: "/contact" },
   robots: { index: false, follow: true },
 };

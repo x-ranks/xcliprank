@@ -38,7 +38,6 @@ export default function DownloadForm() {
       <Link href="/">← ランキングへ戻る</Link>
       <h1>投稿URLから動画を保存</h1>
       <p>X・Twitterの公開投稿URLを貼り付けてください。</p>
-      <p>サイト内にない投稿は、外部サービスFxTwitterで取得を試みます。投稿IDが外部サービスへ送信されます。取得できない場合は保存できません。</p>
       <div className="download-notice">
         <strong>権利者が保存を許可した動画のみ利用できます。</strong>
         <p>違法・権利侵害・非同意の動画、未成年者の性的な動画の保存は禁止します。許可のない転載・再配布も禁止します。</p>

@@ -28,6 +28,8 @@ function allowedOrigin(request: NextRequest) {
     const hostname = new URL(origin).hostname;
     const vercelHostname = process.env.VERCEL_URL?.split(":")[0];
     return (
+      hostname === "twizou.net" ||
+      hostname === "www.twizou.net" ||
       hostname === "xcliprank.com" ||
       hostname === "www.xcliprank.com" ||
       hostname === "localhost" ||
@@ -73,10 +75,12 @@ export async function POST(request: NextRequest) {
     const anonymousIdHash = createHash("sha256")
       .update(`${salt}:${anonymousId}`)
       .digest("hex");
+    const pageViewId = ["page_view", "video_open", "qualified_view"].includes(eventType) && typeof body?.pageViewId === "string" && /^[A-Za-z0-9-]{8,100}$/.test(body.pageViewId) ? body.pageViewId : null;
+    const legacyPath = eventType === "page_view" && typeof metadata.path === "string" ? metadata.path.slice(0, 160) : "";
     const bucketSeconds = EVENT_BUCKET_SECONDS[eventType];
     const bucket = Math.floor(Date.now() / 1000 / bucketSeconds);
     const dedupeKey = createHash("sha256")
-      .update(`${anonymousIdHash}:${sessionId}:${eventType}:${xPostId ?? "-"}:${range ?? "-"}:${bucket}`)
+      .update(`${anonymousIdHash}:${sessionId}:${eventType}:${xPostId ?? "-"}:${range ?? "-"}:${bucket}:${pageViewId ?? legacyPath}`)
       .digest("hex");
 
     const { error } = await supabaseAdmin()

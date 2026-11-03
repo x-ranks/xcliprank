@@ -1,4 +1,5 @@
 "use client";
+import { directPlaybackUrl } from "../../lib/browser-direct-playback";
 
 import PersonalLearningWorker from "../components/PersonalLearningWorker";
 
@@ -389,10 +390,8 @@ export default function ReviewPage() {
     video.twimg.comへ直接アクセスせず、
     既存の動画Proxyを利用。
   */
-  const proxyVideoUrl = currentPost.video_url
-    ? `/api/video?url=${encodeURIComponent(
-        currentPost.video_url
-      )}`
+  const directVideoSource = currentPost.video_url
+    ? directPlaybackUrl(currentPost.video_url) ?? null
     : null;
 
   return (
@@ -470,10 +469,10 @@ export default function ReviewPage() {
         {/* 動画 */}
 
         <section>
-          {proxyVideoUrl ? (
+          {directVideoSource ? (
             <video
               key={currentPost.id}
-              src={proxyVideoUrl}
+              src={directVideoSource}
               controls
               autoPlay
               muted
@@ -509,7 +508,7 @@ export default function ReviewPage() {
               onError={() => {
                 console.error(
                   "Review video playback error:",
-                  proxyVideoUrl
+                  directVideoSource
                 );
               }}
               style={{

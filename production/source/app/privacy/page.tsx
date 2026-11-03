@@ -4,7 +4,7 @@ import LegalPage from "../components/LegalPage";
 
 export const metadata: Metadata = {
   title: "プライバシーポリシー",
-  description: "X CLIP RANKにおけるアクセス情報・削除申請情報などの取扱いを説明します。",
+  description: "twizouにおけるアクセス情報・削除申請情報などの取扱いを説明します。",
   alternates: { canonical: "/privacy" },
   robots: { index: false, follow: true },
 };

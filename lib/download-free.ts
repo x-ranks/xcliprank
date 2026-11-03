@@ -58,7 +58,7 @@ async function fetchMetadata(id: string, legacy: boolean, fetcher: typeof fetch,
   let response: Response;
   try {
     response = await fetcher(`https://api.fxtwitter.com/${legacy ? "" : "2/"}status/${id}`, {
-      headers: { Accept: "application/json", "User-Agent": "Xclip-Download/1.1 (+https://xcliprank.com/download)" },
+      headers: { Accept: "application/json", "User-Agent": "Xclip-Download/1.1 (+https://twizou.net/download)" },
       redirect: "error", cache: "no-store", signal: AbortSignal.timeout(12000),
     });
   } catch (error: any) {

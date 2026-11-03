@@ -12,6 +12,17 @@ export type FreeCandidate = {
   durationSeconds: number | null; videoCount: number;
 };
 
+export function parseFreePostUrl(value: unknown): string {
+  if (typeof value !== "string" || value.length > 512) throw new FreeCuratedError(400, "Xの投稿URLを入力してください。");
+  let url: URL;
+  try { url = new URL(value.trim()); } catch { throw new FreeCuratedError(400, "Xの投稿URLが正しくありません。"); }
+  if (url.protocol !== "https:" || !["x.com", "www.x.com", "twitter.com", "www.twitter.com"].includes(url.hostname) ||
+      url.username || url.password || url.port || url.hash) throw new FreeCuratedError(400, "Xの投稿URLが正しくありません。");
+  const match = url.pathname.match(/^\/(?:[a-z0-9_]{1,15}|i(?:\/web)?)\/status\/(\d{2,20})(?:\/video\/\d+)?\/?$/i);
+  if (!match) throw new FreeCuratedError(400, "Xの投稿URLが正しくありません。");
+  return match[1];
+}
+
 export function normalizeFreeUsername(value: unknown): string {
   if (typeof value !== "string" || value.length > 256) throw new FreeCuratedError(400, "投稿者名が正しくありません。");
   let name = value.trim();
@@ -36,7 +47,7 @@ async function freeJson(path: string, fetcher: typeof fetch, signal?: AbortSigna
   try {
     response = await fetcher(`https://api.fxtwitter.com/2/${path}`, {
       cache: "no-store", redirect: "error", credentials: "omit", referrerPolicy: "no-referrer",
-      headers: { Accept: "application/json", "User-Agent": "Xclip-Free-Curated/1.0 (+https://xcliprank.com)" },
+      headers: { Accept: "application/json", "User-Agent": "Xclip-Free-Curated/1.0 (+https://twizou.net)" },
       signal: signal ? AbortSignal.any([signal, AbortSignal.timeout(12000)]) : AbortSignal.timeout(12000),
     });
   } catch { throw new FreeCuratedError(502, "無料サービスへの接続が失敗・中断しました。有料APIへ切り替えません。", undefined, true); }
@@ -104,7 +115,7 @@ function cdnUrl(value: unknown, thumbnail = false): string | null {
 
 // Timeline rows include reposts and pinned duplicates; neither is a new own post.
 // Unknown/foreign rows remain untrusted. Never use their IDs as a collection boundary.
-export function classifyFreeTimeline(results: any[], author: FreeAuthor, allowReplyContext = false) {
+export function classifyFreeTimeline(results: any[], author: FreeAuthor, allowReplyContext = false, allowReferences = false) {
   const ids: string[] = [], seen = new Map<string, string>();
   const counts = { own: 0, reposts: 0, duplicates: 0, context: 0, type: 0, provider: 0, id: 0, author: 0, foreign: 0, repostIdentity: 0, conflict: 0 };
   // A foreign reply/parent is context only if an explicit same-page reply-ID chain connects it to an own post.
@@ -136,7 +147,10 @@ export function classifyFreeTimeline(results: any[], author: FreeAuthor, allowRe
       if (typeof p.reposted_by !== "object" || p.reposted_by.id !== author.id) { counts.repostIdentity++; continue; }
       counts.reposts++; continue;
     }
-    if (p.author.id !== author.id) { if(allowReplyContext&&connected.has(p.id))counts.context++;else counts.foreign++; continue; }
+    if (p.author.id !== author.id) {
+      const quoted=allowReferences&&results.some(root=>root?.type==="status"&&root.provider==="twitter"&&root.author?.id===author.id&&root.author.protected===false&&!root.reposted_by&&root.quote?.type==="status"&&root.quote.provider==="twitter"&&root.quote.id===p.id&&root.quote.author?.id===p.author.id);
+      if((allowReplyContext&&connected.has(p.id))||quoted)counts.context++;else counts.foreign++; continue;
+    }
     // Exact duplicate content is safe to deduplicate. Conflicting rows for one ID are not.
     const fingerprint = JSON.stringify(p), previous = seen.get(p.id);
     if (previous !== undefined) {
@@ -145,11 +159,18 @@ export function classifyFreeTimeline(results: any[], author: FreeAuthor, allowRe
     }
     seen.set(p.id, fingerprint); ids.push(p.id); counts.own++;
   }
-  const trusted = ![counts.type, counts.provider, counts.id, counts.author, counts.foreign, counts.repostIdentity, counts.conflict].some(Boolean);
+  // The scheduled collector requests replies and references together. A provider
+  // may include unrelated but well-formed foreign rows beside the author's own
+  // posts. They are never candidates or watermark IDs; do not discard the own
+  // posts solely because those unrelated rows were present. Registration and
+  // ordinary imports keep the stricter contract.
+  const unlinkedForeignSafe = allowReplyContext && allowReferences && counts.own > 0;
+  const trusted = ![counts.type, counts.provider, counts.id, counts.author, counts.repostIdentity, counts.conflict].some(Boolean) &&
+    (counts.foreign === 0 || unlinkedForeignSafe);
   return { ids, counts, trusted };
 }
 
-export function parseFreeMediaPage(body: any, author: FreeAuthor, includeReplies = false) {
+export function parseFreeMediaPage(body: any, author: FreeAuthor, includeReplies = false, includeReferences = false) {
   if (body?.code !== 200 || !Array.isArray(body.results) || body.results.length > 100) {
     throw new FreeCuratedError(502, "投稿一覧の形式を確認できません。");
   }
@@ -189,10 +210,24 @@ export function parseFreeMediaPage(body: any, author: FreeAuthor, includeReplies
   if (cursor != null && (typeof cursor !== "string" || cursor.length > 4096)) throw new FreeCuratedError(502, "ページ送り情報が不正です。");
   const timelineIds = [...new Set<string>(body.results.filter((p: any) => p?.type === "status" && p.provider === "twitter" &&
     String(p.author?.id ?? "") === author.id && /^\d{2,20}$/.test(String(p.id ?? ""))).map((p: any) => String(p.id)))];
-  return { posts, timelineIds, timeline: classifyFreeTimeline(body.results, author, includeReplies), rawCount: body.results.length, skipped, multipleVideoPosts, nextCursor: cursor || null };
+  return { posts, timelineIds, referencedPosts: includeReferences ? parseFreeReferencedPosts(body.results, author, new Set(posts.map(p=>p.x_post_id)), 100-posts.length) : [], timeline: classifyFreeTimeline(body.results, author, includeReplies, includeReferences), rawCount: body.results.length, skipped, multipleVideoPosts, nextCursor: cursor || null };
 }
 
-export async function fetchFreeMediaPage(author: FreeAuthor, count: number, cursor: string | null, fetcher: typeof fetch = fetch, signal?: AbortSignal, maximumPosts = count, includeReplies = false) {
+export async function fetchFreePostUrl(value: unknown, expectedTier: "S" | "A", fetcher: typeof fetch = fetch, signal?: AbortSignal) {
+  const id = parseFreePostUrl(value);
+  const body = await freeJson(`status/${id}`, fetcher, signal), post = body.status;
+  if (post?.type !== "status" || post.provider !== "twitter" || String(post.id) !== id ||
+      post.author?.type !== "profile" || !/^\d{2,20}$/.test(String(post.author.id ?? "")) ||
+      typeof post.author.screen_name !== "string" || !/^[a-z0-9_]{1,15}$/i.test(post.author.screen_name) ||
+      post.author.protected !== false) throw new FreeCuratedError(422, "公開中の投稿者と投稿を確認できません。");
+  const author: FreeAuthor = { id: String(post.author.id), username: post.author.screen_name,
+    name: String(post.author.name ?? post.author.screen_name).slice(0, 256), expectedTier };
+  const parsed = parseFreeMediaPage({ code: 200, results: [post] }, author, true);
+  if (parsed.posts.length !== 1) throw new FreeCuratedError(422, "この投稿には掲載できる直接動画がありません。画像・GIF・引用先の動画は対象外です。");
+  return { author, candidate: parsed.posts[0] };
+}
+
+export async function fetchFreeMediaPage(author: FreeAuthor, count: number, cursor: string | null, fetcher: typeof fetch = fetch, signal?: AbortSignal, maximumPosts = count, includeReplies = false, includeReferences = false) {
   if (!Number.isInteger(maximumPosts) || maximumPosts < 1 || maximumPosts > count || ![20, 50, 100].includes(count) || !/^\d{2,20}$/.test(author.id) || (cursor !== null && (typeof cursor !== "string" || cursor.length > 4096))) {
     throw new FreeCuratedError(400, "取得件数・投稿者ID・ページ情報が正しくありません。");
   }
@@ -212,6 +247,29 @@ export async function fetchFreeMediaPage(author: FreeAuthor, count: number, curs
     if (typeof body.cursor.bottom !== "string" || body.cursor.bottom.length > 4096-activePrefix.length) throw new FreeCuratedError(502, "ページ送り情報が不正です。");
     body.cursor = {...body.cursor, bottom: activePrefix + body.cursor.bottom};
   }
-  if(!Array.isArray(body.results)||body.results.length>100)return parseFreeMediaPage(body,author,includeReplies);
-  return parseFreeMediaPage({...body,results:body.results.slice(0,maximumPosts)},author,includeReplies);
+  if(!Array.isArray(body.results)||body.results.length>100)return parseFreeMediaPage(body,author,includeReplies,includeReferences);
+  return parseFreeMediaPage({...body,results:body.results.slice(0,maximumPosts)},author,includeReplies,includeReferences);
+}
+
+export type FreeReferencedPost={kind:"quote"|"repost";viaPostId:string;viaText:string;author:FreeAuthor;candidate:FreeCandidate};
+// Called only by the scheduled, server-fetched timeline. Client-supplied candidates
+// cannot opt into this path. Never follows arbitrary text URLs or external cards.
+export function parseFreeReferencedPosts(results:any[],curator:FreeAuthor,seen=new Set<string>(),limit=100):FreeReferencedPost[]{
+ const out:FreeReferencedPost[]=[];
+ for(const root of results){
+  if(out.length>=limit)break;
+  if(root?.type!=="status"||root.provider!=="twitter"||typeof root.id!=="string"||!/^\d{2,20}$/.test(root.id)||root.deleted||root.withheld||root.unavailable||root.is_private)continue;
+  const repost=root.reposted_by?.id===curator.id,own=root.author?.id===curator.id&&root.author.protected===false&&!root.reposted_by;
+  if(!repost&&!own)continue;
+  if(own&&(seen.has(root.id)||typeof root.text!=="string"||root.text.length>100000||typeof root.possibly_sensitive!=="boolean"))continue;
+  const source=repost?root:root.quote,kind=repost?"repost":"quote";
+  if(source?.type!=="status"||source.provider!=="twitter"||typeof source.id!=="string"||!/^\d{2,20}$/.test(source.id)||source.author?.protected!==false||typeof source.author?.id!=="string"||!/^\d{2,20}$/.test(source.author.id)||typeof source.author.screen_name!=="string"||!/^[a-z0-9_]{1,15}$/i.test(source.author.screen_name)||seen.has(source.id))continue;
+  const author:FreeAuthor={id:source.author.id,username:source.author.screen_name,name:String(source.author.name??source.author.screen_name).slice(0,256),expectedTier:curator.expectedTier};
+  // Strip only the verified repost envelope; the original public/native-media
+  // validation is identical to ordinary candidates. Quote tombstones never pass.
+  const parsed=parseFreeMediaPage({code:200,results:[{...source,reposted_by:null}]},author,true,false);
+  if(parsed.posts.length!==1)continue;
+  seen.add(source.id);out.push({kind,viaPostId:root.id,viaText:own?root.text:"",author,candidate:parsed.posts[0]});
+ }
+ return out;
 }

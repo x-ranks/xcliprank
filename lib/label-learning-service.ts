@@ -1,24 +1,25 @@
+import { labelFrameHash } from "./video-range-frames";
 import { createHash, randomUUID } from "node:crypto";
 import { mkdir, lstat, open, readFile, rename, unlink, writeFile } from "node:fs/promises";
 import path from "node:path";
 import { crossCheckLabels, Decisions, fitLabels, LabelDefinition, LabelModel, LabelSample, LABEL_FEATURE_SPEC, predictLabels, scoreLabels, validFeatures } from "./label-learning-core";
 export type LabelCandidate = { postId: string; author: string | null; authorKey?: string | null; url: string };
 type Review = { decisions: Decisions; role: "train" | "test"; blinded: boolean };
-type Video = LabelCandidate & { preparedFor?: "train" | "test"; hash: string; features: number[]; times: number[]; review: Review | null; predictionSeen: boolean; prediction: ReturnType<typeof predictLabels> | null };
+type Video = LabelCandidate & { frameHash?: string; hashKind?: "frames-v1"; preparedFor?: "train" | "test"; hash: string; features: number[]; times: number[]; review: Review | null; predictionSeen: boolean; prediction: ReturnType<typeof predictLabels> | null };
 type Bundle = { id: string; fingerprint: string; trainedAt: string; head: LabelModel; crossCheck: ReturnType<typeof crossCheckLabels> };
 export type LabelState = { version: 1; revision: number; labels: LabelDefinition[]; videos: Video[]; attempted: string[]; everTrained: string[]; everTrainedAuthors: string[]; model: Bundle | null; testReport: ReturnType<typeof scoreLabels> | null };
-export type LabelDeps = { candidates: () => Promise<LabelCandidate[]>; find: (id: string) => Promise<LabelCandidate | null>; prepare: (url: string) => Promise<{ frames: Buffer[]; features: number[]; times: number[]; hash: string }> };
+export type LabelDeps = { candidates: () => Promise<LabelCandidate[]>; find: (id: string) => Promise<LabelCandidate | null>; prepare: (url: string) => Promise<{ frames: Buffer[]; features: number[]; times: number[]; hash: string; frameHash?: string; hashKind?: "frames-v1" }> };
 const uuid = /^[a-f0-9-]{36}$/, post = /^[0-9]{1,25}$/, sha = /^[a-f0-9]{64}$/;
 const initial = (): LabelState => ({ version: 1, revision: 0, labels: [], videos: [], attempted: [], everTrained: [], everTrainedAuthors: [], model: null, testReport: null });
 const hash = (value: unknown) => createHash("sha256").update(JSON.stringify(value)).digest("hex");
 function fail(code: string): never { throw Error(code); }
 function validCandidate(c: LabelCandidate) { return post.test(c.postId) && (c.author === null || typeof c.author === "string") && typeof c.url === "string"; }
 function validate(s: LabelState) {
-  if (!s || s.version !== 1 || !Number.isSafeInteger(s.revision) || s.revision < 0 || !Array.isArray(s.labels) || s.labels.length > 40 || !Array.isArray(s.videos) || s.videos.length > 300 || !Array.isArray(s.attempted) || s.attempted.length > 2000 || !s.attempted.every(v => post.test(v)) || !Array.isArray(s.everTrained) || !s.everTrained.every(v => sha.test(v)) || !Array.isArray(s.everTrainedAuthors) || !s.everTrainedAuthors.every(v => typeof v === "string")) fail("LABEL_STATE_CORRUPT");
+  if (!s || s.version !== 1 || !Number.isSafeInteger(s.revision) || s.revision < 0 || !Array.isArray(s.labels) || s.labels.length > 40 || !Array.isArray(s.videos) || s.videos.length > 400 || !Array.isArray(s.attempted) || s.attempted.length > 2000 || !s.attempted.every(v => post.test(v)) || !Array.isArray(s.everTrained) || !s.everTrained.every(v => sha.test(v)) || !Array.isArray(s.everTrainedAuthors) || !s.everTrainedAuthors.every(v => typeof v === "string")) fail("LABEL_STATE_CORRUPT");
   const ids = new Set<string>(), names = new Set<string>(), posts = new Set<string>();
   for (const l of s.labels) { if (!l || !uuid.test(l.id) || typeof l.name !== "string" || !l.name.trim() || l.name.length > 40 || typeof l.active !== "boolean" || ids.has(l.id) || names.has(l.name)) fail("LABEL_STATE_CORRUPT"); ids.add(l.id); names.add(l.name); }
   for (const v of s.videos) {
-    if (!v || !validCandidate(v) || posts.has(v.postId) || !sha.test(v.hash) || !validFeatures(v.features) || !Array.isArray(v.times) || v.times.length !== 4 || !v.times.every(t => Number.isFinite(t) && t >= 0) || typeof v.predictionSeen !== "boolean" || (v.preparedFor !== undefined && !["train", "test"].includes(v.preparedFor))) fail("LABEL_STATE_CORRUPT"); posts.add(v.postId);
+    if (!v || (v.frameHash !== undefined && !sha.test(v.frameHash)) || (v.hashKind !== undefined && (v.hashKind !== "frames-v1" || v.hash !== v.frameHash)) || !validCandidate(v) || posts.has(v.postId) || !sha.test(v.hash) || !validFeatures(v.features) || !Array.isArray(v.times) || v.times.length !== 4 || !v.times.every(t => Number.isFinite(t) && t >= 0) || typeof v.predictionSeen !== "boolean" || (v.preparedFor !== undefined && !["train", "test"].includes(v.preparedFor))) fail("LABEL_STATE_CORRUPT"); posts.add(v.postId);
     if (v.review && (!["train", "test"].includes(v.review.role) || typeof v.review.blinded !== "boolean" || !v.review.decisions || typeof v.review.decisions !== "object" || Array.isArray(v.review.decisions) || Object.entries(v.review.decisions).some(([k, value]) => !ids.has(k) || (value !== null && typeof value !== "boolean")))) fail("LABEL_STATE_CORRUPT");
   }
   if (s.model) {
@@ -84,7 +85,7 @@ export function createLabelService(root: string, deps: LabelDeps) {
         else { const l = s.labels.find(l => l.id === id); if (!l || typeof body.active !== "boolean") fail("LABEL_INVALID_INPUT"); l.name = name; l.active = body.active; }
       } else if (body.action === "prepare") {
         if (!s.labels.some(l => l.active)) fail("LABEL_CREATE_FIRST");
-        if (s.videos.length >= 300) fail("LABEL_VIDEO_LIMIT");
+        if (s.videos.length >= 400) fail("LABEL_VIDEO_LIMIT");
         const purpose = body.purpose ?? "train";
         if (purpose !== "train" && purpose !== "test") fail("LABEL_INVALID_INPUT");
         if (purpose === "test" && (!s.model || s.model.fingerprint !== fingerprint(s))) fail("LABEL_RETRAIN_REQUIRED");
@@ -108,6 +109,25 @@ export function createLabelService(root: string, deps: LabelDeps) {
         try {
           const prepared = await deps.prepare(candidate.url);
           if (!validFeatures(prepared.features) || !sha.test(prepared.hash) || prepared.frames.length !== 4 || prepared.times.length !== 4 || !prepared.times.every(t => Number.isFinite(t) && t >= 0) || prepared.frames.some(f => f.length > 1024 * 1024 || f.length < 2 || f[0] !== 0xff || f[1] !== 0xd8)) fail("LABEL_INVALID_FRAMES");
+          if (prepared.frameHash !== undefined) {
+            if (!sha.test(prepared.frameHash) || prepared.hashKind !== "frames-v1" || prepared.hash !== prepared.frameHash || labelFrameHash(prepared.frames) !== prepared.frameHash) fail("LABEL_INVALID_FRAMES");
+            let received = 0;
+            for (const video of s.videos) {
+              let identity = video.frameHash;
+              if (!identity) {
+                const frameDir = path.join(directory, "frames"), st = await lstat(frameDir);
+                if (!st.isDirectory() || st.isSymbolicLink()) fail("LABEL_UNSAFE_FILE");
+                const frames: Buffer[] = [];
+                for (let i = 0; i < 4; i++) {
+                  const filename = path.join(frameDir, video.postId + "-" + video.hash + "-" + i + ".jpg");
+                  await regular(filename, false); const bytes = await readFile(filename); received += bytes.length;
+                  if (bytes.length > 1024 * 1024 || received > 128 * 1024 * 1024) fail("LABEL_FRAME_IDENTITY_BUDGET"); frames.push(bytes);
+                }
+                identity = labelFrameHash(frames);
+              }
+              if (identity === prepared.frameHash) fail("LABEL_DUPLICATE_VIDEO");
+            }
+          }
           if (s.videos.some(v => v.hash === prepared.hash) || (purpose === "test" && s.everTrained.includes(prepared.hash))) fail("LABEL_DUPLICATE_VIDEO");
           const current = await deps.find(candidate.postId); if (!current || current.url !== candidate.url || authorKey(current) !== authorKey(candidate) || !eligible(current)) fail("LABEL_SOURCE_CHANGED");
           const folderPath = path.join(directory, "frames"); await folder(folderPath);

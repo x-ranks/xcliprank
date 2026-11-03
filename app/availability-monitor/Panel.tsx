@@ -13,7 +13,7 @@ export default function Panel(){const [data,setData]=useState<Data|null>(null),[
  <p>投稿の監視記録 {data.counts.posts}件 ／ 確定除外 {data.counts.blocked}件 ／ 再確認待ち {data.counts.pending}件 ／ 凍結記録 {data.counts.suspended}件 ／ 手動削除 {data.counts.manual}投稿者</p>
  <p>次回バッチの最短時刻：{time(data.nextBatchAt)} ／ 休止期限：{time(data.cooldownUntil)} ／ 一巡完了：{time(data.cycleCompletedAt)}</p>
  {!data.lastPostCheckedAt&&!data.lastAuthorCheckedAt?<p>本番の監視記録はまだありません。監視Cronの実行ログを確認してください。</p>:null}
- <p>FxTwitter監視は3時間ごとの起動を0〜4分ずらし、各リクエストを8〜20秒のランダムな間隔で順次実行します。制限・障害時は待機します。削除・非表示は24時間以上離した再確認と正常な投稿の確認を経て除外します。不明な応答だけでは除外しません。以下は確認結果の最新状態で、全実行ログではありません。</p>
+ <p>高速化更新と1時間巡回Cronの適用後は、1時間ごとの起動を0〜4分ずらし、ランキングと削除疑いを優先します。削除・非表示は1時間以上離した再確認と正常な投稿の確認を経て除外します。対象数や応答によって次の確認は遅れる場合があります。各リクエストは8〜20秒の間隔で順次実行し、制限・障害時は待機します。不明な応答だけでは除外しません。以下は確認結果の最新状態で、全実行ログではありません。</p>
  <h2>投稿の除外・再確認待ち（最新最大500件）</h2><div className="table"><table><thead><tr><th>投稿</th><th>投稿者</th><th>状態</th><th>最終確認</th><th>次回確認</th></tr></thead><tbody>{data.posts.map(p=><tr key={p.id}><td><a href={`https://x.com/i/status/${p.id}`} target="_blank" rel="noopener noreferrer">{p.id}</a></td><td>{p.authorKey??"不明"}</td><td>{p.blocked?"確定除外":"再確認待ち"}</td><td>{time(p.checkedAt)}</td><td>{time(p.nextCheckAt)}</td></tr>)}</tbody></table></div>
  <h2>アカウントの監視（最新最大500件）</h2><div className="table"><table><thead><tr><th>投稿者キー</th><th>確認結果</th><th>最終確認</th><th>次回確認</th></tr></thead><tbody>{data.authors.map(a=><tr key={a.key}><td>{a.key}</td><td>{a.status==="suspended"?"凍結":a.status==="public"?"公開確認":"不明・保留"}</td><td>{time(a.checkedAt)}</td><td>{time(a.nextCheckAt)}</td></tr>)}</tbody></table></div>
  <h2>手動削除</h2>{data.manual.map(a=><p key={a.id}>@{a.username} ／ {time(a.at)} ／ 自動復旧しません</p>)}</>:null}

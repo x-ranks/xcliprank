@@ -1,0 +1,11 @@
+'use strict';
+const assert=require('node:assert/strict'),cp=require('node:child_process'),path=require('node:path');
+const env={...process.env,NODE_OPTIONS:'--require "'+path.join(__dirname,'loopback-only-guard.cjs').replaceAll('\\','/')+'"'};
+const code=`const a=require('assert/strict'),n=require('net');
+a.throws(()=>fetch('https://example.com'),/OFFLINE_CHECK_NETWORK_FORBIDDEN/);
+a.throws(()=>n.connect({host:'example.com',port:80}),/OFFLINE_CHECK_NETWORK_FORBIDDEN/);
+a.throws(()=>n.createServer().listen(8080,'0.0.0.0'),/OFFLINE_CHECK_NETWORK_FORBIDDEN/);
+console.log('LOOPBACK_GUARD_OK');`;
+const result=cp.spawnSync(process.execPath,['-e',code],{env,encoding:'utf8',timeout:10000});
+assert.equal(result.status,0,result.stderr);assert.match(result.stdout,/LOOPBACK_GUARD_OK/);
+console.log('PASS LOOPBACK GUARD: external fetch/connect and non-loopback listeners blocked');

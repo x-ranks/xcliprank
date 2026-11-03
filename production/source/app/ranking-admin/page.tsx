@@ -1,4 +1,5 @@
 "use client";
+import { directPlaybackUrl } from "../../lib/browser-direct-playback";
 
 import Link from "next/link";
 import { useEffect, useState } from "react";
@@ -136,7 +137,7 @@ export default function RankingAdminPage() {
       <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(280px, 1fr))", gap: 14 }}>
         {posts.map((post, index) => <article key={post.x_post_id} style={{ padding: 13, border: "1px solid #d8dde3", borderRadius: 12, background: "white" }}>
           {post.video_url
-            ? <video src={`/api/video?url=${encodeURIComponent(post.video_url)}`} poster={post.preview_image_url ?? undefined} controls muted playsInline preload="metadata" style={{ width: "100%", aspectRatio: "16 / 9", objectFit: "cover", background: "#000", borderRadius: 8 }} />
+            ? <video src={directPlaybackUrl(post.video_url)} poster={post.preview_image_url ?? undefined} controls muted playsInline preload="metadata" style={{ width: "100%", aspectRatio: "16 / 9", objectFit: "cover", background: "#000", borderRadius: 8 }} />
             : post.preview_image_url && <img src={post.preview_image_url} alt="動画サムネイル" style={{ width: "100%", aspectRatio: "16 / 9", objectFit: "cover", borderRadius: 8 }} />}
           <div style={{ marginTop: 9 }}><strong>#{index + 1}　{post.adult_tier ?? "-"}　@{post.author_username ?? "不明"}</strong></div>
           <p style={{ minHeight: 42, fontSize: 13, lineHeight: 1.5, overflow: "hidden" }}>{post.text ?? ""}</p>

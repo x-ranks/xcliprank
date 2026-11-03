@@ -1,6 +1,6 @@
 import { FREE_CURATED_AUTHOR_LIMIT } from "../../../lib/free-curated-limits";
 import { NextRequest, NextResponse } from "next/server";
-import { FreeCuratedError, fetchFreeProfile, fetchFreeMediaPage } from "../../../lib/fxtwitter-curated";
+import { FreeCuratedError, fetchFreeProfile, fetchFreeMediaPage, fetchFreePostUrl, parseFreePostUrl } from "../../../lib/fxtwitter-curated";
 import { readFreeRegistry, withFreeRegistry } from "../../../lib/fxtwitter-curated-store";
 import { saveFreeCandidates } from "../../../lib/fxtwitter-curated-save";
 import { allowFreeLocalRequest } from "../../../lib/fxtwitter-local-access";
@@ -29,7 +29,35 @@ export async function POST(request: NextRequest) {
     const raw = await request.text(); if (Buffer.byteLength(raw) > 2048) throw new FreeCuratedError(400, "入力が大きすぎます。");
     let body: any; try { body = JSON.parse(raw); } catch { throw new FreeCuratedError(400, "入力形式が正しくありません。"); }
     if (!body || typeof body !== "object" || Array.isArray(body)) throw new FreeCuratedError(400, "入力形式が正しくありません。");
-    if (!["add", "pause", "resume", "remove", "preview", "save", "sync", "production-status", "publish", "register", "register-existing", "register-step", "dashboard"].includes(body.action)) throw new FreeCuratedError(400, "操作が正しくありません。");
+    if (!["add", "pause", "resume", "remove", "preview", "save", "sync", "production-status", "publish", "register", "register-existing", "register-step", "dashboard", "preview-post-url", "publish-post-url"].includes(body.action)) throw new FreeCuratedError(400, "操作が正しくありません。");
+    if(body.action==="preview-post-url"||body.action==="publish-post-url"){
+      const expectedTier=body.expectedTier==="S"?"S":body.expectedTier==="A"?"A":null;
+      if(!expectedTier)throw new FreeCuratedError(400,"期待Tierを確認してください。");
+      const postId=parseFreePostUrl(body.url);
+      if(body.action==="preview-post-url"){
+        const {author,candidate}=await fetchFreePostUrl(body.url,expectedTier,fetch,request.signal);
+        return json({ok:true,preview:{postId,authorId:author.id,username:author.username,name:author.name,
+          text:candidate.text,createdAt:candidate.created_at,thumbnailUrl:candidate.preview_image_url,
+          xUrl:candidate.x_url,views:candidate.views,likes:candidate.likes,videoCount:candidate.videoCount}});
+      }
+      const token=request.headers.get("authorization"),host=databaseHost();
+      if(!token?.startsWith("Bearer ")||token.length>1024)throw new FreeCuratedError(401,"本番の管理キーを入力してください。");
+      if(!host)throw new FreeCuratedError(503,"ローカルのDB接続先を確認できません。");
+      let response:Response;
+      try{response=await fetch("https://twizou.net/api/engagement?type=fx-post",{
+        method:"POST",cache:"no-store",redirect:"error",credentials:"omit",referrerPolicy:"no-referrer",
+        headers:{Authorization:token,"Content-Type":"application/json",Origin:"https://twizou.net"},
+        body:JSON.stringify({action:"publish-post-url",url:body.url,expectedTier,confirm:true,databaseHost:host}),
+        signal:AbortSignal.any([request.signal,AbortSignal.timeout(30000)])});}
+      catch{throw new FreeCuratedError(502,"本番への接続が失敗・中断しました。再試行前に本番の投稿IDを確認してください。");}
+      if(!response.headers.get("content-type")?.includes("application/json")){
+        await response.body?.cancel();throw new FreeCuratedError(502,"本番の投稿URL登録APIが未適用か、サーバーで拒否されています。");
+      }
+      const production=await response.json();
+      if(!response.ok||production.ok!==true)throw new FreeCuratedError(response.status>=400?response.status:502,
+        typeof production.error==="string"?production.error:"本番への登録に失敗しました。");
+      return json({ok:true,production,message:production.message});
+    }
     const result = await withFreeRegistry(async state => {
       if(body.action === "register")return startFreeRegistration(state,{username:body.username,count:body.count,expectedTier:body.expectedTier==="A"?"A":"S"},{signal:request.signal});
       if(body.action === "register-existing")return restartFreeRegistration(state,body.id,body.count,{signal:request.signal});

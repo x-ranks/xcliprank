@@ -14,7 +14,7 @@ export default function LegalPage({
   return (
     <main className="legal-shell">
       <header className="legal-header">
-        <Link className="legal-back" href="/">← X CLIP RANKへ戻る</Link>
+        <Link className="legal-back" href="/">← twizouへ戻る</Link>
         <h1>{title}</h1>
         <p className="legal-lead">{lead}</p>
         <p className="legal-updated">制定・最終更新：2026年9月18日</p>

@@ -1,4 +1,5 @@
 "use client";
+import { directPlaybackUrl } from "../../lib/browser-direct-playback";
 
 import { useEffect, useMemo, useRef, useState } from "react";
 import type { NSFWJS } from "nsfwjs/core";
@@ -36,8 +37,8 @@ const FRAME_POSITIONS = [0.1, 0.35, 0.65, 0.9] as const;
 const TIER_WEIGHT: Record<string, number> = { S: 5, "A+": 4, A: 3, B: 2, C: 1 };
 const TARGET_COUNT = 100;
 
-function videoProxyUrl(url: string) {
-  return `/api/video?url=${encodeURIComponent(url)}`;
+function directVideoUrl(url: string) {
+  return directPlaybackUrl(url) ?? "";
 }
 
 function waitForVideoEvent(video: HTMLVideoElement, eventName: "loadedmetadata" | "seeked", timeoutMs = 20000) {
@@ -60,7 +61,8 @@ async function openVideo(url: string) {
   video.muted = true;
   video.playsInline = true;
   video.preload = "auto";
-  video.src = videoProxyUrl(url);
+  video.crossOrigin = "anonymous";
+  video.src = directVideoUrl(url);
   const ready = waitForVideoEvent(video, "loadedmetadata");
   video.load();
   await ready;
@@ -312,7 +314,7 @@ export default function CombinedRankingPreviewPage() {
             const movement = post.currentRank - post.combinedRank;
             return (
               <article key={post.x_post_id} style={{ border: "1px solid #ddd", borderRadius: 10, overflow: "hidden", background: "white" }}>
-                <video controls preload="none" poster={post.preview_image_url ?? undefined} src={post.video_url ? videoProxyUrl(post.video_url) : undefined} style={{ width: "100%", aspectRatio: "16/9", objectFit: "cover", background: "#111" }} />
+                <video controls preload="none" poster={post.preview_image_url ?? undefined} src={post.video_url ? directVideoUrl(post.video_url) : undefined} style={{ width: "100%", aspectRatio: "16/9", objectFit: "cover", background: "#111" }} />
                 <div style={{ padding: 12 }}>
                   <div style={{ display: "flex", justifyContent: "space-between", gap: 8 }}><strong>新 {post.combinedRank}位</strong><span style={{ color: movement > 0 ? "#16733d" : movement < 0 ? "#a12622" : "#666" }}>{movement > 0 ? `↑${movement}` : movement < 0 ? `↓${Math.abs(movement)}` : "→"}（現 {post.currentRank}位）</span></div>
                   <div style={{ marginTop: 8 }}>Tier {post.adult_tier} ／ 視覚順位 {Math.round(post.visualPercentile * 100)}点</div>

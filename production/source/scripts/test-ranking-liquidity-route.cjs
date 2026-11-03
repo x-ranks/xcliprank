@@ -1,6 +1,8 @@
 const fs=require('fs'), assert=require('node:assert/strict');
 const root=require('node:path').resolve(__dirname,'..');
 const ts=require(root+'/node_modules/typescript');
+// Freeze the five-minute test window, but retain the chosen calendar day's seed.
+const originalNow=Date.now;const testNow=Math.floor(originalNow()/300000)*300000+120000;Date.now=()=>testNow;
 const scratch=fs.mkdtempSync(require('os').tmpdir()+'/xclip-ranking-regression-');
 process.env.XCLIP_RANKING_FEED_STATE_DIR=scratch+'/editions';process.env.XCLIP_AUTHOR_STATE_DIR=scratch+'/authors';process.env.XCLIP_FREE_CURATED_STATE_DIR=scratch+'/curated';
 const {NextRequest,NextResponse}=require(root+'/node_modules/next/server');
@@ -17,13 +19,18 @@ const feed=load('lib/newest-feed.ts',require),pagination=load('lib/ranking-pagin
 const editions=load('lib/ranking-editions.ts',n=>n==='./ranking-liquidity'?liquidity:require(n));
 const cache=new Map();
 let blockedKeys=new Set();
+let manualEntries=[];
 const authorStatus=load('lib/author-status.ts',require);
 const postStatus=load('lib/post-status.ts',n=>n==='./author-status'?authorStatus:require(n));
 const route=load('app/api/rankings/route.ts',name=>{
+ if(name.endsWith('ranking-read-cache'))return load('lib/ranking-read-cache.ts',require);
+ if(name.endsWith('curated-video-references'))return {readCuratedReferences:async()=>[],eligibleCuratedReferences:async()=>[],referencePermitsPost:()=>false};
+ if(name.endsWith('manual-x-permissions'))return {eligibleManualXIds:async()=>new Set()};
  if(name==='next/server') return {NextRequest,NextResponse};
  if(name==='next/cache') return {unstable_cache:fn=>(...args)=>{const key=JSON.stringify(args);if(!cache.has(key))cache.set(key,fn(...args));return cache.get(key);}};
  if(name.endsWith('ranking-liquidity'))return liquidity;
  if(name.endsWith('newest-feed'))return feed;
+ if(name.endsWith('free-curated-server-store'))return {readScheduledFreeState:async()=>({recentRegistrations:[],recentPatrolPosts:[]})};
  if(name.endsWith('ranking-pagination'))return pagination;
  if(name.endsWith('ranking-update'))return load('lib/ranking-update.ts',require);
  if(name.endsWith('ranking-editions'))return editions;
@@ -31,7 +38,11 @@ const route=load('app/api/rankings/route.ts',name=>{
  if(name.endsWith('post-status'))return postStatus;
  if(name.endsWith('supabase-admin'))return {supabaseAdmin:()=>({from})};
  if(name.endsWith('content-filter'))return {classifyContent:()=>({category:'PASS'})};
- if(name.endsWith('public-ranking-history'))return load('lib/public-ranking-history.ts',id=>id.endsWith('public-video-core')?load('lib/public-video-core.ts'):require(id));
+ if(name.endsWith('manual-ranking'))return {readManualState:async()=>({entries:manualEntries}),applyManualPlacements:(posts,entries,range,limit)=>{
+   const result=[...posts];for(const row of entries){const at=row.positions[range];if(at!==null)result.splice(at-1,0,{...row,x_post_id:'manual:'+row.id});}
+   return result.slice(0,limit).map((row,index)=>({...row,ranking_position:index+1}));
+ }};
+ if(name.endsWith('public-ranking-history'))return load('lib/public-ranking-history.ts',id=>id.endsWith('public-video-core')?load('lib/public-video-core.ts',n=>n.endsWith('indexability')?load('lib/indexability.ts'):require(n)):require(id));
  if(name.endsWith('public-catalog-store'))return {createPublicCatalog:()=>({ranked:async()=>{}})};
  if(name.endsWith('public-save-secret'))return {publicCatalogDirectory:()=>'/isolated-mock-catalog'};
  throw Error('Unexpected module '+name);
@@ -44,11 +55,14 @@ delete process.env.RANKINGS_SOURCE_URL;
  assert.equal(d.displayOrder,'daily_seeded_random');assert.equal(d.visualPreference.enabled,false);assert.ok(d.data.every(p=>['S','A+','A'].includes(p.adult_tier)));
  const noVisual=await (await route.GET(new NextRequest('http://internal.local/api/rankings?range=daily&visual=0'))).json();assert.deepEqual(noVisual.data,d.data);
  assert.equal(n.edition,d.edition,'both requests share one immutable plan');assert.equal(fs.readdirSync(scratch+'/editions').filter(f=>f.endsWith('.json')).length,1);const queriesBeforeRemoval=queries;
- const removedPost=d.data[0].x_post_id;blockedKeys=new Set(['id:10','post:'+removedPost]);
+ const removedAuthor=d.data.find(p=>/^\d{2,20}$/.test(String(p.author_id)))?.author_id;
+ assert(removedAuthor,'Fixture must initially contain the author whose restoration is checked');
+ const removedPost=d.data.find(p=>p.author_id!==removedAuthor)?.x_post_id;assert(removedPost,'Use a separate author for the individual-post exclusion');
+ blockedKeys=new Set(['id:'+removedAuthor,'post:'+removedPost]);
  const refreshed=await route.GET(new NextRequest('http://internal.local/api/rankings?range=daily'));const body=await refreshed.json();
- assert.equal(body.count,100);assert(!body.data.some(p=>p.author_id==='10'||p.x_post_id===removedPost));assert(queries>queriesBeforeRemoval,'block revision invalidates same-five-minute cached plan');
- const status=await route.GET(new NextRequest('http://internal.local/api/rankings?range=author-status'));assert.deepEqual((await status.json()).blockedKeys,['id:10','post:'+removedPost]);
- const weekly=await (await route.GET(new NextRequest('http://internal.local/api/rankings?range=weekly'))).json();assert.equal(weekly.count,100);assert(!weekly.data.some(p=>p.author_id==='10'||p.x_post_id===removedPost));
+ assert.equal(body.count,100);assert(!body.data.some(p=>p.author_id===removedAuthor||p.x_post_id===removedPost));assert(queries>queriesBeforeRemoval,'block revision invalidates same-five-minute cached plan');
+ const status=await route.GET(new NextRequest('http://internal.local/api/rankings?range=author-status'));assert.deepEqual((await status.json()).blockedKeys,['id:'+removedAuthor,'post:'+removedPost]);
+ const weekly=await (await route.GET(new NextRequest('http://internal.local/api/rankings?range=weekly'))).json();assert.equal(weekly.count,100);assert(!weekly.data.some(p=>p.author_id===removedAuthor||p.x_post_id===removedPost));
  const reels=load('app/api/reels/route.ts',name=>{
   if(name==='next/server')return {NextRequest,NextResponse};
   if(name.endsWith('supabase-admin'))return {supabaseAdmin:()=>({from})};
@@ -57,7 +71,13 @@ delete process.env.RANKINGS_SOURCE_URL;
   if(name.endsWith('initial-ranking'))return {loadInitialRanking:async()=>rows.slice(0,100)};
   throw Error('Unexpected Reel module '+name);
  });
- const feed=await (await reels.GET(new NextRequest('http://internal.local/api/reels?limit=120&seed=test'))).json();assert.equal(feed.count,120);assert(!feed.data.some(p=>p.author_id==='10'||p.x_post_id===removedPost),'including stale ranking fallback');
- blockedKeys.clear();const restored=await (await route.GET(new NextRequest('http://internal.local/api/rankings?range=daily'))).json();assert(restored.data.some(p=>p.author_id==='10'));
+ const feed=await (await reels.GET(new NextRequest('http://internal.local/api/reels?limit=120&seed=test'))).json();assert.equal(feed.count,120);assert(!feed.data.some(p=>p.author_id===removedAuthor||p.x_post_id===removedPost),'including stale ranking fallback');
+ blockedKeys.clear();const restored=await (await route.GET(new NextRequest('http://internal.local/api/rankings?range=daily'))).json();assert(restored.data.some(p=>p.author_id===removedAuthor),'Previously ranked author must return after exclusion is cleared');
+ assert(restored.data.some(p=>p.x_post_id===removedPost),'Previously ranked post must also return');
+ assert.deepEqual(restored.data.map(p=>p.x_post_id),d.data.map(p=>p.x_post_id),'Clearing the exclusions must restore the saved edition order exactly');
+ manualEntries=[{id:'11111111-1111-4111-8111-111111111111',url:'https://media.example.com/clip.mp4',title:'手動動画',posterUrl:null,mediaUrl:'https://media.example.com/clip.mp4',positions:{trending:2,daily:1,weekly:null},updatedAt:new Date().toISOString()}];
+ const pinned=await (await route.GET(new NextRequest('http://internal.local/api/rankings?range=trending&page=1'))).json();
+ assert.equal(pinned.data[1].manual_id,manualEntries[0].id);assert.equal(pinned.data[1].ranking_position,2);assert.equal(pinned.data.length,50);
+ manualEntries=[];
  console.log('PASS: actual ranking route with mocked DB; 10+490 / 85+15; 500-target revision; shared plan; blocked excluded; overlap=0; author and post exclusion immediately invalidates cache, refills to 100, verified restoration via current DB hydration; weekly and 120 Reels refilled including stale fallback');
-})().catch(e=>{console.error(e);process.exitCode=1;});
+})().catch(e=>{console.error(e);process.exitCode=1;}).finally(()=>{Date.now=originalNow;const path=require('node:path'),tmp=path.resolve(require('os').tmpdir()),target=path.resolve(scratch);if(!target.startsWith(tmp+path.sep)||!path.basename(target).startsWith('xclip-ranking-regression-'))throw Error('UNSAFE_TEST_CLEANUP');fs.rmSync(target,{recursive:true,force:true,maxRetries:3,retryDelay:100});});

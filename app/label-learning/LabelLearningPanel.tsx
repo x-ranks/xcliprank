@@ -78,7 +78,7 @@ export default function LabelLearningPanel() {
     catch (e) { if (mounted.current) { setError((e as Error).message); setMessage(""); } await refresh().catch(() => undefined); }
     finally { running.current = false; if (mounted.current) setBusy(false); }
   }
-  async function prepareBatch(purpose: LabelPurpose, size: 10 | 100) {
+  async function prepareBatch(purpose: LabelPurpose, size: 10 | 300) {
     if (running.current || !current.current) return;
     const goal = preparationGoal(current.current.videos, purpose, size);
     const needed = remainingPreparation(current.current.videos, purpose, goal);
@@ -95,7 +95,7 @@ export default function LabelLearningPanel() {
         try { await request("prepare", { purpose }); ready++; }
         catch (e) {
           failed++; await refresh(); const code = (e as Error & { code?: string }).code;
-          if (!["LABEL_DUPLICATE_VIDEO", "LABEL_VIDEO_FETCH_FAILED", "LABEL_VIDEO_TOO_LARGE", "LABEL_SOURCE_CHANGED"].includes(code ?? "")) throw e;
+          if (!["LABEL_DUPLICATE_VIDEO", "LABEL_VIDEO_FETCH_FAILED", "LABEL_VIDEO_TOO_LARGE", "LABEL_VIDEO_HTTP_FORBIDDEN", "LABEL_VIDEO_HTTP_NOT_FOUND", "LABEL_VIDEO_HTTP_GONE", "LABEL_SOURCE_CHANGED"].includes(code ?? "")) throw e;
         }
       }
       if (mounted.current) setMessage(`画像の準備：成功${ready}・見送り${failed}。${stop.current ? "停止しました。同じボタンで続きから再開できます。" : "未保存の動画に正解を付けてください。次回も追加できます。"}`);
@@ -115,7 +115,7 @@ export default function LabelLearningPanel() {
   const testReady = view?.videos.filter(v => v.review?.role === "test" && v.review.blinded && !v.everTrained).length ?? 0;
   return <main style={{ maxWidth: 1120, margin: "0 auto", padding: 24 }}>
     <Link href="/learning-tools">← 管理画面の入口</Link>　<Link href="/label-publication">学習済みラベルを本番へ反映 →</Link><h1>ラベル管理・4枚で学習</h1>
-    <p>①ラベル作成 → ②学習用を100件まで準備し、4枚を見て正解保存 → ③累積した教材すべてで学習 → ④新しいランダム動画で精度チェック。</p>
+    <p>①ラベル作成 → ②学習用を300件まで準備し、4枚を見て正解保存 → ③累積した教材すべてで学習 → ④新しいランダム動画で精度チェック。</p>
     <p>ラベル・画像・モデルはこのPCの専用フォルダへ保存します。本番掲載、Tier評価、巡回、既存のラベルJSONは変更しません。</p>
     {error ? <p role="alert" style={{ color: "#ff9292" }}>{error}</p> : null}<p role="status" aria-live="polite">{message}</p>
     <button disabled={busy} onClick={() => { void refresh().catch(e => setError(e.message)); }}>記録を更新</button>
@@ -127,11 +127,11 @@ export default function LabelLearningPanel() {
       </section>
       <section style={box}><h2>2．4枚を準備してラベル付け</h2>
         <p>収集済みDBの掲載条件を満たす動画から選びます。新規ポストの収集やX API呼出は行いません。動画の10％・25％・50％・80％地点を表示します。</p>
-        <p>学習用：画像準備 {trainingPrepared}/100動画 ／ 正解保存 {view.trainingCount}/100動画</p>
-        <progress aria-label="学習用の正解保存進捗" max={100} value={Math.min(100, view.trainingCount)} style={{ width: "100%" }} />
-        <p>10件の正解を保存したら「次の学習用10件を準備」で追加できます。「学習用100件まで準備」は途中停止・画面を開き直した後も準備済み件数から続けます。正解保存は手動です。画面を閉じると追加取得は止まります。</p>
-        <p>元動画を1本ずつ一時ダウンロードしてCPU処理します。1動画最大96MiB、100件なら転送量は最大約9.4GiBです。抽出後に一時動画を削除し、4枚の画像と特徴を保持します。通信量を抑える場合は10件ずつ進めてください。</p>
-        <div style={line}><button disabled={busy || !view.labels.some(l => l.active)} onClick={() => void run("prepare", { purpose: "train" })}>学習用を1件追加</button><button disabled={busy || !view.labels.some(l => l.active)} onClick={() => void prepareBatch("train", 10)}>次の学習用10件を準備</button><button disabled={busy || !view.labels.some(l => l.active) || trainingPrepared >= 100} onClick={() => void prepareBatch("train", 100)}>学習用100件まで準備・再開</button>{busy ? <button onClick={() => { stop.current = true; }}>この動画の準備後に停止</button> : null}</div>
+        <p>学習用：画像準備 {trainingPrepared}/300動画 ／ 正解保存 {view.trainingCount}/300動画</p>
+        <progress aria-label="学習用の正解保存進捗" max={300} value={Math.min(300, view.trainingCount)} style={{ width: "100%" }} />
+        <p>10件の正解を保存したら「次の学習用10件を準備」で追加できます。「学習用300件まで準備」は途中停止・画面を開き直した後も準備済み件数から続けます。正解保存は手動です。画面を閉じると追加取得は止まります。</p>
+        <p>元動画を1本ずつ一時ダウンロードしてCPU処理します。1動画最大1,024MiB。判定画像は224×224ピクセルに縮小します。300件すべてが上限の場合、転送量は最大300GiBです。抽出後に一時動画を削除し、4枚の画像と特徴を保持します。通信量を抑える場合は10件ずつ進めてください。</p>
+        <div style={line}><button disabled={busy || !view.labels.some(l => l.active)} onClick={() => void run("prepare", { purpose: "train" })}>学習用を1件追加</button><button disabled={busy || !view.labels.some(l => l.active)} onClick={() => void prepareBatch("train", 10)}>次の学習用10件を準備</button><button disabled={busy || !view.labels.some(l => l.active) || trainingPrepared >= 300} onClick={() => void prepareBatch("train", 300)}>学習用300件まで準備・再開</button>{busy ? <button onClick={() => { stop.current = true; }}>この動画の準備後に停止</button> : null}</div>
         <p><button disabled={busy} onClick={() => { setFilter("unreviewed-train"); setPage(0); }}>未保存の学習用動画を確認する</button></p>
         <form style={{ ...line, marginTop: 12 }} onSubmit={e => { e.preventDefault(); const input = postInput.trim(); const matched = input.match(/^https:\/\/(?:x\.com|twitter\.com)\/[^/?#]+\/status\/(\d{1,25})(?:[/?#].*)?$/); const postId = matched?.[1] ?? input; if (!/^\d{1,25}$/.test(postId)) { setError("投稿IDまたはXの投稿URLを入力してください。"); return; } void run("prepare", { postId, purpose: "train" }); }}><label>収集済み投稿のID／URL <input value={postInput} onChange={e => setPostInput(e.target.value)} disabled={busy} /></label><button disabled={busy || !postInput.trim()}>指定動画を準備</button></form>
       </section>
@@ -142,7 +142,7 @@ export default function LabelLearningPanel() {
           return <li key={l.id}>{l.name}：該当{answers.filter(v => v === true).length}・非該当{answers.filter(v => v === false).length}・未確認{answers.filter(v => typeof v !== "boolean").length}</li>;
         })}</ul>
         <div style={line}><button disabled={busy || view.trainingCount < 10} onClick={() => void run("train")}>保存済み{view.trainingCount}件すべてで学習する</button></div>
-        <p>10件ごとに別の学習へ切り替わることはありません。前の正解を残して20件・30件・100件と追加し、学習ボタンを押すと保存済み教材をすべて使います。</p>
+        <p>10件ごとに別の学習へ切り替わることはありません。前の正解を残して20件・30件・300件と追加し、学習ボタンを押すと保存済み教材をすべて使います。</p>
         <h3>新しいランダム動画で精度を確認</h3>
         <p>精度確認用：準備{testPrepared}動画 ／ 予測を見る前に正解保存済み{testReady}動画。学習に使っていない投稿者の新しい動画をランダムに選び、用途を自動で「精度確認用」にします。</p>
         <div style={line}><button disabled={busy || !view.model || view.model.stale} onClick={() => void prepareBatch("test", 10)}>新しいランダム10件を精度確認用に準備</button><button disabled={busy} onClick={() => { setFilter("unreviewed-test"); setPage(0); }}>精度確認用に正解を付ける</button><button disabled={busy || !view.model || view.model.stale || !testReady} onClick={() => void run("check")}>正解と予測を比べて精度チェック</button></div>

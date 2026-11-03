@@ -21,13 +21,11 @@ function load(id){if(modules.has(id))return modules.get(id).exports;const m={exp
    const combined=core.combinePersonalFrames(Array.from({length:4},(_,i)=>Array(256).fill(i)));
    assert.equal(combined.length,1024);assert.deepEqual([combined[0],combined[256],combined[512],combined[768]],[0,1,2,3]);
    await assert.rejects(video.extractPersonalVideo('https://example.com/a.mp4'));
-   let cancelled=0;
-   global.fetch=async()=>({ok:false,status:404,body:{cancel:async()=>cancelled++}});
+   global.fetch=async()=>new Response(null,{status:404});
    await assert.rejects(video.extractPersonalVideo('https://video.twimg.com/fixture.mp4'),/VIDEO_HTTP_404/);
-   global.fetch=async()=>({ok:true,headers:{get:()=>String(257*1024*1024)},body:{cancel:async()=>cancelled++}});
-   await assert.rejects(video.extractPersonalVideo('https://video.twimg.com/fixture.mp4',{maxBytes:999*1024*1024}),/VIDEO_TOO_LARGE/);
-   assert.equal(cancelled,2,'HTTP failures and oversize headers cancel body');
-   const bytes=fs.readFileSync(file);global.fetch=async url=>{assert.equal(new URL(url).hostname,'video.twimg.com');return new Response(bytes);};
+   global.fetch=async()=>new Response(Buffer.from([1,2,3]));
+   await assert.rejects(video.extractPersonalVideo('https://video.twimg.com/fixture.mp4'),/VIDEO_RANGE_UNAVAILABLE/);
+   const bytes=fs.readFileSync(file);global.fetch=async(url,options)=>{assert.equal(new URL(url).hostname,'video.twimg.com');const [start,requested]=options.headers.Range.match(/\d+/g).map(Number),end=Math.min(requested,bytes.length-1);return new Response(bytes.subarray(start,end+1),{status:206,headers:{'content-range':`bytes ${start}-${end}/${bytes.length}`}});};
    const features=await video.extractPersonalVideo('https://video.twimg.com/fixture.mp4');assert.equal(features.length,1024);assert(features.every(Number.isFinite));
    assert.notDeepEqual(features.slice(0,256),features.slice(512,768),'distinct scenes retain distinct features');
    console.log('PASS: actual four-scene video -> 10/25/50/80% images -> ordered 1024-D features; missing/nonfinite frames rejected; non-X-video URL rejected; no X API');

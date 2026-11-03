@@ -1,7 +1,7 @@
 import type { RankPost } from "../app/components/RankingClient";
 
-export const SITE_URL = "https://xcliprank.com";
-export const SITE_NAME = "X CLIP RANK";
+export const SITE_URL = "https://twizou.net";
+export const SITE_NAME = "twizou";
 
 export function rankingItemList(
   name: string,
@@ -21,7 +21,7 @@ export function rankingItemList(
       name: `${post.ranking_position ?? index + 1}位 ${
         post.author_name ?? post.author_username ?? "X投稿者"
       }`,
-      url: `${SITE_URL}/p/${post.x_post_id}`
+      url: post.manual_id ? post.x_url : `${SITE_URL}/p/${post.x_post_id}`
     }))
   };
 }

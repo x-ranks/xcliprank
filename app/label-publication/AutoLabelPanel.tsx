@@ -13,10 +13,10 @@ export default function AutoLabelPanel() {
     const r = await fetch("/api/label-auto", { method: "POST", headers: { "content-type": "application/json" }, body: JSON.stringify({ action, revision: latest.current?.revision ?? 0, threshold }) });
     const d = await r.json(); if (!r.ok) throw Error(d.error ?? "処理を完了できませんでした。"); apply(d); return d as View;
   }
-  async function start(fresh = false) {
+  async function start(fresh = false, fullRetag = false, emptyOnly = false, changeThreshold = false) {
     if (running.current || !latest.current) return; running.current = true; stop.current = false; setBusy(true); setError("");
     try {
-      let current = await request(fresh ? "new" : "start");
+      let current = await request(changeThreshold ? "restart-threshold" : emptyOnly ? "retry-empty" : fullRetag ? "retag-all" : fresh ? "new" : "start");
       while (!stop.current && alive.current && current.phase === "running") {
         current = await request("step");
         if (current.phase === "running" && !stop.current && alive.current) await new Promise(r => setTimeout(r, 1000));
@@ -25,18 +25,22 @@ export default function AutoLabelPanel() {
     } catch (e) { if (alive.current) { setError((e as Error).message); await refresh().catch(() => undefined); } }
     finally { running.current = false; if (alive.current) setBusy(false); }
   }
-  const c = view?.counts;
+  const c = view?.counts, thresholdChanged = view !== null && threshold !== view.threshold;
   return <section className="auto-label-panel" aria-labelledby="auto-label-title"><h2 id="auto-label-title">全動画を自動ラベル付け</h2>
-    <p>掲載できる動画を1件ずつ一時取得し、4枚から推定して本番へ反映します。手動ラベルは保持します。確認画像の目視操作は不要です。</p>
+    <p>掲載できる動画の必要範囲だけを受信し、4枚から推定して本番へ反映します。手動ラベルは保持します。確認画像の目視操作は不要です。</p>
     <p>この画面を開いている間に進みます。閉じると次の動画へは進まず、処理位置を保存します。再起動後も続きから再開できます。</p>
+    <p>再タグ付けは新しい学習モデル・タグ定義で、掲載可能な自動付与動画を先頭から再判定します。手動正解は保持し、403・404等の失敗は既存の再試行待機を守ります。元動画ファイルは保存せず、受信量は1動画32MiBまで、画像は224×224ピクセルです。範囲取得できない動画は全体取得へ切り替えず見送ります。タグ追加・休止後は先に再学習してください。</p>
+    <p>「タグが空の動画だけ再処理」は、手動確認済みとタグ付き動画を飛ばします。動画取得の失敗待機は維持し、上で選んだ判定基準を使います。基準を下げる前に診断と精度確認を行ってください。</p>
     <p>自動ラベルは推定として表示します。学習できていないラベルは付けず、候補なしもそのまま記録します。スコアは実際の正解率を示す値ではありません。</p>
     {error ? <p role="alert">{error}</p> : null}
     <p role="status" aria-live="polite">{view ? (view.phase === "running" && !busy ? "処理位置を保存済み・再開待ち" : phases[view.phase]) : "記録を確認中…"}{busy ? " ／ 今の1件が終わるまでお待ちください" : ""}</p>
-    {c ? <dl className="auto-label-counts"><div><dt>掲載候補を確認</dt><dd>{c.scanned}件</dd></div><div><dt>今回の本番反映</dt><dd>{c.published}件</dd></div><div><dt>うち該当ラベルなし</dt><dd>{c.emptyLabels}件</dd></div><div><dt>既存ラベルを保持</dt><dd>{c.protected + c.already}件</dd></div><div><dt>掲載条件外</dt><dd>{c.unavailable}件</dd></div><div><dt>動画の処理失敗</dt><dd>{c.failed}件</dd></div></dl> : null}
+    {c ? <dl className="auto-label-counts"><div><dt>掲載候補を確認</dt><dd>{c.scanned}件</dd></div><div><dt>判定結果の記録</dt><dd>{c.published}件</dd></div><div><dt>タグを付けた動画</dt><dd>{Math.max(0, c.published - c.emptyLabels)}件</dd></div><div><dt>タグなしで記録</dt><dd>{c.emptyLabels}件</dd></div><div><dt>既存ラベルを保持</dt><dd>{c.protected + c.already}件</dd></div><div><dt>掲載条件外</dt><dd>{c.unavailable}件</dd></div><div><dt>再試行待ち</dt><dd>{c.deferred}件</dd></div><div><dt>動画の処理失敗</dt><dd>{c.failed}件</dd></div></dl> : null}
+    {view?.scope === "empty" ? <p role="status">今回の対象：タグが空の動画のみ</p> : null}
     {view?.current ? <p>処理対象：{view.current.handle ? "@" + view.current.handle : view.current.id}{view.pendingPublication ? " ／ 推定済み・本番反映を再試行できます" : ""}</p> : null}
     {view?.message ? <p role="alert">処理を止めて位置を保存しました。通信・本番更新・モデルの状態を確認して再開してください。（{view.message}）</p> : null}
-    <label>判定の厳しさ <select disabled={busy || (view !== null && !["idle", "completed", "blocked"].includes(view.phase))} value={threshold} onChange={e => setThreshold(Number(e.target.value))}><option value={0.7}>標準（0.7）</option><option value={0.5}>広め（0.5）</option><option value={0.9}>厳しめ（0.9）</option></select></label>
-    <div className="auto-label-actions"><button type="button" disabled={busy || !view || view.phase === "completed"} onClick={() => void start()}>自動反映を開始・続きから再開</button><button type="button" disabled={!busy} onClick={() => { stop.current = true; }}>今の1件が終わったら停止</button><button type="button" disabled={busy || !view || !["completed", "blocked"].includes(view.phase)} onClick={() => void start(true)}>新着・失敗分を含めて新しい一周を開始</button><button type="button" disabled={busy} onClick={() => void refresh().catch(e => setError(e.message))}>記録を更新</button></div>
+    <label>判定の厳しさ <select disabled={busy || !view} value={threshold} onChange={e => setThreshold(Number(e.target.value))}><option value={0.7}>標準（0.7）</option><option value={0.5}>広め（0.5）</option><option value={0.9}>厳しめ（0.9）</option></select></label>
+    {view ? <p>現在の一周の基準：{view.threshold}。選んだ基準：{threshold}。基準を変えると、前の記録を保存して空タグだけの新しい一周を先頭から始めます。タグ付き・手動確認済みは保持し、取得失敗の待機も引き継ぎます。</p> : null}
+    <div className="auto-label-actions"><button type="button" disabled={busy || !view || !thresholdChanged} onClick={() => void start(false, false, true, true)}>選んだ基準で空タグだけ再処理</button><button type="button" disabled={busy || !view || thresholdChanged || view.phase === "completed"} onClick={() => void start()}>自動反映を開始・続きから再開</button><button type="button" disabled={!busy} onClick={() => { stop.current = true; }}>今の1件が終わったら停止</button><button type="button" disabled={busy || !view || !["completed", "blocked"].includes(view.phase)} onClick={() => void start(true)}>新着・失敗分を含めて新しい一周を開始</button><button type="button" disabled={busy || !view || !["idle", "completed", "blocked"].includes(view.phase)} onClick={() => void start(true, false, true)}>タグが空の動画だけ再処理</button><button type="button" disabled={busy || !view} onClick={() => void start(true, true)}>全ての動画を再タグ付け</button><button type="button" disabled={busy} onClick={() => void refresh().catch(e => setError(e.message))}>記録を更新</button></div>
     {view?.lastErrors.length ? <details><summary>直近の処理失敗（最大20件）</summary><ul>{view.lastErrors.map((e, i) => <li key={e.id + ":" + i}>{e.id}：{e.code}</li>)}</ul></details> : null}
   </section>;
 }

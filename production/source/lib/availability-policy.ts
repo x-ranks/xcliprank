@@ -2,9 +2,13 @@ import { randomInt } from "node:crypto";
 // Low-volume background policy. Jitter spreads load; it does not bypass provider limits.
 export const HOUR = 3600000;
 export const DAY = 24 * HOUR;
-export const BATCH_INTERVAL = 3 * HOUR;
+export const BATCH_INTERVAL = HOUR;
+export const PRIORITY_RECHECK_INTERVAL = HOUR;
+export const POST_RECHECK_INTERVAL = 6 * HOUR;
+export const MISSING_CONFIRM_INTERVAL = HOUR;
+export const AUTHOR_RECHECK_INTERVAL = 6 * HOUR;
 export const AUTHOR_BATCH_LIMIT = 12;
-export const POST_BATCH_LIMIT = 20;
+export const POST_BATCH_LIMIT = 100;
 export const REQUEST_SPACING = 5000;
 export const MONITOR_REQUEST_MIN_MS = 8000;
 export const MONITOR_REQUEST_MAX_MS = 20000;
@@ -17,7 +21,7 @@ export async function fetchMonitorJson(endpoint: string, fetcher: typeof fetch =
   try {
     const response = await fetcher("https://api.fxtwitter.com" + endpoint, {
       cache: "no-store", redirect: "error", credentials: "omit", referrerPolicy: "no-referrer",
-      headers: { "User-Agent": "Xclip-Availability-Monitor/2.0 (+https://xcliprank.com)", Accept: "application/json" },
+      headers: { "User-Agent": "Xclip-Availability-Monitor/2.0 (+https://twizou.net)", Accept: "application/json" },
       signal: AbortSignal.timeout(8000),
     });
     const retry = response.headers.get("retry-after");

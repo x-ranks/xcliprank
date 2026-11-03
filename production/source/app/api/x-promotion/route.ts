@@ -171,15 +171,15 @@ function createDraft(variant: PromotionVariant, count: number) {
   const drafts: Record<PromotionVariant, { label: string; text: string }> = {
     a: {
       label: "A：更新・速報型",
-      text: `【${date.display}】24時間動画ランキング更新\n\n${countText}注目のTOP3をピックアップしました。\n▶ ${tracked.url}\n\n#XCLIPRANK #動画ランキング`,
+      text: `【${date.display}】24時間動画ランキング更新\n\n${countText}注目のTOP3をピックアップしました。\n▶ ${tracked.url}\n\n#twizou #動画ランキング`,
     },
     b: {
       label: "B：問いかけ型",
-      text: `今日の人気動画、もう見ましたか？\n\n24時間ランキングのTOP3はこちら。\n▶ ${tracked.url}\n\n#XCLIPRANK`,
+      text: `今日の人気動画、もう見ましたか？\n\n24時間ランキングのTOP3はこちら。\n▶ ${tracked.url}\n\n#twizou`,
     },
     c: {
       label: "C：発見・回遊型",
-      text: `次に見る動画を探すなら。\n\n24時間ランキングから注目のTOP3をまとめました。\n▶ ${tracked.url}\n\n#XCLIPRANK #動画ランキング`,
+      text: `次に見る動画を探すなら。\n\n24時間ランキングから注目のTOP3をまとめました。\n▶ ${tracked.url}\n\n#twizou #動画ランキング`,
     },
   };
 

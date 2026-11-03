@@ -5,7 +5,9 @@ export default function robots(): MetadataRoute.Robots {
   return {
     rules: {
       userAgent: "*",
-      allow: "/",
+      // Only the public JSON playback lookup is needed during rendering.
+      // Keep other APIs blocked; do not match similarly named routes.
+      allow: ["/", "/api/video-playback-url$", "/api/video-playback-url?"],
       disallow: [
         "/api/",
         "/curated-authors",

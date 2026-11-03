@@ -9,6 +9,7 @@ export type EngagementEventType =
 
 type EngagementPayload = {
   eventType: EngagementEventType;
+  occurrenceId?: string;
   xPostId?: string;
   range?: string;
   source?: string;
@@ -28,7 +29,7 @@ type Acquisition = {
   landingPath: string;
 };
 
-function createId() {
+export function createEngagementEventId() {
   if (typeof crypto !== "undefined" && "randomUUID" in crypto) {
     return crypto.randomUUID();
   }
@@ -41,7 +42,7 @@ function getOrCreateId(storage: Storage, key: string) {
   const existing = storage.getItem(key);
   if (existing) return existing;
 
-  const created = createId();
+  const created = createEngagementEventId();
   storage.setItem(key, created);
   return created;
 }
@@ -88,6 +89,7 @@ export function trackEngagement(payload: EngagementPayload) {
   try {
     const body = JSON.stringify({
       ...payload,
+      ...(["page_view", "video_open", "qualified_view"].includes(payload.eventType) ? { pageViewId: payload.occurrenceId ?? createEngagementEventId() } : {}),
       metadata: {
         ...getAcquisition(),
         ...(payload.metadata ?? {}),

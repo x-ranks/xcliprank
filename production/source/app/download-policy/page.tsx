@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 
 export const metadata: Metadata = {
-  title: "動画の保存ポリシー | Xclip",
+  title: "動画の保存ポリシー | twizou",
   description: "動画の保存に関する禁止事項と、端末への直接保存の仕組みについて説明します。",
   robots: { index: false, follow: true },
 };
@@ -10,7 +10,7 @@ export const metadata: Metadata = {
 export default function DownloadPolicyPage() {
   return (
     <main style={{ maxWidth: 760, margin: "0 auto", padding: "32px 20px", lineHeight: 1.8 }}>
-      <Link href="/">← Xclipに戻る</Link>
+      <Link href="/">← twizouに戻る</Link>
       <h1>動画の保存ポリシー</h1>
       <section>
         <h2>保存できる動画</h2>
@@ -27,7 +27,7 @@ export default function DownloadPolicyPage() {
       </section>
       <section>
         <h2>動画の取得と直接保存</h2>
-        <p>Xclipは、公開投稿の動画URL情報を確認し、端末への保存を補助します。保存する動画はXの配信元から利用者のブラウザへ直接読み込まれます。Xclipでは動画ファイルの保管・再アップロードを行いません。受信したデータは、保存操作が終わるまで利用者の端末内に一時保持されます。</p>
+        <p>twizouは、公開投稿の動画URL情報を確認し、端末への保存を補助します。保存する動画はXの配信元から利用者のブラウザへ直接読み込まれます。twizouでは動画ファイルの保管・再アップロードを行いません。受信したデータは、保存操作が終わるまで利用者の端末内に一時保持されます。</p>
         <p>端末に保存されたファイルは利用者が管理してください。保存機能は、権利者の許諾やコンテンツの適法性を保証するものではありません。</p>
         <p>投稿URLからの保存では、サイト内に未登録の投稿IDを外部サービスFxTwitterへ送信し、公開投稿情報・動画URLを取得します。取得した動画URLは約10分、失敗結果は約1分キャッシュします。本文や動画本体をキャッシュへ保存せず、ランキングへ自動登録することもありません。</p>
       </section>

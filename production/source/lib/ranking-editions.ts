@@ -68,6 +68,16 @@ export async function readEdition(edition: string): Promise<RankingEdition | nul
     throw Error("RANKING_EDITION_UNREADABLE");
   }
 }
+// A prepared edition appearing on disk invalidates temporary previous-edition
+// responses, including across workers. Never read the metadata payload here.
+export async function editionCacheRevision(edition: string) {
+  validateEditionId(edition);
+  try {
+    const stat = await fs.lstat(path.join(await directory(), edition + ".json"), { bigint: true });
+    if (!stat.isFile() || stat.isSymbolicLink() || stat.size > BigInt(512 * 1024)) throw Error("RANKING_EDITION_UNREADABLE");
+    return [stat.dev, stat.ino, stat.mtimeNs, stat.ctimeNs, stat.size].join(":");
+  } catch (error: any) { if (error.code === "ENOENT") return "preparing"; throw error; }
+}
 export async function saveEdition(value: RankingEdition): Promise<RankingEdition> {
   validateEditionId(value.edition); validate(value, value.edition);
   const root = await directory(), target = path.join(root, value.edition + ".json"), temp = path.join(root, ".edition-" + randomUUID() + ".tmp");

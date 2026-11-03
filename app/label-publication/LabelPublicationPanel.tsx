@@ -1,5 +1,6 @@
 "use client";
 import Link from "next/link";
+import LabelA4Diagnostics from "./LabelA4Diagnostics";
 import AutoLabelPanel from "./AutoLabelPanel";
 import { useEffect, useRef, useState } from "react";
 import type { createLabelPublication } from "../../lib/label-publication-service";
@@ -11,7 +12,7 @@ function Row({ row, view, busy, run }: { row: View["rows"][number]; view: View; 
     <div style={{ display: "grid", gridTemplateColumns: "repeat(2,minmax(0,1fr))", gap: 8 }}>{row.frames.map((src, i) => <img key={src} src={src} alt={`確認画像${i + 1}`} loading="lazy" onLoad={() => setLoaded(old => old.includes(i) ? old : [...old, i])} onError={() => setLoaded(old => old.filter(n => n !== i))} style={{ width: "100%", maxHeight: 240, objectFit: "contain" }} />)}</div>
     <fieldset disabled={busy || row.published || row.stale}><legend>本番に表示するラベル</legend><div style={grid}>{view.labels.filter(l => l.active).map(l => <label key={l.id}><input type="checkbox" checked={ids.includes(l.id)} onChange={e => setIds(old => e.target.checked ? [...old, l.id] : old.filter(id => id !== l.id))} />{l.name}</label>)}</div>
       <button disabled={row.origin === "inferred" && loaded.length !== 4} onClick={() => void run("approve", { id: row.id, labelIds: ids })}>4枚を確認してラベルを確定</button></fieldset>
-    {row.error ? <p role="alert">{row.error}</p> : null}<p><a href={`https://x.com/i/status/${row.id}`} target="_blank" rel="noreferrer">元投稿</a> ／ <a href={`https://xcliprank.com/p/${row.id}`} target="_blank" rel="noreferrer">本番の個別ページ</a></p>
+    {row.error ? <p role="alert">{row.error}</p> : null}<p><a href={`https://x.com/i/status/${row.id}`} target="_blank" rel="noreferrer">元投稿</a> ／ <a href={`https://twizou.net/p/${row.id}`} target="_blank" rel="noreferrer">本番の個別ページ</a></p>
   </article>;
 }
 export default function LabelPublicationPanel() {
@@ -27,6 +28,7 @@ export default function LabelPublicationPanel() {
   return <main style={{ maxWidth: 1120, margin: "0 auto", padding: 24 }}><Link href="/label-learning">← ラベル学習</Link><h1>学習したラベルを本番へ反映</h1>
     <p>モデル・教師・動画画像はこのPCに置き、ラベル名と投稿IDなどの反映情報を本番へ送り、手動ラベルと自動推定を区別します。Tier・新着巡回・掲載可否は変更しません。</p>
     {error ? <p role="alert">{error}</p> : null}<p role="status" aria-live="polite">{message}</p><button disabled={busy} onClick={() => void refresh().catch(e => setError(e.message))}>記録を更新</button>
+    <LabelA4Diagnostics />
     <AutoLabelPanel />
     {view ? <><section style={box}><h2>手動確認したラベルの反映</h2><p>学習教材{view.modelSamples}動画 ／ 独立した精度確認{view.independentTestVideos}動画 ／ 準備{rows.length}件 ／ 反映済み{rows.filter(r => r.published).length}件</p>
       <p>①「手動正解を準備」→②確認済みラベルを本番へ反映。新しい動画は③10件ずつ推定→④4枚を見てラベルを確定→⑤本番へ反映、の順に進みます。</p>

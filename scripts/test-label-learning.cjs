@@ -63,18 +63,14 @@ async function main(){
  const failed=createLabelService(path.join(temporary,'failed'),{...deps,prepare:async()=>{throw Error('LABEL_VIDEO_FETCH_FAILED');}});await failed.mutate({action:'create-label',name:'A',revision:0});await assert.rejects(failed.mutate({action:'prepare',postId:'100',revision:1}),/LABEL_VIDEO_FETCH_FAILED/);assert.equal((await failed.status()).revision,2);assert.equal((await failed.status()).videos.length,0);
  const duplicate=createLabelService(path.join(temporary,'duplicate'),{...deps,prepare:async()=>deps.prepare(fixture[0].url)});await duplicate.mutate({action:'create-label',name:'A',revision:0});await duplicate.mutate({action:'prepare',postId:'100',revision:1});await assert.rejects(duplicate.mutate({action:'prepare',postId:'101',revision:2}),/LABEL_DUPLICATE_VIDEO/);assert.equal((await duplicate.status()).videos.length,1);
  const linkTarget=path.join(temporary,'link-target'),linkParent=path.join(temporary,'linked');fs.mkdirSync(linkTarget);fs.symlinkSync(linkTarget,linkParent,process.platform==='win32'?'junction':'dir');const linked=createLabelService(path.join(linkParent,'labels'),deps);await assert.rejects(linked.mutate({action:'create-label',name:'A',revision:0}),/LABEL_UNSAFE_FILE/);assert.equal(fs.readdirSync(linkTarget).length,0);fs.unlinkSync(linkParent);
- // Actual video helper with synthetic bytes: allowlist, max-size refusal, four frames,
- // matching feature order, no Tier cache writes, and temporary MP4 cleanup.
- const tierVideo=path.join(root,'lib','tier-personal-video.ts'),tierImage=path.join(root,'lib','tier-personal-image.ts');let decoded=0,lastVideoFile;
- mocks.set(tierVideo,{ensureVideoTools:async()=>{},extractLocalVideoFrames:async file=>{decoded++;lastVideoFile=file;assert.deepEqual(fs.readFileSync(file),Buffer.from([1,2,3]));return{times:[1,2,3,4],frames:Array.from({length:4},(_,i)=>Buffer.from([255,216,i]))};}});
+ // Actual label helper with mocked partial-frame extraction; no media fetch or files.
+ const rangeFrames=path.join(root,'lib','video-range-frames.ts'),tierImage=path.join(root,'lib','tier-personal-image.ts');let decoded=0;
+ const frameModule=require(rangeFrames);mocks.set(rangeFrames,{...frameModule,extractRangeVideoFrames:async(url,options)=>{decoded++;assert.equal(options.maxBytes,32*1024*1024);return{hash:sha('range'),times:[1,2,3,4],frames:Array.from({length:4},(_,i)=>Buffer.from([255,216,i]))};}});
  mocks.set(tierImage,{extractPersonalFrame:async bytes=>Array(256).fill(bytes[2])});
- const video=require('../lib/label-learning-video.ts');const previousFetch=global.fetch;let httpCalls=0;
- try{
-  global.fetch=async(u,o)=>{httpCalls++;assert.equal(o.redirect,'error');assert.equal(o.cache,'no-store');return new Response(new Uint8Array([1,2,3]),{headers:{'content-length':'3'}});};
-  const prepared=await video.prepareLabelVideo('https://video.twimg.com/fixture.mp4');assert.equal(prepared.features.length,1024);assert.equal(prepared.features[256],1);assert.equal(prepared.features[768],3);assert.equal(prepared.frames.length,4);assert(!fs.existsSync(lastVideoFile));assert.equal(decoded,1);
-  await assert.rejects(video.prepareLabelVideo('https://evil.invalid/fixture.mp4'),/LABEL_VIDEO_URL_REFUSED/);assert.equal(httpCalls,1);
-  global.fetch=async()=>new Response(new Uint8Array([1]),{headers:{'content-length':String(97*1024*1024)}});await assert.rejects(video.prepareLabelVideo('https://video.twimg.com/too-big.mp4'),/LABEL_VIDEO_TOO_LARGE/);assert.equal(decoded,1);
- }finally{global.fetch=previousFetch;}
+ const video=require('../lib/label-learning-video.ts');
+ const prepared=await video.prepareLabelVideo('https://video.twimg.com/fixture.mp4');assert.equal(prepared.features.length,1024);assert.equal(prepared.features[256],1);assert.equal(prepared.features[768],3);assert.equal(prepared.frames.length,4);assert.equal(decoded,1);
+ await assert.rejects(video.prepareLabelVideo('https://evil.invalid/fixture.mp4'),/LABEL_VIDEO_URL_REFUSED/);assert.equal(decoded,1);
+ mocks.set(rangeFrames,frameModule);
  // Actual read-only DB adapter, isolated cwd; query selection excludes heavy columns.
  const priorCwd=process.cwd();process.chdir(temporary);
  try{

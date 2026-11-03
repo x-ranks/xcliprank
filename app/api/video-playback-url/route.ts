@@ -28,7 +28,7 @@ export async function GET(request: Request) {
     const sources = await refreshPlaybackSources(requestUrl.searchParams.get("postId") ?? "", {
       async findPost(id) {
         const { data, error } = await supabaseAdmin().from("posts")
-          .select("video_url,is_visible,moderation_blocked,review_required,content_category,adult_tier,manual_tier")
+          .select("author_id,author_username,video_url,is_visible,moderation_blocked,review_required,content_category,adult_tier,manual_tier")
           .eq("x_post_id", id).maybeSingle();
         if (error) throw new DownloadError(503, "掲載情報を確認できません。（PLAYBACK_DB_FAILED）");
         return data as DownloadPost | null;

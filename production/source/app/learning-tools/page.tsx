@@ -80,6 +80,13 @@ const operationTools: ToolCard[] = [
     tone: "amber",
   },
   {
+    href: "/manual-ranking",
+    title: "個別URLのランキング登録",
+    description: "動画URLを登録し、新着・24時間・週間の指定順位へ本番反映します。",
+    badge: "ローカル専用",
+    tone: "blue",
+  },
+  {
     href: "/removal-requests-admin",
     title: "削除要請管理",
     description: "受け付けた削除要請を確認し、対応状況と管理メモを更新します。",

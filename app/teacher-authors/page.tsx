@@ -1,4 +1,5 @@
 "use client";
+import { directPlaybackUrl } from "../../lib/browser-direct-playback";
 
 import { useEffect, useMemo, useState } from "react";
 
@@ -54,8 +55,8 @@ const X_REASONS = [
   ["other", "その他X"],
 ] as const;
 
-function proxyVideo(url: string) {
-  return `/api/video?url=${encodeURIComponent(url)}`;
+function directVideo(url: string) {
+  return directPlaybackUrl(url) ?? "";
 }
 
 function proxyImage(url: string) {
@@ -323,7 +324,7 @@ export default function TeacherAuthorsPage() {
                 <div style={{ display: "grid", gridTemplateColumns: "minmax(0, 1.7fr) minmax(310px, 1fr)", gap: 20 }}>
                   <div>
                     {currentPost.videoUrl ? (
-                      <video key={currentPost.xPostId} src={proxyVideo(currentPost.videoUrl)} poster={currentPost.previewImageUrl ? proxyImage(currentPost.previewImageUrl) : undefined} controls autoPlay muted playsInline preload="metadata" style={{ width: "100%", maxHeight: "72vh", background: "#000" }} />
+                      <video key={currentPost.xPostId} src={directVideo(currentPost.videoUrl)} poster={currentPost.previewImageUrl ? proxyImage(currentPost.previewImageUrl) : undefined} controls autoPlay muted playsInline preload="metadata" style={{ width: "100%", maxHeight: "72vh", background: "#000" }} />
                     ) : <div style={{ minHeight: 400, background: "#111", color: "white", display: "grid", placeItems: "center" }}>動画なし</div>}
                     <div style={{ display: "flex", justifyContent: "space-between", marginTop: 8 }}>
                       <button onClick={() => setCurrentIndex((index) => Math.max(0, index - 1))} disabled={currentIndex === 0}>← 前</button>

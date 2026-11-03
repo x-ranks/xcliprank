@@ -1,4 +1,5 @@
 "use client";
+import { reducedMediaData, reelLoadPolicy } from "../../lib/reel-load-policy";
 import useSuspendedAuthors from "../components/useSuspendedAuthors";
 import { isUnavailablePost } from "../../lib/post-status";
 import DirectPlaybackVideo from "../components/DirectPlaybackVideo";
@@ -49,6 +50,7 @@ export default function ReelsFeed() {
   const [durations, setDurations] = useState<Record<string, number>>({});
   const [posts, setPosts] = useState<ReelPost[]>([]);
   const [activeIndex, setActiveIndex] = useState(0);
+  const [reducedData, setReducedData] = useState(false);
   const [muted, setMuted] = useState(true);
   const [playing, setPlaying] = useState(true);
   const [loading, setLoading] = useState(true);
@@ -59,6 +61,13 @@ export default function ReelsFeed() {
   const slideRefs = useRef(new Map<number, HTMLElement>());
   const videoRefs = useRef(new Map<number, HTMLVideoElement>());
   const suspendedMoveRef = useRef<number | null>(null);
+
+  useEffect(() => {
+    const connection = (navigator as Navigator & { connection?: EventTarget & { saveData?: boolean; effectiveType?: string } }).connection;
+    const update = () => setReducedData(reducedMediaData(connection));
+    update(); connection?.addEventListener("change", update);
+    return () => connection?.removeEventListener("change", update);
+  }, []);
 
   useEffect(() => {
     document.body.classList.add("reels-mode");
@@ -248,7 +257,7 @@ export default function ReelsFeed() {
 
       <div className="reels-feed" ref={feedRef} aria-label="動画リール">
         {posts.map((post, index) => {
-          const nearActive = Math.abs(index - activeIndex) <= 2;
+          const load = reelLoadPolicy(index, activeIndex, reducedData);
           const failed = failedIds.has(post.x_post_id);
           const isActive = index === activeIndex;
 
@@ -263,8 +272,8 @@ export default function ReelsFeed() {
               }}
             >
               <div className="reel-stage">
-                {nearActive && !failed ? (
-                  <DirectPlaybackVideo postId={post.x_post_id} recoverEnabled={isActive}
+                {load.mountVideo && !failed ? (
+                  <DirectPlaybackVideo trackQualifiedView={isActive} trackReelOpen={isActive} engagementSourcePage="/reels" postId={post.x_post_id} recoverEnabled={isActive}
                     key={`${post.x_post_id}-loaded`}
                     ref={(element) => {
                       if (element) videoRefs.current.set(index, element);
@@ -276,7 +285,7 @@ export default function ReelsFeed() {
                     muted={muted}
                     playsInline
                     loop
-                    preload={isActive ? "auto" : "metadata"}
+                    preload={load.preload}
                     onClick={() => togglePlayback(index)}
                     onPlay={() => isActive && setPlaying(true)}
                     onPause={() => isActive && setPlaying(false)}
@@ -288,7 +297,7 @@ export default function ReelsFeed() {
                     onLoadedMetadata={event => {
                       const duration = event.currentTarget.duration;
                       if (Number.isFinite(duration) && duration > 0) {
-                        setDurations(values => ({ ...values, [post.x_post_id]: duration }));
+                        setDurations(values => values[post.x_post_id] === duration ? values : ({ ...values, [post.x_post_id]: duration }));
                       }
                     }}
                     onError={() => markFailed(post.x_post_id, index)}
@@ -296,7 +305,7 @@ export default function ReelsFeed() {
                 ) : (
                   <div
                     className="reel-poster"
-                    style={post.preview_image_url ? {
+                    style={load.loadPoster && post.preview_image_url ? {
                       backgroundImage: `url(${post.preview_image_url})`,
                     } : undefined}
                   />

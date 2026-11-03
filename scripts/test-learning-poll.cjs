@@ -1,7 +1,7 @@
 const fs=require('node:fs'),path=require('node:path'),vm=require('node:vm'),assert=require('node:assert/strict');
 const {createRequire}=require('node:module');
 const base=path.resolve(__dirname,'..');
-const deps=process.env.XCLIP_TEST_DEPENDENCY_ROOT||base;
+const deps=process.env.XCLIP_TEST_DEPENDENCY_ROOT||'C:/Projects/xcliprank';
 const ts=createRequire(path.join(deps,'package.json'))('typescript');
 function moduleAt(rel,imports={},globals={}){
  const code=ts.transpileModule(fs.readFileSync(path.join(base,rel),'utf8'),{compilerOptions:{module:ts.ModuleKind.CommonJS,target:ts.ScriptTarget.ES2020,jsx:ts.JsxEmit.ReactJSX}}).outputText;

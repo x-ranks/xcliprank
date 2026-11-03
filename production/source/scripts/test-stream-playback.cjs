@@ -40,5 +40,9 @@ const post={video_url:mp4,is_visible:true,moderation_blocked:false,review_requir
  const fatalCtrl=new AbortController();await stream.attachDirectStream(video,hls,{signal:fatalCtrl.signal,onReady:()=>{},onError:()=>errors++},async()=>({default:Engine,FetchLoader:class{}}));instance.events.error('error',{fatal:true,details:'manifestLoadError'});assert.equal(errors,1);assert.equal(destroyed,2);fatalCtrl.abort();
  const aborted=new AbortController();aborted.abort();await assert.rejects(stream.attachDirectStream(video,hls,{signal:aborted.signal,onReady(){},onError(){}},async()=>{throw Error('must not load');}),e=>e.name==='AbortError');
  let finishImport;const delayed=new AbortController();const pending=stream.attachDirectStream(video,hls,{signal:delayed.signal,onReady(){},onError(){}},()=>new Promise(resolve=>finishImport=resolve));delayed.abort();finishImport({default:Engine,FetchLoader:class{}});await assert.rejects(pending,e=>e.name==='AbortError');assert.equal(attached,2);
+ let nativeImports=0,nativeReady=0;
+ const nativeController=new AbortController(),nativeVideo={...video,canPlayType:()=>"probably"};
+ const nativeCleanup=await stream.attachDirectStream(nativeVideo,hls,{signal:nativeController.signal,onReady:()=>nativeReady++,onError(){throw Error('unexpected native failure');}},async()=>{nativeImports++;throw Error('native playback must not load JS engine');});
+ assert.equal(nativeImports,0);assert.equal(nativeVideo.src,hls);listeners.loadeddata();assert.equal(nativeReady,1);nativeController.abort();nativeCleanup();assert.deepEqual(listeners,{});
  console.log('PASS STREAM: free native-media playlist; MP4 save response retained; CDN-only fetch with no credentials/referrer/redirects; exclusions before lookup; bounded buffer configuration; ready/fatal/abort/late-import cleanup. Large-file streaming is simulated, not an actual browser test.');
 })().catch(e=>{console.error(e);process.exitCode=1;});

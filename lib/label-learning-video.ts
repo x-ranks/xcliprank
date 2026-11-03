@@ -1,32 +1,19 @@
-import { createHash } from "node:crypto";
-import { mkdtemp, open, rm } from "node:fs/promises";
-import { tmpdir } from "node:os";
-import path from "node:path";
-import { ensureVideoTools, extractLocalVideoFrames } from "./tier-personal-video";
+import { extractRangeVideoFrames } from "./video-range-frames";
+import { allowedRangeVideo } from "./video-range-session";
 import { extractPersonalFrame } from "./tier-personal-image";
 import { combinePersonalFrames } from "./tier-personal-core";
-export function allowedLabelVideo(raw: string) {
-  try { const u = new URL(raw); return u.protocol === "https:" && !u.username && !u.password && (!u.port || u.port === "443") && (u.hostname === "video.twimg.com" || u.hostname.endsWith(".video.twimg.com")); } catch { return false; }
-}
-export async function prepareLabelVideo(url: string) {
+export const allowedLabelVideo = allowedRangeVideo;
+export async function prepareLabelVideo(url: string, options: { maxBytes?: number } = {}) {
   if (!allowedLabelVideo(url)) throw Error("LABEL_VIDEO_URL_REFUSED");
-  try { await ensureVideoTools(); } catch { throw Error("LABEL_VIDEO_TOOLS_MISSING"); }
-  const directory = await mkdtemp(path.join(tmpdir(), "xclip-label-video-")), filename = path.join(directory, "video.mp4");
+  if (options.maxBytes !== undefined && (!Number.isSafeInteger(options.maxBytes) || options.maxBytes < 256 * 1024 || options.maxBytes > 1024 * 1024 * 1024)) throw Error("LABEL_VIDEO_INVALID_LIMIT");
   try {
-    const response = await fetch(url, { redirect: "error", cache: "no-store", signal: AbortSignal.timeout(60000) });
-    const max = 96 * 1024 * 1024;
-    if (!response.ok || !response.body) { await response.body?.cancel(); throw Error("LABEL_VIDEO_FETCH_FAILED"); }
-    if (Number(response.headers.get("content-length") || 0) > max) { await response.body.cancel(); throw Error("LABEL_VIDEO_TOO_LARGE"); }
-    const file = await open(filename, "wx", 0o600), reader = response.body.getReader(), hash = createHash("sha256"); let bytes = 0;
-    try {
-      while (true) {
-        const { done, value } = await reader.read(); if (done) break;
-        bytes += value.length; if (bytes > max) throw Error("LABEL_VIDEO_TOO_LARGE"); hash.update(value);
-        let offset = 0; while (offset < value.length) { const written = await file.write(value, offset, value.length - offset); if (!written.bytesWritten) throw Error("LABEL_VIDEO_WRITE_FAILED"); offset += written.bytesWritten; }
-      }
-    } finally { await file.close(); await reader.cancel(); }
-    const extracted = await extractLocalVideoFrames(filename), vectors: number[][] = [];
+    const extracted = await extractRangeVideoFrames(url, { maxBytes: Math.min(options.maxBytes ?? 32 * 1024 * 1024, 32 * 1024 * 1024) });
+    const vectors: number[][] = [];
     for (const frame of extracted.frames) vectors.push(await extractPersonalFrame(frame));
-    return { frames: extracted.frames, times: extracted.times, features: combinePersonalFrames(vectors), hash: hash.digest("hex") };
-  } finally { await rm(directory, { recursive: true, force: true, maxRetries: 3, retryDelay: 100 }); }
+    return { ...extracted, features: combinePersonalFrames(vectors) };
+  } catch (error) {
+    const code = error instanceof Error ? error.message : "VIDEO_RANGE_FETCH_FAILED";
+    const map: Record<string, string> = { VIDEO_TOOLS_MISSING: "LABEL_VIDEO_TOOLS_MISSING", VIDEO_HTTP_403: "LABEL_VIDEO_HTTP_FORBIDDEN", VIDEO_HTTP_404: "LABEL_VIDEO_HTTP_NOT_FOUND", VIDEO_HTTP_410: "LABEL_VIDEO_HTTP_GONE", VIDEO_HTTP_429: "LABEL_VIDEO_HTTP_RATE_LIMIT", VIDEO_RANGE_BUDGET_EXCEEDED: "LABEL_VIDEO_RANGE_BUDGET_EXCEEDED", VIDEO_RANGE_UNAVAILABLE: "LABEL_VIDEO_RANGE_UNAVAILABLE", INVALID_VIDEO_DURATION: "LABEL_VIDEO_INVALID_DURATION" };
+    throw Error(map[code] ?? (code.startsWith("VIDEO_HTTP_5") ? "LABEL_VIDEO_HTTP_SERVER_ERROR" : "LABEL_VIDEO_FETCH_FAILED"));
+  }
 }

@@ -34,6 +34,8 @@ export default function AgeGate() {
     }
 
     setVisible(!accepted);
+    if (accepted) document.documentElement.setAttribute("data-age-confirmed", "yes");
+    else document.documentElement.removeAttribute("data-age-confirmed");
     document.body.classList.toggle("age-gate-open", !accepted);
 
     return () => document.body.classList.remove("age-gate-open");
@@ -46,6 +48,7 @@ export default function AgeGate() {
       // Continue for the current visit when storage is unavailable.
     }
     document.body.classList.remove("age-gate-open");
+    document.documentElement.setAttribute("data-age-confirmed", "yes");
     setVisible(false);
   }
 
@@ -54,7 +57,7 @@ export default function AgeGate() {
   return (
     <div className="age-gate" role="dialog" aria-modal="true" aria-labelledby="age-gate-title" aria-describedby="age-gate-description">
       <div className="age-gate-panel">
-        <p className="age-gate-brand"><span>X</span> CLIP RANK</p>
+        <p className="age-gate-brand">twizou</p>
         <h2 id="age-gate-title">18歳以上ですか？</h2>
         <p id="age-gate-description">
           当サイトには成人向けの内容が含まれます。18歳未満の方、または居住地域の法令上閲覧できない方は利用できません。

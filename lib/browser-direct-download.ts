@@ -2,13 +2,18 @@ import { isAllowedDownloadUrl } from "./video-download";
 
 // A Blob keeps video bytes on the user's device, never on the Xclip server.
 export const DIRECT_DOWNLOAD_LIMIT = 128 * 1024 * 1024;
+export const DIRECT_SAVE_LIMIT = 256 * 1024 * 1024;
 export class DirectDownloadError extends Error {}
 
 export async function fetchDirectVideo(rawUrl: string, options: {
   signal: AbortSignal;
+  maxBytes?: number;
   fetcher?: typeof fetch;
   onProgress?: (received: number, total: number | null) => void;
 }): Promise<Blob> {
+  const limit = options.maxBytes ?? DIRECT_DOWNLOAD_LIMIT;
+  if (!Number.isSafeInteger(limit) || limit <= 0 || limit > DIRECT_SAVE_LIMIT) throw new DirectDownloadError("保存サイズ上限が正しくありません。");
+  const limitMessage = `この動画は${Math.ceil(limit / 1024 / 1024)}MBを超えるため、この直接保存版では保存できません。`;
   if (!isAllowedDownloadUrl(rawUrl)) throw new DirectDownloadError("動画の取得先が正しくありません。");
   if (options.signal.aborted) throw new DOMException("Aborted", "AbortError");
   let response: Response;
@@ -29,9 +34,9 @@ export async function fetchDirectVideo(rawUrl: string, options: {
   }
   const length = response.headers.get("content-length");
   const total = length && /^\d+$/.test(length) && Number.isSafeInteger(Number(length)) ? Number(length) : null;
-  if (total !== null && total > DIRECT_DOWNLOAD_LIMIT) {
+  if (total !== null && total > limit) {
     await response.body.cancel();
-    throw new DirectDownloadError("この動画は128MBを超えるため、この直接保存版では保存できません。");
+    throw new DirectDownloadError(limitMessage);
   }
   const reader = response.body.getReader();
   const chunks: BlobPart[] = [];
@@ -46,7 +51,7 @@ export async function fetchDirectVideo(rawUrl: string, options: {
       if (options.signal.aborted) throw new DOMException("Aborted", "AbortError");
       if (part.done) break;
       received += part.value.byteLength;
-      if (received > DIRECT_DOWNLOAD_LIMIT) throw new DirectDownloadError("この動画は128MBを超えるため、この直接保存版では保存できません。");
+      if (received > limit) throw new DirectDownloadError(limitMessage);
       // Copy only this chunk to an ArrayBuffer with unambiguous BlobPart typing.
       chunks.push(new Uint8Array(part.value).buffer);
       options.onProgress?.(received, total);

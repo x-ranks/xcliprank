@@ -9,6 +9,8 @@ const emptyState: FreeRegistry = {version:1,cooldownUntil:0,authors:[]};
 const date=(value:string|null)=>value?new Date(value).toLocaleString("ja-JP"):"未実行";
 type ProductionState={authors:{id:string;username:string;paused:boolean;source:string;checkedAt:number;nextCheckAt:number;savedTotal:number;lastError:string|null}[];cooldownUntil:number};
 type Reply={ok:boolean;error?:string;message?:string;state?:FreeRegistry;databaseHost?:string|null;id?:string;job?:RegistrationJob;production?:{state:ProductionState;registrationAuthorLimit?:number}};
+type PostPreview={postId:string;authorId:string;username:string;name:string;text:string;createdAt:string;thumbnailUrl:string|null;xUrl:string;views:number;likes:number;videoCount:number};
+type PostReply={ok:boolean;error?:string;message?:string;preview?:PostPreview;production?:{published?:{saved:number;promoted:number;excluded:number;duplicates:number};author?:{username:string;added:boolean};postId?:string}};
 
 export default function FreeAuthorsPanel(){
   const [state,setState]=useState<FreeRegistry>(emptyState),[username,setUsername]=useState("");
@@ -17,6 +19,9 @@ export default function FreeAuthorsPanel(){
   const [busy,setBusy]=useState(true),[databaseHost,setDatabaseHost]=useState<string|null>(null);
   const [productionLimit,setProductionLimit]=useState<number|null>(null);
   const [production,setProduction]=useState<ProductionState|null>(null),[confirmPublish,setConfirmPublish]=useState(false);
+  const [postUrl,setPostUrl]=useState(""),[postTier,setPostTier]=useState<"S"|"A">("A"),[postKey,setPostKey]=useState("");
+  const [postPreview,setPostPreview]=useState<PostPreview|null>(null),[postBusy,setPostBusy]=useState(false);
+  const [postMessage,setPostMessage]=useState(""),[postError,setPostError]=useState("");
   const controller=useRef<AbortController|null>(null),running=useRef(false);
   const active=state.authors.find(a=>a.id===selected);
   useEffect(()=>{
@@ -27,6 +32,26 @@ export default function FreeAuthorsPanel(){
     }).catch(e=>{if(!abort.signal.aborted)setError(e.message);}).finally(()=>{if(!abort.signal.aborted)setBusy(false);});
     return()=>controller.current?.abort();
   },[]);
+  useEffect(()=>{setPostKey(sessionStorage.getItem("fx-post-secret")??sessionStorage.getItem("manual-ranking-secret")??"");},[]);
+  async function postOperation(action:"preview-post-url"|"publish-post-url"){
+    if(postBusy)return;
+    setPostBusy(true);setPostError("");setPostMessage("");
+    try{
+      const response=await fetch("/api/fxtwitter-authors",{method:"POST",cache:"no-store",headers:{"Content-Type":"application/json",
+        ...(action==="publish-post-url"?{Authorization:`Bearer ${postKey.trim()}`}:{})},
+        body:JSON.stringify({action,url:postUrl,expectedTier:postTier})});
+      const data:PostReply=await response.json();
+      if(!response.ok||!data.ok)throw Error(data.error??"投稿を確認できませんでした。");
+      if(action==="preview-post-url")setPostPreview(data.preview??null);
+      else{
+        sessionStorage.setItem("fx-post-secret",postKey.trim());
+        const p=data.production?.published,a=data.production?.author;
+        setPostMessage(`${data.message??"処理が完了しました。"} 新規${p?.saved??0}件・既存候補から${p?.promoted??0}件・対象外${p?.excluded??0}件・重複${p?.duplicates??0}件。${a?.added?"投稿者を新着巡回へ追加しました。":"投稿者は登録済みです。"}`);
+        setPostPreview(null);
+      }
+    }catch(error){setPostError(error instanceof Error?error.message:"処理に失敗しました。");}
+    finally{setPostBusy(false);}
+  }
   async function request(body:object,signal:AbortSignal){
     const response=await fetch("/api/fxtwitter-authors",{method:"POST",cache:"no-store",headers:{"Content-Type":"application/json"},body:JSON.stringify(body),signal});
     const p:Reply=await response.json();
@@ -55,6 +80,24 @@ export default function FreeAuthorsPanel(){
   const add=(event:FormEvent)=>{event.preventDefault();void operation({action:"register",username,count,expectedTier});};
   return <main className="shell">
     <header><Link href="/learning-tools#operations">← 管理トップ</Link><h1>選別投稿者を追加・一括取得</h1><p><Link href="/curated-manager">共通の投稿者管理 →</Link> ／ <Link href="/availability-monitor">再生不可動画の監視 →</Link></p><p><Link href="/fxtwitter-monitor">巡回管理・取得実績一覧 →</Link></p><p>プロフィールURLを入力して登録すると、動画取得・本番掲載・今後の新着巡回まで自動で設定します。</p></header>
+    <section className="box" aria-label="投稿URLから動画を登録">
+      <h2>投稿URLから動画を登録</h2>
+      <p>投稿URLからFxTwitterで投稿者・本文・動画を確認し、通常の掲載条件で本番へ登録します。新しい投稿者は次回以降の新着巡回にも追加します。順位は指定せず、元の投稿日時や評価に従います。</p>
+      <label> Xの投稿URL<input type="url" value={postUrl} onChange={event=>{setPostUrl(event.target.value);setPostPreview(null);}}
+        placeholder="https://x.com/username/status/123..." maxLength={512} disabled={postBusy}/></label>
+      <label> 新しい投稿者の期待Tier<select value={postTier} onChange={event=>{setPostTier(event.target.value as "S"|"A");setPostPreview(null);}} disabled={postBusy}>
+        <option value="A">A</option><option value="S">S</option></select></label>
+      <p className="muted">既に登録済みの投稿者は現在の期待Tierを維持します。画像・GIF・引用先だけの動画、削除済み・停止中・重複投稿は掲載しません。</p>
+      <button type="button" disabled={postBusy||!postUrl.trim()} onClick={()=>void postOperation("preview-post-url")}>{postBusy?"確認中…":"投稿内容を確認"}</button>
+      {postPreview?<article className="author"><h3>{postPreview.name} <small>@{postPreview.username}</small></h3>
+        <p>{postPreview.text||"本文なし"}</p><p className="muted">投稿日：{new Date(postPreview.createdAt).toLocaleString("ja-JP")} ／ 動画{postPreview.videoCount}本（登録は先頭の1本） ／ 表示数{postPreview.views} ／ いいね{postPreview.likes}</p>
+        {postPreview.thumbnailUrl?<img src={postPreview.thumbnailUrl} alt="取得した投稿の動画サムネイル" style={{maxWidth:320,width:"100%",borderRadius:8}}/>:null}
+        <p><a href={postPreview.xUrl} target="_blank" rel="noopener noreferrer">Xの投稿を開く ↗</a></p>
+        <label>本番の管理キー<input type="password" autoComplete="off" value={postKey} onChange={event=>setPostKey(event.target.value)} disabled={postBusy}/></label>
+        <button type="button" disabled={postBusy||!postKey.trim()} onClick={()=>void postOperation("publish-post-url")}>この投稿を通常の新着動画として登録</button>
+      </article>:null}
+      {postError?<p className="error" role="alert">{postError}</p>:null}{postMessage?<p className="success" role="status">{postMessage}</p>:null}
+    </section>
     <section className="box">
       <h2>選別投稿者を追加</h2>
       <form onSubmit={add}>

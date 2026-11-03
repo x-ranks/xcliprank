@@ -4,21 +4,21 @@ import LegalPage from "../components/LegalPage";
 
 export const metadata: Metadata = {
   title: "利用規約",
-  description: "X CLIP RANKの利用条件を説明します。",
+  description: "twizouの利用条件を説明します。",
   alternates: { canonical: "/terms" },
   robots: { index: false, follow: true },
 };
 
 export default function TermsPage() {
   return (
-    <LegalPage title="利用規約" lead="X CLIP RANKを利用する前に、以下の条件をご確認ください。">
+    <LegalPage title="利用規約" lead="twizouを利用する前に、以下の条件をご確認ください。">
       <section className="legal-section legal-callout">
         <h2>年齢制限</h2>
         <p>当サイトは18歳以上で、かつ居住地域の法令上成人向けコンテンツを閲覧できる方のみ利用できます。</p>
       </section>
       <section className="legal-section">
         <h2>サービスの内容</h2>
-        <p>Xclipは、X（旧Twitter）の公開投稿情報・動画URLを取得し、独自の基準によるランキング、動画の閲覧、端末への保存補助機能を提供します。再生・保存する動画はXの配信元から利用者の端末へ直接読み込まれ、Xclipでは動画ファイルの保管・再アップロードを行いません。ランキングへの掲載は、内容の推奨や適法性の保証、投稿者との提携を意味しません。</p>
+        <p>twizouは、X（旧Twitter）の公開投稿情報と管理者が登録した外部動画URLを使い、独自の基準によるランキングと動画の閲覧を提供します。X動画には端末への保存補助機能もあります。再生できる動画は元の配信元から利用者の端末へ直接読み込まれ、twizouでは動画ファイルの保管・再アップロードを行いません。ランキングへの掲載は、内容の推奨や適法性の保証、投稿者との提携を意味しません。</p>
       </section>
       <section className="legal-section">
         <h2>禁止事項</h2>

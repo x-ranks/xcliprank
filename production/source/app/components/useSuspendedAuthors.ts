@@ -23,7 +23,8 @@ export default function useSuspendedAuthors() {
     void refresh();
     const timer = window.setInterval(() => void refresh(), 15 * 60000);
     const visible = () => void refresh(); document.addEventListener("visibilitychange", visible);
-    return () => { controller.abort(); window.clearInterval(timer); document.removeEventListener("visibilitychange", visible); };
+    window.addEventListener("pageshow", visible); window.addEventListener("popstate", visible);
+    return () => { controller.abort(); window.clearInterval(timer); document.removeEventListener("visibilitychange", visible); window.removeEventListener("pageshow", visible); window.removeEventListener("popstate", visible); };
   }, []);
   return keys;
 }

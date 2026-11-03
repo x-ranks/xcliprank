@@ -1,10 +1,10 @@
 import { registrationLeaseActive } from "./registration-lease";
 import { supabaseAdmin } from "./supabase-admin";
 import { fetchFreeMediaPage, FreeCuratedError } from "./fxtwitter-curated";
-import { publishFreeCandidates, emptyPublicationOutcomes } from "./free-curated-publish";
+import { publishFreeCandidates, publishFreeReferencedPosts, emptyPublicationOutcomes } from "./free-curated-publish";
 import { newFreeMetrics, type FreeScanMetrics } from "./free-curated-metrics";
 import { importLegacyAuthors } from "./free-curated-scan";
-import { withScheduledFreeState, writeScheduledFreeState } from "./free-curated-server-store";
+import { withScheduledFreeState, writeScheduledFreeState, rememberPatrolPosts } from "./free-curated-server-store";
 import { readXState, writeXState, activeReservations, X_DAY, X_DAILY_AUTHORS } from "./x-curated-state";
 import { readFxState, writeFxState, fxCursorHash } from "./fx-curated-state";
 import { maxPostId, snowflakeTime } from "./x-curated-search";
@@ -12,7 +12,7 @@ import { unavailableKeys } from "./post-status-store";
 import { randomInt } from "node:crypto";
 
 export type FxScanOptions={directory?:string;database?:ReturnType<typeof supabaseAdmin>;now?:()=>number;
-  fetcher?:typeof fetch;pause?:()=>Promise<void>;publish?:typeof publishFreeCandidates;blocked?:()=>Promise<Set<string>>;verification?:"random-five"};
+  fetcher?:typeof fetch;pause?:()=>Promise<void>;publish?:typeof publishFreeCandidates;publishReferences?:typeof publishFreeReferencedPosts;blocked?:()=>Promise<Set<string>>;verification?:"random-five"};
 export async function scanFxCurated(options:FxScanOptions={}){
   const now=options.now??Date.now;
   return withScheduledFreeState(async state=>{
@@ -41,7 +41,13 @@ export async function scanFxCurated(options:FxScanOptions={}){
       .sort((a,b)=>a.checkedAt-b.checkedAt||a.id.localeCompare(b.id));
     if(options.verification&&eligible.length<5){stats.skipped=true;return finish("verification_needs_five_eligible_authors");}
     if(options.verification)for(let i=eligible.length-1;i>0;i--){const j=randomInt(i+1);[eligible[i],eligible[j]]=[eligible[j],eligible[i]];}
-    const due=eligible.slice(0,options.verification?5:Math.min(8,X_DAILY_AUTHORS-x.reservations.length));
+    // Reserve at most two of eight slots for a pending page or repeated failure.
+    // The remaining slots keep their oldest-checked order, and the existing
+    // rolling 24-author/day quota still applies to every attempt.
+    const capacity=options.verification?5:Math.min(8,X_DAILY_AUTHORS-x.reservations.length);
+    const priority=options.verification?[]:eligible.filter(a=>!!fx.positions[a.id]?.cursor || (a.metrics?.consecutiveFailures??0)>=2).slice(0,Math.min(2,capacity));
+    const selected=new Set(priority.map(a=>a.id));
+    const due=options.verification?eligible.slice(0,capacity):[...priority,...eligible.filter(a=>!selected.has(a.id)).slice(0,capacity-priority.length)];
     state.nextBatchAt=at+3*3600000-5*60000;await writeScheduledFreeState(state,options.directory);
     for(const author of due){
       const started=now(),metrics=author.metrics??newFreeMetrics(started);author.metrics=metrics;
@@ -66,7 +72,7 @@ export async function scanFxCurated(options:FxScanOptions={}){
         if(snowflakeTime(p.sinceId)>started)throw new FreeCuratedError(422,"取得基準が未来の時刻です。取得位置を保持しています。");
         await(options.pause??(()=>new Promise<void>(r=>setTimeout(r,5000))))();
         fx.requests++;stats.fx_requests++;await writeFxState(fx,options.directory);
-        const page=await fetchFreeMediaPage(author,100,p.cursor,options.fetcher,undefined,100,true);
+        const page=await fetchFreeMediaPage(author,100,p.cursor,options.fetcher,undefined,100,true,true);
         fx.rawPosts+=page.rawCount;stats.fetched+=page.rawCount;metrics.fetchedTotal+=page.rawCount;metrics.lastFetched=page.rawCount;
         if(!page.rawCount){stats.empty++;throw new FreeCuratedError(502,"FxTwitterの投稿一覧が空です。取得位置を保持して次の投稿者へ進みます。");}
         // Accept only attributed reposts and identical pinned duplicates, not arbitrary foreign rows.
@@ -78,25 +84,36 @@ export async function scanFxCurated(options:FxScanOptions={}){
         const previousNewest=p.newestId??(p.cursor?p.upperId:p.sinceId);
         const newest=timeline.ids.filter(id=>BigInt(id)<=BigInt(upper)).reduce<string>((a,b)=>maxPostId(a,b)!,previousNewest!);
         const candidates=page.posts.filter(v=>BigInt(v.x_post_id)>BigInt(p.sinceId)&&BigInt(v.x_post_id)<=BigInt(upper));
-        metrics.lastNew=candidates.length;metrics.newTotal+=candidates.length;stats.new_posts+=candidates.length;
+        const referenced=page.referencedPosts.filter(r=>r.kind==="quote"?BigInt(r.viaPostId)>BigInt(p.sinceId)&&BigInt(r.viaPostId)<=BigInt(upper):BigInt(r.candidate.x_post_id)<=(((BigInt(started)-1288834974657n)<<22n)+4194303n));
+        const candidateCount=candidates.length+referenced.length;
+        metrics.lastNew=candidateCount;metrics.newTotal+=candidateCount;stats.new_posts+=candidateCount;
         // Reposts have original-post IDs (not repost time). A mixed/repost-only page cannot prove the lower boundary.
-        const reached=timeline.ids.length>0&&!c.reposts&&!c.context&&!c.duplicates&&timeline.ids.every(id=>BigInt(id)<=BigInt(p.sinceId));
+        const reached=timeline.ids.length>0&&!c.reposts&&!c.context&&!c.duplicates&&!c.foreign&&timeline.ids.every(id=>BigInt(id)<=BigInt(p.sinceId));
         const next=reached?null:page.nextCursor;
         if(next&&(next===p.cursor||p.seenCursorHashes.includes(fxCursorHash(next))||p.seenCursorHashes.length>=200))throw new FreeCuratedError(502,"FxTwitterのページ送りが進みません。取得位置を保持しています。");
-        const saved=candidates.length?await(options.publish??publishFreeCandidates)(author,candidates,{database:db}):{saved:0,promoted:0,outcomes:emptyPublicationOutcomes()};
+        const ownSaved=candidates.length?await(options.publish??publishFreeCandidates)(author,candidates,{database:db}):{saved:0,promoted:0,savedIds:[] as string[],outcomes:emptyPublicationOutcomes()};
+        // A later reference-table/DB failure must not lose activity receipts for
+        // already inserted own posts. The timeline checkpoint is still uncommitted.
+        if("savedIds" in ownSaved&&ownSaved.savedIds.length){rememberPatrolPosts(state,ownSaved.savedIds,started);await writeScheduledFreeState(state,options.directory);}
+        const refSaved=referenced.length?await(options.publishReferences??publishFreeReferencedPosts)(author,referenced,{database:db,blocked}):{saved:0,promoted:0,savedIds:[] as string[],outcomes:emptyPublicationOutcomes()};
+        const saved={saved:ownSaved.saved+refSaved.saved,promoted:ownSaved.promoted+refSaved.promoted,savedIds:[...("savedIds" in ownSaved?ownSaved.savedIds:[]),...refSaved.savedIds],outcomes:emptyPublicationOutcomes()};
+        for(const key of Object.keys(saved.outcomes) as (keyof typeof saved.outcomes)[])saved.outcomes[key]=(ownSaved.outcomes?.[key]??0)+refSaved.outcomes[key];
         if(saved.outcomes){
-          metrics.lastPublication={candidates:candidates.length,saved:saved.saved,promoted:saved.promoted,...saved.outcomes};
+          metrics.lastPublication={candidates:candidateCount,saved:saved.saved,promoted:saved.promoted,...saved.outcomes};
           for(const key of Object.keys(stats.publication) as (keyof typeof stats.publication)[])stats.publication[key]+=saved.outcomes[key];
         }
         const count=saved.saved+saved.promoted;author.savedTotal+=count;stats.saved+=count;
+        rememberPatrolPosts(state,"savedIds" in saved && Array.isArray(saved.savedIds) ? saved.savedIds : [],started);
+        // A later cursor write may fail; keep the successfully inserted post IDs for the next edition.
+        await writeScheduledFreeState(state,options.directory);
         // Commit only AFTER publication. A DB failure replays the same page; deduplication stays in publishFreeCandidates.
         p.checkedAt=started;
         if(next){p.upperId=upper;p.newestId=newest;p.cursor=next;p.seenCursorHashes.push(fxCursorHash(next));stats.pending++;}
         else{p.sinceId=maxPostId(p.sinceId,newest)!;p.upperId=null;p.cursor=null;p.seenCursorHashes=[];delete p.newestId;
           author.latestId=p.sinceId;author.pendingCursor=null;author.pendingLatestId=null;author.baselineId=null;}
         metrics.lastSaved=count;metrics.lastSuccessAt=now();metrics.successCount++;metrics.consecutiveFailures=0;
-        metrics.lastOutcome=candidates.length?"success":"no_new";
-        metrics.recentVideos=candidates.slice(0,10).map(v=>({id:v.x_post_id,at:v.created_at,url:v.x_url}));author.lastError=null;
+        metrics.lastOutcome=candidateCount?"success":"no_new";
+        metrics.recentVideos=[...candidates,...referenced.map(r=>r.candidate)].slice(0,10).map(v=>({id:v.x_post_id,at:v.created_at,url:v.x_url}));author.lastError=null;
       }catch(e){
         stats.failed++;metrics.failureCount++;metrics.consecutiveFailures++;metrics.lastOutcome="error";
         author.lastError=e instanceof FreeCuratedError&&e.status===429?"FxTwitter取得制限（HTTP 429）。取得位置を保持して次の投稿者へ進みます。":

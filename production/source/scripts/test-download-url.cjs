@@ -20,19 +20,19 @@ const empty=body();empty.includes.media.forEach(m=>m.variants=[{content_type:'vi
 const withheld=body();withheld.data.withheld={country_codes:['JP']};assert.throws(()=>pure.selectDownloadMedia(withheld,'123'));
 const m={exports:{}};const code=ts.transpileModule(fs.readFileSync('app/api/video-resolve/route.ts','utf8'),{compilerOptions:{module:ts.ModuleKind.CommonJS,target:ts.ScriptTarget.ES2022,esModuleInterop:true}}).outputText;let dbReads=0;
 new Function('require','module','exports',code)(n=>n.includes('supabase-admin')?{supabaseAdmin:()=>{dbReads++;return{from(){return{select(){return{eq(){return{maybeSingle:async()=>({data:post,error:null})};}};}};}};}}:n.endsWith('download-url-store')?{lookupPublicVideo:async()=>{throw Error('Must not call API');},downloadSecret:async()=>''}:pure,m,m.exports);
-const req=(data,origin)=>new Request('https://xcliprank.com/api/video-resolve',{method:'POST',headers:{'content-type':'application/json',...(origin?{origin}:{})},body:typeof data==='string'?data:JSON.stringify(data)});
-let r=await m.exports.POST(req({url:'https://x.com/test/status/123',consent:true},'https://xcliprank.com'));assert.equal(r.status,200);assert.equal((await r.json()).source,'stored');
+const req=(data,origin)=>new Request('https://twizou.net/api/video-resolve',{method:'POST',headers:{'content-type':'application/json',...(origin?{origin}:{})},body:typeof data==='string'?data:JSON.stringify(data)});
+let r=await m.exports.POST(req({url:'https://x.com/test/status/123',consent:true},'https://twizou.net'));assert.equal(r.status,200);assert.equal((await r.json()).source,'stored');
 r=await m.exports.POST(req({url:'https://x.com/test/status/123',consent:true},'https://evil.test'));assert.equal(r.status,403);
 r=await m.exports.POST(req({url:'https://x.com/test/status/123',consent:false}));assert.equal(r.status,400);
 r=await m.exports.POST(req('bad JSON'));assert.equal(r.status,400);assert.equal(dbReads,1);
-r=await m.exports.POST(new Request('http://xcliprank.com/api/video-resolve',{method:'POST',headers:{origin:'https://xcliprank.com'},body:JSON.stringify({url:'https://x.com/test/status/123',consent:true})}));assert.equal(r.status,200,'Passenger internal HTTP retains public HTTPS origin');
+r=await m.exports.POST(new Request('http://twizou.net/api/video-resolve',{method:'POST',headers:{origin:'https://twizou.net'},body:JSON.stringify({url:'https://x.com/test/status/123',consent:true})}));assert.equal(r.status,200,'Passenger internal HTTP retains public HTTPS origin');
 r=await m.exports.POST(req('x'.repeat(5000)));assert.equal(r.status,400);assert.equal(dbReads,2);
 const route={exports:{}};let selected=null;const mediaFetch=global.fetch;let mediaRequests=0;
 const downloadHelper=load('lib/video-download');
 new Function('require','module','exports',ts.transpileModule(fs.readFileSync('app/api/video-download/route.ts','utf8'),{compilerOptions:{module:ts.ModuleKind.CommonJS,target:ts.ScriptTarget.ES2022,esModuleInterop:true}}).outputText)(n=>n.includes('supabase-admin')?{supabaseAdmin:()=>({from:()=>({select:()=>({eq:()=>({maybeSingle:async()=>({data:selected,error:null})})})})})}:n.endsWith('download-url-store')?{downloadSecret:async()=>'test-secret'}:n.endsWith('video-download')?downloadHelper:pure,route,route.exports);
 try{
  global.fetch=async(url)=>{mediaRequests++;assert.equal(url,'https://video.twimg.com/high.mp4');return new Response(new Uint8Array([1,2,3]),{headers:{'content-type':'video/mp4'}});};
- const endpoint='https://xcliprank.com/api/video-download?postId=123&consent=1&token='+encodeURIComponent(result.videos[0].token);
+ const endpoint='https://twizou.net/api/video-download?postId=123&consent=1&token='+encodeURIComponent(result.videos[0].token);
  r=await route.exports.GET(new Request(endpoint));assert.equal(r.status,200);const direct=await r.json();assert.equal(direct.url,'https://video.twimg.com/high.mp4');assert.equal(direct.mode,'browser-direct');assert.equal(r.headers.get('content-disposition'),null);
  selected={...post,moderation_blocked:true};r=await route.exports.GET(new Request(endpoint));assert.equal(r.status,404);assert.equal(mediaRequests,0);
  selected=null;r=await route.exports.GET(new Request(endpoint+'tampered'));assert.equal(r.status,404);assert.equal(mediaRequests,0);

@@ -34,3 +34,19 @@ export function readDirectVideoDuration(raw: string, timeoutMs = 12000): Promise
     try { video.src = url; video.load(); } catch { finish(null); }
   });
 }
+
+// Duration is small JSON from free post metadata, never a video-data request.
+export async function readPostVideoDuration(postId: string, signal: AbortSignal,
+  fetcher: typeof fetch = fetch): Promise<number | null> {
+  if (!/^\d{2,20}$/.test(postId) || signal.aborted) return null;
+  try {
+    const response = await fetcher(`/api/video-playback-url?postId=${encodeURIComponent(postId)}`, {
+      signal, cache: "no-store", credentials: "same-origin",
+    });
+    if (!response.ok) { await response.body?.cancel(); return null; }
+    const body = await response.json();
+    if (signal.aborted || body.mode !== "browser-direct" || !directPlaybackUrl(body.url)) return null;
+    const value = body.durationSeconds;
+    return typeof value === "number" && Number.isFinite(value) && value > 0 && value <= 86400 ? value : null;
+  } catch { return null; }
+}

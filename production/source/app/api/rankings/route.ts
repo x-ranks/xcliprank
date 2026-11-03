@@ -1,4 +1,8 @@
+import { createRankingReadCache } from "../../../lib/ranking-read-cache";
+import { readCuratedReferences, eligibleCuratedReferences, referencePermitsPost } from "../../../lib/curated-video-references";
 import { rememberRanking } from "../../../lib/public-ranking-history";
+import { applyManualPlacements, readManualState, type ManualPlacement } from "../../../lib/manual-ranking";
+import { eligibleManualXIds } from "../../../lib/manual-x-permissions";
 import { createPublicCatalog } from "../../../lib/public-catalog-store";
 import { publicCatalogDirectory } from "../../../lib/public-save-secret";
 import { readRankingUpdate } from "../../../lib/ranking-update";
@@ -6,9 +10,11 @@ import { isUnavailablePost } from "../../../lib/post-status";
 import { unavailableKeys } from "../../../lib/post-status-store";
 import { buildLiquidRankings, liquidityClock } from "../../../lib/ranking-liquidity";
 import { buildNewestFeed, videoIdentity, NEWEST_TOTAL, NEWEST_PAGE_SIZE, NEWEST_AUTHOR_LIMIT } from "../../../lib/newest-feed";
-import { editionId, editionEntry, readEdition, saveEdition, validateEditionId, type RankingEdition } from "../../../lib/ranking-editions";
+import { readScheduledFreeState } from "../../../lib/free-curated-server-store";
+import { editionId, editionEntry, readEdition, saveEdition, editionCacheRevision, validateEditionId, type RankingEdition } from "../../../lib/ranking-editions";
 import { parseRankingPage, newestPageHref } from "../../../lib/ranking-pagination";
 import {
+  after,
   NextRequest,
   NextResponse
 } from "next/server";
@@ -135,6 +141,11 @@ const MAX_DISCOVERY_POSTS = 0;
 const MAX_POSTS_PER_AUTHOR = 20;
 const MAX_FALLBACK_POSTS_PER_AUTHOR = 20;
 const VISUAL_PREFERENCE_WEIGHT = 0.2;
+
+// Off-page rows still participate in current safety checks and page counts.
+// Metrics, images and model payloads are only needed in the displayed window.
+const ELIGIBILITY_FIELDS = "id,x_post_id,author_id,author_username,video_url,adult_tier,manual_tier,text,content_category,manual_review_note";
+type CandidateOptions = { before?: string; newestFirst?: boolean; poolLimit?: number; ids?: string[]; summaryIds?: ReadonlySet<string> };
 
 function isContentCategory(
   value: unknown
@@ -340,16 +351,18 @@ async function fetchCandidates(
   since: string | null,
   authorIds?: string[],
   allowedTiers: readonly string[] = DISPLAY_TIERS,
-  options: { before?: string; newestFirst?: boolean; poolLimit?: number; ids?: string[] } = {}
+  options: CandidateOptions = {}
 ) {
   // Keep PostgREST URLs bounded: 500 long X IDs plus author IDs can exceed proxy limits.
   if (options.ids?.length === 0) return [];
   if (options.ids && options.ids.length > 100) {
     const rows: any[] = [];
-    for (let offset = 0; offset < options.ids.length; offset += 100) {
-      rows.push(...await fetchCandidates(since, authorIds, allowedTiers, {
-        ...options, ids: options.ids.slice(offset, offset + 100), poolLimit: 100
-      }));
+    // Three bounded ID queries at a time; preserve the original result order.
+    for (let start = 0; start < options.ids.length; start += 300) {
+      const groups = [0, 100, 200].map(offset => options.ids!.slice(start + offset, start + offset + 100)).filter(ids => ids.length);
+      rows.push(...(await Promise.all(groups.map(ids => fetchCandidates(since, authorIds, allowedTiers, {
+        ...options, ids, poolLimit: 100
+      })))).flat());
     }
     return rows;
   }
@@ -363,10 +376,11 @@ async function fetchCandidates(
   const supabase =
     supabaseAdmin();
 
+  function pageQuery() {
   let query =
     supabase
       .from("posts")
-      .select("*")
+      .select(options.ids?.every(id => options.summaryIds?.has(id)) ? ELIGIBILITY_FIELDS : "*")
 
       /*
        * 表示可能
@@ -450,14 +464,23 @@ async function fetchCandidates(
     );
   }
 
+    return query;
+  }
   const data: any[] = [];
   const poolLimit = options.poolLimit ?? 500;
-  for (let offset = 0; offset < poolLimit; offset += 500) {
-    const pageSize = Math.min(500, poolLimit - offset);
-    const page = await query.range(offset, offset + pageSize - 1);
-    if (page.error) throw page.error;
-    data.push(...(page.data ?? []));
-    if ((page.data?.length ?? 0) < pageSize) break;
+  // Separate builders are required: PostgREST .range() mutates its builder.
+  // Cold edition scans use at most three 500-row pages concurrently.
+  for (let start = 0; start < poolLimit; start += 1500) {
+    const offsets = [0, 500, 1000].map(offset => start + offset).filter(offset => offset < poolLimit);
+    const pages = await Promise.all(offsets.map(offset => pageQuery().range(offset, Math.min(poolLimit, offset + 500) - 1)));
+    for (const page of pages) if (page.error) throw page.error;
+    let complete = false;
+    for (let i = 0; i < pages.length; i++) {
+      const pageSize = Math.min(500, poolLimit - offsets[i]);
+      data.push(...(pages[i].data ?? []));
+      if ((pages[i].data?.length ?? 0) < pageSize) { complete = true; break; }
+    }
+    if (complete) break;
   }
 
   const blocked = await unavailableKeys();
@@ -474,15 +497,25 @@ async function fetchCandidatePool(
   since: string | null,
   curatedAuthorIds: Set<string>,
   allowedTiers: readonly string[] = DISPLAY_TIERS,
-  options: { before?: string; newestFirst?: boolean; poolLimit?: number; ids?: string[] } = {}
+  options: CandidateOptions = {}
 ) {
-  // ランキング候補も選別投稿者だけをDBから取得する。
-  return fetchCandidates(
-    since,
-    [...curatedAuthorIds],
-    allowedTiers,
-    options
-  );
+  const db=supabaseAdmin();
+  // Eligibility is checked on every request; ID batches are bounded and concurrent.
+  const ownPromise=fetchCandidates(since,[...curatedAuthorIds],allowedTiers,options);
+  const own=await ownPromise;
+  // An owned, currently eligible row needs no reference permission. Only missing
+  // IDs can require source/selected-author reference checks during hydration.
+  const ownIds=new Set(own.map(row=>String(row.x_post_id)));
+  const referenceIds=options.ids?.filter(id=>!ownIds.has(id));
+  const refs=await eligibleCuratedReferences(db,await readCuratedReferences(db,referenceIds,[...curatedAuthorIds]));
+  const ids=[...new Set(refs.filter(r=>curatedAuthorIds.has(r.selected_author_id)).map(r=>r.post_id))]
+    .sort((a,b)=>BigInt(a)>BigInt(b)?-1:BigInt(a)<BigInt(b)?1:0).slice(0,options.poolLimit??500);
+  const linked=ids.length?await fetchCandidates(since,undefined,allowedTiers,{...options,ids,poolLimit:ids.length}):[];
+  const manualEntries = options.ids?.length ? (await readManualState()).entries : [];
+  const manualIds = [...new Set(manualEntries.flatMap(entry => entry.xApproval && options.ids?.includes(entry.xApproval.postId) ? [entry.xApproval.postId] : []))];
+  const manualRows = manualIds.length ? await fetchCandidates(since,undefined,allowedTiers,{...options,ids:manualIds,poolLimit:manualIds.length,summaryIds:undefined}) : [];
+  const permitted = manualRows.length ? await eligibleManualXIds(manualRows,await unavailableKeys()) : new Set<string>();
+  return [...new Map([...own,...linked.filter(row=>referencePermitsPost(row,refs)),...manualRows.filter(row=>permitted.has(String(row.x_post_id)))].map(row=>[String(row.x_post_id),row])).values()];
 }
 
 async function fetchActiveCuratedAuthorIds() {
@@ -1065,22 +1098,52 @@ async function createRankingEdition(snapshot: number, blocked: Set<string>) {
     fetchCandidatePool(null, authorIds, EVERGREEN_TIERS, { before: clock.since, newestFirst: true, poolLimit: 3000 }),
     fetchCandidatePool(new Date(snapshot - 7 * 86400000).toISOString(), authorIds)
   ]);
-  let fallbackPromise: Promise<any[]> | undefined;
-  const fallback = () => fallbackPromise ??= fetchCandidatePool(null, authorIds, EVERGREEN_TIERS);
-  const [weekly, weeklyBase] = await Promise.all([
-    createWeeklySelection(weeklyRaw, authorIds, true, fallback),
-    createWeeklySelection(weeklyRaw, authorIds, false, fallback)
-  ]);
-  const eligibleRaw = [...new Map([...recentRaw, ...archiveRaw].map(p => [String(p.x_post_id ?? p.id), p])).values()];
+  const registrationState = await readScheduledFreeState();
+  const activitySince = snapshot - 24 * 60 * 60 * 1000;
+  const registrationTimes = new Map((registrationState.recentRegistrations ?? [])
+    .filter(row => row.at >= activitySince && row.at <= snapshot).map(row => [row.id, row.at]));
+  const patrolTimes = new Map((registrationState.recentPatrolPosts ?? [])
+    .filter(row => row.at >= activitySince && row.at <= snapshot).map(row => [row.id, row.at]));
+  const fetchedIds = new Set([...recentRaw, ...archiveRaw].map(post => String(post.x_post_id ?? post.id)));
+  const activityIds = [...new Set([...registrationTimes.keys(), ...patrolTimes.keys()])].filter(id => !fetchedIds.has(id));
+  const activityRaw: any[] = [];
+  for (let start = 0; start < activityIds.length; start += 100) {
+    const batch = activityIds.slice(start, start + 100);
+    activityRaw.push(...await fetchCandidatePool(null, authorIds, DISPLAY_TIERS, { ids: batch, poolLimit: batch.length }));
+  }
+  const eligibleRaw = [...new Map([...recentRaw, ...archiveRaw, ...activityRaw].map(p => [String(p.x_post_id ?? p.id), p])).values()];
   const filtered = applyContentFilter(eligibleRaw);
   const recent = sortNewestPosts(filtered.posts.filter(p => Date.parse(p.created_at) >= Date.parse(clock.since) && Date.parse(p.created_at) <= snapshot));
   const archive = filtered.posts.filter(p => Date.parse(p.created_at) < Date.parse(clock.since));
+  const tierPriority: Record<string, number> = { S: 0, "A+": 1, A: 2 };
+  const protectedIds = new Set<string>(), protectedMedia = new Set<string>(), protectedAuthors = new Map<string, number>();
+  const registrationCandidates = filtered.posts.filter(post => registrationTimes.has(String(post.x_post_id)) &&
+    Object.prototype.hasOwnProperty.call(tierPriority, String(post.adult_tier)))
+    .sort((a, b) => tierPriority[String(a.adult_tier)] - tierPriority[String(b.adult_tier)] ||
+      (registrationTimes.get(String(b.x_post_id)) ?? 0) - (registrationTimes.get(String(a.x_post_id)) ?? 0) ||
+      Date.parse(b.created_at) - Date.parse(a.created_at));
+  for (const post of registrationCandidates) {
+    if (protectedIds.size >= 5) break;
+    const author = String(post.author_id), media = videoIdentity(post);
+    if ((protectedAuthors.get(author) ?? 0) >= 3 || media && protectedMedia.has(media)) continue;
+    protectedIds.add(String(post.x_post_id)); if (media) protectedMedia.add(media);
+    protectedAuthors.set(author, (protectedAuthors.get(author) ?? 0) + 1);
+  }
+  const availableElsewhere = (post: any) => !protectedIds.has(String(post.x_post_id ?? post.id)) &&
+    (!videoIdentity(post) || !protectedMedia.has(videoIdentity(post)!));
+  let fallbackPromise: Promise<any[]> | undefined;
+  const fallback = () => fallbackPromise ??= fetchCandidatePool(null, authorIds, EVERGREEN_TIERS).then(rows => rows.filter(availableElsewhere));
+  const weeklyCandidates = weeklyRaw.filter(availableElsewhere);
+  const [weekly, weeklyBase] = await Promise.all([
+    createWeeklySelection(weeklyCandidates, authorIds, true, fallback),
+    createWeeklySelection(weeklyCandidates, authorIds, false, fallback)
+  ]);
   // Preserve the current daily 85 archive slots, recent slots and seeded display selection.
-  const dailyPlan = buildLiquidRankings(recent, archive, clock.since, clock.seed);
+  const dailyPlan = buildLiquidRankings(recent.filter(availableElsewhere), archive.filter(availableElsewhere), clock.since, clock.seed);
   const reservedRows = [...dailyPlan.daily, ...weekly.data, ...weeklyBase.data];
   const reserved = new Set(reservedRows.map(p => String(p.x_post_id ?? p.id)));
   const reservedMedia = new Set(reservedRows.map(videoIdentity).filter((key): key is string => key !== null));
-  const newest = buildNewestFeed(recent, archive, reserved, clock.seed, reservedMedia);
+  const newest = buildNewestFeed(recent, archive, reserved, clock.seed, reservedMedia, registrationTimes, patrolTimes);
   const { posts: _posts, ...filterMetrics } = filtered;
   const { data: _weekly, ...weeklyMeta } = weekly;
   const { data: _weeklyBase, ...weeklyBaseMeta } = weeklyBase;
@@ -1094,6 +1157,7 @@ async function createRankingEdition(snapshot: number, blocked: Set<string>) {
       authorCount: authorIds.size, filtered: { ...filterMetrics, candidateCount: filtered.posts.length },
       weekly: weeklyMeta, weeklyBase: weeklyBaseMeta,
       liquidity: { ...dailyPlan.metrics, newRecent: newest.newRecent, newArchive: newest.newArchive,
+        newRegistrationPriority: newest.priorityCount,
         newArchiveTarget: NEWEST_TOTAL - newest.newRecent, trendingShortfall: newest.shortfall,
         newArchiveShortfall: newest.shortfall, overlap: 0, weeklyOverlap: 0 },
       since: clock.since, generatedAt: new Date().toISOString()
@@ -1106,14 +1170,30 @@ async function loadRankingEdition(requested: string | null) {
   const clock = liquidityClock(), blocked = await unavailableKeys();
   const edition = requested ?? editionId(clock.snapshot, blocked);
   validateEditionId(edition);
+  // The previous five-minute order remains usable briefly while the new order
+  // is prepared after the response. Every displayed row is still rechecked below.
+  // Explicit historical URLs never silently switch editions.
+  if (!requested && Date.now() - clock.snapshot < 60000) {
+    const ready = await readEdition(edition);
+    if (ready) return ready;
+    const previous = await readEdition(editionId(clock.snapshot - 300000, blocked));
+    if (previous) {
+      try { after(async () => { try { await prepareCurrentEdition(edition, clock.snapshot, blocked); } catch { console.warn("RANKING_PREPARATION_FAILED"); } }); }
+      catch { /* No background lifetime outside a Next request. */ }
+      return previous;
+    }
+  }
+  return prepareCurrentEdition(edition, clock.snapshot, blocked, Boolean(requested));
+}
+async function prepareCurrentEdition(edition: string, snapshot: number, blocked: Set<string>, historical = false) {
   let promise = rankingEditions.get(edition);
   if (!promise) {
     promise = (async () => {
       const saved = await readEdition(edition);
       if (saved) return saved;
       // Historical URLs never reconstruct or replace their order from a changed database.
-      if (requested) throw Error("RANKING_EDITION_EXPIRED");
-      return saveEdition(await createRankingEdition(clock.snapshot, blocked));
+      if (historical) throw Error("RANKING_EDITION_EXPIRED");
+      return saveEdition(await createRankingEdition(snapshot, blocked));
     })().catch(error => { rankingEditions.delete(edition); throw error; });
     rankingEditions.set(edition, promise);
     while (rankingEditions.size > 4) rankingEditions.delete(rankingEditions.keys().next().value!);
@@ -1125,14 +1205,24 @@ async function editionRankingResponse(req: NextRequest, range: RangeType, visual
   const pageValue = req.nextUrl.searchParams.get("page");
   const page = parseRankingPage(pageValue);
   if (range !== "trending" && pageValue != null) throw Error("INVALID_RANKING_PAGE");
+  const requestStarted = performance.now();
   const plan = await loadRankingEdition(req.nextUrl.searchParams.get("edition"));
+  const editionFinished = performance.now();
   const key = range === "weekly" && !visual ? "weeklyBase" : range;
   const entries = plan.plans[key];
-  const totalPages = Math.max(1, Math.ceil(entries.length / NEWEST_PAGE_SIZE));
-  if (range === "trending" && page > totalPages) throw Error("RANKING_PAGE_NOT_FOUND");
+  const currentEdition = editionId(liquidityClock().snapshot, await unavailableKeys());
   // Hydrate only the requested ranking; reevaluate current DB safety and active author state.
-  const authorIds = await fetchActiveCuratedAuthorIds();
-  const rows = entries.length ? await fetchCandidatePool(null, authorIds, DISPLAY_TIERS, { ids: entries.map(p => p.id), poolLimit: 500 }) : [];
+  const [authorIds, manualState] = await Promise.all([
+    fetchActiveCuratedAuthorIds(),
+    plan.edition === currentEdition || !req.nextUrl.searchParams.get("edition") ? readManualState() : Promise.resolve({ entries: [] })
+  ]);
+  const manual = manualState.entries.filter(row => row.positions[range] !== null);
+  // Keep every frozen slot and its fresh permissions. Without manual placements,
+  // only the requested 100-ID batch needs full display fields (50 visible rows).
+  const summaryIds = range === "trending" && pageValue != null && manual.length === 0
+    ? new Set(entries.filter((_, index) => index < (page - 1) * NEWEST_PAGE_SIZE || index >= page * NEWEST_PAGE_SIZE).map(entry => entry.id))
+    : undefined;
+  const rows = entries.length ? await fetchCandidatePool(null, authorIds, DISPLAY_TIERS, { ids: entries.map(p => p.id), poolLimit: 500, summaryIds }) : [];
   const filtered = applyContentFilter(rows);
   const byId = new Map(filtered.posts.map(p => [String(p.x_post_id ?? p.id), p]));
   const blocked = await unavailableKeys();
@@ -1145,10 +1235,27 @@ async function editionRankingResponse(req: NextRequest, range: RangeType, visual
     const { id: _id, ...decoration } = entry;
     return { ...row, ...decoration, ranking_position: index + 1 };
   });
-  const allData = hydrated.filter((p): p is NonNullable<typeof p> => p !== null);
+  const safeData = hydrated.filter((p): p is NonNullable<typeof p> => p !== null);
+  const manualXIds = manual.map(row => row.url.match(/(?:x\.com|twitter\.com)\/[^/]+\/status\/(\d+)/)?.[1]).filter((id): id is string => !!id);
+  const extraRows = manualXIds.length ? await fetchCandidatePool(null, authorIds, DISPLAY_TIERS, { ids: manualXIds, poolLimit: 100 }) : [];
+  const extra = applyContentFilter(extraRows).posts.filter(row => !isUnavailablePost(row, blocked));
+  const originalIds = new Set(safeData.map(row => String(row.x_post_id)));
+  const eligibleXIds = new Set([...safeData, ...extra].map(row => String(row.x_post_id)));
+  const placements = manual.filter(row => { const id = row.url.match(/(?:x\.com|twitter\.com)\/[^/]+\/status\/(\d+)/)?.[1]; return !id || eligibleXIds.has(id); });
+  const candidates = [...safeData, ...extra.filter(row => !originalIds.has(String(row.x_post_id)))];
+  const allData = (placements.length ? applyManualPlacements(candidates, placements, range, range === "trending" ? NEWEST_TOTAL : 100, blocked) : safeData).map(post => {
+    if (!("mediaUrl" in post)) return post;
+    const row = post as ManualPlacement & { x_post_id: string; ranking_position: number };
+    return { x_post_id: row.x_post_id, manual_id: row.id, manual_media_url: row.mediaUrl,
+      manual_title: row.title, x_url: row.url, preview_image_url: row.posterUrl,
+      video_url: row.mediaUrl, video_bitrate: null, author_username: null, author_name: row.title,
+      views: 0, likes: 0, bookmarks: null, reposts: 0, replies: 0, score: 0, adult_tier: null,
+      created_at: row.updatedAt, ranking_position: row.ranking_position };
+  });
+  const totalPages = Math.max(1, Math.ceil(allData.length / NEWEST_PAGE_SIZE));
+  if (range === "trending" && page > totalPages) throw Error("RANKING_PAGE_NOT_FOUND");
   const paginated = range === "trending" && pageValue != null;
-  const data = (paginated ? hydrated.slice((page - 1) * NEWEST_PAGE_SIZE, page * NEWEST_PAGE_SIZE) : hydrated)
-    .filter((p): p is NonNullable<typeof p> => p !== null);
+  const data = paginated ? (placements.length ? allData : hydrated).slice((page - 1) * NEWEST_PAGE_SIZE, page * NEWEST_PAGE_SIZE).filter((p): p is NonNullable<typeof p> => p !== null) : allData;
   const tierCounts = data.reduce<Record<string, number>>((counts, post) => {
     const tier = String(post.adult_tier); counts[tier] = (counts[tier] ?? 0) + 1; return counts;
   }, {});
@@ -1160,12 +1267,13 @@ async function editionRankingResponse(req: NextRequest, range: RangeType, visual
     previousHref: page > 1 ? newestPageHref(page - 1, plan.edition) : null,
     nextHref: page < totalPages ? newestPageHref(page + 1, plan.edition) : null
   } : undefined;
+  const responseHeaders = { "Cache-Control": "no-store", "Server-Timing": `edition;dur=${(editionFinished-requestStarted).toFixed(1)}, hydrate;dur=${(performance.now()-editionFinished).toFixed(1)}` };
   if (range === "weekly") {
     const meta = plan.metadata[key];
     return NextResponse.json({ ...meta, ...common,
       rankingMix: { ...meta.rankingMix, curatedSelectedCount: allData.length },
       visualPreference: { ...meta.visualPreference, scoredCount: allData.filter(p => p.visual_preference_applied).length }
-    }, { headers: { "Cache-Control": "no-store" } });
+    }, { headers: responseHeaders });
   }
   const metrics = plan.metadata.filtered;
   return NextResponse.json({
@@ -1181,10 +1289,10 @@ async function editionRankingResponse(req: NextRequest, range: RangeType, visual
       currentVisibleArchive: allData.filter(p => p.ranking_supplemented).length,
       currentShortfall: Math.max(0, (range === "trending" ? NEWEST_TOTAL : 100) - allData.length) },
     tierPriority: DISPLAY_TIERS,
-    rankingMethod: range === "trending" ? "recent first by page; author spread within 50; A-or-higher archive; disjoint from daily and weekly" : "daily random A-or-higher selection and display; score independent",
+    rankingMethod: range === "trending" ? "five high-tier fresh registrations; then newly collected posts; then post time; max three per author per page; one high-tier older post per page; disjoint from daily and weekly" : "daily random A-or-higher selection and display; score independent",
     displayOrder: range === "daily" ? "daily_seeded_random" : "recent_pages_author_spread",
     visualPreference: { enabled: false, weight: 0, scoredCount: 0 }
-  }, { headers: { "Cache-Control": "no-store" } });
+  }, { headers: responseHeaders });
 }
 
 
@@ -1274,4 +1382,59 @@ async function rankingResponse(
 }
 
 
-export async function GET(req: NextRequest) { return rememberRanking(await rankingResponse(req), (ids, at) => createPublicCatalog(publicCatalogDirectory()).ranked(ids, at)); }
+async function uncachedRanking(req: NextRequest) {
+  const started = performance.now();
+  const response = await rankingResponse(req), historyStarted = performance.now();
+  const result = await rememberRanking(response, (ids, at) => createPublicCatalog(publicCatalogDirectory()).ranked(ids, at));
+  result.headers.append("Server-Timing", `history;dur=${(performance.now()-historyStarted).toFixed(1)}, ranking;dur=${(performance.now()-started).toFixed(1)}`);
+  return result;
+}
+
+let publicReadCache: ReturnType<typeof createRankingReadCache> | undefined;
+const siblingWarmups = new Set<string>();
+export async function GET(req: NextRequest) {
+  const query = req.nextUrl.searchParams;
+  // Public ranking data only. Unknown queries, proxy mode, auth and status checks
+  // never enter this cache. HTML/RSC and management responses retain their policy.
+  const eligible = process.env.NODE_ENV === "production" && process.env.XCLIP_RANKING_CACHE_DISABLED !== "1" &&
+    !process.env.RANKINGS_SOURCE_URL?.trim() && !req.headers.has("authorization") &&
+    ["trending", "daily", "weekly"].includes(query.get("range") ?? "trending") &&
+    [...query.keys()].every(key => ["range", "page", "edition", "visual"].includes(key) && query.getAll(key).length === 1);
+  if (!eligible) return uncachedRanking(req);
+  try {
+    const [blocked, manual] = await Promise.all([unavailableKeys(), readManualState()]);
+    const current = editionId(liquidityClock().snapshot, blocked);
+    // Files are reread on every cache lookup. DB-only changes have a maximum
+    // 30-second reuse window; playback/detail routes still check current access.
+    const preparedRevision = await editionCacheRevision(current);
+    const key = JSON.stringify([preparedRevision, query.get("range") ?? "trending", query.get("page"), query.get("edition") ?? current,
+      query.get("visual") === "0", current, [...blocked].sort(), manual.revision, manual.entries]);
+    const started = performance.now();
+    const result = await (publicReadCache ??= createRankingReadCache()).get(key, () => uncachedRanking(req));
+    result.headers.append("Server-Timing", `cache-lookup;dur=${(performance.now()-started).toFixed(1)}`);
+    if (result.ok && result.headers.get("X-Twizou-Ranking-Cache") === "HIT" && Number(result.headers.get("X-Twizou-Ranking-Cache-Age-Ms")) >= 15000) {
+      // Refresh before expiry while serving only still-valid data. Expired data
+      // is never served, even when the background refresh fails or runs slowly.
+      try { after(async () => { try { await publicReadCache!.refresh(key, () => uncachedRanking(req)); } catch { /* Retry on later demand. */ } }); }
+      catch { /* No background lifetime outside a Next request. */ }
+    }
+    if (result.ok && result.headers.get("X-Twizou-Ranking-Cache") === "MISS" && (!query.get("edition") || query.get("edition") === current)) {
+      const bucket = current + ":" + Math.floor(Date.now() / 30000);
+      if (!siblingWarmups.has(bucket)) {
+        siblingWarmups.add(bucket);
+        while (siblingWarmups.size > 2) siblingWarmups.delete(siblingWarmups.values().next().value!);
+        // Warm two sibling data results after this response, serially. No HTML,
+        // media or providers are fetched. Foreground requests share the same flight.
+        try { after(async () => {
+          for (const range of ["trending", "daily", "weekly"]) {
+            if (range === (query.get("range") ?? "trending")) continue;
+            try { await GET(new NextRequest("http://internal.local/api/rankings?range=" + range + (range === "trending" ? "&page=1" : ""))); } catch { /* A failed warmup never affects browsing. */ }
+          }
+        }); } catch { /* CLI/unit contexts have no request lifetime. */ }
+      }
+    }
+    return result;
+  } catch {
+    return NextResponse.json({ ok: false, error: "RANKING_LOAD_FAILED" }, { status: 503, headers: { "Cache-Control": "no-store" } });
+  }
+}

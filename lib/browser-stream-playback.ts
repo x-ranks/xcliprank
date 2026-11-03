@@ -34,8 +34,6 @@ export async function attachDirectStream(video: HTMLVideoElement, raw: string, o
   const url = streamingPlaylistUrl(raw);
   if (!url) throw new Error("分割再生URLを確認できません。（STREAM_NO_PLAYLIST）");
   if (options.signal.aborted) throw new DOMException("Aborted", "AbortError");
-  const { default: Engine, FetchLoader } = await loadLibrary();
-  if (options.signal.aborted) throw new DOMException("Aborted", "AbortError");
   let engine: Hls | null = null, closed = false, ready = false;
   let timer: ReturnType<typeof setTimeout> | undefined;
   const cleanup = () => {
@@ -60,6 +58,14 @@ export async function attachDirectStream(video: HTMLVideoElement, raw: string, o
   video.addEventListener("loadeddata", markReady);
   timer = setTimeout(() => fail(new Error("分割再生の読み込みが時間切れになりました。（STREAM_TIMEOUT）")), 45000);
   try {
+    if (video.canPlayType("application/vnd.apple.mpegurl")) {
+      // Safari can play its native playlist without downloading the JS engine.
+      video.addEventListener("error", nativeError);
+      video.src = url; video.load();
+      return cleanup;
+    }
+    const { default: Engine, FetchLoader } = await loadLibrary();
+    if (options.signal.aborted || closed) throw new DOMException("Aborted", "AbortError");
     if (Engine.isSupported()) {
       engine = new Engine({ loader: FetchLoader, enableWorker: false, autoStartLoad: true,
         maxBufferLength: 30, maxMaxBufferLength: 30, maxBufferSize: 32 * 1024 * 1024,
@@ -70,10 +76,6 @@ export async function attachDirectStream(video: HTMLVideoElement, raw: string, o
       });
       engine.on(Engine.Events.MEDIA_ATTACHED, () => { if (!closed) engine?.loadSource(url); });
       engine.attachMedia(video);
-    } else if (video.canPlayType("application/vnd.apple.mpegurl")) {
-      // Safari's native HLS loader uses the browser's own HTTP/referrer behavior.
-      video.addEventListener("error", nativeError);
-      video.src = url; video.load();
     } else throw new Error("このブラウザは分割再生に対応していません。（STREAM_UNSUPPORTED）");
     return cleanup;
   } catch (error) { cleanup(); throw error; }

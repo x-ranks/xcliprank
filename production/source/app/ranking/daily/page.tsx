@@ -6,27 +6,30 @@ import { loadRankingPage } from "../../../lib/initial-ranking";
 export const dynamic = "force-dynamic";
 
 export const metadata: Metadata = {
-  title: "X動画 24時間ランキング",
+  title: "24時間のTwitter動画ランキング・保存",
   description:
-    "A〜Sの選別動画を毎日ランダムな順序で紹介。新着ランキングと重複しない動画を探せる、X CLIP RANKの24時間ランキングです。",
+    "毎日入れ替わるTwitter（X）動画を紹介。新着とは違う掲載動画を探し、再生・保存や元投稿の確認ができます。",
   alternates: {
     canonical: "/ranking/daily"
   },
   robots: {
     index: true,
-    follow: true
+    follow: true,
+    "max-image-preview": "large"
   },
   openGraph: {
-    title: "X動画 24時間ランキング | X CLIP RANK",
+    title: "24時間のTwitter動画ランキング・保存 | twizou",
     description:
-      "A〜Sの選別動画を毎日ランダムな順序で紹介。新着ランキングと重複しない動画を探せる、X CLIP RANKの24時間ランキングです。",
-    url: "/ranking/daily"
+      "毎日入れ替わるTwitter（X）動画を紹介。新着とは違う掲載動画を探し、再生・保存や元投稿の確認ができます。",
+    url: "/ranking/daily",
+    images: ["/twizou-share.png"]
   },
   twitter: {
     card: "summary_large_image",
-    title: "X動画 24時間ランキング | X CLIP RANK",
+    title: "24時間のTwitter動画ランキング・保存 | twizou",
     description:
-      "毎日更新のX動画24時間ランキングです。"
+      "毎日更新のX動画24時間ランキングです。",
+    images: ["/twizou-share.png"]
   },
   other: {
     rating: "adult"

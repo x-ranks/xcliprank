@@ -3,7 +3,7 @@ import LegalPage from "../components/LegalPage";
 
 export const metadata: Metadata = {
   title: "広告・PR表記方針",
-  description: "X CLIP RANKにおける広告、PR、アフィリエイトリンクの表示方針です。",
+  description: "twizouにおける広告、PR、アフィリエイトリンクの表示方針です。",
   alternates: { canonical: "/advertising-disclosure" },
   robots: { index: false, follow: true },
 };

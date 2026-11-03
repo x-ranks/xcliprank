@@ -1,4 +1,5 @@
 "use client";
+import { directPlaybackUrl } from "../../lib/browser-direct-playback";
 
 import { useEffect, useMemo, useRef, useState } from "react";
 import type { NSFWJS, PredictionType } from "nsfwjs/core";
@@ -72,8 +73,8 @@ function imageProxyUrl(url: string) {
   return `/api/visual-filter-image?url=${encodeURIComponent(url)}`;
 }
 
-function videoProxyUrl(url: string) {
-  return `/api/video?url=${encodeURIComponent(url)}`;
+function directVideoUrl(url: string) {
+  return directPlaybackUrl(url) ?? "";
 }
 
 function clamp(value: number) {
@@ -115,7 +116,8 @@ async function openVideo(url: string) {
   video.muted = true;
   video.playsInline = true;
   video.preload = "auto";
-  video.src = videoProxyUrl(url);
+  video.crossOrigin = "anonymous";
+  video.src = directVideoUrl(url);
   const metadataReady = waitForVideoEvent(video, "loadedmetadata");
   video.load();
   await metadataReady;

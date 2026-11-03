@@ -1,8 +1,11 @@
+import RankingNavLink from "./components/RankingNavLink";
+import SiteBrand from "./components/SiteBrand";
 import type { Metadata } from "next";
 import { notFound, redirect } from "next/navigation";
 import { parseRankingPage, newestPageHref, rankingHref } from "../lib/ranking-pagination";
 import Link from "next/link";
 import RankingClient from "./components/RankingClient";
+import SiteFooter from "./components/SiteFooter";
 import StructuredData from "./components/StructuredData";
 import { loadRankingPage } from "../lib/initial-ranking";
 import { rankingItemList, SITE_NAME, SITE_URL } from "../lib/seo";
@@ -11,28 +14,31 @@ export const dynamic = "force-dynamic";
 
 const homeMetadata: Metadata = {
   title: {
-    absolute: "X動画ランキング｜新着・24時間・週間の人気動画"
+    absolute: "Twitter動画ランキング・保存｜新着・24時間・週間｜twizou"
   },
   description:
-    "Xに投稿された動画を独自基準で選出し、新着・24時間・週間ランキングで紹介。軽量なサムネイルから気になる投稿をすぐに確認できます。",
+    "Twitter（X）の動画を新着・24時間・週間ランキングで紹介。気になる動画の再生・保存や、投稿者・タグからの動画探しができます。",
   alternates: {
     canonical: "/"
   },
   robots: {
     index: true,
-    follow: true
+    follow: true,
+    "max-image-preview": "large"
   },
   openGraph: {
-    title: "X動画ランキング｜新着・24時間・週間の人気動画",
+    title: "Twitter動画ランキング・保存｜新着・24時間・週間｜twizou",
     description:
-      "Xに投稿された動画を独自基準で選出し、新着・24時間・週間ランキングで紹介します。",
-    url: "/"
+      "Twitter（X）の動画を新着・24時間・週間ランキングで紹介。動画の再生・保存や、投稿者・タグからの動画探しができます。",
+    url: "/",
+    images: [`${SITE_URL}/twizou-share.png`]
   },
   twitter: {
     card: "summary_large_image",
-    title: "X動画ランキング｜新着・24時間・週間の人気動画",
+    title: "Twitter動画ランキング・保存｜新着・24時間・週間｜twizou",
     description:
-      "Xに投稿された動画を新着・24時間・週間ランキングで紹介します。"
+      "Twitter（X）の動画ランキング。気になる動画を再生・保存し、投稿者やタグから探せます。",
+    images: [`${SITE_URL}/twizou-share.png`]
   },
   other: {
     rating: "adult"
@@ -48,7 +54,7 @@ export async function generateMetadata({ searchParams }: { searchParams: Search 
   const canonical = SITE_URL + newestPageHref(page);
   // Next 15 can discard a root URL's query when metadataBase is set.
   // This page supplies absolute URLs, so resolve them without the inherited base.
-  return { ...homeMetadata, metadataBase: null, alternates: { canonical }, openGraph: { ...homeMetadata.openGraph, url: canonical } };
+  return { ...homeMetadata, ...(page > 1 ? { title: { absolute: `Twitter動画ランキング・保存｜新着 ${page}ページ｜twizou` } } : {}), metadataBase: null, alternates: { canonical }, openGraph: { ...homeMetadata.openGraph, url: canonical } };
 }
 export default async function Home({ searchParams }: { searchParams: Search }) {
   const query = await searchParams;
@@ -85,16 +91,18 @@ export default async function Home({ searchParams }: { searchParams: Search }) {
   return (
     <main>
       <StructuredData data={structuredData} />
-      <header className="hero">
-        <h1 className="site-title"><span>X</span> CLIP RANK</h1>
-        <p>Xに投稿された動画をランキング形式で表示</p>
+      <header className="hero branded-page-header">
+        <SiteBrand />
+        <h1 className="ranking-page-title">新着ランキング</h1>
+        <p>新着動画を紹介！</p>
       </header>
       <nav className="ranking-page-nav" aria-label="ランキングを選択">
-        <Link href={rankingHref("trending", edition)} className="active" aria-current="page">新着</Link>
-        <Link href={rankingHref("daily", edition)}>24時間</Link>
-        <Link href={rankingHref("weekly", edition)}>週間</Link>
-        <Link href="/reels">リール</Link>
-        <Link href="/download">動画保存</Link>
+        <RankingNavLink href="/rising">急上昇</RankingNavLink>
+        <RankingNavLink href={rankingHref("trending", edition)} className="active" aria-current="page">新着</RankingNavLink>
+        <RankingNavLink href={rankingHref("daily", edition)}>24時間</RankingNavLink>
+        <RankingNavLink href={rankingHref("weekly", edition)}>週間</RankingNavLink>
+        <RankingNavLink href="/reels">リール</RankingNavLink>
+        <RankingNavLink href="/download">動画保存</RankingNavLink>
       </nav>
       <RankingClient
         key={`${edition}:${page}`}
@@ -105,16 +113,13 @@ export default async function Home({ searchParams }: { searchParams: Search }) {
         fixedRange
       />
       <section className="seo-info" aria-labelledby="about-ranking">
-        <h2 id="about-ranking">X動画ランキングについて</h2>
+        <h2 id="about-ranking">Twitter動画ランキングについて</h2>
         <p>
-          人気の動向は<Link href="/ranking/daily">24時間ランキング</Link>と
-          <Link href="/ranking/weekly">週間ランキング</Link>から確認できます。
+          人気の動向は<Link prefetch={false} href="/ranking/daily">24時間ランキング</Link>と
+          <Link prefetch={false} href="/ranking/weekly">週間ランキング</Link>から確認できます。
         </p>
       </section>
-      <footer>
-        <p>動画ファイル自体はすべてXのサービス上にあり、当サイトでは動画ファイルの保存・収集・再アップロードを行っていません。X上の元投稿を参照して表示しています。</p>
-        <p>削除・非公開化された投稿は表示されなくなります。違法または権利侵害と思われる投稿は、<Link href="/removal-request">削除要請フォーム</Link>からお知らせください。</p>
-      </footer>
+      <SiteFooter />
     </main>
   );
 }

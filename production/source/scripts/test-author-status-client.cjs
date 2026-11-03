@@ -3,7 +3,7 @@ const code=ts.transpileModule(fs.readFileSync('app/components/useSuspendedAuthor
 let state=[],effect,timer,listeners=new Map(),controller,requestCount=0,result={ok:true,blockedKeys:['id:123']},fail=false;
 const react={useState:()=>[state,update=>{state=update(state);}],useEffect:fn=>{effect=fn;}};
 global.document={hidden:false,addEventListener:(type,fn)=>listeners.set(type,fn),removeEventListener:(type,fn)=>{assert.equal(listeners.get(type),fn);listeners.delete(type);}};
-global.window={setInterval:(fn,ms)=>{assert.equal(ms,900000);timer=fn;return 10;},clearInterval:id=>{assert.equal(id,10);timer=null;}};
+global.window={setInterval:(fn,ms)=>{assert.equal(ms,900000);timer=fn;return 10;},clearInterval:id=>{assert.equal(id,10);timer=null;},addEventListener:(type,fn)=>listeners.set(type,fn),removeEventListener:(type,fn)=>{assert.equal(listeners.get(type),fn);listeners.delete(type);}};
 global.fetch=async (url,options)=>{assert.equal(url,'/api/rankings?range=author-status');assert.equal(options.cache,'no-store');controller=options.signal;requestCount++;if(fail)throw Error('network');return Response.json(result);};
 const m={exports:{}};new Function('require','module','exports',code)(n=>n==='react'?react:require(n),m,m.exports);
 const settle=()=>new Promise(resolve=>setImmediate(resolve));
@@ -13,6 +13,8 @@ const settle=()=>new Promise(resolve=>setImmediate(resolve));
  document.hidden=true;const before=requestCount;timer();await settle();assert.equal(requestCount,before);
  document.hidden=false;fail=true;listeners.get('visibilitychange')();await settle();assert.deepEqual(state,['id:123']);
  fail=false;result={ok:true,blockedKeys:['post:456']};timer();await settle();assert.deepEqual(state,['post:456']);result={ok:true,blockedKeys:[]};timer();await settle();assert.deepEqual(state,[]);
+ result={ok:true,blockedKeys:['post:789']};listeners.get('popstate')();await settle();assert.deepEqual(state,['post:789'],'Returning to a cached list refreshes current exclusions');
+ result={ok:true,blockedKeys:[]};listeners.get('pageshow')();await settle();assert.deepEqual(state,[],'Restored document refreshes current exclusions');
  cleanup();assert.equal(controller.aborted,true);assert.equal(timer,null);assert.equal(listeners.size,0);
  console.log('PASS LIVE STATUS CLIENT: internal JSON only, visible-page 15-minute refresh, same-state dedup, hidden-page pause, network failure retains blocks, restoration, abort/listener/timer cleanup.');
 })().catch(e=>{console.error(e);process.exitCode=1;});

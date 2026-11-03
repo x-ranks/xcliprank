@@ -1,9 +1,17 @@
 "use client";
 
 import Link from "next/link";
-import { FormEvent, useState } from "react";
+import { FormEvent, useEffect, useRef, useState } from "react";
 
 export default function RemovalRequestPage() {
+  const reportedUrlInput = useRef<HTMLInputElement>(null);
+  useEffect(() => {
+    const posts = new URLSearchParams(window.location.search).getAll("post");
+    const id = posts.length === 1 ? posts[0] : "";
+    if (/^[1-9][0-9]{1,24}$/.test(id) && reportedUrlInput.current && !reportedUrlInput.current.value) {
+      reportedUrlInput.current.value = "https://x.com/i/status/" + id;
+    }
+  }, []);
   const [sending, setSending] = useState(false);
   const [message, setMessage] = useState<{ tone: "success" | "error"; text: string } | null>(null);
 
@@ -34,13 +42,14 @@ export default function RemovalRequestPage() {
   return (
     <main className="removal-shell">
       <header className="removal-header">
-        <Link href="/">← X CLIP RANKへ戻る</Link>
+        <Link href="/">← twizouへ戻る</Link>
         <h1>削除要請フォーム</h1>
         <p>違法性、著作権・プライバシー侵害、本人の同意がない掲載などが疑われるX投稿について、確認を依頼できます。</p>
       </header>
 
       <div className="removal-notice">
-        XclipにはX（旧Twitter）の公開投稿情報と動画へのURL情報を掲載しています。動画はXの配信元から利用者の端末へ直接読み込まれます。申請内容を確認し、当サイトの掲載情報を表示対象から除外するか判断します。Xclipからの除外ではX上の元投稿は削除されません。元投稿への対応が必要な場合は、Xの報告機能もご利用ください。
+        <p><strong>削除要請には24時間以内に対応いたします。</strong></p>
+        <p>twizouではX（旧Twitter）の公開投稿情報と動画へのURL情報を掲載しています。動画はXの配信元から利用者の端末へ直接読み込まれており、当サイトでは動画の収集と再アップロードは一切行っておりません。申請内容を確認し、当サイトの掲載情報を表示対象から除外するか判断します。twizouからの除外ではX上の元投稿は削除されません。元投稿への対応が必要な場合は、Xの報告機能もご利用ください。</p>
       </div>
 
       {message && <div className={`removal-message ${message.tone}`} role="status">{message.text}</div>}
@@ -48,7 +57,7 @@ export default function RemovalRequestPage() {
       <form className="removal-form" onSubmit={submit}>
         <div className="removal-field">
           <label htmlFor="reportedUrl">対象のX投稿URL</label>
-          <input id="reportedUrl" name="reportedUrl" type="url" required placeholder="https://x.com/username/status/123..." maxLength={300} />
+          <input ref={reportedUrlInput} id="reportedUrl" name="reportedUrl" type="url" required placeholder="https://x.com/username/status/123..." maxLength={300} />
           <small>x.com または twitter.com の投稿URLを入力してください。</small>
         </div>
 

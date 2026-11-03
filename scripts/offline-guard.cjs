@@ -13,3 +13,4 @@ for(const name of ['readFileSync','writeFileSync','appendFileSync','openSync','r
 for(const name of ['readFile','writeFile','appendFile','open','readdir','rm']){
  const original=fs.promises[name];fs.promises[name]=async function(p,...args){if(privatePath(p))throw Error('REAL_LOCAL_STATE_FORBIDDEN');return original.call(this,p,...args);};
 }
+

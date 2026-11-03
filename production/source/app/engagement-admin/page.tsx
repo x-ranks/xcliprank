@@ -10,7 +10,13 @@ const RANGE_LABELS: Record<string, string> = {
   trending: "新着",
   daily: "24時間",
   weekly: "週間",
+  rising: "急上昇",
   reels: "おすすめリール",
+  discover: "動画を探す",
+  favorites: "お気に入り・保存履歴",
+  browse: "動画一覧",
+  accounts: "投稿者",
+  tags: "タグ",
   unknown: "未分類",
 };
 
@@ -46,6 +52,7 @@ type Stats = {
   };
   daily: DailyRow[];
   rangeOpens: Record<string, number>;
+  pageViewsByPath: Record<string, number>;
   acquisitionSessions: Record<string, number>;
   xContentSessions: Record<string, number>;
 };
@@ -299,6 +306,11 @@ export default function EngagementAdminPage() {
             )}
           </section>
 
+          <section className="engagement-panel">
+            <div className="engagement-panel-heading"><div><h2>閲覧されたページ</h2><p>ページ別の表示回数（上位20件）。修正前の期間は少なく記録されています。</p></div></div>
+            {Object.entries(stats.pageViewsByPath ?? {}).length === 0 ? <p className="engagement-empty">ページ表示はまだありません。</p> :
+              <div className="engagement-source-list">{Object.entries(stats.pageViewsByPath ?? {}).sort((a, b) => b[1] - a[1]).slice(0, 20).map(([path, count]) => <div key={path}><span>{path}</span><strong>{number(count)}回</strong></div>)}</div>}
+          </section>
           <div className="engagement-two-columns">
             <section className="engagement-panel">
               <div className="engagement-panel-heading">

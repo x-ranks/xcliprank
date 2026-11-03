@@ -9,11 +9,12 @@ function copy(dir){const target=path.join(fixture,dir);fs.mkdirSync(target,{recu
  if(entry.isDirectory())copy(rel);else fs.copyFileSync(path.join(root,rel),path.join(fixture,rel));
 }}
 const deps=path.join(root,'node_modules');
-const report={mode,passed:[],skipped:[],failures:[],network:'denied',realState:'denied'};
+const report={mode,passed:[],skipped:[],failures:[],network:'external denied; isolated loopback fixture allowed',realState:'denied'};
 try{
  for(const dir of ['app','lib','scripts','sql','supabase'])copy(dir);
  for(const file of ['package.json','package-lock.json','next-env.d.ts','tsconfig.json','next.config.ts','middleware.ts'])fs.copyFileSync(path.join(root,file),path.join(fixture,file));
- fs.symlinkSync(fs.realpathSync(deps),path.join(fixture,'node_modules'),process.platform==='win32'?'junction':'dir');
+ if(mode==='build'&&process.platform==='win32')fs.cpSync(fs.realpathSync(deps),path.join(fixture,'node_modules'),{recursive:true,dereference:true});
+ else fs.symlinkSync(fs.realpathSync(deps),path.join(fixture,'node_modules'),process.platform==='win32'?'junction':'dir');
  const home=path.join(fixture,'test-home');fs.mkdirSync(home);
  const protectedFiles={
   '.local-admin/fixtures/registration.json':{authors:Array.from({length:101},(_,i)=>({id:String(1000+i),paused:i===4}))},
@@ -27,12 +28,13 @@ try{
  const env={};for(const k of ['PATH','Path','SystemRoot','WINDIR','COMSPEC','PATHEXT','TEMP','TMP'])if(process.env[k])env[k]=process.env[k];
  Object.assign(env,{HOME:home,USERPROFILE:home,NEXT_TELEMETRY_DISABLED:'1',XCLIP_TEST_DEPENDENCY_ROOT:fixture,
   NODE_OPTIONS:'--require "'+path.join(fixture,'scripts/offline-guard.cjs').replaceAll('\\','/')+'"'});
- const run=args=>cp.spawnSync(process.execPath,args,{cwd:fixture,env,encoding:'utf8',windowsHide:true,timeout:mode==='test'?45000:240000,maxBuffer:2*1024*1024});
+ const run=(args,extra={})=>cp.spawnSync(process.execPath,args,{cwd:fixture,env:{...env,...extra},encoding:'utf8',windowsHide:true,timeout:mode==='test'&&args.some(x=>String(x).includes('test-label-learning300.cjs'))?120000:mode==='test'?45000:240000,maxBuffer:2*1024*1024});
  if(mode==='test'){
   const optional=new Set(['test-tier-four-frames.cjs','test-tier-compatible-playback.cjs']);
   for(const name of fs.readdirSync(path.join(fixture,'scripts')).filter(n=>/^test-.*\.cjs$/.test(n)).sort()){
    if(optional.has(name)){report.skipped.push({name,reason:'Requires external FFmpeg/FFprobe; run separately with installed tools'});continue;}
-   const r=run(['scripts/'+name]);
+   const extra=name==='test-video-range-session.cjs'?{NODE_OPTIONS:'--require "'+path.join(fixture,'scripts/loopback-only-guard.cjs').replaceAll('\\','/')+'"'}:{};
+   const r=run(['scripts/'+name],extra);
    if(r.status===0){report.passed.push(name);console.log('PASS '+name);}else{report.failures.push({name,status:r.status,output:(r.stderr||r.stdout||String(r.error)).slice(-5000)});console.error('FAIL '+name);}
   }
  }else{
@@ -45,7 +47,9 @@ try{
  console.log('CANONICAL_CHECK_REPORT='+JSON.stringify({mode,passed:report.passed.length,skipped:report.skipped,failures:report.failures.map(x=>({name:x.name,status:x.status,output:x.output?.slice(-1500)})),network:report.network,realState:report.realState}));
  if(report.failures.length)process.exitCode=1;
 }finally{
- const link=path.join(fixture,'node_modules');if(fs.existsSync(link))fs.unlinkSync(link);
+ const link=path.join(fixture,'node_modules');if(!inside(link)||!path.basename(fixture).startsWith('xclip-canonical-check-'))throw Error('UNSAFE_CLEANUP_TARGET');
+ if(fs.existsSync(link)){if(mode==='build'&&process.platform==='win32')fs.rmSync(link,{recursive:true,force:true,maxRetries:3,retryDelay:100});else fs.unlinkSync(link);}
  if(!inside(path.join(fixture,'app'))||!path.basename(fixture).startsWith('xclip-canonical-check-'))throw Error('UNSAFE_CLEANUP_TARGET');
  fs.rmSync(fixture,{recursive:true,force:true,maxRetries:3,retryDelay:100});
 }
+

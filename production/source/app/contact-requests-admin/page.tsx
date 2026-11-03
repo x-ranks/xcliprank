@@ -109,8 +109,8 @@ export default function ContactRequestsAdminPage() {
 
   useEffect(() => {
     document.title = counts.pending > 0
-      ? `(${counts.pending}) 新着の問い合わせ | X CLIP RANK`
-      : "問い合わせ管理 | X CLIP RANK";
+      ? `(${counts.pending}) 新着の問い合わせ | twizou`
+      : "問い合わせ管理 | twizou";
   }, [counts.pending]);
 
   function unlock() {

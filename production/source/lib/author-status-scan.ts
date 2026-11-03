@@ -1,7 +1,7 @@
 import { classifyAuthorResponse, authorKey, type AuthorIdentity, type AuthorOutcome } from "./author-status";
 import { manualCuratedKeys } from "./curated-removals";
 import { readAuthorState, writeAuthorState, authorStateDirectory } from "./author-status-store";
-import { DAY, AUTHOR_BATCH_LIMIT, pauseMonitorRequest, FAILURE_COOLDOWN, fetchMonitorJson } from "./availability-policy";
+import { DAY, AUTHOR_RECHECK_INTERVAL, AUTHOR_BATCH_LIMIT, pauseMonitorRequest, FAILURE_COOLDOWN, fetchMonitorJson } from "./availability-policy";
 
 export async function fetchAuthorStatus(key: string, fetcher: typeof fetch = fetch): Promise<{
   outcome: AuthorOutcome; limited?: boolean; retryAfterMs?: number; failed?: boolean;
@@ -25,7 +25,7 @@ export async function scanAuthorStatuses(authors: AuthorIdentity[], options: {
   const due = [...keys].filter(key => {
     if(manual.has(key))return false;
     const old = state.entries[key];
-    return !old || Math.max(old.nextCheckAt, old.checkedAt + DAY) <= now();
+    return !old || (old.status === "suspended" ? Math.max(old.nextCheckAt, old.checkedAt + DAY) : old.checkedAt + AUTHOR_RECHECK_INTERVAL) <= now();
   }).sort((a, b) => (state.entries[a]?.checkedAt ?? 0) - (state.entries[b]?.checkedAt ?? 0) || a.localeCompare(b));
   const stats = { checked: 0, suspended: 0, restored: 0, unknown: 0, deferred: due.length, totalAuthors: keys.size,
     paid_x_requests: 0, stopped: false, cooldownUntil: state.cooldownUntil };
@@ -37,7 +37,7 @@ export async function scanAuthorStatuses(authors: AuthorIdentity[], options: {
     const result = await fetchAuthorStatus(key, options.fetcher), time = now(), old = state.entries[key];
     const status = result.outcome === "unknown" ? old?.status ?? "unknown" : result.outcome;
     state.entries[key] = { status, checkedAt: time, confirmedAt: result.outcome === "unknown" ? old?.confirmedAt ?? 0 : time,
-      nextCheckAt: time + DAY };
+      nextCheckAt: time + (status === "suspended" ? DAY : AUTHOR_RECHECK_INTERVAL) };
     failures = result.failed ? failures + 1 : 0;
     if (result.limited || failures >= 2) { state.cooldownUntil = time + (result.retryAfterMs ?? FAILURE_COOLDOWN); stats.stopped = true; }
     stats.checked++; stats.deferred--; if (result.outcome === "unknown") stats.unknown++;

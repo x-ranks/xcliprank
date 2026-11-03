@@ -1,15 +1,20 @@
+import { validStoredVideoTechnical, validVideoTechnical, type VideoTechnical } from "./video-technical";
 import { acquirePublicOperation } from "./public-operation-lock";
 import { promises as fs } from "node:fs";
 import path from "node:path";
 import { randomUUID } from "node:crypto";
 import { blankCatalog, blankRecord, labelDefinition, publicPostId, type PublicCatalog, type PublicLabel } from "./public-video-core";
 const MAX_RECORDS = 100000, MAX_BYTES = 64 * 1024 * 1024;
+// Cache validated ledger bytes, never publication permissions. Every read still
+// checks the actual file identity; callers receive independent mutable copies.
+const snapshots = new Map<string, { stamp: string; value: PublicCatalog }>();
+const stamp = (s: import("node:fs").BigIntStats) => [s.dev, s.ino, s.size, s.mtimeNs, s.ctimeNs].join(":");
 const iso = (s: unknown) => typeof s === "string" && /^\d{4}-\d\d-\d\dT/.test(s) && Number.isFinite(Date.parse(s));
 function validate(c: PublicCatalog) {
   if (!c || c.version !== 1 || !Number.isSafeInteger(c.revision) || c.revision < 0 || !Array.isArray(c.labels) || c.labels.length > 40 || !c.labels.every(labelDefinition) || new Set(c.labels.map(l => l.id)).size !== c.labels.length || new Set(c.labels.map(l => l.name)).size !== c.labels.length || !c.records || typeof c.records !== "object" || Array.isArray(c.records) || Object.keys(c.records).length > MAX_RECORDS) throw Error("PUBLIC_CATALOG_CORRUPT");
   const ids = new Set(c.labels.map(l => l.id));
   for (const [id, r] of Object.entries(c.records)) {
-    if (!publicPostId(id) || !r || r.id !== id || !Array.isArray(r.labelIds) || r.labelIds.length > 40 || new Set(r.labelIds).size !== r.labelIds.length || r.labelIds.some(l => !ids.has(l)) || ![null, "manual", "model_reviewed", "model_auto"].includes(r.basis) || (r.modelRevision !== null && !/^[a-f0-9]{64}$/.test(r.modelRevision)) || (r.sourceHash !== null && !/^[a-f0-9]{64}$/.test(r.sourceHash)) || (r.labelPublishedAt !== null && !iso(r.labelPublishedAt)) || !Number.isSafeInteger(r.saves) || r.saves < 0 || (r.firstSavedAt !== null && !iso(r.firstSavedAt)) || (r.saves > 0 && !r.firstSavedAt) || (r.saves === 0 && r.firstSavedAt !== null) || (r.firstRankedAt !== null && !iso(r.firstRankedAt)) || !Array.isArray(r.receipts) || r.receipts.length > 128 || r.receipts.some(t => !/^[a-f0-9-]{36}$/.test(t.id) || !Number.isFinite(t.expires))) throw Error("PUBLIC_CATALOG_CORRUPT");
+    if (!publicPostId(id) || !r || (r.technical !== undefined && !validStoredVideoTechnical(r.technical)) || r.id !== id || !Array.isArray(r.labelIds) || r.labelIds.length > 40 || new Set(r.labelIds).size !== r.labelIds.length || r.labelIds.some(l => !ids.has(l)) || ![null, "manual", "model_reviewed", "model_auto"].includes(r.basis) || (r.modelRevision !== null && !/^[a-f0-9]{64}$/.test(r.modelRevision)) || (r.sourceHash !== null && !/^[a-f0-9]{64}$/.test(r.sourceHash)) || (r.labelPublishedAt !== null && !iso(r.labelPublishedAt)) || !Number.isSafeInteger(r.saves) || r.saves < 0 || (r.firstSavedAt !== null && !iso(r.firstSavedAt)) || (r.saves > 0 && !r.firstSavedAt) || (r.saves === 0 && r.firstSavedAt !== null) || (r.firstRankedAt !== null && !iso(r.firstRankedAt)) || !Array.isArray(r.receipts) || r.receipts.length > 128 || r.receipts.some(t => !/^[a-f0-9-]{36}$/.test(t.id) || !Number.isFinite(t.expires))) throw Error("PUBLIC_CATALOG_CORRUPT");
   }
 }
 export function createPublicCatalog(directory: string) {
@@ -22,10 +27,38 @@ export function createPublicCatalog(directory: string) {
     }
   }
   async function regular(p: string, max: number) { const s = await fs.lstat(p); if (!s.isFile() || s.isSymbolicLink() || s.size > max) throw Error("PUBLIC_CATALOG_UNSAFE"); }
-  async function read(): Promise<PublicCatalog> {
+  async function readSnapshot(): Promise<PublicCatalog> {
     await safeParents();
-    try { await regular(file, MAX_BYTES); const c = JSON.parse(await fs.readFile(file, "utf8")) as PublicCatalog; validate(c); return c; }
-    catch (e) { if ((e as NodeJS.ErrnoException).code === "ENOENT") return blankCatalog(); throw Error("PUBLIC_CATALOG_UNREADABLE"); }
+    try {
+      for (let attempt = 0; attempt < 3; attempt++) {
+        const before = await fs.lstat(file, { bigint: true });
+        if (!before.isFile() || before.isSymbolicLink() || before.size > BigInt(MAX_BYTES)) throw Error("PUBLIC_CATALOG_UNSAFE");
+        const key = stamp(before), cached = snapshots.get(file);
+        if (cached?.stamp === key) return cached.value;
+        const c = JSON.parse(await fs.readFile(file, "utf8")) as PublicCatalog; validate(c);
+        const after = await fs.lstat(file, { bigint: true });
+        if (stamp(after) !== key) continue;
+        if (before.size <= BigInt(8 * 1024 * 1024)) {
+          snapshots.delete(file); snapshots.set(file, { stamp: key, value: c });
+          while (snapshots.size > 2) snapshots.delete(snapshots.keys().next().value!);
+          return c;
+        }
+        return c;
+      }
+      throw Error("PUBLIC_CATALOG_CHANGED_DURING_READ");
+    } catch (e) {
+      snapshots.delete(file);
+      if ((e as NodeJS.ErrnoException).code === "ENOENT") return blankCatalog();
+      throw Error("PUBLIC_CATALOG_UNREADABLE");
+    }
+  }
+  async function read(): Promise<PublicCatalog> { return structuredClone(await readSnapshot()); }
+  // A detail page needs one record, not a clone of every video's ledger entry.
+  async function readForIds(ids: string[]): Promise<PublicCatalog> {
+    if (!Array.isArray(ids) || ids.length > 100 || ids.some(id => !publicPostId(id))) throw Error("PUBLIC_INVALID_INPUT");
+    const snapshot = await readSnapshot();
+    return { version: 1, revision: snapshot.revision, labels: structuredClone(snapshot.labels),
+      records: Object.fromEntries([...new Set(ids)].filter(id => snapshot.records[id]).map(id => [id, structuredClone(snapshot.records[id])])) };
   }
   async function mutate(work: (c: PublicCatalog) => boolean) {
     await safeParents(); await fs.mkdir(root, { recursive: true, mode: 0o700 }); await safeParents();
@@ -35,7 +68,7 @@ export function createPublicCatalog(directory: string) {
       if (work(c)) {
         c.revision++; validate(c); const text = JSON.stringify(c); if (Buffer.byteLength(text) > MAX_BYTES) throw Error("PUBLIC_CATALOG_FULL");
         const temp = path.join(root, ".catalog-" + randomUUID() + ".tmp");
-        try { await fs.writeFile(temp, text, { flag: "wx", mode: 0o600 }); await fs.rename(temp, file); } finally { await fs.unlink(temp).catch(() => undefined); }
+        try { await fs.writeFile(temp, text, { flag: "wx", mode: 0o600 }); await fs.rename(temp, file); snapshots.delete(file); } finally { await fs.unlink(temp).catch(() => undefined); }
       }
       return c;
     } finally { await lock.release(); }
@@ -43,6 +76,10 @@ export function createPublicCatalog(directory: string) {
   function record(c: PublicCatalog, id: string) { if (!publicPostId(id)) throw Error("PUBLIC_INVALID_ID"); if (!c.records[id]) { if (Object.keys(c.records).length >= MAX_RECORDS) throw Error("PUBLIC_CATALOG_FULL"); c.records[id] = blankRecord(id); } return c.records[id]; }
   async function ranked(ids: string[], at: string) {
     if (!Array.isArray(ids) || ids.length > 500 || ids.some(id => !publicPostId(id)) || !iso(at)) throw Error("PUBLIC_INVALID_INPUT");
+    // Most page views only repeat known history. Avoid taking the writer lock
+    // and rereading the whole ledger when there is nothing to record.
+    const current = await read();
+    if (ids.every(id => current.records[id]?.firstRankedAt)) return current;
     return mutate(c => { let changed = false; for (const id of new Set(ids)) { const r = record(c, id); if (!r.firstRankedAt) { r.firstRankedAt = at; changed = true; } } return changed; });
   }
   async function saved(id: string, receipt: { id: string; expires: number }, now = Date.now()) {
@@ -56,7 +93,14 @@ export function createPublicCatalog(directory: string) {
     return mutate(c => {
       if (c.revision !== input.revision) throw Error("PUBLIC_CATALOG_STALE");
       // Automatic predictions never overwrite human decisions, including empty labels.
-      const writable = input.posts.filter(p => p.basis !== "model_auto" || !["manual", "model_reviewed"].includes(c.records[p.id]?.basis ?? ""));
+      const writable = input.posts.filter(p => {
+          if (p.basis !== "model_auto") return true;
+          const previous = c.records[p.id];
+          if (["manual", "model_reviewed"].includes(previous?.basis ?? "")) return false;
+          // An uncertain empty prediction must not erase existing, still-active
+          // automatic tags for the same media. Checked inside the catalog lock.
+          return !(p.labelIds.length === 0 && previous?.sourceHash === p.sourceHash && previous.labelIds.some(id => permitted.has(id)));
+        });
       if (!writable.length && input.posts.length) return false;
       // Existing IDs never disappear; inactive definitions remain for old receipts.
       const incoming = new Map(input.labels.map(l => [l.id, l]));
@@ -67,5 +111,14 @@ export function createPublicCatalog(directory: string) {
       return true;
     });
   }
-  return { read, ranked, saved, labels };
+  async function technical(id: string, sourceHash: string, metadata: VideoTechnical, now = Date.now(), method: "ffprobe-range-v1" | "mp4-range-v1" = "ffprobe-range-v1") {
+    if (!publicPostId(id) || !/^[a-f0-9]{64}$/.test(sourceHash) || !validVideoTechnical(metadata)) throw Error("PUBLIC_INVALID_TECHNICAL_METADATA");
+    return mutate(c => {
+      const r = record(c, id), old = r.technical;
+      if (old?.sourceHash === sourceHash) metadata = { ...metadata, ...(metadata.width === undefined && old.width !== undefined ? { width: old.width } : {}), ...(metadata.height === undefined && old.height !== undefined ? { height: old.height } : {}) };
+      if (old?.sourceHash === sourceHash && old.durationSeconds === metadata.durationSeconds && old.width === metadata.width && old.height === metadata.height) return false;
+      r.technical = { ...metadata, sourceHash, observedAt: new Date(now).toISOString(), method }; return true;
+    });
+  }
+  return { read, readForIds, ranked, saved, labels, technical };
 }

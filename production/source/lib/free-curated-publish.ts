@@ -1,3 +1,4 @@
+import { writeCuratedReferences, referenceSourceHash } from "./curated-video-references";
 import { ensureCommonAuthor } from "./curated-common";
 import { supabaseAdmin } from "./supabase-admin";
 import { unavailableKeys } from "./post-status-store";
@@ -7,20 +8,40 @@ import { classifyContent } from "./content-filter";
 import { rankingScore } from "./ranking";
 import { loadTierLearningModel, predictLearnedTier, blendRuleAndLearnedTier } from "./tier-learning";
 import { calculateTier, applyCuratedTierFloor, type FreeTierAuthor } from "./fxtwitter-curated-tier";
-import { FreeCuratedError, type FreeAuthor, type FreeCandidate } from "./fxtwitter-curated";
+import { FreeCuratedError, type FreeAuthor, type FreeCandidate, type FreeReferencedPost } from "./fxtwitter-curated";
 
 export const FREE_DISPLAY_TIERS = new Set(["S", "A+", "A", "B+", "B", "C"]);
 export const emptyPublicationOutcomes=()=>({unavailable:0,contentOrReview:0,tier:0,knownPostOrMedia:0,batchDuplicate:0,insertRace:0});
 export async function publishFreeCandidates(author: FreeAuthor, candidates: FreeCandidate[], options: {
   database?: ReturnType<typeof supabaseAdmin>; blocked?: Set<string>; modelLoader?: typeof loadTierLearningModel;
-  previousHiddenSaveAt?: string | null;
+  previousHiddenSaveAt?: string | null; reference?: {curator:FreeAuthor;links:FreeReferencedPost[]};
+  manualPost?: boolean;
 } = {}) {
   const database = options.database ?? supabaseAdmin(), blocked = options.blocked ?? await unavailableKeys();
-  if(blocked.has("id:"+author.id)||blocked.has("name:"+author.username.toLowerCase()))throw new FreeCuratedError(409,"除外中の投稿者は掲載できません。");
-  if(await ensureCommonAuthor(author,database)!=="active")throw new FreeCuratedError(409,"停止中の投稿者は掲載できません。");
+  if(blocked.has("id:"+author.id)||blocked.has("name:"+author.username.toLowerCase())){
+    if(options.reference)return {saved:0,promoted:0,savedIds:[],excluded:candidates.length,duplicates:0,outcomes:{...emptyPublicationOutcomes(),unavailable:candidates.length},paid_x_requests:0};
+    throw new FreeCuratedError(409,"除外中の投稿者は掲載できません。");
+  }
+  if(!options.reference&&!options.manualPost&&await ensureCommonAuthor(author,database)!=="active")throw new FreeCuratedError(409,"停止中の投稿者は掲載できません。");
   const {data: knownAuthor, error: authorError} = await database.from("authors").select("*").eq("x_author_id", author.id).maybeSingle();
   if (authorError) throw new FreeCuratedError(503, "投稿者のDB確認に失敗しました。");
+  if (options.manualPost && (knownAuthor?.review_required === true || ['paused','removed','unavailable'].includes(knownAuthor?.curated_status)))
+    throw new FreeCuratedError(409, "停止または確認対象の投稿者は掲載できません。");
+  const reference=options.reference;
+  let curatorReview=false;
+  if(reference){
+    if(reference.links.length!==candidates.length||reference.links.some(r=>r.author.id!==author.id||!candidates.includes(r.candidate)))throw new FreeCuratedError(400,"引用元の照合に失敗しました。");
+    const {data:curator,error}=await database.from("authors").select("x_author_id,is_curated,curated_status,review_required").eq("x_author_id",reference.curator.id).maybeSingle();
+    if(error)throw new FreeCuratedError(503,"紹介元の確認に失敗しました。");
+    if(!curator?.is_curated||curator.curated_status!=="active"||blocked.has("id:"+reference.curator.id)||blocked.has("name:"+reference.curator.username.toLowerCase())||['paused','removed','unavailable'].includes(knownAuthor?.curated_status)){
+      return {saved:0,promoted:0,savedIds:[],excluded:candidates.length,duplicates:0,outcomes:{...emptyPublicationOutcomes(),unavailable:candidates.length},paid_x_requests:0};
+    }
+    curatorReview=curator.review_required===true;
+  }
   const context: FreeTierAuthor = { ...(knownAuthor ?? {}), curated_expected_tier: author.expectedTier };
+  const referenceRows: import("./curated-video-references").CuratedVideoReference[]=[];
+  const referenceLink=(candidate:FreeCandidate)=>reference?.links.find(r=>r.candidate===candidate);
+  const rememberReference=(candidate:FreeCandidate)=>{const r=referenceLink(candidate);if(r)referenceRows.push({post_id:candidate.x_post_id,source_author_id:author.id,selected_author_id:reference!.curator.id,selected_post_id:r.viaPostId,reference_kind:r.kind,source_hash:referenceSourceHash(candidate.video_url!),observed_at:new Date().toISOString()});};
   const duplicateIds = new Set<string>(), existing = new Map<string, any>();
   for (const column of ["x_post_id", "media_key", "video_url"] as const) {
     const values = [...new Set(candidates.map(p => p[column]).filter((v): v is string => !!v))];
@@ -44,20 +65,23 @@ export async function publishFreeCandidates(author: FreeAuthor, candidates: Free
   const rows: any[] = [], oldHidden: {candidate: FreeCandidate; row: any}[] = [];
   for (const p of candidates) {
     if (p.author_id !== author.id || isUnavailablePost(p, blocked)) { excluded++;outcomes.unavailable++; continue; }
+    const link=referenceLink(p);
+    if(link&&blocked.has("post:"+link.viaPostId)){excluded++;outcomes.unavailable++;continue;}
     const content = classifyContent(p.text), review = requiresSafetyReview(p.text);
-    if (content.category !== "PASS" || review || context.review_required) { excluded++;outcomes.contentOrReview++; continue; }
+    if (content.category !== "PASS" || review || context.review_required || curatorReview || (link && (classifyContent(link.viaText).category!=="PASS" || requiresSafetyReview(link.viaText)))) { excluded++;outcomes.contentOrReview++; continue; }
     if (duplicateIds.has(p.x_post_id)) {
       outcomes.knownPostOrMedia++;
       const row = existing.get(p.x_post_id), savedAt = Date.parse(options.previousHiddenSaveAt ?? "");
       const seenAt = Date.parse(row?.last_seen_at ?? "");
       // One-time promotion of the currently selected page saved by v2. Unrelated hidden,
       // manually rated, removed, or previously published records are never republished by Cron.
-      if (row && Number.isFinite(savedAt) && Number.isFinite(seenAt) && seenAt <= savedAt && seenAt >= savedAt - 10 * 60000 &&
+      if (!reference && row && Number.isFinite(savedAt) && Number.isFinite(seenAt) && seenAt <= savedAt && seenAt >= savedAt - 10 * 60000 &&
         row.author_id === author.id && row.collection_source === "curated" && row.author_stats_counted === false &&
         row.is_visible === false && row.moderation_blocked === false && row.review_required === false && row.manual_tier == null &&
         row.manual_category == null && row.manual_reviewed_at == null && row.moderated_at == null && row.moderation_source == null &&
         row.video_url === p.video_url && row.text === p.text && Date.parse(row.created_at) === Date.parse(p.created_at) &&
         FREE_DISPLAY_TIERS.has(row.adult_tier) && row.content_category === "PASS") oldHidden.push({candidate:p,row});
+      if(reference&&row?.is_visible===true&&row.moderation_blocked===false&&row.review_required===false&&row.content_category==="PASS"&&row.author_id===author.id&&row.video_url===p.video_url&&FREE_DISPLAY_TIERS.has(row.manual_tier??row.adult_tier))rememberReference(p);
       continue;
     }
     if ((p.media_key && media.has(p.media_key)) || (p.video_url && videos.has(p.video_url))) {outcomes.batchDuplicate++;continue;}
@@ -68,6 +92,7 @@ export async function publishFreeCandidates(author: FreeAuthor, candidates: Free
     const learned = predictLearnedTier(model,{authorId:author.id,adultScore,creatorScore,possiblySensitive:p.possibly_sensitive});
     const tier = blendRuleAndLearnedTier(rule,learned);
     if (!FREE_DISPLAY_TIERS.has(tier.tier)) { excluded++;outcomes.tier++; continue; }
+    rememberReference(p);
     const {durationSeconds: _d,videoCount: _c,...post}=p;
     rows.push({...post,adult_score:adultScore,creator_score:creatorScore,review_required:false,author_stats_counted:false,
       effective_adult_score:tier.score,adult_tier:tier.tier,content_category:content.category,content_filter_score:content.score,
@@ -75,14 +100,19 @@ export async function publishFreeCandidates(author: FreeAuthor, candidates: Free
       score:rankingScore({views:p.views,likes:p.likes,reposts:p.reposts,replies:p.replies,createdAt:p.created_at})});
   }
   let saved = 0, promoted = 0;
+  let savedIds: string[] = [];
   if (rows.length) {
     const {error} = await database.from("authors").upsert({x_author_id:author.id,username:author.username,name:author.name,
-      is_curated:true,curated_status:"active",last_seen_at:now},{onConflict:"x_author_id",ignoreDuplicates:true});
+      ...(reference||options.manualPost?{is_curated:false}:{is_curated:true,curated_status:"active"}),last_seen_at:now},{onConflict:"x_author_id",ignoreDuplicates:true});
     if (error) throw new FreeCuratedError(503,"投稿者のDB保存に失敗しました。");
+    // Reference facts are durable before a new visible row is inserted.
+    await writeCuratedReferences(database,referenceRows);
     const inserted = await database.from("posts").upsert(rows,{onConflict:"x_post_id",ignoreDuplicates:true}).select("x_post_id");
     if (inserted.error) throw new FreeCuratedError(503,"本番動画のDB保存に失敗しました。");
     saved=(inserted.data??[]).length;
+    savedIds=(inserted.data??[]).map((row:any)=>String(row.x_post_id)).filter((id:string)=>/^\d{2,20}$/.test(id));
   }
+  if(!rows.length&&referenceRows.length)await writeCuratedReferences(database,referenceRows);
   for (const {candidate:p,row} of oldHidden) {
     // Check all conditions again in the UPDATE to preserve concurrent reviews/removals.
     const {data,error} = await database.from("posts").update({is_visible:true})
@@ -95,5 +125,17 @@ export async function publishFreeCandidates(author: FreeAuthor, candidates: Free
     promoted+=(data??[]).length;
   }
   outcomes.knownPostOrMedia-=promoted;outcomes.insertRace=rows.length-saved;
-  return {saved,promoted,excluded,duplicates:duplicateIds.size,outcomes,paid_x_requests:0};
+  return {saved,promoted,savedIds,excluded,duplicates:duplicateIds.size,outcomes,paid_x_requests:0};
+}
+
+export async function publishFreeReferencedPosts(curator:FreeAuthor,refs:FreeReferencedPost[],options:{database?:ReturnType<typeof supabaseAdmin>;blocked?:Set<string>}={}){
+ const total={saved:0,promoted:0,savedIds:[] as string[],excluded:0,duplicates:0,outcomes:emptyPublicationOutcomes(),paid_x_requests:0};
+ const groups=new Map<string,FreeReferencedPost[]>();
+ for(const ref of refs){const group=groups.get(ref.author.id)??[];group.push(ref);groups.set(ref.author.id,group);}
+ for(const links of groups.values()){
+  const result=await publishFreeCandidates(links[0].author,links.map(r=>r.candidate),{...options,reference:{curator,links}});
+  total.saved+=result.saved;total.promoted+=result.promoted;total.savedIds.push(...result.savedIds);total.excluded+=result.excluded;total.duplicates+=result.duplicates;
+  for(const key of Object.keys(total.outcomes) as (keyof typeof total.outcomes)[])total.outcomes[key]+=result.outcomes[key];
+ }
+ return total;
 }
