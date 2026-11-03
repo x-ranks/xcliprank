@@ -32,3 +32,5 @@
 ## 開発・テスト
 
 `npm ci` 後、`npm run check:source`、`npm run test:offline`、`node scripts/check-canonical.cjs types`、`node scripts/check-canonical.cjs build`。本番用コードと配布物は別の検証を実施する。FFmpeg依存テストは環境条件を確認して別途実行する。試験に実データ・実資格情報・外部動画を使用しない。
+
+選別投稿者が参照した動画の管理テーブル定義は `snapshots/twizou-20261102/production-reconstructed/supabase/curated-video-references.sql` を参照。本番DBへの適用成功はユーザー報告済み。再実行や移行前には現行スキーマを確認する。
