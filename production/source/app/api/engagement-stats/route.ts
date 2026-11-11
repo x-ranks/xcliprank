@@ -15,7 +15,7 @@ const EVENT_TYPES = [
   "ranking_change",
   "outbound_x",
 ] as const;
-const RANGES = ["trending", "daily", "weekly", "rising", "reels", "discover", "favorites", "browse", "accounts", "tags"] as const;
+const RANGES = ["trending", "daily", "weekly", "rising", "reels", "discover", "favorites", "browse", "accounts", "tags", "landing"] as const;
 
 type EngagementRow = {
   occurred_at: string;
@@ -120,6 +120,8 @@ export async function GET(request: NextRequest) {
     const sessionAcquisition = new Map<string, string>();
     const xContentSessionSets = new Map<string, Set<string>>();
     const daily = new Map<string, DailyBucket>();
+    const userDays = new Map<string, Set<string>>();
+    let firstQualifiedDay = "";
     const pageViewsByPath: Record<string, number> = Object.create(null);
     const eventCounts = Object.fromEntries(
       EVENT_TYPES.map((eventType) => [eventType, 0])
@@ -159,6 +161,10 @@ export async function GET(request: NextRequest) {
       }
 
       const day = japaneseDate(row.occurred_at);
+      const seenDays = userDays.get(row.anonymous_id_hash) ?? new Set<string>();
+      seenDays.add(day);
+      userDays.set(row.anonymous_id_hash, seenDays);
+      if (row.event_type === "qualified_view" && (!firstQualifiedDay || day < firstQualifiedDay)) firstQualifiedDay = day;
       const bucket = daily.get(day) ?? emptyDailyBucket();
       bucket.users.add(row.anonymous_id_hash);
       bucket.sessions.add(row.session_id);
@@ -187,6 +193,14 @@ export async function GET(request: NextRequest) {
     const videoOpen = eventCounts.video_open ?? 0;
     const qualifiedView = eventCounts.qualified_view ?? 0;
     const sessionCount = sessions.size;
+    let returningUsers = 0;
+    for (const seenDays of userDays.values()) if (seenDays.size >= 2) returningUsers += 1;
+    // 5-second tracking began after the first events; compare only days it was running.
+    let trackedOpens = 0;
+    let trackedQualified = 0;
+    for (const [date, bucket] of daily) {
+      if (firstQualifiedDay && date >= firstQualifiedDay) { trackedOpens += bucket.videoOpen; trackedQualified += bucket.qualifiedView; }
+    }
 
     return NextResponse.json(
       {
@@ -211,6 +225,11 @@ export async function GET(request: NextRequest) {
             videoOpen > 0
               ? Number(((qualifiedView / videoOpen) * 100).toFixed(1))
               : 0,
+          qualificationRateTracked:
+            trackedOpens > 0 ? Number(((trackedQualified / trackedOpens) * 100).toFixed(1)) : 0,
+          qualifiedSince: firstQualifiedDay,
+          returningUsers,
+          returningRate: users.size > 0 ? Number(((returningUsers / users.size) * 100).toFixed(1)) : 0,
         },
         daily: Array.from(daily.entries()).map(([date, bucket]) => ({
           date,
