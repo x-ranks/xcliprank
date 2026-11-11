@@ -5,6 +5,7 @@ import { notFound, redirect } from "next/navigation";
 import { parseRankingPage, newestPageHref, rankingHref } from "../lib/ranking-pagination";
 import Link from "next/link";
 import RankingClient from "./components/RankingClient";
+import NewSinceVisit from "./components/NewSinceVisit";
 import SiteFooter from "./components/SiteFooter";
 import StructuredData from "./components/StructuredData";
 import { loadRankingPage } from "../lib/initial-ranking";
@@ -104,6 +105,7 @@ export default async function Home({ searchParams }: { searchParams: Search }) {
         <RankingNavLink href="/reels">リール</RankingNavLink>
         <RankingNavLink href="/download">動画保存</RankingNavLink>
       </nav>
+      {page === 1 && <NewSinceVisit ids={initialPosts.map(post => String(post.x_post_id))} />}
       <RankingClient
         key={`${edition}:${page}`}
         range="trending"

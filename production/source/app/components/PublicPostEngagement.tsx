@@ -3,6 +3,7 @@
 import { useEffect, useRef } from "react";
 import { createEngagementEventId, trackEngagement } from "../../lib/engagement-client";
 import { publicReturnForPost, RETURN_STORAGE_KEY } from "../../lib/public-return-navigation";
+import { recordRecent } from "../../lib/recent-videos";
 
 function rankingRange(sourcePage: string | null) {
   if (!sourcePage) return undefined;
@@ -35,6 +36,9 @@ export default function PublicPostEngagement({ postId, sourcePage }: { postId: s
       source: "post_detail",
     });
   }, [postId, sourcePage]);
+
+  // Remember this video for the "最近見た" tab; storage is optional.
+  useEffect(() => { try { recordRecent(localStorage, postId); } catch { /* ignore */ } }, [postId]);
 
   return null;
 }
