@@ -35,7 +35,7 @@ export default function DirectPlaybackVideo({ src, postId, recoverEnabled = true
     const counter = createPlaybackCounter(); let opened = false;
     const range = () => { let stored: string | null = null; try { stored = sessionStorage.getItem(RETURN_STORAGE_KEY); } catch {}
       const from = engagementSourcePage || publicReturnForPost(postId, null, stored) || window.location.pathname;
-      return engagementRange(from.split("?")[0]); };
+      const base = from.split("?")[0]; return engagementRange(base) ?? (/^\/p\//.test(base) ? "landing" : undefined); };
     const reset = () => counter.reset();
     const playing = () => { reset(); if (trackReelOpen && !opened) { opened = true; trackEngagement({ eventType: "video_open", xPostId: postId, range: "reels", source: "reel_play" }); } tick(); };
     const tick = () => { if (trackQualifiedView && counter.tick(video.currentTime, performance.now(), video.playbackRate, !video.paused && !video.seeking && document.visibilityState === "visible")) trackEngagement({ eventType: "qualified_view", xPostId: postId, range: range(), source: trackReelOpen ? "reel_play" : "post_player", metadata: { seconds: 5 } }); };

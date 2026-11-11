@@ -17,6 +17,7 @@ const RANGE_LABELS: Record<string, string> = {
   browse: "動画一覧",
   accounts: "投稿者",
   tags: "タグ",
+  landing: "直接着地（検索・外部リンク）",
   unknown: "未分類",
 };
 
@@ -49,6 +50,10 @@ type Stats = {
     outboundX: number;
     opensPerSession: number;
     qualificationRate: number;
+    qualificationRateTracked?: number;
+    qualifiedSince?: string;
+    returningUsers?: number;
+    returningRate?: number;
   };
   daily: DailyRow[];
   rangeOpens: Record<string, number>;
@@ -233,7 +238,7 @@ export default function EngagementAdminPage() {
           <section className="engagement-kpis" aria-label="主要指標">
             {[
               ["匿名ユーザー", stats.totals.users, "期間内の端末単位"],
-              ["訪問", stats.totals.sessions, "ブラウザのタブ単位"],
+              ["訪問", stats.totals.sessions, "30分以内の連続利用は1訪問（旧: タブ単位）"],
               ["動画オープン", stats.totals.videoOpen, "動画を開いた回数"],
               ["5秒視聴", stats.totals.qualifiedView, "5秒到達した回数"],
               ["1訪問あたり", stats.totals.opensPerSession, "動画オープン数"],
@@ -250,8 +255,13 @@ export default function EngagementAdminPage() {
           <section className="engagement-insights">
             <article>
               <span>5秒視聴率</span>
-              <strong>{stats.totals.qualificationRate.toFixed(1)}%</strong>
-              <small>5秒視聴 ÷ 動画オープン</small>
+              <strong>{(stats.totals.qualificationRateTracked ?? stats.totals.qualificationRate).toFixed(1)}%</strong>
+              <small>5秒視聴 ÷ 動画オープン{stats.totals.qualifiedSince ? `（${stats.totals.qualifiedSince}以降）` : ""}</small>
+            </article>
+            <article>
+              <span>再訪ユーザー</span>
+              <strong>{(stats.totals.returningRate ?? 0).toFixed(1)}%</strong>
+              <small>期間内に2日以上来た端末（{number(stats.totals.returningUsers ?? 0)}台）</small>
             </article>
             <article>
               <span>Xへ移動</span>

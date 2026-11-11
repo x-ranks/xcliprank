@@ -31,7 +31,7 @@ export default function PublicPostEngagement({ postId, sourcePage }: { postId: s
       eventType: "video_open",
       occurrenceId: openId.current.id,
       xPostId: postId,
-      range: rankingRange(from),
+      range: rankingRange(from) ?? "landing",
       source: "post_detail",
     });
   }, [postId, sourcePage]);
