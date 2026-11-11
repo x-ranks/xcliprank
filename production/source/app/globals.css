@@ -1505,3 +1505,55 @@ html[data-age-confirmed="yes"] body.age-gate-open { overflow:auto; }
 .site-search-form :is(input,button):focus-visible { outline:3px solid #a8d4ff; outline-offset:2px; }
 .public-card-x-stats { display:flex; flex-wrap:wrap; gap:4px 10px; padding:0 11px; font-size:12px; }
 @media (max-width:600px) { .public-card-x-likes:not(:only-child) { display:none; } }
+
+/* 2026-11-11: compact masthead and list chrome so the first videos are visible immediately;
+   the favorite control becomes an overlay on the thumbnail. Appended last so it wins the cascade. */
+.site-brand-band { display:grid; grid-template-columns:auto minmax(0,1fr); align-items:center; gap:10px 18px; margin:0 0 14px; padding:12px 16px; }
+.site-brand-link { min-height:44px; gap:10px; }
+.site-brand-link img { width:44px; height:44px; }
+.site-brand-link span { font-size:30px; }
+.site-search-form { margin-top:0; max-width:none; justify-self:end; width:min(100%,520px); flex-wrap:nowrap; }
+.site-search-form button { flex:none; }
+.site-discovery-nav { grid-column:1 / -1; margin-top:0; }
+@media (min-width:901px) {
+  .site-brand-band { grid-template-columns:auto minmax(0,1fr) minmax(280px,440px); }
+  .site-discovery-nav { grid-column:2; grid-row:1; }
+  .site-search-form { grid-column:3; grid-row:1; width:100%; }
+}
+.branded-page-header .ranking-page-title { font-size:clamp(24px,3vw,32px); }
+.hero p { margin-top:4px; }
+.ranking-update { margin:10px 2px !important; font-size:13px !important; }
+.download-page-link { margin:0 2px 6px; }
+.compact-metrics { flex-wrap:wrap; gap:2px 9px; white-space:normal; }
+.compact-metrics > span { white-space:nowrap; }
+.video-card { position:relative; }
+.video-card .favorite-control { position:absolute; top:7px; right:7px; z-index:3; display:block; padding:0; }
+.video-card .favorite-control button { width:40px; height:40px; min-height:40px; padding:0; border-radius:999px; border-color:rgba(255,255,255,.22); background:rgba(8,12,17,.62); color:#fff; font-size:0; line-height:1; backdrop-filter:blur(6px); }
+.video-card .favorite-control button::before { content:"☆"; font-size:20px; }
+.video-card .favorite-control button[aria-pressed="true"] { border-color:#907b42; background:rgba(48,41,29,.88); }
+.video-card .favorite-control button[aria-pressed="true"]::before { content:"★"; color:#ffd666; }
+.video-card .favorite-control [role="status"] { position:absolute; top:44px; right:0; width:max-content; max-width:150px; padding:5px 8px; border-radius:8px; background:rgba(40,16,20,.94); }
+@media (hover:hover) and (prefers-reduced-motion:no-preference) {
+  .video-card { transition:transform .16s ease, border-color .16s ease, box-shadow .16s ease; }
+  .video-card:hover { transform:translateY(-2px); box-shadow:0 10px 26px #0005; }
+}
+@media (max-width:600px) {
+  .hero { padding:6px 0 8px; }
+  .site-brand-band { gap:8px 10px; margin-bottom:10px; padding:10px 12px; border-radius:12px; }
+  .site-brand-link { min-height:36px; gap:8px; }
+  .site-brand-link img { width:30px; height:30px; }
+  .site-brand-link span { font-size:22px; }
+  .site-search-form { grid-column:1 / -1; width:100%; gap:6px; }
+  .site-search-form input[type="search"] { flex:1 1 0; min-height:40px; padding:6px 10px; }
+  .site-search-form button { min-height:40px; padding:6px 10px; font-size:13px; }
+  .site-discovery-nav { flex-wrap:nowrap; overflow-x:auto; scrollbar-width:none; }
+  .site-discovery-nav a { flex:none; min-height:36px; padding:5px 11px; }
+  .branded-page-header .ranking-page-title { margin-top:2px; font-size:20px; }
+  .hero p { margin:2px 0 0; font-size:13px; line-height:1.5; }
+  .ranking-update { margin:6px 2px 2px !important; font-size:12px !important; }
+  .ranking-page-nav { display:flex; flex-wrap:nowrap; gap:4px; padding:5px; margin-bottom:6px; overflow-x:auto; scrollbar-width:none; border-radius:13px; }
+  .ranking-page-nav a, .ranking-page-nav button { flex:1 1 auto; min-height:38px; padding:6px 8px; font-size:12.5px; text-align:center; }
+  .download-page-link { margin:4px 2px; font-size:12px; text-align:left; }
+  .ranking-page-summary { min-height:0; padding:0 2px 6px; justify-content:flex-start; }
+  .ranking-page-summary small { text-align:left; }
+}
