@@ -1557,3 +1557,8 @@ html[data-age-confirmed="yes"] body.age-gate-open { overflow:auto; }
   .ranking-page-summary { min-height:0; padding:0 2px 6px; justify-content:flex-start; }
   .ranking-page-summary small { text-align:left; }
 }
+
+/* 2026-11-11: return-visit banner and X follow chip. */
+.new-since-visit { margin:8px 2px 4px; padding:9px 12px; border:1px solid #ff3347; border-radius:10px; background:#2a1519; color:#ffd9de; font-size:13px; line-height:1.5; }
+.new-since-visit strong { color:#fff; }
+.site-discovery-nav a.site-x-link { border-color:#3b5873; background:#16222d; color:#bcd8f2; }

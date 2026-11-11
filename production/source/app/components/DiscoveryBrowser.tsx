@@ -5,11 +5,14 @@ import PublicPostLink from "./PublicPostLink";
 import PublicThumbnail from "./PublicThumbnail";
 import FavoriteButton, { VIDEO_LIST_EVENT } from "./FavoriteButton";
 import { readVideoLists, setVideoListEntry, type VideoListKind } from "../../lib/local-video-lists";
+import { readRecent } from "../../lib/recent-videos";
 
 type Card = { id: string; handle: string | null; authorName: string | null; text: string | null; posterUrl: string | null; createdAt: string | null; unavailable?: boolean };
-type Mode = "random" | "search" | "month" | "tier" | "favorites" | "saveHistory";
-const personal = (mode: Mode): mode is VideoListKind => mode === "favorites" || mode === "saveHistory";
-const initialMode = (value: string | null): Mode => ["random", "search", "month", "tier", "favorites", "saveHistory"].includes(value ?? "") ? value as Mode : "random";
+type Mode = "random" | "search" | "month" | "tier" | "favorites" | "saveHistory" | "recent";
+type PersonalMode = VideoListKind | "recent";
+const personal = (mode: Mode): mode is PersonalMode => mode === "favorites" || mode === "saveHistory" || mode === "recent";
+const personalIds = (mode: PersonalMode): string[] => mode === "recent" ? readRecent(localStorage) : readVideoLists(localStorage)[mode];
+const initialMode = (value: string | null): Mode => ["random", "search", "month", "tier", "favorites", "saveHistory", "recent"].includes(value ?? "") ? value as Mode : "random";
 function personalCards(ids: string[], videos: Card[]): Card[] { const found = new Map(videos.map(v => [v.id, v])); return ids.map(id => found.get(id) ?? { id, handle: null, authorName: null, text: null, posterUrl: null, createdAt: null, unavailable: true }); }
 function discoveryParams(mode: Mode, term: string, month: string, tier: string, seed: number, offset: number) {
   const p = new URLSearchParams({ mode: mode === "month" && !month ? "months" : mode, offset: String(offset) });
@@ -25,7 +28,7 @@ export default function DiscoveryBrowser({ personalPage = false }: { personalPag
   const [revision, setRevision] = useState(0), [retry, setRetry] = useState(0), [initialized, setInitialized] = useState(false);
   const generation = useRef(0);
   useEffect(() => { const params = new URLSearchParams(location.search); const selected = initialMode(params.get("mode"));
-    setMode(personalPage ? (selected === "saveHistory" ? "saveHistory" : "favorites") : personal(selected) ? "random" : selected);
+    setMode(personalPage ? (selected === "saveHistory" || selected === "recent" ? selected : "favorites") : personal(selected) ? "random" : selected);
     setQ((params.get("q") ?? "").slice(0, 80)); setTerm((params.get("q") ?? "").slice(0, 80)); setMonth(params.get("month") ?? ""); setTier(params.get("tier") ?? "S");
     const suppliedSeed = params.get("seed"); setSeed(suppliedSeed && /^\d{1,10}$/.test(suppliedSeed) && Number(suppliedSeed) <= 0xffffffff ? Number(suppliedSeed) : Math.floor(Math.random() * 4294967296)); setInitialized(true);
   }, [personalPage]);
@@ -34,7 +37,7 @@ export default function DiscoveryBrowser({ personalPage = false }: { personalPag
     setCards([]); setOffset(0); setBusy(true); setError("");
     async function load() {
       try { let videos: Card[], next: number | null;
-        if (personal(mode)) { const ids = readVideoLists(localStorage)[mode]; const chunk = ids.slice(0, 50); next = ids.length > 50 ? 50 : null;
+        if (personal(mode)) { const ids = personalIds(mode); const chunk = ids.slice(0, 50); next = ids.length > 50 ? 50 : null;
           const response = await fetch("/api/discovery", { method: "POST", headers: { "content-type": "application/json" }, body: JSON.stringify({ ids: chunk }), signal: controller.signal }); const data = await response.json(); if (!response.ok || !data.ok) throw Error(); videos = personalCards(chunk, data.videos);
         } else { const params = discoveryParams(mode, term, month, tier, seed, 0);
           if (mode === "search" && !term.trim()) { setBusy(false); setOffset(null); return; }
@@ -49,7 +52,7 @@ export default function DiscoveryBrowser({ personalPage = false }: { personalPag
   async function more() {
     if (busy || offset === null) return; const requestGeneration = generation.current; setBusy(true); setError("");
     try { let videos: Card[], next: number | null;
-      if (personal(mode)) { const ids = readVideoLists(localStorage)[mode]; const chunk = ids.slice(offset, offset + 50); const response = await fetch("/api/discovery", { method: "POST", headers: { "content-type": "application/json" }, body: JSON.stringify({ ids: chunk }) }); const data = await response.json(); if (!response.ok || !data.ok) throw Error(); videos = personalCards(chunk, data.videos); next = offset + chunk.length < ids.length ? offset + chunk.length : null;
+      if (personal(mode)) { const ids = personalIds(mode); const chunk = ids.slice(offset, offset + 50); const response = await fetch("/api/discovery", { method: "POST", headers: { "content-type": "application/json" }, body: JSON.stringify({ ids: chunk }) }); const data = await response.json(); if (!response.ok || !data.ok) throw Error(); videos = personalCards(chunk, data.videos); next = offset + chunk.length < ids.length ? offset + chunk.length : null;
       } else { const params = discoveryParams(mode, term, month, tier, seed, offset); const response = await fetch("/api/discovery?" + params); const data = await response.json(); if (!response.ok || !data.ok) throw Error(); videos = data.data.videos; next = data.data.nextOffset; }
       if (requestGeneration !== generation.current) return;
       setCards(previous => { const existing = new Set(previous.map(v => v.id)); return [...previous, ...videos.filter(v => !existing.has(v.id))]; }); setOffset(next);
@@ -63,9 +66,10 @@ export default function DiscoveryBrowser({ personalPage = false }: { personalPag
   const returnTo = (personalPage ? "/favorites?" : "/discover?") + returnParams.toString();
   useEffect(() => { if (initialized && location.pathname === (personalPage ? "/favorites" : "/discover")) history.replaceState(history.state, "", returnTo); }, [initialized, personalPage, returnTo]);
   return <div className="discovery-browser"><nav className="discovery-tabs" aria-label="動画の探し方">
-    {(personalPage ? [["favorites", "お気に入り"], ["saveHistory", "保存履歴"]] : [["random", "ランダム"], ["tier", "Tierで探す"], ["month", "月別"], ["search", "検索"]]).map(([value, label]) => <button key={value} type="button" aria-pressed={mode === value} onClick={() => setMode(value as Mode)}>{label}</button>)}
+    {(personalPage ? [["favorites", "お気に入り"], ["recent", "最近見た"], ["saveHistory", "保存履歴"]] : [["random", "ランダム"], ["tier", "Tierで探す"], ["month", "月別"], ["search", "検索"]]).map(([value, label]) => <button key={value} type="button" aria-pressed={mode === value} onClick={() => setMode(value as Mode)}>{label}</button>)}
   </nav>
-  {personalPage && <p>この端末のブラウザに記録します。お気に入りは最大1000件、保存履歴は新しい順に最大1000件です。保存履歴は保存操作の記録で、端末への保存完了を保証するものではありません。</p>}
+  {personalPage && mode === "recent" && <p>この端末で最近開いた動画を、新しい順に最大100件表示します。ブラウザのデータを消去すると、記録も消えます。</p>}
+  {personalPage && mode !== "recent" && <p>この端末のブラウザに記録します。お気に入りは最大1000件、保存履歴は新しい順に最大1000件です。保存履歴は保存操作の記録で、端末への保存完了を保証するものではありません。</p>}
   {mode === "search" && <form onSubmit={event => { event.preventDefault(); setTerm(q.trim()); }}><label>タグ・本文・投稿者名 <input value={q} maxLength={80} onChange={event => setQ(event.target.value)} /></label> <button type="submit">検索</button></form>}
   {mode === "month" && <label>投稿月 <select value={month} onChange={event => setMonth(event.target.value)}><option value="">月を選択</option>{months.map(m => <option key={m} value={m}>{m}</option>)}</select></label>}
   {mode === "tier" && <label>Tier <select value={tier} onChange={event => setTier(event.target.value)}>{["S", "A+", "A", "B+", "B", "C"].map(t => <option key={t}>{t}</option>)}</select></label>}

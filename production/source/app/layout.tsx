@@ -56,7 +56,7 @@ export default function RootLayout({
       <head>
         <script dangerouslySetInnerHTML={{ __html: `try{if(localStorage.getItem("xcliprank_age_confirmed_v1")==="yes")document.documentElement.setAttribute("data-age-confirmed","yes")}catch{}` }} />
         <link rel="preconnect" href="https://pbs.twimg.com" />
-        <link rel="dns-prefetch" href="https://video.twimg.com" />
+        <link rel="preconnect" href="https://video.twimg.com" />
       </head>
       <body>
         {children}
