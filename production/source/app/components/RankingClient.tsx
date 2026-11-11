@@ -272,7 +272,7 @@ export default function RankingClient({
                   width={392}
                   height={220}
                   decoding="async"
-                  loading={index === 0 ? "eager" : "lazy"}
+                  loading={index < 3 ? "eager" : "lazy"}
                   fetchPriority={index === 0 ? "high" : "auto"}
                 />
               ) : (

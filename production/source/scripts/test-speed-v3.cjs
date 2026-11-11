@@ -66,7 +66,7 @@ async function main(){
  vm.runInNewContext(script,{localStorage:{getItem(){throw Error('denied');}},document:{documentElement:{setAttribute(){throw Error('AGE_BYPASS');}}}});
  const age=fs.readFileSync(p.join(root,'app/components/AgeGate.tsx'),'utf8');assert(age.includes('18歳以上ですか？')&&age.includes('removeAttribute("data-age-confirmed")'));
  for(const file of ['app/page.tsx','app/components/DedicatedRankingPage.tsx','app/rising/page.tsx']){const text=fs.readFileSync(p.join(root,file),'utf8');assert(!/<Link(?![^>]*prefetch=)/.test(text),file+' must explicitly avoid automatic prefetch');}
- const client=fs.readFileSync(p.join(root,'app/components/RankingClient.tsx'),'utf8');assert(client.includes('width={392}')&&client.includes('loading={index === 0 ? "eager" : "lazy"}'));
+ const client=fs.readFileSync(p.join(root,'app/components/RankingClient.tsx'),'utf8');assert(client.includes('width={392}')&&client.includes('loading={index < 3 ? "eager" : "lazy"}')&&client.includes('fetchPriority={index === 0 ? "high" : "auto"}'));
  const result={ageBootstrapFailClosed:true,explicitNoPrefetch:true,...await ranking(),catalog:await catalog()};
  console.log('PASS SPEED V3 '+JSON.stringify(result));
 }
