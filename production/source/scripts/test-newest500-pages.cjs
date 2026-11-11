@@ -46,6 +46,7 @@ function resolve(n){if(n.endsWith("SiteBrand"))return load("app/components/SiteB
  if(n.endsWith('RankingClient'))return Client;
  if(n.endsWith('StructuredData'))return structured;
  if(n.endsWith('SiteFooter'))return ()=>null; // unchanged server-only component not included in source receipt
+ if(n.endsWith('NewSinceVisit'))return ()=>null; // client-only personalisation, no effect on SSR cards or links
  if(n.endsWith('ranking-pagination'))return pagination;if(n.endsWith('ranking-display'))return load('lib/ranking-display.ts');
  if(n.endsWith('initial-ranking'))return {loadRankingPage:async(...args)=>{requests.push(args);return {...pageData,status};}};
  if(n.endsWith('/seo'))return seo;
