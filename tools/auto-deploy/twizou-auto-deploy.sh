@@ -254,8 +254,15 @@ for attempt in $(seq 1 20); do
   sleep 2
 done
 [[ "$VERIFIED" == 1 ]] || fail 'PUBLIC_VERSION_VERIFY_FAILED'
+# 入れ替え直後はアプリの起動待ちで 502/503 が一時的に返ることがあるため、最大 ~90 秒は待って再確認する
 for route in / /rising; do
-  code=$(fetch "$BASE_URL$route" "$TMP/page.html" "$TMP/page.h")
+  code=000
+  for warm in $(seq 1 30); do
+    code=$(fetch "$BASE_URL$route" "$TMP/page.html" "$TMP/page.h")
+    [[ "$code" == 200 ]] && break
+    log "WARMUP_WAIT route=$route code=$code try=$warm"
+    sleep 3
+  done
   [[ "$code" == 200 ]] || fail "PAGE_FAILED route=$route code=$code"
   grep -q 'class="video-card"' "$TMP/page.html" || fail "CARDS_EMPTY route=$route"
   [[ "$route" != /rising ]] || cp "$TMP/page.html" "$TMP/rising.html"
