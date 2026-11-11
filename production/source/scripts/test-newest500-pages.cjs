@@ -62,7 +62,7 @@ function assertCanonicalRankingLinks(html){
 }
 (async()=>{
  const home=load('app/page.tsx',resolve);
- const firstMetadata=await home.generateMetadata({searchParams:Promise.resolve({})});assert(firstMetadata.title.absolute.startsWith('Twitter動画ランキング'));
+ const firstMetadata=await home.generateMetadata({searchParams:Promise.resolve({})});assert(firstMetadata.title.absolute.startsWith('twizou｜Twitter動画ランキング'));
  const meta=await home.generateMetadata({searchParams:Promise.resolve({page:'2',edition})});assert.equal(meta.alternates.canonical,'https://twizou.net/?page=2');
  const {resolveAlternates}=require(deps+'/node_modules/next/dist/lib/metadata/resolvers/resolve-basics.js');
  // Exercise the installed framework, not only our pre-resolution metadata value.

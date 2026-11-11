@@ -15,7 +15,7 @@ export const dynamic = "force-dynamic";
 
 const homeMetadata: Metadata = {
   title: {
-    absolute: "Twitter動画ランキング・保存｜新着・24時間・週間｜twizou"
+    absolute: "twizou｜Twitter動画ランキング・保存｜新着・24時間・週間"
   },
   description:
     "Twitter（X）の動画を新着・24時間・週間ランキングで紹介。気になる動画の再生・保存や、投稿者・タグからの動画探しができます。",
@@ -28,7 +28,7 @@ const homeMetadata: Metadata = {
     "max-image-preview": "large"
   },
   openGraph: {
-    title: "Twitter動画ランキング・保存｜新着・24時間・週間｜twizou",
+    title: "twizou｜Twitter動画ランキング・保存｜新着・24時間・週間",
     description:
       "Twitter（X）の動画を新着・24時間・週間ランキングで紹介。動画の再生・保存や、投稿者・タグからの動画探しができます。",
     url: "/",
@@ -36,7 +36,7 @@ const homeMetadata: Metadata = {
   },
   twitter: {
     card: "summary_large_image",
-    title: "Twitter動画ランキング・保存｜新着・24時間・週間｜twizou",
+    title: "twizou｜Twitter動画ランキング・保存｜新着・24時間・週間",
     description:
       "Twitter（X）の動画ランキング。気になる動画を再生・保存し、投稿者やタグから探せます。",
     images: [`${SITE_URL}/twizou-share.png`]
@@ -55,7 +55,7 @@ export async function generateMetadata({ searchParams }: { searchParams: Search 
   const canonical = SITE_URL + newestPageHref(page);
   // Next 15 can discard a root URL's query when metadataBase is set.
   // This page supplies absolute URLs, so resolve them without the inherited base.
-  return { ...homeMetadata, ...(page > 1 ? { title: { absolute: `Twitter動画ランキング・保存｜新着 ${page}ページ｜twizou` } } : {}), metadataBase: null, alternates: { canonical }, openGraph: { ...homeMetadata.openGraph, url: canonical } };
+  return { ...homeMetadata, ...(page > 1 ? { title: { absolute: `twizou｜Twitter動画ランキング・保存｜新着 ${page}ページ` } } : {}), metadataBase: null, alternates: { canonical }, openGraph: { ...homeMetadata.openGraph, url: canonical } };
 }
 export default async function Home({ searchParams }: { searchParams: Search }) {
   const query = await searchParams;
@@ -76,10 +76,20 @@ export default async function Home({ searchParams }: { searchParams: Search }) {
         "@type": "WebSite",
         "@id": `${SITE_URL}/#website`,
         name: SITE_NAME,
+        alternateName: ["twizou.net", "トゥイゾウ"],
         url: SITE_URL,
         inLanguage: "ja-JP",
         description:
-          "Xに投稿された動画を新着・24時間・週間ランキングで紹介するサイト"
+          "Xに投稿された動画を新着・24時間・週間ランキングで紹介するサイト",
+        publisher: { "@id": `${SITE_URL}/#organization` }
+      },
+      {
+        "@type": "Organization",
+        "@id": `${SITE_URL}/#organization`,
+        name: SITE_NAME,
+        url: SITE_URL,
+        logo: `${SITE_URL}/icon-192.png`,
+        sameAs: ["https://x.com/twizou_rank"]
       },
       rankingItemList(
         "X動画 新着ランキング",
