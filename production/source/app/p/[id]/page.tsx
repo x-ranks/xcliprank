@@ -1,4 +1,6 @@
 import { Suspense } from "react";
+import { headers } from "next/headers";
+import AgeGate from "../../components/AgeGate";
 import { publicVideoSchema } from "../../../lib/public-video-schema";
 import PublicPostText from "../../components/PublicPostText";
 import SiteBrand from "../../components/SiteBrand";
@@ -26,10 +28,11 @@ export async function generateMetadata(props: Props): Promise<Metadata> {
     twitter: { card: d.video.posterUrl ? "summary_large_image" : "summary", title: d.metadata.title, description: d.metadata.description, ...(d.video.posterUrl ? { images: [d.video.posterUrl] } : {}) } };
 }
 export default async function PostPage(props: Props) {
+  const verifiedGooglebot = (await headers()).get("x-twizou-verified-googlebot") === "1";
   const d = await data(props); if (!d) notFound(); const { video: v, metadata: m } = d;
   const facts = publicVideoFacts(v, d.technical);
   const query = await props.searchParams; const sourcePage = safePublicReturn(query?.from); const returnTo = sourcePage ?? "/";
-  return <main className="public-post-page">
+  return <><AgeGate verifiedGooglebot={verifiedGooglebot} forceForPost /><main className="public-post-page">
     <SiteBrand />
     <PublicPostEngagement postId={v.id} sourcePage={sourcePage} />
     {publicVideoSchema(v, m, d.labels, d.technical) ? <StructuredData data={publicVideoSchema(v, m, d.labels, d.technical)!} /> : null}
@@ -59,7 +62,7 @@ export default async function PostPage(props: Props) {
     <Suspense fallback={<section aria-label="関連動画を準備中" style={{ minHeight: 280 }}><h2>関連動画</h2><p role="status">動画を読み込んでいます…</p></section>}>
       <PostRelated id={v.id} returnTo={returnTo} />
     </Suspense>
-  </main>;
+  </main></>;
 }
 
 // Nonessential panels must not keep the streamed player response open indefinitely.

@@ -92,15 +92,15 @@ export default async function Home({ searchParams }: { searchParams: Search }) {
     <main>
       <StructuredData data={structuredData} />
       <header className="hero branded-page-header">
-        <SiteBrand />
+        <SiteBrand showSearch />
         <h1 className="ranking-page-title">新着ランキング</h1>
         <p>新着動画を紹介！</p>
       </header>
       <nav className="ranking-page-nav" aria-label="ランキングを選択">
         <RankingNavLink href="/rising">急上昇</RankingNavLink>
-        <RankingNavLink href={rankingHref("trending", edition)} className="active" aria-current="page">新着</RankingNavLink>
-        <RankingNavLink href={rankingHref("daily", edition)}>24時間</RankingNavLink>
-        <RankingNavLink href={rankingHref("weekly", edition)}>週間</RankingNavLink>
+        <RankingNavLink href={rankingHref("trending")} className="active" aria-current="page">新着</RankingNavLink>
+        <RankingNavLink href={rankingHref("daily")}>24時間</RankingNavLink>
+        <RankingNavLink href={rankingHref("weekly")}>週間</RankingNavLink>
         <RankingNavLink href="/reels">リール</RankingNavLink>
         <RankingNavLink href="/download">動画保存</RankingNavLink>
       </nav>

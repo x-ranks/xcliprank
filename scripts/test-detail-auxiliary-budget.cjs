@@ -7,6 +7,8 @@ let labels=0,related=0;
 const never=()=>new Promise(()=>{}),Link=({href,prefetch,children,...props})=>React.createElement('a',{href,...props},children);
 function load(file){if(cache.has(file))return cache.get(file);const m={exports:{}};new Function('require','module','exports',ts.transpileModule(fs.readFileSync(path.join(root,file),'utf8'),{compilerOptions:{module:ts.ModuleKind.CommonJS,target:ts.ScriptTarget.ES2022,jsx:ts.JsxEmit.ReactJSX,esModuleInterop:true}}).outputText)(n=>resolve(n,file),m,m.exports);cache.set(file,m.exports);return m.exports;}
 function resolve(n,file){
+ if(n==='next/headers')return {headers:async()=>new Headers()};
+ if(n.endsWith('AgeGate'))return {__esModule:true,default:()=>null};
  if(n==='react'||n==='react/jsx-runtime')return require(n);
  if(n==='next/link')return Link;if(n==='next/navigation')return {notFound(){throw Error('NOT_FOUND');}};
  if(n.endsWith('public-video-server'))return {readPublicDetailCore:async()=>detail,readPublicLabels:()=>{labels++;return never();},readPublicRelated:()=>{related++;return never();}};

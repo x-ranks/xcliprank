@@ -6310,5 +6310,14 @@
 }
 }
 }
-}
+},
+  "twizouSourceSync20261111": {
+    "date": "2026-11-11",
+    "baselineCommit": "9e752fb3d942b35482084a1b68ac05d81b6351ac",
+    "releaseManifest": "releases/20261111-twizou/manifest.json",
+    "localManifest": "docs/current-local-source-20261111.json",
+    "productionManifest": "docs/current-production-source-20261111.json",
+    "lastConfirmedProductionBuild": "uMZ18H35sHkUF_6OtbRLA",
+    "investigation": "docs/TWIZOU_GSC_INVESTIGATION_20261111.md"
+  }
 }

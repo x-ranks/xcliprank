@@ -15,19 +15,19 @@ const PAGE_COPY = {
     eyebrow: "DAILY RANKING",
     title: "24時間ランキング",
     description:
-      "毎日入れ替わる動画を紹介！",
+      "直近24時間のX（Twitter）動画と、過去のおすすめを日替わりで紹介します。",
     seoTitle: "Twitter動画の24時間ランキング・保存",
     seoDescription:
-      "直近24時間の人気動画をランキング形式で表示しています。"
+      "新着ランキングとはひと味違う動画を探したいときにどうぞ。"
   },
   weekly: {
     eyebrow: "WEEKLY RANKING",
     title: "週間ランキング",
     description:
-      "直近1週間の人気動画を紹介！",
+      "直近1週間のX（Twitter）動画を中心に、人気やtwizouでの評価をもとに選んでいます。",
     seoTitle: "Twitter動画の週間ランキング・保存",
     seoDescription:
-      "直近1週間の人気動画をランキング形式で表示しています。"
+      "動画が少ないときは、過去のおすすめも加えています。"
   }
 } as const;
 
@@ -56,23 +56,23 @@ export default function DedicatedRankingPage({
     <main>
       <StructuredData data={structuredData} />
       <header className="ranking-page-header">
-        <SiteBrand />
+        <SiteBrand showSearch />
         <h1 className="ranking-page-title">{copy.title}</h1>
         <p className="ranking-page-description">{copy.description}</p>
       </header>
 
       <nav className="ranking-page-nav" aria-label="ランキングを選択">
         <RankingNavLink href="/rising">急上昇</RankingNavLink>
-        <RankingNavLink href={rankingHref("trending", edition)}>新着</RankingNavLink>
+        <RankingNavLink href={rankingHref("trending")}>新着</RankingNavLink>
         <RankingNavLink
-          href={rankingHref("daily", edition)}
+          href={rankingHref("daily")}
           className={range === "daily" ? "active" : undefined}
           aria-current={range === "daily" ? "page" : undefined}
         >
           24時間
         </RankingNavLink>
         <RankingNavLink
-          href={rankingHref("weekly", edition)}
+          href={rankingHref("weekly")}
           className={range === "weekly" ? "active" : undefined}
           aria-current={range === "weekly" ? "page" : undefined}
         >
@@ -94,11 +94,11 @@ export default function DedicatedRankingPage({
         <h2 id={`${range}-ranking-info`}>{copy.seoTitle}</h2>
         <p>{copy.seoDescription}</p>
         <p className="seo-related-links">
-          <Link prefetch={false} href={rankingHref("trending", edition)}>新着ランキング</Link>
+          <Link prefetch={false} href={rankingHref("trending")}>新着ランキング</Link>
           {range === "daily" ? (
-            <Link prefetch={false} href={rankingHref("weekly", edition)}>週間ランキング</Link>
+            <Link prefetch={false} href={rankingHref("weekly")}>週間ランキング</Link>
           ) : (
-            <Link prefetch={false} href={rankingHref("daily", edition)}>24時間ランキング</Link>
+            <Link prefetch={false} href={rankingHref("daily")}>24時間ランキング</Link>
           )}
         </p>
       </section>

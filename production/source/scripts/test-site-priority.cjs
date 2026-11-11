@@ -7,7 +7,7 @@ function load(file,resolve=require){if(resolve)resolve=require("./public-ui-test
 const core=load('lib/public-video-core.ts',n=>n.endsWith('indexability')?load('lib/indexability.ts'):require(n)),nav=load('lib/public-return-navigation.ts');
 const id='2061469959365280142',poster='data:image/svg+xml,'+encodeURIComponent('<svg xmlns="http://www.w3.org/2000/svg" width="392" height="220"><rect width="392" height="220" fill="#213345"/><circle cx="196" cy="110" r="32" fill="#6e8fa4"/><path d="M188 92l25 18-25 18z" fill="white"/></svg>');
 const video={id,authorId:'123',handle:'sample_author',authorName:'サンプル投稿者',text:'公開投稿のサンプルです。 #タグA ＃タグB #未登録',posterUrl:poster,videoUrl:'https://video.twimg.com/fixture.mp4',createdAt:'2026-10-20T12:00:00Z',sourceHash:'a'.repeat(64),eligible:true};
-let labels=[{id:'a',name:'タグA',count:4,index:true},{id:'b',name:'タグB',count:3,index:true},{id:'empty',name:'空タグ',count:0,index:false}],rankingPages=10,rankingStatus=200,rankingThrows=false;
+let labels=[{id:'a',name:'タグA',count:4,index:true},{id:'b',name:'タグB',count:3,index:true},{id:'empty',name:'空タグ',count:0,index:false}];
 const index={posts:[{id,modifiedAt:'2026-10-20T12:00:00Z'}],accounts:[{key:'sample_author',modifiedAt:'2026-10-20T12:00:00Z'}],tags:labels};
 const Link=({children,href,prefetch,...props})=>React.createElement('a',{href,...props},children);
 const bridge={readPublicIndex:async()=>index,readPublicBrowse:async page=>page===1||page===2?{page,totalCount:101,totalPages:2,videos:[video]}:null,readPublicLabels:async()=>labels,
@@ -17,7 +17,7 @@ function resolve(n){if(n==='react')return React;if(n.endsWith('public-video-sche
  if(n==='react'||n==='react/jsx-runtime')return require(n);if(n==='next/link')return Link;
  if(n==='next/navigation')return{notFound(){throw Error('NOT_FOUND');},permanentRedirect(){throw Error('REDIRECT');},useRouter:()=>({replace(){}})};
  if(n.endsWith('public-video-server'))return {...bridge,readPublicDetailCore:bridge.readPublicDetail,readPublicRelated:bridge.readPublicDetail};
- if(n.endsWith('initial-ranking'))return{loadRankingPage:async()=>{if(rankingThrows)throw Error('FIXTURE_RANKING_UNAVAILABLE');return{status:rankingStatus,pagination:{totalPages:rankingPages}};}};
+ if(n.endsWith('initial-ranking'))throw Error('SITEMAP_MUST_NOT_LOAD_RANKING');
  if(n.endsWith('public-video-core'))return core;if(n.endsWith('public-return-navigation'))return nav;
  if(n.endsWith('public-list-pages'))return load('lib/public-list-pages.ts');if(n.endsWith('ranking-pagination'))return load('lib/ranking-pagination.ts');if(n.endsWith('indexability'))return load('lib/indexability.ts');
  if(n.endsWith('/seo'))return{SITE_URL:core.PUBLIC_SITE,SITE_NAME:'twizou'};
@@ -49,9 +49,13 @@ async function main(){
  const browse=load('app/browse/page.tsx',resolve),browseHtml=renderToStaticMarkup(await browse.default({searchParams:Promise.resolve({page:'2'})}));
  assert(browseHtml.includes('サンプル投稿者'));assert(browseHtml.includes('公開投稿のサンプル'));assert(browseHtml.includes('width="392" height="220"'));assert(!browseHtml.includes('>動画 '+id+'<'));assert(browseHtml.includes('href="/p/'+id+'"'));assert(!/href="\/p\/[^" ]+\?from=/.test(browseHtml));assert.equal(nav.safePublicReturn('/browse?page=2'),'/browse?page=2');assert.equal(nav.safePublicReturn('/browse?page=0'),null);
  const bm=await browse.generateMetadata({searchParams:Promise.resolve({page:'2'})});assert.equal(bm.alternates.canonical,core.PUBLIC_SITE+'/browse?page=2');assert.equal(bm.robots['max-image-preview'],'large');await assert.rejects(browse.default({searchParams:Promise.resolve({page:'3'})}),/NOT_FOUND/);
- const sitemap=load('app/sitemap.ts',resolve);let urls=await sitemap.default();assert(urls.some(v=>v.url===core.PUBLIC_SITE+'/?page=10'));assert(!urls.some(v=>v.url.includes('edition=')));assert(!urls.some(v=>v.url.includes(encodeURIComponent('空タグ'))));assert.equal(urls.find(v=>v.url.endsWith('/p/'+id)).lastModified,undefined);assert.equal(urls.find(v=>v.url.endsWith('/accounts/sample_author')).lastModified,undefined);
- rankingPages=3;urls=await sitemap.default();assert(urls.some(v=>v.url.endsWith('/?page=3')));assert(!urls.some(v=>v.url.endsWith('/?page=4')));rankingPages=100;assert.equal((await sitemap.default()).filter(v=>v.url.includes('/?page=')).length,9);
- rankingThrows=true;assert((await sitemap.default()).some(v=>v.url.endsWith('/p/'+id)));assert(!(await sitemap.default()).some(v=>v.url.includes('/?page=')));rankingThrows=false;
+ const sitemap=load('app/sitemap.ts',resolve);const urls=await sitemap.default();
+ assert(urls.some(v=>v.url===core.PUBLIC_SITE));
+ assert(!urls.some(v=>v.url.startsWith(core.PUBLIC_SITE+'/?page=')));
+ assert(!urls.some(v=>v.url.includes('edition=')||v.url.includes('from=')));
+ assert(!urls.some(v=>v.url.includes(encodeURIComponent('空タグ'))));
+ assert.equal(urls.find(v=>v.url.endsWith('/p/'+id)).lastModified,undefined);
+ assert.equal(urls.find(v=>v.url.endsWith('/accounts/sample_author')).lastModified,undefined);
  const tags=load('app/tags/page.tsx',resolve),tagsHtml=renderToStaticMarkup(await tags.default());assert(!tagsHtml.includes('空タグ'));assert(tagsHtml.includes('タグA'));
  const storedLabels=labels;labels=labels.map(l=>({...l,count:0,index:false}));assert.equal((await tags.generateMetadata()).robots.index,false);assert(renderToStaticMarkup(await tags.default()).includes('現在表示できるタグはありません。'));labels=storedLabels;
  const tag=load('app/tags/[name]/page.tsx',resolve),tagHtml=renderToStaticMarkup(await tag.default({params:Promise.resolve({name:'タグA'})}));assert(tagHtml.includes('タグの掲載動画'));assert(tagHtml.includes('再生・保存'));assert(tagHtml.includes('aria-label="一緒に付けられているタグ"'));assert(tagHtml.includes('/tags/'+encodeURIComponent('タグB')));assert(!tagHtml.includes('空タグ'));
@@ -64,6 +68,6 @@ async function main(){
   const html='<!doctype html><html lang="ja"><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>twizou 更新内容の確認用プレビュー</title><style>'+css+'\n.preview-note{padding:20px;max-width:1120px;margin:auto;border-bottom:1px solid #456}.demo a{pointer-events:none}.demo{border-bottom:3px solid #456;margin-bottom:36px}</style><body><div class="preview-note"><h1 style="font-size:28px">更新内容の確認用プレビュー</h1><p>架空のデータを使った実コンポーネントの表示見本です。リンク操作は無効です。年齢確認は実サイトで維持します。</p><p>変更：動画一覧のカード化／タグ一覧の0件非表示／タグページの案内・関連タグ／動画詳細のパンくずと既存タグへのリンク。タイトル・サイトマップ・メタ設定は変更一覧.mdをご覧ください。</p></div>'+[['動画一覧（2ページ目）',browseHtml],['タグ一覧',tagsHtml],['タグページ',tagHtml],['動画詳細',postHtml]].map(([name,body])=>'<section class="demo"><h2 class="preview-note">'+name+'</h2>'+body+'</section>').join('')+'</body></html>';
   fs.writeFileSync(path.join(dest,'preview.html'),html.replaceAll('src="/twizou-mark.svg"','src="twizou-mark.svg"'));fs.copyFileSync(path.join(root,'public/twizou-mark.svg'),path.join(dest,'twizou-mark.svg'));
  }
- console.log('PASS SITE PRIORITY: real SSR browse/cards/tag hubs/tag descriptions/post hashtag links and breadcrumb JSON; batch reads/exclusions/order; current ranking-page sitemap counts/cap/failure isolation; preview limits/canonical/OGP/report/direct video preserved. Fixture only, no network.');
+ console.log('PASS SITE PRIORITY: real SSR browse/cards/tag hubs/tag descriptions/post hashtag links and breadcrumb JSON; batch reads/exclusions/order; sitemap independent of ranking hydration; preview limits/canonical/OGP/report/direct video preserved. Fixture only, no network.');
 }
 main().catch(e=>{console.error(e);process.exitCode=1;});

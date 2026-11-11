@@ -1,0 +1,1669 @@
+{
+  "version": 1,
+  "files": [
+    {
+      "path": "app/accounts/[key]/page.tsx",
+      "sha256": "f22c691bdccb1bdbbefb6f855f21f9932961f904d2b7e5f9aee46da772325d6c"
+    },
+    {
+      "path": "app/accounts/page.tsx",
+      "sha256": "65d53323639c1692a7e5bba3fc86347df181cd0a6e02f03b028a65b2d195d069"
+    },
+    {
+      "path": "app/advertising-disclosure/page.tsx",
+      "sha256": "0f920adaede6f8811f5ba35d3c51e81dd66c5864ced759cdbd732622e9d9548d"
+    },
+    {
+      "path": "app/api/adult-authors/route.ts",
+      "sha256": "8967e7f174741f5fb73b366d28c82266af387447762f1f64cb641ac1f198de4f"
+    },
+    {
+      "path": "app/api/collect-curated-author/route.ts",
+      "sha256": "c241570710ef209fe4eed5747ccdb07b97591e66174c7dc6f3751f14390fb1fa"
+    },
+    {
+      "path": "app/api/collect-curated-batch/route.ts",
+      "sha256": "68e25d2c92a53f32e91312beb3337d0788f41cc815d67bbc3af1c052d8d2412f"
+    },
+    {
+      "path": "app/api/collect-priority-batch/route.ts",
+      "sha256": "bdb0459878dd24f9868a0478ce7a5a317bc3e61d977e95ff9c877a8bbbcff48c"
+    },
+    {
+      "path": "app/api/collect-priority/route.ts",
+      "sha256": "784fb3330687ceef9d70f2ee806b6b535c16ca23a06a49330ea2e859d8309219"
+    },
+    {
+      "path": "app/api/collect-test/route.ts",
+      "sha256": "0a057eb2179df30bcadffb09b76f5a76996935e539c5fa663747e2783470a95c"
+    },
+    {
+      "path": "app/api/collect/route.ts",
+      "sha256": "e30230dd80f442ac7e3dad1bc25fde2309df1456411dd40aa4c2f1eedfc10c89"
+    },
+    {
+      "path": "app/api/content-filter-backfill/route.ts",
+      "sha256": "0b93b995d695a0413011429b810c6cee0da34fe623e3b16525962ffcec9b073b"
+    },
+    {
+      "path": "app/api/content-filter-preview/route.ts",
+      "sha256": "1e98e7c2245ae3b6dd13b3b71613514ab2d29c4fc60f6d3583faa73878dd910d"
+    },
+    {
+      "path": "app/api/content-filter-review/route.ts",
+      "sha256": "4959b48aeea10b9811e21407b9d120bfd0de2acc08d25b6f54f3028ec73af570"
+    },
+    {
+      "path": "app/api/curated-authors/route.ts",
+      "sha256": "cc9374296de44849535c5e31e627e74c2c574b1b6f83da22585af2deb2d3a5a1"
+    },
+    {
+      "path": "app/api/curated-manager/route.ts",
+      "sha256": "4287130d91f5ba2f00d8e64c783e9480d69317dd0039057812365ec00f3a0c70"
+    },
+    {
+      "path": "app/api/discovery/route.ts",
+      "sha256": "880c7345acf52f26ffdbdb3390402914f6048d091450cda4f2d7021cd84ad14f"
+    },
+    {
+      "path": "app/api/engagement-stats/route.ts",
+      "sha256": "e5aef6700f8afbc305975a1250f7f192ffa43fa2005d953a8e91ef6cce5fc195"
+    },
+    {
+      "path": "app/api/engagement/route.ts",
+      "sha256": "89e93f75c082632bbb9eab7fd92b02859eeb91e7ff682efe21f4f3c18c86c20e"
+    },
+    {
+      "path": "app/api/fxtwitter-authors/route.ts",
+      "sha256": "7644a72bd25409472e3edede50a7d7cf51052fc8c05fb186bc6f01a424f53309"
+    },
+    {
+      "path": "app/api/label-auto/route.ts",
+      "sha256": "71cff9364176c6190fa641f2b3f26a06526476f2a1a2ba1804684e67300b46b4"
+    },
+    {
+      "path": "app/api/label-diagnostics/route.ts",
+      "sha256": "952b1f66dad0a9263b1dd2454d5ce7ff333f36558dc46b56ab940d4b94150337"
+    },
+    {
+      "path": "app/api/label-learning/frame/route.ts",
+      "sha256": "5f23473da894a589d2209cde22e2376782064180eff2639bbdc4cbfc5677dc8c"
+    },
+    {
+      "path": "app/api/label-learning/route.ts",
+      "sha256": "0044310ad84075743a82008fdc617310eca31c90c21b1015bdbda52f89f14728"
+    },
+    {
+      "path": "app/api/label-publication/frame/route.ts",
+      "sha256": "bec72776dd02c3783e58f905a2e051abf11388d2a099d8337da7229ff1db7ef0"
+    },
+    {
+      "path": "app/api/label-publication/route.ts",
+      "sha256": "27b37557c2ca299177b9047e95d183a5c16cceff2d345f75c0b06d90f6cd861b"
+    },
+    {
+      "path": "app/api/local-admin-status/route.ts",
+      "sha256": "3b90e8e14c4e6a9e135c06761dee896638a5b42d37fa0cbcf3bcc96218c06485"
+    },
+    {
+      "path": "app/api/manual-ranking/route.ts",
+      "sha256": "a92fc4489ede178c6030ade561a003c0705d23550bd82efbdbe84d529351eef5"
+    },
+    {
+      "path": "app/api/preference-feature-cache/route.ts",
+      "sha256": "b01a91546deda18669134ad0cded97dfc5be51ba64d8611f3ee9fd434df93ec6"
+    },
+    {
+      "path": "app/api/preference-model/route.ts",
+      "sha256": "8a96bc2b03b62a74dcd7b2a40f35e926da07a809b65209311722ab6cd2897825"
+    },
+    {
+      "path": "app/api/public-save-event/route.ts",
+      "sha256": "461173d5d30e0e662e74bb89bc038f263483a89516fcd728fd2fb655fb194530"
+    },
+    {
+      "path": "app/api/ranking-admin/route.ts",
+      "sha256": "64703f59d7174e39768f084a2a49ee19e4a4df75d3055d0b8b704edace8d95e7"
+    },
+    {
+      "path": "app/api/rankings/route.ts",
+      "sha256": "e97c7ac6628ef0b7c81839d0d0f92dfc3380e4b7e49475c1eca4e90895abed59"
+    },
+    {
+      "path": "app/api/rebuild-author-signals/route.ts",
+      "sha256": "549612ec3b7706264913b608ed4fac31c4a3bf6cf237c8a0f2e2429263858423"
+    },
+    {
+      "path": "app/api/recount-authors/route.ts",
+      "sha256": "f14cbdf08e729179e31bf84fbcf3cb74d7f6b68eff35357575582f2c4ebe489c"
+    },
+    {
+      "path": "app/api/recount-effective-adult/route.ts",
+      "sha256": "ecf8b3886b353409aff1e7bed0c1822294fa8351d0a6bd6bae16bd1f7c45febf"
+    },
+    {
+      "path": "app/api/recount-posts/route.ts",
+      "sha256": "0256d185c2e073c605c7c1d9c6c8b41543add97bff54f417727f8a09cdae8ea7"
+    },
+    {
+      "path": "app/api/reels/route.ts",
+      "sha256": "465c70bbe9a8395d8cde48f18d00112cd9d33319db670b1b69b85f4862d6eed4"
+    },
+    {
+      "path": "app/api/removal-requests/route.ts",
+      "sha256": "45bb8b897cfd53108202e080aed37a869af8c957c24857a2259788ac5647af0c"
+    },
+    {
+      "path": "app/api/review/route.ts",
+      "sha256": "e49373d4311acc6f0377fa6f1e6bde2e733550a11ce491d33b6f02c6b5de9bc1"
+    },
+    {
+      "path": "app/api/run-cycle/route.ts",
+      "sha256": "01e563629aa7fcdfa94e5b6093dcf2ef0cf844f52dad24d700522a38383123bf"
+    },
+    {
+      "path": "app/api/teacher-authors/route.ts",
+      "sha256": "4d6be89869ff9fb45283aeee8485367f5ecf7b77707231cec4b0159ee46254cc"
+    },
+    {
+      "path": "app/api/tier-personal-model/route.ts",
+      "sha256": "00a0f25bb408075cfd72f5ecc437f11bc1a8ee9ce21ecfc3a3c1e03feb8e1e4c"
+    },
+    {
+      "path": "app/api/tier-preview-playback/route.ts",
+      "sha256": "7e8dd7fa6ec88ea9fedeb1b1c5009bff5679d038373031574f12a05dc023c668"
+    },
+    {
+      "path": "app/api/tier-reevaluation/route.ts",
+      "sha256": "2b5064bdbf4296f43be3c63c60c66de1ea76eb305806455ef0283bc348ed72f2"
+    },
+    {
+      "path": "app/api/tier-teacher-analysis/route.ts",
+      "sha256": "e85e12347c03d9c67d0d16354ee8c3d63088b825b796fdb30998e74beec69357"
+    },
+    {
+      "path": "app/api/tier-video-preview/route.ts",
+      "sha256": "a75bba92d947c37c0ec91e1dbbaebc997c09835faf31252244ed74812de00567"
+    },
+    {
+      "path": "app/api/video-download/route.ts",
+      "sha256": "98197e4f2e925f69b236f14d1773ed7938d0f6a4782d92159ceb3cd72cbb343c"
+    },
+    {
+      "path": "app/api/video-inventory/route.ts",
+      "sha256": "d6e74820996f7f6419bdc2bbefdbbb2d6a90dbd5a444c789a1f073abcd359e32"
+    },
+    {
+      "path": "app/api/video-playback-url/route.ts",
+      "sha256": "dd8a0a27f93686ec49341225e4efc1ee8c3ee47f43e3986932087fadca0a3c22"
+    },
+    {
+      "path": "app/api/video-resolve/route.ts",
+      "sha256": "68b72f70630345e15b25d629cd3ec2a23aa33d3f2fe1e039802751e593fa8e20"
+    },
+    {
+      "path": "app/api/video/route.ts",
+      "sha256": "5f9ddad228f6cd636da78253b0b7c4c0d5e836941fe0cd9b4c374e0f2703f504"
+    },
+    {
+      "path": "app/api/visual-filter-image/route.ts",
+      "sha256": "6b3cf40a5bf2d3b0698c93cea6cec6ef32854c43212d4d512818fd4c4497bbf4"
+    },
+    {
+      "path": "app/api/visual-filter-model/[file]/route.ts",
+      "sha256": "53c5396149c40dc329c04eb7b753f53307d7c2f21249eeae844933bfb8b32088"
+    },
+    {
+      "path": "app/api/visual-filter-preview/route.ts",
+      "sha256": "005d30d858816d3738055b92be85b0fc37bbb20c9e293a6dc4f19c371b24829b"
+    },
+    {
+      "path": "app/api/visual-preference-scores/route.ts",
+      "sha256": "b46b7a984e9b7b501dc28f2304181b8e45dc9bc38a7709f859518a1a101be3af"
+    },
+    {
+      "path": "app/api/x-api-usage/route.ts",
+      "sha256": "baf4811d5d382217c987d25bb98ba9624e168c39221b91b44736ec2bccae1d45"
+    },
+    {
+      "path": "app/api/x-promotion/route.ts",
+      "sha256": "2a944f06933d7c4c752282fef217069d0d04143f73336c1256ca4caacbaefffc"
+    },
+    {
+      "path": "app/availability-monitor/Panel.tsx",
+      "sha256": "e8d50e45c48779f9071cde178990b5b79f9be1293095c780be5b5dfd8676725c"
+    },
+    {
+      "path": "app/availability-monitor/page.tsx",
+      "sha256": "adf7de382a9cf4063d5d86db1e7dacc98827807ab139886765715c7a6c031f89"
+    },
+    {
+      "path": "app/browse/page.tsx",
+      "sha256": "cd80edce603feaa3fd8e7559d7ab15425da370803e07eac480aa4cc9d9a6152f"
+    },
+    {
+      "path": "app/combined-ranking-preview/page.tsx",
+      "sha256": "d3d348ab6af5556a568c4533f9c8237621fb16fac209853101d1bcab97e673e1"
+    },
+    {
+      "path": "app/components/AgeGate.tsx",
+      "sha256": "0d04e1a3b1f62c91f545799561966e28ae5a3b9e073e0fa28c4d100c48baa5b9"
+    },
+    {
+      "path": "app/components/DedicatedRankingPage.tsx",
+      "sha256": "f77de56d0d825f3a551cb6d5dde5afaf3c7715bc97068f1d33bea3482fcde622"
+    },
+    {
+      "path": "app/components/DirectPlaybackVideo.tsx",
+      "sha256": "947a1214751f178ef2f662e334d598f0bfd64167c270c4c918699c733d7a6248"
+    },
+    {
+      "path": "app/components/DiscoveryBrowser.tsx",
+      "sha256": "d5be192201d5b28011f3585432e12c7192e084484a95dc511ba389b008cac045"
+    },
+    {
+      "path": "app/components/EngagementVisitTracker.tsx",
+      "sha256": "af062a7b819c4d1aa7707dfbbd4a1865c39bc4cd5354f38479d39a0181bbf628"
+    },
+    {
+      "path": "app/components/ExternalVideo.tsx",
+      "sha256": "e06a5911b524523c7e5723fc444a2eb010f3bef6a2a3d3ad6056326363c8641c"
+    },
+    {
+      "path": "app/components/FavoriteButton.tsx",
+      "sha256": "b230df12e96006cc72897298f8436180a0273f9c40c7b260d78987b9c26b4746"
+    },
+    {
+      "path": "app/components/LegalPage.tsx",
+      "sha256": "eeb948ecbdd09ad98eb8d24651c72c22376d3bf3c37ac6dcd77afd925b1620ae"
+    },
+    {
+      "path": "app/components/PersonalLearningWorker.tsx",
+      "sha256": "23ba3e0772d52dd85785e4f1da4c7f9a41dffc08f327a1888ed96b54beb97283"
+    },
+    {
+      "path": "app/components/PublicDetailViewer.tsx",
+      "sha256": "b992bcc1a83546118d572ddb98a0ad5479d02817bd1838ad594b7043ac91a409"
+    },
+    {
+      "path": "app/components/PublicListRestore.tsx",
+      "sha256": "e1489655040b125595a74f1f722db9e383d22a9aa97c660f42b2781135f4badf"
+    },
+    {
+      "path": "app/components/PublicPostClose.tsx",
+      "sha256": "0edc7614274e589ad4f96a20893d4da1590817199527b5f2cd52b6ee21982230"
+    },
+    {
+      "path": "app/components/PublicPostEngagement.tsx",
+      "sha256": "ea4be4f7f6a91a555aced478a8c3d0ccaef2da2d761b1be607b7cde268c1e5f0"
+    },
+    {
+      "path": "app/components/PublicPostLink.tsx",
+      "sha256": "0158645dbad6bbd5b8ffd2b758ae2b9e04af18dafc15a8b32b8f5a837ec71ae5"
+    },
+    {
+      "path": "app/components/PublicPostText.tsx",
+      "sha256": "473db96f7a38ceef35b9a6ca52fcfb56608c8e81d59994892acf3d523a002081"
+    },
+    {
+      "path": "app/components/PublicThumbnail.tsx",
+      "sha256": "c10e7f040192455d1c324bb1d255ffa87ba8ec651a7137fe184c8980f60e4d13"
+    },
+    {
+      "path": "app/components/PublicVideoCards.tsx",
+      "sha256": "1d0039632b95dfc8e2435dca65234cfa520d48e2fd42568effc474ddd4f5922a"
+    },
+    {
+      "path": "app/components/RankingClient.tsx",
+      "sha256": "8846da5388d9b4e2ef0644e041b0aa96b4242b31bceb1933950cf5c44819b5bb"
+    },
+    {
+      "path": "app/components/RankingNavLink.tsx",
+      "sha256": "8db43936253844f39161205718c570a127fdd859e3e13296a6e89c58ab03a218"
+    },
+    {
+      "path": "app/components/SiteBrand.tsx",
+      "sha256": "8bd9e94012329ba57b5e0529f34dbbe41811f356ef99fde02ca7978dd9ed91a6"
+    },
+    {
+      "path": "app/components/SiteFooter.tsx",
+      "sha256": "80806ecac5ad7c788105c89750521f002d4ab825b0de30ef0bbeedaa94cd180b"
+    },
+    {
+      "path": "app/components/StructuredData.tsx",
+      "sha256": "420c48544efe5274f6242bf0401a085d72366aefca88c11ec771f306bbc27c48"
+    },
+    {
+      "path": "app/components/TierPreviewVideo.tsx",
+      "sha256": "e3c6ed67927bf3f6f8a922aec127a529c2fc45a88b2e95fe8054008688bea12f"
+    },
+    {
+      "path": "app/components/TweetEmbed.tsx",
+      "sha256": "1b27d2ea2dea1cfb3d7ce19660c8d4f50f6f5243572de206f80b8546ace03b4b"
+    },
+    {
+      "path": "app/components/VideoDownloadButton.tsx",
+      "sha256": "04c80d6328ddcd5ee9107d60aa97218b9422b70194655e29549c2c21e54f8de6"
+    },
+    {
+      "path": "app/components/VideoDurationBadge.tsx",
+      "sha256": "33c9a3bf7b964fd6175e65d77fc164932ecef12f4ee520949636182b512d8885"
+    },
+    {
+      "path": "app/components/useSuspendedAuthors.ts",
+      "sha256": "9d1420fd886e43bcab928b0113456624c50cc07c029f6b3f882d6c5a5d9bb8eb"
+    },
+    {
+      "path": "app/contact-requests-admin/page.tsx",
+      "sha256": "cd3f7e8d96c14b9195fb4621aa33635e16de1a126324f37f6124b82041967057"
+    },
+    {
+      "path": "app/contact/ContactForm.tsx",
+      "sha256": "74c7949eb9e04cfba574d8e27c513a8c48674cb31329a2e4067c9898e34c497f"
+    },
+    {
+      "path": "app/contact/page.tsx",
+      "sha256": "0cd39500faaa611383f984b627e5a8cc12d5c8ce5827a81ea3cbe24f459d9a85"
+    },
+    {
+      "path": "app/content-filter-review/page.tsx",
+      "sha256": "019d4a166e8c1f25df5e55564348380a63029a79ff3b9585eacf45cdcf2a15ea"
+    },
+    {
+      "path": "app/copyright/page.tsx",
+      "sha256": "f414bf3afc5cd7c102bab361df16d8485bd70ebdb9336e17c3ab28a7bb7f12a9"
+    },
+    {
+      "path": "app/curated-authors/page.tsx",
+      "sha256": "a0e046586a10ed39c6c2b0734e9bddc83547f449e3b2393c4dc6c06af3f3a9f3"
+    },
+    {
+      "path": "app/curated-manager/Panel.tsx",
+      "sha256": "25863de46a79bca7161cc2bb01f47c7d08e084e415adc002cba323a012152d1c"
+    },
+    {
+      "path": "app/curated-manager/page.tsx",
+      "sha256": "c827df52db15ea27901997388784c3a9775e8b140768b83f5dbcbe2b967bedd8"
+    },
+    {
+      "path": "app/discover/page.tsx",
+      "sha256": "d1ff98386d636cff9267b198b6dace3d6ac9afcbc4e4ccc6246685f1502ffd99"
+    },
+    {
+      "path": "app/download-policy/page.tsx",
+      "sha256": "96d90d17fe8366354199f75df9b7538bc70d77d2605e85259498740f5d4a18c7"
+    },
+    {
+      "path": "app/download/DownloadForm.tsx",
+      "sha256": "c706770aa210f965dd33768cd7ee938c84b6b7a5aa7f4fa9c72bfd86b8947b05"
+    },
+    {
+      "path": "app/download/page.tsx",
+      "sha256": "552b5230e8a66bc296c95b60a87aaeade5904e341a6cde63a74cc20d0b7670dc"
+    },
+    {
+      "path": "app/engagement-admin/page.tsx",
+      "sha256": "0d77b1f4046c1b00be962f0f49390d98d5287878b10584aa0782516e1cf54988"
+    },
+    {
+      "path": "app/favorites/page.tsx",
+      "sha256": "4935c04d45397458567025244ae49809553daf25bc185a0bd096f0a5b5d37309"
+    },
+    {
+      "path": "app/fxtwitter-authors/FreeAuthorsPanel.tsx",
+      "sha256": "67122e8000696de5d322373989b43d80437d782e77862851a8e7ec3163b08efd"
+    },
+    {
+      "path": "app/fxtwitter-authors/page.tsx",
+      "sha256": "442f8385c749345bbe3ce12dbb987443d680c7cb18032879bf138c93df52c8f9"
+    },
+    {
+      "path": "app/fxtwitter-monitor/MonitorPanel.tsx",
+      "sha256": "5941f516f6d4f99e169b2d62ed9b5ce3457d85c8a072ebbd3b3a5a80a57cebc6"
+    },
+    {
+      "path": "app/fxtwitter-monitor/page.tsx",
+      "sha256": "204bf735f3cc9f4513207226e211492efd43190c27f5ee7dab20ecf0050ca6d2"
+    },
+    {
+      "path": "app/globals.css",
+      "sha256": "56bfe156e2950fa50fc3ecc236b014a1af346330101730f34d5b8bf9343ac50d"
+    },
+    {
+      "path": "app/label-learning/LabelLearningPanel.tsx",
+      "sha256": "7252713be24854c08a284886c18691c3cc03806e0bc6c01e88e10032186107bf"
+    },
+    {
+      "path": "app/label-learning/page.tsx",
+      "sha256": "aff83f029e4c4c8fb3a6427b5d863a6850b8abb2fb8d365bed4eff6630aeca41"
+    },
+    {
+      "path": "app/label-publication/AutoLabelPanel.tsx",
+      "sha256": "f57c019b6eb1d875e6ec31ec9ea02377c341330de8cd8e4f22f4b30db273a09e"
+    },
+    {
+      "path": "app/label-publication/LabelA4Diagnostics.tsx",
+      "sha256": "34a43e6cf56ae92a074f1c49ec479bc92643c1bfbd7a8563d4ca5c2d253cca7d"
+    },
+    {
+      "path": "app/label-publication/LabelPublicationPanel.tsx",
+      "sha256": "0b29c65542252d121f1b27c8df5eb6f87dca5602efd6debed4fe0b43486c30e3"
+    },
+    {
+      "path": "app/label-publication/page.tsx",
+      "sha256": "5b32a786869a0d35d23c8944a0a869ae6e1807af14a7de4b1a481a40ba0371bc"
+    },
+    {
+      "path": "app/layout.tsx",
+      "sha256": "3d8e172212a136967cd1a8cd9e8b159fe346b4553c1cf34ddedfa170a9380983"
+    },
+    {
+      "path": "app/learning-tools/page.tsx",
+      "sha256": "cc758daf2028626ce47c5daad973f63034f94e3051010d7d8c3140e14da58ede"
+    },
+    {
+      "path": "app/manual-ranking/ManualRankingClient.tsx",
+      "sha256": "52539b4a9fedc336e66ed0af9f96c46d909287c2d2801ef24cc1a43f1970d1b9"
+    },
+    {
+      "path": "app/manual-ranking/page.tsx",
+      "sha256": "6565755153c9455e2a0ba917845db895a66f9bd2e25c221bb79e8d4eed8da4e6"
+    },
+    {
+      "path": "app/p/[id]/page.tsx",
+      "sha256": "d31db4190d81e005e24f64296c699be1ce0399f81193cce725e9c8636110dbd7"
+    },
+    {
+      "path": "app/page.tsx",
+      "sha256": "0bf79fa2fd9158d4e783198bfed744449491b0431fe65e50979de72a032630c0"
+    },
+    {
+      "path": "app/preference-model/page.tsx",
+      "sha256": "ba11002330052f9bd20f871c5c8e2064b8023fc2003050cc7b5ee67f1c9b5556"
+    },
+    {
+      "path": "app/privacy/page.tsx",
+      "sha256": "0f3497f38f7faa1548f19a36189a36d3e176b4d2bf9a1d8d9f43d24e00424489"
+    },
+    {
+      "path": "app/ranking-admin/page.tsx",
+      "sha256": "ad9139488c04cde899fdc04a81cfb3c681ff0c55b4d9bb9004c83a55493e9e94"
+    },
+    {
+      "path": "app/ranking/daily/page.tsx",
+      "sha256": "33987945088a6b6e1549813db267f542edb0d41c3c0476881102ccdb8ac2c080"
+    },
+    {
+      "path": "app/ranking/weekly/page.tsx",
+      "sha256": "da6f4910302f725faf4fc53c80834d41add9c6d91a4334719b652799e4412b08"
+    },
+    {
+      "path": "app/reels/ReelsFeed.tsx",
+      "sha256": "ae6de106801ee1cfbd5af591ee633bb90f5bc18469f2c4bf68d536758527fb83"
+    },
+    {
+      "path": "app/reels/page.tsx",
+      "sha256": "0bf6063d8c7bdf21cabd12e10807a5d94eeb39c6b136b662a14e80f8641d0521"
+    },
+    {
+      "path": "app/removal-request/page.tsx",
+      "sha256": "531e16a0878d1e5357ae1aad39bdeca9502adc306b70b58c727e79c9321609ee"
+    },
+    {
+      "path": "app/removal-requests-admin/page.tsx",
+      "sha256": "384f3a7d8692bc3945eab440b5be38cb238588925da0fd3c05918cc3e1de1820"
+    },
+    {
+      "path": "app/review/page.tsx",
+      "sha256": "f765e6f56714d1e35de16d3264ce09b05b27eec01468b6cd63df30b105e45e35"
+    },
+    {
+      "path": "app/rising/loading.tsx",
+      "sha256": "4a0c796206912821b2fca0bcaa701273e7d04773739b229f000c8ced0ca70e5b"
+    },
+    {
+      "path": "app/rising/page.tsx",
+      "sha256": "a5aad700674cec2044ad5612b202220e79b323e3890eae0e2ba484acd8553ded"
+    },
+    {
+      "path": "app/robots.ts",
+      "sha256": "1c6649312beb04c4897ae78dffc103cd09ac449d7825bc2aff59c79ee2813975"
+    },
+    {
+      "path": "app/site-visual-preference-review-2/page.tsx",
+      "sha256": "df85baf7c3b4796cd2995e452cc4f4d15328f86c942f78dc9b22306c20a633c6"
+    },
+    {
+      "path": "app/site-visual-preference-review-3/page.tsx",
+      "sha256": "9a224786515cf75da0d20e03ef12d8c2aa74b49dd738cce1934d26179927a498"
+    },
+    {
+      "path": "app/site-visual-preference-review/page.tsx",
+      "sha256": "f7f526f15e49d5c24dd45362c6934cd67e3c616039d012e9bd292d3646e35fd7"
+    },
+    {
+      "path": "app/sitemap-video-pilot.xml/route.ts",
+      "sha256": "b048445d219d3c401c49ccc394eed38265f3a55faa8cb64e4c1301f2fb296dd9"
+    },
+    {
+      "path": "app/sitemap.ts",
+      "sha256": "cc5590e61e43da2b9336c39583cea464779b3f29685ee21d2d7b392bca74a780"
+    },
+    {
+      "path": "app/tags/[name]/page.tsx",
+      "sha256": "08a63adce5d69267d59be261c89136f0d1bd76281e9cf1c4c69e0de225b45f75"
+    },
+    {
+      "path": "app/tags/page.tsx",
+      "sha256": "9f2074c12814fa572271aff468c8ef9b1ec5e5d5557aac7fd16d0095f356d95f"
+    },
+    {
+      "path": "app/teacher-authors/page.tsx",
+      "sha256": "b2603aaf879bfbd0da2869bdf9200173a145f56e26910fbb2866e3cf9cb8cc78"
+    },
+    {
+      "path": "app/terms/page.tsx",
+      "sha256": "9f30fc1354a82abb85a1d73a1071a4578eb1711a92ad3e58ee9f6aaf428b5619"
+    },
+    {
+      "path": "app/tier-personal-model/layout.tsx",
+      "sha256": "869c07996f51857775a90b2baeaea2375ea19c2101ab4ba0307d0b5a2085dac4"
+    },
+    {
+      "path": "app/tier-personal-model/page.tsx",
+      "sha256": "4be7c8cec71290aaf36eda3b6da948e6b33cc373cd793b050b81aa1b23873f8a"
+    },
+    {
+      "path": "app/tier-reevaluation/layout.tsx",
+      "sha256": "935c6af81bd3d9a0fab0476e9c266eafafab94ab5fff5ad2563be18d07d53076"
+    },
+    {
+      "path": "app/tier-reevaluation/page.tsx",
+      "sha256": "567981340abe5c52eb6999bd5f185dd227b9f8a0bf504adf1221bdf49ffbc3aa"
+    },
+    {
+      "path": "app/tier-teacher-analysis/layout.tsx",
+      "sha256": "fb348e2665225e7410d65e47e5f457230640658dd96298adf48e07e6c6630192"
+    },
+    {
+      "path": "app/tier-teacher-analysis/page.tsx",
+      "sha256": "4ec929216e827be546dcab0bb55c65f5bd67bb99b5ff0fffed2fae980e8ea3cb"
+    },
+    {
+      "path": "app/tier-video-preview/layout.tsx",
+      "sha256": "5f1f7b593815cda9cd8d751bb7e4b2c16240385beaec154d28ebf832629acdab"
+    },
+    {
+      "path": "app/tier-video-preview/page.tsx",
+      "sha256": "a9888df66689e6a26049df62801d805118cd527d51b0f7a281893250580474ea"
+    },
+    {
+      "path": "app/video-inventory/Panel.tsx",
+      "sha256": "016829e3222a3316e98f36036689a5bec5249c6bd5af87d345cb7cb61c63146f"
+    },
+    {
+      "path": "app/video-inventory/page.tsx",
+      "sha256": "29e0b087288d0082691a9b81465d8d9da4339eae5080bff4fb492bb16b768499"
+    },
+    {
+      "path": "app/visual-filter-preview/page.tsx",
+      "sha256": "68b74f2c037a91872ff182112aebbe97acee593b83afe4caaa954ccb89d9fb1a"
+    },
+    {
+      "path": "app/visual-reference-review/page.tsx",
+      "sha256": "b94c005b476c8a4a2576b8b77e26123b8d3f3899275f804f95a1c4a8abf7d50c"
+    },
+    {
+      "path": "app/x-api-usage/page.tsx",
+      "sha256": "c0927b02f7a2a515630bf19d2e34380678d578eff1550569d316af351e6caf29"
+    },
+    {
+      "path": "app/x-promotion/page.tsx",
+      "sha256": "208bca5e26cf962329825dbff71b4b0dc140a8b92c968bd9706f8bae0c40ad3f"
+    },
+    {
+      "path": "lib/adult-score.ts",
+      "sha256": "f3945af35340fd5aef7086a45d5980d0c1754ff661bdde4c120d9107847f4e09"
+    },
+    {
+      "path": "lib/author-status-store.ts",
+      "sha256": "ad251a008f083e871fc1f156ade74c36c15e93ec06daa5d28378347ff6f943c6"
+    },
+    {
+      "path": "lib/author-status.ts",
+      "sha256": "2093c05f86a008962756418c878212373f11aeeddd7d585926a83d1f89014615"
+    },
+    {
+      "path": "lib/browser-direct-download.ts",
+      "sha256": "dfcff3262a04e4d762030e8e762549567ca894a70e77806423d93c69ca04ffa7"
+    },
+    {
+      "path": "lib/browser-direct-playback.ts",
+      "sha256": "949376d6a5267838cfd29098baf091ca880362af919bfbab5923062832c9994f"
+    },
+    {
+      "path": "lib/browser-playback-recovery.ts",
+      "sha256": "ceb1f9e136b58b64f87d4d967b3b1f2cbfb0a5fa578aaf1bd7d694365fd259ba"
+    },
+    {
+      "path": "lib/browser-stream-playback.ts",
+      "sha256": "97961a8d2b37e488ce962c48316a6979f2046f5967b33a570b681dd0e056de3c"
+    },
+    {
+      "path": "lib/content-filter.ts",
+      "sha256": "32702b77ed751395ef311dbf2402b708dea7f01341235c02c84c7eff7730bff5"
+    },
+    {
+      "path": "lib/cron-auth.ts",
+      "sha256": "8a9e85861e294fc1e5338407039735663f7b60f0250389a5b10882f5d0954ac2"
+    },
+    {
+      "path": "lib/curated-collector.ts",
+      "sha256": "02e5526538a760b604d0a4131319638da1e7b124c1d12c44753d62768b2d6c3e"
+    },
+    {
+      "path": "lib/curated-removals.ts",
+      "sha256": "146091b0fbb71f74d81315253637245de5279e593a0fe661f18c395929774959"
+    },
+    {
+      "path": "lib/curated-video-references.ts",
+      "sha256": "544abb473e54bcfd62094cf96a8e8a527e2cb9054405264c14469a2b06b7c119"
+    },
+    {
+      "path": "lib/discovery-index.ts",
+      "sha256": "cdb6a8a426317dc1682e346be65265f1135a9bd54953c5dd3c61599361baacb0"
+    },
+    {
+      "path": "lib/discovery-request.ts",
+      "sha256": "21d9a788be4e02a1ee6d9a159c0c913894b63ce5b965e802e18811b6a9180769"
+    },
+    {
+      "path": "lib/download-free.ts",
+      "sha256": "9f3666baec00905dd6459824601ae6473e90cc1a2360c3dbe9a788ada074631e"
+    },
+    {
+      "path": "lib/download-url-store.ts",
+      "sha256": "324ef6eab6a1b1c35ba00c10d5212160ae06d8cdd686e43a1f1e05676ecabada"
+    },
+    {
+      "path": "lib/download-url.ts",
+      "sha256": "70c8c2dd4906742f8a0a6fc7a3dd030605c9894b853c7d17cdb298afe9b20c9c"
+    },
+    {
+      "path": "lib/engagement-client.ts",
+      "sha256": "b883cf34c1d48322fcea4cde46960c7365860e63c3f42f5f104584940da151de"
+    },
+    {
+      "path": "lib/engagement-navigation.ts",
+      "sha256": "c0c76ff16f86bb57c00f8a38b9573643a72f08589b34fc21d12684b92aa76355"
+    },
+    {
+      "path": "lib/engagement-playback.ts",
+      "sha256": "f2f96b8ba2e1883bc31e7a49d3518a365d20e9d06c0a3bf101a9567081dfdfb4"
+    },
+    {
+      "path": "lib/error-message.ts",
+      "sha256": "77c79aa9b0fd4a760c627fd0c98c2c724793048121eb2ac1dbc63c542b7b30cb"
+    },
+    {
+      "path": "lib/free-curated-client.ts",
+      "sha256": "33410400791fbdd6e708d7117a3de81c15e2581aa34083f184cfb48059a2dff1"
+    },
+    {
+      "path": "lib/free-curated-limits.ts",
+      "sha256": "284e0e6b949bdd997c8a297ab6b1946ace29d81bb8f342283294b5cf249562cd"
+    },
+    {
+      "path": "lib/free-curated-metrics.ts",
+      "sha256": "54d94177f281bdc4f5676128581a116f0eb52fe3b8758c15cce98ae51a2ceb29"
+    },
+    {
+      "path": "lib/free-curated-registration.ts",
+      "sha256": "018834db2fc236aa8957a2c29108d0df041f602931899474494287b3ee4fe518"
+    },
+    {
+      "path": "lib/fxtwitter-curated-save.ts",
+      "sha256": "f64c8942cc81f6932492dc1b39bc1666224538c63b42c28747f0da4bce7c376e"
+    },
+    {
+      "path": "lib/fxtwitter-curated-store.ts",
+      "sha256": "e06873514e00bba57eccefc184aa1395312253f34d43c3d491f601f7fb74e0bd"
+    },
+    {
+      "path": "lib/fxtwitter-curated-tier.ts",
+      "sha256": "7d71a34ecdaba52971125669e71c637b2aebb5f1a8519cc16c155d9327d7548d"
+    },
+    {
+      "path": "lib/fxtwitter-curated.ts",
+      "sha256": "090fa5f3b52ea8320ef308a579f4fe56c24b60abad6b4662fd727c2319502b7d"
+    },
+    {
+      "path": "lib/fxtwitter-local-access.ts",
+      "sha256": "5728717bae5c27b20123c6afd39e743fa9f1a0ce16c0bda9b4bf7abf5651bdf5"
+    },
+    {
+      "path": "lib/indexability.ts",
+      "sha256": "632956cf7406e51a22536674dc399132ccc342fb11fa97a6e72d5cdfadba2da2"
+    },
+    {
+      "path": "lib/initial-ranking.ts",
+      "sha256": "879bc21e44676e3891ce422e608a3777b9d79214cafd57daaadb5f323c8f1e5d"
+    },
+    {
+      "path": "lib/label-a4-diagnostics.ts",
+      "sha256": "deba30edbb1c904e93b3293c06e25e88e6a3e8bc5453292a21228d7705973f5d"
+    },
+    {
+      "path": "lib/label-a4-server.ts",
+      "sha256": "bc084dad08816a0094dfe5639b2fefe095ff1915cbcc24768268d946317a1d4e"
+    },
+    {
+      "path": "lib/label-auto-server.ts",
+      "sha256": "1e75c5dabf48d3f75a7a0a72e664e3c4f5a9171b2b2efed5f32e4196495ff4d3"
+    },
+    {
+      "path": "lib/label-auto-service.ts",
+      "sha256": "d307a9e42c7a05b1f522bc844854e34023684e727526b528c2b3c19103135b78"
+    },
+    {
+      "path": "lib/label-learning-batch.ts",
+      "sha256": "3526188080155e1012052e432618ba13a0c172c8c99daa6483be9e438a9a648a"
+    },
+    {
+      "path": "lib/label-learning-core.ts",
+      "sha256": "9b1e0730b1e1c0f350174048c358a0d03d873d75224ba893c146b121b9cf0866"
+    },
+    {
+      "path": "lib/label-learning-http.ts",
+      "sha256": "692da5e0281c1c6793e45823ee2904273bbce0de3eb3a2ea4f4006e3ea548bcb"
+    },
+    {
+      "path": "lib/label-learning-server.ts",
+      "sha256": "c5db4b16e2bd9a5cb5273b614c66e1850cf92477ac3bf0d87e326210e39354a5"
+    },
+    {
+      "path": "lib/label-learning-service.ts",
+      "sha256": "b5591875188f7259343c77e5fd5d232c2006c51012a638d03f944db9fa34a6b9"
+    },
+    {
+      "path": "lib/label-learning-video.ts",
+      "sha256": "eed93efe72cee537f12826278ad8644a3376da407ebedbca8c0184d61ef60e62"
+    },
+    {
+      "path": "lib/label-publication-server.ts",
+      "sha256": "4f266c92eec2166c92cb1514d430fcb5abeb9a31498391f9173b08462ac387cb"
+    },
+    {
+      "path": "lib/label-publication-service.ts",
+      "sha256": "ff332815b315154983bbfdc927f8881d6638206ca0db42b6e030549f4fdb3d0f"
+    },
+    {
+      "path": "lib/local-video-lists.ts",
+      "sha256": "11b715b68c2ca455078fb3875546ce6da295d8494a3dc749ca78fbe8992483d6"
+    },
+    {
+      "path": "lib/manual-ranking.ts",
+      "sha256": "35c51ee0b9a87477484d0fd6a5b14e4d747cbdbde43f99266345d75b389e8cd0"
+    },
+    {
+      "path": "lib/manual-request-body.ts",
+      "sha256": "af99f284e52162d6532939f3c7a54671a97389e4efa91820407297f3f24cc2ee"
+    },
+    {
+      "path": "lib/manual-url.ts",
+      "sha256": "32f92c58ba5def4830d9a3cae211d653d6ea443e6c1f798429198b8a9b4463ca"
+    },
+    {
+      "path": "lib/personal-learning-poll.ts",
+      "sha256": "74037ee76d16b07269c867bc5fc37a768b38f15283d0caf3ca73a7523896d948"
+    },
+    {
+      "path": "lib/playback-refresh.ts",
+      "sha256": "09fb063c7e61e2a2e79a6f7a205e8031f7057fded9406a4d88d113896aaa00f7"
+    },
+    {
+      "path": "lib/post-status-store.ts",
+      "sha256": "78b6c548039702d14fccf898493c8f8c2c5340739662f214187dbc8473542176"
+    },
+    {
+      "path": "lib/post-status.ts",
+      "sha256": "cefbc7955dfd9101edad3f8a7e1f5cfbbb09301350319c4f7717f9cafba43c81"
+    },
+    {
+      "path": "lib/public-catalog-store.ts",
+      "sha256": "2112dc2f292989075fa21f6110f166fb99a9aa0565cd75598bc123bc6fcdb8a0"
+    },
+    {
+      "path": "lib/public-detail-navigation.ts",
+      "sha256": "77eda1586d573c4e2e85f71b56da193df846bb516de7e61f3427792d868b7f7c"
+    },
+    {
+      "path": "lib/public-http.ts",
+      "sha256": "0d6d266943e4859ffff35f46d7a74133eb6c45f40ae680641a80329eaeaa406c"
+    },
+    {
+      "path": "lib/public-list-pages.ts",
+      "sha256": "904cae441db9aeedd6c781251cc04a39e1b50b3a9b8a520bb3ff337415754d9e"
+    },
+    {
+      "path": "lib/public-operation-lock.ts",
+      "sha256": "daa82e971822e74504724cd1e32962ea13bf99467a0508038761f255a9de3cbd"
+    },
+    {
+      "path": "lib/public-ranking-history.ts",
+      "sha256": "4b4714e66021e96d7f0f44e6481a3ffcbe7eb85eed0ffafb0ec8dbdb40894b79"
+    },
+    {
+      "path": "lib/public-response-metadata.ts",
+      "sha256": "f8740f0ccf3d446fa03034cf2c14dbfe4ae4a034a3af75556b9683c94b7d96ff"
+    },
+    {
+      "path": "lib/public-return-navigation.ts",
+      "sha256": "d27dab2be5d3333178fe331446fd6f144ccc606c11c0fbc969ee1891a7850eb5"
+    },
+    {
+      "path": "lib/public-save-receipt.ts",
+      "sha256": "939dc11783db214c30e805008f683201477fd5f07fdbad513601564a2349b7c6"
+    },
+    {
+      "path": "lib/public-save-secret.ts",
+      "sha256": "83d42fea93bbbdaa28e1d2c787762271155a7600137ce846e57d1b24fa7c9e45"
+    },
+    {
+      "path": "lib/public-thumbnail.ts",
+      "sha256": "9df8baa55b63700661654c1f3d91592550db543fe291c4a8bd722e8b65ca17ff"
+    },
+    {
+      "path": "lib/public-video-core.ts",
+      "sha256": "82133e055012422d0c6b490ca94950fc52d19e53e0560b9d7ddc66f5cfe6c140"
+    },
+    {
+      "path": "lib/public-video-production.ts",
+      "sha256": "1bd9f105f65be709daec3227aa6583b2190faf359309bd03d62ce173a4f4166d"
+    },
+    {
+      "path": "lib/public-video-schema.ts",
+      "sha256": "006d8e827d7e62ff6d6c45ddb9a59d9a3fd8f58035e119f071a1aba5e3157e54"
+    },
+    {
+      "path": "lib/public-video-server.ts",
+      "sha256": "bba5a38cceb079989f59b82f73b06408f0ff0b10e9b46e4eee74cdbb79c911b2"
+    },
+    {
+      "path": "lib/public-video-service.ts",
+      "sha256": "cee0cf5ace65bee2f07ef61aa67983ed376121d30c6ab1f7fe79f626ac6e9421"
+    },
+    {
+      "path": "lib/ranking-display.ts",
+      "sha256": "d306c4b80d665cd5f9af4372e8bf673f230497891d90d786ff92958cb04b6fa3"
+    },
+    {
+      "path": "lib/ranking-pagination.ts",
+      "sha256": "e0e1660b972ab262581ad687656eb8defe52a898f3b9c5987b7f569d00a0df9b"
+    },
+    {
+      "path": "lib/ranking-read-cache.ts",
+      "sha256": "36f5adea22072044f76dc7e1ef6a1a91c043fa1fdd539ace4d579a2b95d01c05"
+    },
+    {
+      "path": "lib/ranking-update.ts",
+      "sha256": "9fd5a559a14180044f570a1a891616b58f262f8c85a76cae1217106fe18ea492"
+    },
+    {
+      "path": "lib/ranking.ts",
+      "sha256": "3eef807645941acdc114f6b9a12432ed9058b4f060b421eed5b9fc8d87b71c07"
+    },
+    {
+      "path": "lib/reel-load-policy.ts",
+      "sha256": "257043476a3d6f273fe512798ff65eba041c10f26b94fb2c195df006578c00d7"
+    },
+    {
+      "path": "lib/rising-ranking.ts",
+      "sha256": "5c748835dff738f4a84853c7f4a8f2d9d0cc4f718026634fec7e0675a50daf10"
+    },
+    {
+      "path": "lib/rising-score.ts",
+      "sha256": "1dccd97c19b98b481db1fb6ee2bc79e04efcd086bb4c2f1c3f92fd7ac640424e"
+    },
+    {
+      "path": "lib/rising-snapshot.ts",
+      "sha256": "fa4c2145d43b46f6151d351c1b9179863812ce55d91dc4cd597c2cc4ba2d4d7c"
+    },
+    {
+      "path": "lib/seo.ts",
+      "sha256": "4776db9ac4f500d4dce450e8db19c45f90400976526db695c5823250627da343"
+    },
+    {
+      "path": "lib/share-video.ts",
+      "sha256": "ac678ec4099ba7edd8a50fa6a53c7454219344708f7f872f606c17bad8fbe00e"
+    },
+    {
+      "path": "lib/supabase-admin.ts",
+      "sha256": "f8b8ce736e78bc7ce0ded8dee0861921e6eeb90ffe93b070f9ba2c618fb502fe"
+    },
+    {
+      "path": "lib/tag-aliases.ts",
+      "sha256": "d7976040c36a7db74339ea50abe3f9a9efc3115b13aae079480c6bda4d6f40dd"
+    },
+    {
+      "path": "lib/technical-backfill.ts",
+      "sha256": "6bfd523a9165e9be5e6085f9a2acde06f66ced2a6c595c3d8206f3fed002952e"
+    },
+    {
+      "path": "lib/tier-learning.ts",
+      "sha256": "d454f243a4cd80af6fbeb0095281542812e23488707af6b3c5294ea8759531f8"
+    },
+    {
+      "path": "lib/tier-model-release.ts",
+      "sha256": "c317137ba45363c939f2691eb8d63141b3280c942f060b29d72674b1094c3e95"
+    },
+    {
+      "path": "lib/tier-new-video-worker.ts",
+      "sha256": "4f8b98c267fec2b42ce2afc59b495c634e31a7001cdee5538d40851f87f654e3"
+    },
+    {
+      "path": "lib/tier-personal-core.ts",
+      "sha256": "c57710c4fb870a9cb416d1cc12e0abd8e7ce9ed0815447331bd515aba900689b"
+    },
+    {
+      "path": "lib/tier-personal-engine.ts",
+      "sha256": "bad0e2655e65e658e488c4bffa8c23d84e166bc31750ac14943c916a8f4202fd"
+    },
+    {
+      "path": "lib/tier-personal-evaluation.ts",
+      "sha256": "e81c5cc08ad0f07aa8aa497c227abbb785a245e41c8eef0db91543a7a8c2cc3a"
+    },
+    {
+      "path": "lib/tier-personal-image.ts",
+      "sha256": "832843380b391ae1068cdb37808f8e67abcc67eb4ed67652cb5aebecdba1b1ff"
+    },
+    {
+      "path": "lib/tier-personal-store.ts",
+      "sha256": "1d924043e933f703bd2210e9ceb3131c8c95c3a9fe4a0e9a393bddc5d037fc01"
+    },
+    {
+      "path": "lib/tier-personal-video.ts",
+      "sha256": "c58da4d663e446ae20f80d4de97a94a8810746f571b1026609df83409c7023e5"
+    },
+    {
+      "path": "lib/tier-preview-playback.ts",
+      "sha256": "d401b0de1ea0367cd80f1ad1f3dc94d3d5e90cf9f2d7fdf984f0af425c8a81ee"
+    },
+    {
+      "path": "lib/tier-reevaluation.ts",
+      "sha256": "d0ed57dbb77d58b224d0bec4955be7cff67b18133bf99296bef18bfd3ecfe481"
+    },
+    {
+      "path": "lib/tier-teacher-analysis.ts",
+      "sha256": "e1ff7659f163c774b6cc8ab42febf048c0a2047adc1bbfe4a2ff8ea7a7f8812d"
+    },
+    {
+      "path": "lib/tier-video-preview.ts",
+      "sha256": "9e2570c7e36ce1887a127be40134b8fb7269fd47be2cfee9840599f3143c2a66"
+    },
+    {
+      "path": "lib/tier-visual-comparison.ts",
+      "sha256": "89e76c2d6f3511e810bc52efb4c82f512d658ba2978a507c51d56b3ee147bf8d"
+    },
+    {
+      "path": "lib/vendor/LICENSE.txt",
+      "sha256": "ca8773cf798c7ed997d4dd7c8e23c348699f8d5b7462636694cc14de6cda12db"
+    },
+    {
+      "path": "lib/vendor/hls.d.mts",
+      "sha256": "d2838b7e1d3da9ef999652736a78582b0d20d19480ef79d4b8c3141a49cf82cc"
+    },
+    {
+      "path": "lib/vendor/hls.mjs",
+      "sha256": "11e668e41247b44b5807a10264f36e2edd9eaaa681167c46c9a681bd3757059b"
+    },
+    {
+      "path": "lib/video-download.ts",
+      "sha256": "ae8f7c303c4c5d13a91fa2bbd226054e26586c06ff8af4e7699644d27a21ac52"
+    },
+    {
+      "path": "lib/video-duration-format.ts",
+      "sha256": "d933574ef6986077765c73a4095abf92353a6b95855acaef773f9183ba65e918"
+    },
+    {
+      "path": "lib/video-duration-probe.ts",
+      "sha256": "d2c9d3bd74522b20a275cfff9dd0854214fcd3985d1791d250651c84e33dc68c"
+    },
+    {
+      "path": "lib/video-inventory.ts",
+      "sha256": "a29a997ba55f13d523c516db0131a49d7a8206b58bfec4801507a19448ee6404"
+    },
+    {
+      "path": "lib/video-range-frames.ts",
+      "sha256": "9089f3b0a2e614727e5e0dc78a974d2740c0335e047c15acbb8145c3ca822270"
+    },
+    {
+      "path": "lib/video-range-session.ts",
+      "sha256": "f1f405db17576b9b6cd3d77567b6b9ca8a4e4482a89554c7dc5fdb18792bb5fb"
+    },
+    {
+      "path": "lib/video-sitemap-pilot-source.ts",
+      "sha256": "8b8e0d534a4ad364a1be052cce82d5283b0b1c01d44e9d33e09a644438645fd4"
+    },
+    {
+      "path": "lib/video-sitemap-pilot.ts",
+      "sha256": "a40313710e45e3d33c9a55094f12fe7376a404fc647e1c7579c0f6008ad006f3"
+    },
+    {
+      "path": "lib/video-technical.ts",
+      "sha256": "c8fcbd7825b78202569ef93206c9ba655615ec086faaac573f657df86e2a3321"
+    },
+    {
+      "path": "lib/video-tools.ts",
+      "sha256": "3a556dc8bb41173cdee367558c341a0ccf201cb5a7c066ebd5c5f8ebd04bdde1"
+    },
+    {
+      "path": "lib/x-image-safety.ts",
+      "sha256": "bf98a41b248cf70246aa1453f6e92de8a70b11e1bcdcfc11ecdca1eb4926511c"
+    },
+    {
+      "path": "lib/x-promotion-analysis.ts",
+      "sha256": "96fa1fce7e5e3edebef44d0d7e02cc43cfe5d89e59268a08c0c2f9581759320b"
+    },
+    {
+      "path": "lib/x-promotion-kit.ts",
+      "sha256": "19143669891b2edb9952b475263f5bafed7ef43a411f075833b523e478820e97"
+    },
+    {
+      "path": "lib/x-promotion-manual-posts.ts",
+      "sha256": "be10bae9577981a8c3c01e54a649493b1f7f945e43aac3645c1f08e01719e8f7"
+    },
+    {
+      "path": "lib/x-promotion-planner.ts",
+      "sha256": "96010b4aa5ddbc5d39a34d0b07742aff6450d5ae5d098b26ec3187ec27af4f17"
+    },
+    {
+      "path": "lib/x-publish.ts",
+      "sha256": "c54b31fdadd84a7b92323345880b534b6854171be25c2d4d4c86f60b50587e93"
+    },
+    {
+      "path": "lib/x.ts",
+      "sha256": "59dee9613ff5d392f963ebd7159dc91a2019fa00b6682b400699ef947cc4a58b"
+    },
+    {
+      "path": "middleware.ts",
+      "sha256": "ca01632656b77f728ca06aee587bacd1ef4666bb20471506730c9f3435660cd5"
+    },
+    {
+      "path": "next-env.d.ts",
+      "sha256": "85ae5aee75f011967cf2d25cbc342f62d69314e9d925f7f4aa3456fc2cffcca6"
+    },
+    {
+      "path": "next.config.ts",
+      "sha256": "444ee3efe5873db0968931de2732caeb52906e02382902408ab7941f0f34a285"
+    },
+    {
+      "path": "package-lock.json",
+      "sha256": "b20d20a42302e04e9bd0f1c2080e66953012f62314b690665d4967d9b8e86540"
+    },
+    {
+      "path": "package.json",
+      "sha256": "0d3865ed1e218a7949e26f9137599b2ae988eefbc63cd557290596f94e9ec15c"
+    },
+    {
+      "path": "public/twizou-mark.svg",
+      "sha256": "616e864ba1570c06c09ddbd1b8b17e30681ebbe319678f4b013c104ffb00464a"
+    },
+    {
+      "path": "public/twizou-share.png",
+      "sha256": "9a08c4d82633b46764852eeab1f3722490e0d1ed0df155a0f4444faa86f9ee72"
+    },
+    {
+      "path": "scripts/check-canonical.cjs",
+      "sha256": "115b03a4af1556588e6d53d338c85b546f5180affe9889de6b1d3f7d47d64fda"
+    },
+    {
+      "path": "scripts/contact-sheet.cjs",
+      "sha256": "42c07c758f4121ac7a64112a6084e02acb9061afc28e7c954989a7a4bacde0a4"
+    },
+    {
+      "path": "scripts/install-auto-label-task.ps1",
+      "sha256": "a6760d5532ecbeca5599704e6c1a1ead70cc2eda770bbffea29ba65c35676f71"
+    },
+    {
+      "path": "scripts/install-public-response-cache.cjs",
+      "sha256": "f596caac73d1766b3f82d5e17b1e18368dbdd7e8c7823ccb49358aea7906f638"
+    },
+    {
+      "path": "scripts/loopback-only-guard.cjs",
+      "sha256": "1cdc447175d8def42798f69f167a9e40544448163e4346ceb2636f550ff8f111"
+    },
+    {
+      "path": "scripts/offline-guard.cjs",
+      "sha256": "811ed224630b53c874f982e177f326f990a49dba116396d59a60460a4baa21b6"
+    },
+    {
+      "path": "scripts/public-response-cache.cjs",
+      "sha256": "0847dca38c84387c62af5c4c3d7a438fbb855a8a8dd20cf3e743813dbaadd732"
+    },
+    {
+      "path": "scripts/public-ui-test-loader.cjs",
+      "sha256": "95651511b6c3d1b143f56c5536864927b59738aa717a3bb266e19adeda000ef2"
+    },
+    {
+      "path": "scripts/ranking-prewarm.cjs",
+      "sha256": "efe883da2e4e1945419444fb843894c6b9c7b06b815676d5b05a042fdb3457c3"
+    },
+    {
+      "path": "scripts/run-auto-label-worker.cjs",
+      "sha256": "99b883d8a02ad56d3ee0e97a620297d205ee62e8d60c5bb06f2a4b4365a1a0d9"
+    },
+    {
+      "path": "scripts/run-video-technical-backfill.cjs",
+      "sha256": "ac829e904921fa85e471992bc5a9cd2693ff87182866d85e047f2ac0a0a5c1a2"
+    },
+    {
+      "path": "scripts/setup-labels.cjs",
+      "sha256": "d681dae211bca76f5743bbeeabc8f4e511855d752feb27777238ff52f11a7a29"
+    },
+    {
+      "path": "scripts/test-author-status-client.cjs",
+      "sha256": "3dda4d83b95c02efb34697454577e58b83656a9fdf2f6dbf3628b3e8a16b9238"
+    },
+    {
+      "path": "scripts/test-auto-label-catalog.cjs",
+      "sha256": "8bde816c2ec37d5e48dcfb3bad13333ca1a112830805c068ecd66a4fd35ba8a2"
+    },
+    {
+      "path": "scripts/test-brand-ui.cjs",
+      "sha256": "da9f12f775010eea756845dbe0710c6fee9626c20e49bf9748f4b0b7832747df"
+    },
+    {
+      "path": "scripts/test-browse-index-cache.cjs",
+      "sha256": "66a2787548c8068fbf8c7547512093725dd9c9edaeaa7e1004201a1a5ce1d1f4"
+    },
+    {
+      "path": "scripts/test-crawl-playback.cjs",
+      "sha256": "c53d30f9f7e499c03a3f4dc7af95c6206e3d852beaad3742cf7055a64c436af4"
+    },
+    {
+      "path": "scripts/test-curated-manager-local.cjs",
+      "sha256": "f9f662618761a10e43d88a277763475cabdba42f025e340a3af3baeb0ee460a7"
+    },
+    {
+      "path": "scripts/test-curated-reference-parser.cjs",
+      "sha256": "0196d6ccd5abea43ba7218f439a27431fb326dbd535387ea54887dbe0cb1bb8f"
+    },
+    {
+      "path": "scripts/test-detail-auxiliary-budget.cjs",
+      "sha256": "5bfcc54ba7328bf401150afa3fc6b48188eb79c23470b19b1f91f57591b8f4ad"
+    },
+    {
+      "path": "scripts/test-detail-fast-path.cjs",
+      "sha256": "c1b7408cdfa8b26227c5ecc43f4056577ddeb96fdf463c7b41f583691aed3b2a"
+    },
+    {
+      "path": "scripts/test-detail-navigation.cjs",
+      "sha256": "b2936759f5b3d8bbeebda34a7f45eb6a21046761973d01d3f754bdb8f4b4031f"
+    },
+    {
+      "path": "scripts/test-direct-download.cjs",
+      "sha256": "4f028284612febf771dd05ea56f6c7489bc49a5c94ec43ffde3a832b77e79da2"
+    },
+    {
+      "path": "scripts/test-direct-playback.cjs",
+      "sha256": "70b0dbc259df734213c7cffaae7819adf3e393e727e11d4f9f66eed1b5264c86"
+    },
+    {
+      "path": "scripts/test-discovery-request.cjs",
+      "sha256": "d0b882ae87a99de9c8118191cd329bba3dc6396173b9828492e602d107564753"
+    },
+    {
+      "path": "scripts/test-discovery.cjs",
+      "sha256": "d27af9bc9db25539dd87efef146cf3c36eb57a139c3ca8d1a959f377da090c47"
+    },
+    {
+      "path": "scripts/test-download-free.cjs",
+      "sha256": "47801f744491f22154a77d3dc61893d416b8bb3a495751f945feaf746836091d"
+    },
+    {
+      "path": "scripts/test-download-url.cjs",
+      "sha256": "dbdd0888b73c8029b293634d7baeba6ffa537ebac2426aac9b8648b295df8c07"
+    },
+    {
+      "path": "scripts/test-engagement-completeness.cjs",
+      "sha256": "5cfdec40b6f5430e00b26a135440e6fad7776be5f2ef0b60c463eb9773e99f29"
+    },
+    {
+      "path": "scripts/test-engagement-navigation.cjs",
+      "sha256": "d490b0a9f87c837226ccab0326129fd86fd0f5818b52ce0419898fe80dc8dc3d"
+    },
+    {
+      "path": "scripts/test-engagement-player.cjs",
+      "sha256": "0e1054219422a2cfd0e93bf2613b524ef059556ff8cbf5a2bfac74d4e7b338f1"
+    },
+    {
+      "path": "scripts/test-factual-seo.cjs",
+      "sha256": "c94e293d48949346a28aa3931a8ef22086cc67f05fec8c6a06643135a556d9b0"
+    },
+    {
+      "path": "scripts/test-free-curated-cursors.cjs",
+      "sha256": "1e0c2315e28bf7d2ee7455987e2bae4d9692beed5ca2eb7b8415d952e040eaba"
+    },
+    {
+      "path": "scripts/test-free-curated-registration.cjs",
+      "sha256": "14e53b48de540608c3bc40eac59107243ccfb55fa8e7c4e55831b71cfcad84e9"
+    },
+    {
+      "path": "scripts/test-free-curated-timeline.cjs",
+      "sha256": "2fb727baeace4702404fac9fd6b400927d9945f4671d8f40d74368ee0eed1d7c"
+    },
+    {
+      "path": "scripts/test-fx-post-url-local.cjs",
+      "sha256": "02dcf531846d07a9c6cbad3b41b77e5a2b226b2562b12f7ef8ea7d57ff42f42c"
+    },
+    {
+      "path": "scripts/test-fxtwitter-curated.cjs",
+      "sha256": "729d6e8f8a0e1d1cf2d78a4334ccae3fe879ecbabb1279d11dc0a833b5428d09"
+    },
+    {
+      "path": "scripts/test-gsc-watch.cjs",
+      "sha256": "cd6465d728b6d6aaa79f2ef1c2e7eab4cc1664bd32be4ab400664ffb8f1700f3"
+    },
+    {
+      "path": "scripts/test-hls-loader.cjs",
+      "sha256": "fefca727f4120ec0ffc6eaf9b8e6381c28aebabfebf0c1cd0547ab5e752827c2"
+    },
+    {
+      "path": "scripts/test-indexability.cjs",
+      "sha256": "a6ef07fcae9eb4fd3b2b6f511e53edbaf4eb3c68530bb005c35909089eeaeb3d"
+    },
+    {
+      "path": "scripts/test-label-a4-ui.cjs",
+      "sha256": "f4034ccba23549790dd5310d4a2e5d158b7d3e3f3168de2ec749cf793dafc768"
+    },
+    {
+      "path": "scripts/test-label-a4.cjs",
+      "sha256": "5fd25ca8a0137824e47145522e85342a86dc510613d19ee929bcd6dd264ea339"
+    },
+    {
+      "path": "scripts/test-label-auto-http.cjs",
+      "sha256": "fb62fee0e38587c0d02bfef60f5ff86c0c10152a6b25f7bf39b91c0a66f6f069"
+    },
+    {
+      "path": "scripts/test-label-auto.cjs",
+      "sha256": "3ad33b6902fa071c6c7c708a5c0653584893e387413465dc3012b1e229c47233"
+    },
+    {
+      "path": "scripts/test-label-expand.cjs",
+      "sha256": "a68ffcc2c14567c721a7a77aed554f2eb371bea055b19d6a5628a72a3b3f7ffe"
+    },
+    {
+      "path": "scripts/test-label-frame-identity.cjs",
+      "sha256": "8aecffe4aabcf4f86dafaac435121936181428a25eb0a89d325325e6df314aba"
+    },
+    {
+      "path": "scripts/test-label-learning.cjs",
+      "sha256": "41547c85c4b5102be7a4ce7589716f65f97c2a75a2a1d27d0f21a8f94714ae20"
+    },
+    {
+      "path": "scripts/test-label-learning100-ui.cjs",
+      "sha256": "2f1ec02958431b52890afbfd95a0413e76d0a302be2ec76490bdf69667976f3d"
+    },
+    {
+      "path": "scripts/test-label-learning100.cjs",
+      "sha256": "4ed42804deb9582d0aef81d2fae7ae032030447750efa4f628d931af81f5706d"
+    },
+    {
+      "path": "scripts/test-label-learning300.cjs",
+      "sha256": "86606d5c03e3d8b8da07d1fcadbb036f501d52cead94bf4e93ee5b26c2bccabc"
+    },
+    {
+      "path": "scripts/test-label-publication.cjs",
+      "sha256": "c457b21edbad4aee5b2d8510e953809e3282cb83edf388f8d8ae2b0903cbe8dd"
+    },
+    {
+      "path": "scripts/test-label-retag-ui.cjs",
+      "sha256": "24eba91c253553d4402932fde85150278e81e51db942c0e888f9521b5e528f96"
+    },
+    {
+      "path": "scripts/test-label-threshold-switch-ui.cjs",
+      "sha256": "d415e900a131c25cca7c739b04d97e99e1b6b5319d7c70afe50d481262c3c5f3"
+    },
+    {
+      "path": "scripts/test-label-threshold-switch.cjs",
+      "sha256": "2431c1f7d69a5cd7bcb37008aed15531e77ad0a5e74aa61d9139174843c90af8"
+    },
+    {
+      "path": "scripts/test-label-video-limit.cjs",
+      "sha256": "2f626e1c9d47d4a6631f9b311085b18f9cd2fc55a8e8a5b807edbf235be1d3f6"
+    },
+    {
+      "path": "scripts/test-learning-poll.cjs",
+      "sha256": "babbc1916b7cb426dec6d427a329071b732980758f36fd74e96fb7d827bcd52f"
+    },
+    {
+      "path": "scripts/test-learning-status.cjs",
+      "sha256": "6c47b44a992e142c6104eb57b430e3cb997bcb7b71a2ecdd793cc600facbf997"
+    },
+    {
+      "path": "scripts/test-local-video-lists.cjs",
+      "sha256": "fe8e755bc61f1e996cb7990874f0d8ec972721143fd339b53e4f33780cbc62ae"
+    },
+    {
+      "path": "scripts/test-loopback-guard.cjs",
+      "sha256": "3b233b1fca62b6d004956ffb17a1fc2a4ca018b5fb75c84ac993ada8699f1649"
+    },
+    {
+      "path": "scripts/test-manual-ranking-auth.cjs",
+      "sha256": "7f85d1005dfc5073b866bf49473adf89803dfa59e3e0e8d2b7942c7f60884976"
+    },
+    {
+      "path": "scripts/test-manual-ranking.cjs",
+      "sha256": "e64fea1045057b60668fb37ca7f4560d26ee58b52826b7f9b4627b1955f9d246"
+    },
+    {
+      "path": "scripts/test-manual-upload-bridge.cjs",
+      "sha256": "b54074d9520d21d54981c62a74384015f7d18b53aa4d1714cb2f672872610320"
+    },
+    {
+      "path": "scripts/test-metadata-batch.cjs",
+      "sha256": "36e2a82b94fb37021a76391051d7590ba09375a21add6b1eb5c913ecf858e04d"
+    },
+    {
+      "path": "scripts/test-newest-append.cjs",
+      "sha256": "dfeb1739634ea14591c1cc24476af0a7780251b398b4a22d44fa832f4d6dc3b3"
+    },
+    {
+      "path": "scripts/test-newest500-local.cjs",
+      "sha256": "6bcf162e1b354305b756311ad0083722f5dcb2f3da294900220c64312a424a6c"
+    },
+    {
+      "path": "scripts/test-newest500-pages.cjs",
+      "sha256": "cf067b08d10d19c51d5d384b8215282a0f6a03c6e7d39ce67190eabf9b66cecf"
+    },
+    {
+      "path": "scripts/test-performance.cjs",
+      "sha256": "0247dd69beb5f42d7ec7d06e0456fb3ab68191ea1a812d39f1fccd524c419649"
+    },
+    {
+      "path": "scripts/test-playback-component.cjs",
+      "sha256": "ae08d6de052af0f8f2827fc33afaf07221d95929489aca8c48d13d91fb076704"
+    },
+    {
+      "path": "scripts/test-playback-recovery.cjs",
+      "sha256": "203c30a5003d28b1503f02d84825690782c2a63f050e4d3b1edec090c36af174"
+    },
+    {
+      "path": "scripts/test-prewarm-thumbnail.cjs",
+      "sha256": "5675030636c2136438f2e594a58eb81743d5fbf831dcb572622608d2c333766b"
+    },
+    {
+      "path": "scripts/test-public-catalog.cjs",
+      "sha256": "7fc2c3707cb5bac2c875afd2f219215d438b71f440f26ffc3d9bede178b7b785"
+    },
+    {
+      "path": "scripts/test-public-direct-boundary.cjs",
+      "sha256": "09c89944b19fe32cdee90fb38f905e4108ac0b6daa330fe9a30c462ddf3e6901"
+    },
+    {
+      "path": "scripts/test-public-download-observation.cjs",
+      "sha256": "83ab5fb7c1a22f6454223337508fb7339b1d2ee7305108dd43e0fb0727e9f5b9"
+    },
+    {
+      "path": "scripts/test-public-mobile-return.cjs",
+      "sha256": "a04eb2a4846edc22480c242a5bb6da37744492b338ba99e3ae89ba541082a728"
+    },
+    {
+      "path": "scripts/test-public-notices.cjs",
+      "sha256": "1437f8f765fa72418c6e756672e86d216fbc335aa10a6f5a66de294af20e568b"
+    },
+    {
+      "path": "scripts/test-public-operation-lock.cjs",
+      "sha256": "eb6d4efb480757b35119ca7ec960b7b1b366a6d07d2b03cdcef97a471fb70a0d"
+    },
+    {
+      "path": "scripts/test-public-pages.cjs",
+      "sha256": "c6c8391cd134ccf101556a61ff72feea839f5dd864099d20336cfb113c7301fd"
+    },
+    {
+      "path": "scripts/test-public-response-cache.cjs",
+      "sha256": "067dbdf709b464e1e8e11d168939c7eddb19986843d84ec372d5b9324c8bceb9"
+    },
+    {
+      "path": "scripts/test-public-video-service.cjs",
+      "sha256": "bc3880d74f8a2e59ea9d790eaf6454e78faff3826d7368b7dd0b131e46a0ad31"
+    },
+    {
+      "path": "scripts/test-ranking-cache-return.cjs",
+      "sha256": "ba20cfa1fb629748875cebe2cc153694fcaa71b215c6eef5e0fd1c11d07103bb"
+    },
+    {
+      "path": "scripts/test-ranking-refresh.cjs",
+      "sha256": "9899d25564bb09d8d9efcf788ff04b4045ef068067151f70f3c28aeeb42079e5"
+    },
+    {
+      "path": "scripts/test-ranking-update-public.cjs",
+      "sha256": "3a1be46a287734be773a9ae3c1ab6a997190f52b6bfa7442efce32ef11edbed1"
+    },
+    {
+      "path": "scripts/test-ranking-update-ui.cjs",
+      "sha256": "fb9d6a791337bdf2fa3d268231bc51a94f8c873cbbfc695f3a22c468cbe328a3"
+    },
+    {
+      "path": "scripts/test-referrer-playback.cjs",
+      "sha256": "13ff2dc14c3da68c8fcefad3123e8a882ee0bf74a6f9d050c3e840843e6ac620"
+    },
+    {
+      "path": "scripts/test-registration-progress.cjs",
+      "sha256": "6912421bb794fb2224774a912dc88b00dc54f6db314f486fee66ed8b062792d6"
+    },
+    {
+      "path": "scripts/test-registration-recovery.cjs",
+      "sha256": "106ccbda62c31a5d8768557675b8de76fd1bbaf9e4d0149d387161880b82f0a1"
+    },
+    {
+      "path": "scripts/test-rising-refresh.cjs",
+      "sha256": "f65c8d3c808efd174739e5cfb594ee26fc726125cb08d531b030369fca944017"
+    },
+    {
+      "path": "scripts/test-rising-related-share.cjs",
+      "sha256": "d97b9f9476703f9bb442e61c46d0eccb4d5af5233115f975149065abace870de"
+    },
+    {
+      "path": "scripts/test-search-ux-pilot.cjs",
+      "sha256": "0f18db188b5164282443f562d045669fcdc19916cb3a43ed81cfc587d1ac3268"
+    },
+    {
+      "path": "scripts/test-seo-middleware.cjs",
+      "sha256": "7efedc827b555abdf857250335aa2218275ae308bffcb94193a39725f707e8ba"
+    },
+    {
+      "path": "scripts/test-seo-reachability.cjs",
+      "sha256": "05565ccdf22920a8cdd6e4bb3fc663f12754870fad311827b9047eff46c043f0"
+    },
+    {
+      "path": "scripts/test-share-context.cjs",
+      "sha256": "8401a073333180ea9cf6bf98e01d0aeb2bab3abda8abb0a3cfa3d6166faa0eba"
+    },
+    {
+      "path": "scripts/test-site-priority.cjs",
+      "sha256": "e8caf046da604b277b1d84c8afba201d8b86a8c4d7eb1824284066883c56d5b4"
+    },
+    {
+      "path": "scripts/test-speed-playback-v2.cjs",
+      "sha256": "707c3b2a396562cf2b88ee371b2c637513aa69cccb161329f68966ec0cd2ea64"
+    },
+    {
+      "path": "scripts/test-speed-v3.cjs",
+      "sha256": "76e009a5474847c9e6b78acce4310b8a4d48f04938c8db3c2bc55b1cda7a0b19"
+    },
+    {
+      "path": "scripts/test-stream-component.cjs",
+      "sha256": "8c2cd9c011f21894b901116e5276ff18a97025c6ef79e3fe987fb6a698e6b967"
+    },
+    {
+      "path": "scripts/test-stream-playback.cjs",
+      "sha256": "bbedb8a4cbce172a599bc56f5e5631d72943f2a38490e37c76406b25b9bc0d3f"
+    },
+    {
+      "path": "scripts/test-technical-backfill.cjs",
+      "sha256": "6f385b9df276a8bc6d4e2bb3a478ac44ae3ae890e7e3dffa76553298347cccf2"
+    },
+    {
+      "path": "scripts/test-tier-compatible-playback.cjs",
+      "sha256": "638bfaf5869f574285b91dbfd6b90387defa72b73d8537d96b65772fca1fb439"
+    },
+    {
+      "path": "scripts/test-tier-four-frames.cjs",
+      "sha256": "5744a3eacfb01fabce0fab07c56e525e0034582b16b6b50c71bdaa9f35c3b31a"
+    },
+    {
+      "path": "scripts/test-tier-high-recall.cjs",
+      "sha256": "4fc21bb498f5f435c190bb06c7bd314595af5ce02ac22051ed096629151034ca"
+    },
+    {
+      "path": "scripts/test-tier-model-release.cjs",
+      "sha256": "dc88fa82d7c5b81ab75d9576fe7fee80dd1ce7b8e73ad25fabca7bb516624436"
+    },
+    {
+      "path": "scripts/test-tier-new-video-worker.cjs",
+      "sha256": "122eea4e319434381d2b175e9ff092405fd6ecc91f0a90ae83709f2aca8c7a00"
+    },
+    {
+      "path": "scripts/test-tier-ordinal-adjustment.cjs",
+      "sha256": "b15fb979028fbd4a1be53138053b4a209c01bb08bcd54c8dae5521edc5bf0db6"
+    },
+    {
+      "path": "scripts/test-tier-personal-engine.cjs",
+      "sha256": "77dbef676c6e72c00ce949d6ab6460f4221d282644d7114c2524d31147b25d8b"
+    },
+    {
+      "path": "scripts/test-tier-personal.cjs",
+      "sha256": "5a99b37cacb95a88474d2fd39f1575f8df63d347054deffc0102893a0cedf4bf"
+    },
+    {
+      "path": "scripts/test-tier-preview-playback.cjs",
+      "sha256": "58ff3e3fee542be0a006611110056df37622e267943c8f813c27fbea951af7b9"
+    },
+    {
+      "path": "scripts/test-tier-reevaluation-auth.cjs",
+      "sha256": "706e2c84778e707032c100788d6387332fb758ae1f8e5d37117b75bdc3c11045"
+    },
+    {
+      "path": "scripts/test-tier-reevaluation.cjs",
+      "sha256": "fd4ab95605b0f6da4428c7d8631a5d3ff35a9426ce0a2cf279e50ea0ee434426"
+    },
+    {
+      "path": "scripts/test-tier-teacher-analysis.cjs",
+      "sha256": "acfbf93f3640b9517867de2a6a62712628550dbe3f4ad0ef6f3e09eeab1ac8f7"
+    },
+    {
+      "path": "scripts/test-tier-teacher-improvements.cjs",
+      "sha256": "8e391a0f1730debd66fb12f494d91c90e0c050c40c19179653608c79180e04d9"
+    },
+    {
+      "path": "scripts/test-tier-video-preview.cjs",
+      "sha256": "b480f961ae540e43ea2987bbabe489109ff3288252762164d97c9bfa656fc99a"
+    },
+    {
+      "path": "scripts/test-tier-visual-comparison.cjs",
+      "sha256": "d14e92d001554e885c35bbf90091041880d29719c53d7b82b19f5261f1e2f0f1"
+    },
+    {
+      "path": "scripts/test-url-resolve-fix.cjs",
+      "sha256": "0bc35b9a3fd8028e9c64a1ed48019fda613e83e85e67a9073a21ef7111e07c5a"
+    },
+    {
+      "path": "scripts/test-verified-googlebot.cjs",
+      "sha256": "560367ddef26e9fc60edd67d1449a3a9177f3c71149816281f6c6d80aec205e4"
+    },
+    {
+      "path": "scripts/test-video-download.cjs",
+      "sha256": "4f028284612febf771dd05ea56f6c7489bc49a5c94ec43ffde3a832b77e79da2"
+    },
+    {
+      "path": "scripts/test-video-inventory.cjs",
+      "sha256": "1e3770e437e8c88c7a860ead5fb7072bf29007084d9177bb2429415152ed7660"
+    },
+    {
+      "path": "scripts/test-video-range-session.cjs",
+      "sha256": "4d526718d3629ef7e02e2949e13d4ebb35ae8338e625e739d97ecb9ac69aaf14"
+    },
+    {
+      "path": "scripts/test-video-report.cjs",
+      "sha256": "a87fe23372128e7b65967c46404a4b0a1595e1f36d705db89336c7b8f3be1059"
+    },
+    {
+      "path": "scripts/test-video-schema-technical.cjs",
+      "sha256": "f716275adecd9c25330f6d6c54489b91edb1231cd6543926448a7d9e2f62609c"
+    },
+    {
+      "path": "scripts/test-video-sitemap-pilot.cjs",
+      "sha256": "3f995433b15dad98745ef79b97f277a8aef2bfcf1ced7ed689ef42bce5de65b9"
+    },
+    {
+      "path": "scripts/validate-labels.cjs",
+      "sha256": "322a67b186b337f4f58a48e566a319b2c14c33ee8464970b9b98e3b534765d45"
+    },
+    {
+      "path": "scripts/verified-googlebot.cjs",
+      "sha256": "f6f9f72985e5af2697b5ca5f1f477e37fbb2d6e14f438ef48581de5cf35a22f6"
+    },
+    {
+      "path": "scripts/verify-canonical-source.cjs",
+      "sha256": "b43b184f2e0a2e1e7bfb252a5c84ae39482254955cab6471a3bb5f22b9dc57e3"
+    },
+    {
+      "path": "scripts/verify-current-manifest.cjs",
+      "sha256": "109b65ebafc85cb8cafc3bf1cd1a3cea55f80f099dbacac038c4a3fb211f2790"
+    },
+    {
+      "path": "scripts/verify-production-source.cjs",
+      "sha256": "a17db58f75311f86074daf42b8d9c0c353d1343d4892e1538bb05ebdabc224ee"
+    },
+    {
+      "path": "scripts/visual-preference-holdout-eval.py",
+      "sha256": "c11bfbad7b76536c582d3c63018e37f867525047f8c4879afb18228e791361f4"
+    },
+    {
+      "path": "scripts/visual-preference-poc.py",
+      "sha256": "3deae12a4af1238eb3cc4f284ebbc0336b03f11f247654609d7ddfed5b32773c"
+    },
+    {
+      "path": "sql/tier-personal-model.sql",
+      "sha256": "e922a7c1b6fc4b8d9451f8c0c0f0577fb732cbeb94801126008ca389f982d19e"
+    },
+    {
+      "path": "supabase/curated-authors.sql",
+      "sha256": "ad335704bb44382c5dce70d28cd15b9a251781d3fb0561367c9d769b92cab968"
+    },
+    {
+      "path": "supabase/engagement-events.sql",
+      "sha256": "152b098f2bc3fd539d6646c0ab8571968ebe0df77eb07bcad1ae72647c2b3d23"
+    },
+    {
+      "path": "supabase/engagement-page-view-20260913.sql",
+      "sha256": "33ef51a7074be53991285804de4cc18021957090b7f6cea218b04dc12ea4bf6b"
+    },
+    {
+      "path": "supabase/ranking-moderation.sql",
+      "sha256": "721b8b329045e554f096aea1f4d774489d0cc03a1036104fbf8ca67a4fd908f0"
+    },
+    {
+      "path": "supabase/removal-requests.sql",
+      "sha256": "61ca781198e4fae614d5a97415f7ef2d11ce0d8e9190c86e4cef706cb852f8af"
+    },
+    {
+      "path": "supabase/schema.sql",
+      "sha256": "7a38a8cf634ca39c85dd5467fdbed81ce015e46ece2d1daf375c50fb805ed6d5"
+    },
+    {
+      "path": "supabase/x-api-usage.sql",
+      "sha256": "8382cacde5da0fb19613f3cdae90a75944cc7891cca0123f874e50366e5e0b02"
+    },
+    {
+      "path": "supabase/x-promotion-logs-20260913.sql",
+      "sha256": "c25ab5f39c902464b1749a9ca75bb0d4c55b8743135c54cdec0d5291b1b8159e"
+    },
+    {
+      "path": "tsconfig.json",
+      "sha256": "e970e8d12d1edff63c67844043a0b36a5da3f45a953f0c90253928fa69b3a7a6"
+    }
+  ]
+}

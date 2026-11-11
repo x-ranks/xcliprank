@@ -1,12 +1,23 @@
 import Link from "next/link";
 
 /** Shared public masthead. The icon is decorative; the link has its own name. */
-export default function SiteBrand() {
+export default function SiteBrand({ showSearch = false }: { showSearch?: boolean } = {}) {
   return <div className="site-brand-band">
     <Link className="site-brand-link" href="/rising" aria-label="twizouのトップページ（急上昇）へ">
       <img src="/twizou-mark.svg" width="64" height="64" alt="" aria-hidden="true" />
       <span>twizou</span>
     </Link>
-    <nav className="site-discovery-nav" aria-label="動画を探す"><a href="/discover?mode=random">全期間</a><a href="/discover?mode=tier">Tier別</a><a href="/discover?mode=month">月別</a><a href="/discover?mode=search">検索</a><Link href="/favorites" prefetch={false}>☆ お気に入り</Link></nav>
+    {showSearch && <form className="site-search-form" action="/discover" method="get" role="search" aria-label="サイト内の動画検索">
+      <input type="hidden" name="mode" value="search" />
+      <input type="search" name="q" aria-label="タグ・本文・投稿者名" placeholder="タグ・本文・投稿者名" maxLength={80} required />
+      <button type="submit">動画を検索</button>
+    </form>}
+    <nav className="site-discovery-nav" aria-label="動画を探す">
+      {!showSearch && <a className="site-search-link" href="/discover?mode=search">動画を検索</a>}
+      <a href="/discover?mode=random">ランダム</a>
+      <a href="/discover?mode=tier">Tierで探す</a>
+      <a href="/discover?mode=month">月別</a>
+      <Link href="/favorites" prefetch={false}>☆ お気に入り</Link>
+    </nav>
   </div>;
 }

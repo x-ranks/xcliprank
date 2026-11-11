@@ -9,6 +9,7 @@ import { isCronAuthorized } from "../../../lib/cron-auth";
 import { applyPromotionMosaic } from "../../../lib/x-image-safety";
 import { SITE_URL } from "../../../lib/seo";
 import { supabaseAdmin } from "../../../lib/supabase-admin";
+import { productionPublicBackend } from "../../../lib/public-video-production";
 
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
@@ -34,8 +35,12 @@ type RankingPreview = {
 type RankingSnapshot = {
   count: number;
   topPostIds: string[];
+  candidateIds: string[];
   previews: RankingPreview[];
 };
+type Trend = { name: string; postCount: number | null };
+let trendCache: { until: number; trends: Trend[] } | null = null;
+let trendFailureUntil = 0;
 
 function isVariant(value: unknown): value is PromotionVariant {
   return typeof value === "string" && VARIANTS.includes(value as PromotionVariant);
@@ -86,6 +91,9 @@ async function rankingSnapshot(): Promise<RankingSnapshot> {
 
   const posts = Array.isArray(payload.data) ? payload.data : [];
   const topPosts = posts.slice(0, 3) as Record<string, unknown>[];
+  const candidateIds = [...new Set((posts as Record<string, unknown>[]).slice(0, 12).map((post) =>
+    typeof post.x_post_id === "string" && /^\d{1,25}$/.test(post.x_post_id) ? post.x_post_id : ""
+  ).filter(Boolean))];
   const topPostIds = topPosts
     .map((post) =>
       typeof post.x_post_id === "string" ? post.x_post_id : ""
@@ -119,6 +127,7 @@ async function rankingSnapshot(): Promise<RankingSnapshot> {
       ? Number(payload.count)
       : posts.length,
     topPostIds,
+    candidateIds,
     previews,
   };
 }
@@ -203,7 +212,7 @@ async function promotionHistory() {
   const { data, error } = await supabaseAdmin()
     .from("x_promotion_logs")
     .select(
-      "id,created_at,status,trigger_source,variant,ranking_date,utm_content,x_post_url,media_count,error_message"
+      "id,created_at,status,trigger_source,variant,ranking_date,utm_content,x_post_url,media_count,error_message,draft_text"
     )
     .order("created_at", { ascending: false })
     .limit(30);
@@ -232,6 +241,78 @@ export async function GET(request: NextRequest) {
         },
         { headers: { "cache-control": "no-store" } }
       );
+    }
+
+    if (request.nextUrl.searchParams.get("mode") === "kit") {
+      const snapshot = await rankingSnapshot();
+      // The ranking is a shortlist, never the final publication decision.
+      // Recheck every candidate against current visibility, author permission,
+      // moderation, and unavailable-post state at the moment the kit is opened.
+      const fresh = await productionPublicBackend().service.inspect(snapshot.candidateIds);
+      const byId = new Map(fresh.filter((video) => video.eligible).map((video) => [video.id, video]));
+      const candidates = snapshot.candidateIds.flatMap((id, index) => {
+        const video = byId.get(id);
+        if (!video) return [];
+        const imageUrl = safePreviewUrl(video.posterUrl);
+        if (!imageUrl) return [];
+        return [{
+          id, rank: index + 1, handle: video.handle, text: video.text?.slice(0, 240) ?? "",
+          posterUrl: imageUrl, views: video.views, likes: video.likes,
+          createdAt: video.createdAt,
+          detailUrl: `${SITE_URL}/p/${id}`,
+        }];
+      });
+      return NextResponse.json({ ok: true, candidates, checkedAt: new Date().toISOString() }, { headers: { "cache-control": "no-store" } });
+    }
+
+    if (request.nextUrl.searchParams.get("mode") === "trends") {
+      // Opt-in because this X endpoint may consume paid API credits.
+      if (process.env.X_PROMOTION_TRENDS_ENABLED !== "1") return NextResponse.json({ ok: true, available: false, reason: "XトレンドAPIは未設定です" }, { headers: { "cache-control": "no-store" } });
+      const token = process.env.X_BEARER_TOKEN?.trim();
+      if (!token) return NextResponse.json({ ok: true, available: false, reason: "XトレンドAPIの認証を確認できません" }, { headers: { "cache-control": "no-store" } });
+      if (trendCache && Date.now() < trendCache.until) return NextResponse.json({ ok: true, available: true, trends: trendCache.trends, cached: true }, { headers: { "cache-control": "no-store" } });
+      if (Date.now() < trendFailureUntil) return NextResponse.json({ ok: false, error: "Xトレンドの取得に失敗したため、しばらく再試行を控えています" }, { status: 503, headers: { "cache-control": "no-store" } });
+      let response: Response;
+      try {
+        response = await fetch("https://api.x.com/2/trends/by/woeid/23424856", {
+          headers: { Authorization: `Bearer ${token}` }, cache: "no-store", signal: AbortSignal.timeout(10_000),
+        });
+      } catch {
+        trendFailureUntil = Date.now() + 15 * 60 * 1000;
+        throw Error("XトレンドAPIに接続できませんでした");
+      }
+      if (!response.ok) {
+        trendFailureUntil = Date.now() + 15 * 60 * 1000;
+        return NextResponse.json({ ok: false, error: `Xトレンドを取得できませんでした（HTTP ${response.status}）` }, { status: 502, headers: { "cache-control": "no-store" } });
+      }
+      const payload = await response.json();
+      const trends: Trend[] = (Array.isArray(payload.data) ? payload.data : []).slice(0, 30).flatMap((item: Record<string, unknown>) => {
+        const name = typeof item.trend_name === "string" ? item.trend_name.trim() : "";
+        if (!name || name.length > 100) return [];
+        const postCount = typeof item.tweet_count === "number" && Number.isFinite(item.tweet_count) && item.tweet_count >= 0 ? item.tweet_count : null;
+        return [{ name, postCount }];
+      });
+      trendCache = { until: Date.now() + 6 * 60 * 60 * 1000, trends };
+      return NextResponse.json({ ok: true, available: true, trends, cached: false }, { headers: { "cache-control": "no-store" } });
+    }
+
+    if (request.nextUrl.searchParams.get("mode") === "kit-image" || request.nextUrl.searchParams.get("mode") === "kit-video") {
+      const id = request.nextUrl.searchParams.get("postId") ?? "";
+      if (!/^\d{1,25}$/.test(id)) return NextResponse.json({ ok: false, error: "投稿IDが正しくありません" }, { status: 400 });
+      const video = (await productionPublicBackend().service.inspect([id])).find((item) => item.id === id && item.eligible);
+      if (!video) return NextResponse.json({ ok: false, error: "現在は掲載対象外です" }, { status: 404, headers: { "cache-control": "no-store" } });
+      if (request.nextUrl.searchParams.get("mode") === "kit-video") {
+        if (!new URL(video.videoUrl).pathname.toLowerCase().endsWith(".mp4")) return NextResponse.json({ ok: false, error: "この動画形式は投稿用の保存に対応していません" }, { status: 415, headers: { "cache-control": "no-store" } });
+        return NextResponse.json({ ok: true, url: video.videoUrl, filename: `twizou-${id}.mp4` }, { headers: { "cache-control": "no-store" } });
+      }
+      const imageUrl = safePreviewUrl(video.posterUrl);
+      if (!imageUrl) return NextResponse.json({ ok: false, error: "画像を用意できません" }, { status: 404, headers: { "cache-control": "no-store" } });
+      const image = await downloadPreview({ rank: 1, xPostId: id, imageUrl, author: video.handle ?? "", tier: video.adultTier ?? "" });
+      return new NextResponse(Buffer.from(image.bytes), { headers: {
+        "cache-control": "no-store", "content-type": "image/jpeg",
+        "content-disposition": `attachment; filename="twizou-${id}-mosaic.jpg"`,
+        "x-content-type-options": "nosniff",
+      } });
     }
 
     const snapshot = await rankingSnapshot();

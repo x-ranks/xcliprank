@@ -1,0 +1,605 @@
+[
+  {
+    "files": [
+      {
+        "path": "app/components/AgeGate.tsx",
+        "baselineSha256": "88a1a4f3269c34e2ddcb9d3e72be6bb69e37e735d0d38fef9ed139a998528e91",
+        "candidateSha256": "0d04e1a3b1f62c91f545799561966e28ae5a3b9e073e0fa28c4d100c48baa5b9"
+      },
+      {
+        "path": "app/p/[id]/page.tsx",
+        "baselineSha256": "4415341f7db86fdeae2079d49caed4838618398aea6e2a6511bab3aebfad687b",
+        "candidateSha256": "d31db4190d81e005e24f64296c699be1ce0399f81193cce725e9c8636110dbd7"
+      },
+      {
+        "path": "scripts/public-response-cache.cjs",
+        "baselineSha256": "bf66bf165a0e1db73b4c9db3d1b1020dc472b2831014abbbfd3b221136ef617a",
+        "candidateSha256": "0847dca38c84387c62af5c4c3d7a438fbb855a8a8dd20cf3e743813dbaadd732"
+      },
+      {
+        "path": "scripts/install-public-response-cache.cjs",
+        "baselineSha256": "1c6a61d8ab3298093e3115093a794988199926e4273255fa7a0859cc20d2cad6",
+        "candidateSha256": "f596caac73d1766b3f82d5e17b1e18368dbdd7e8c7823ccb49358aea7906f638"
+      },
+      {
+        "path": "scripts/verified-googlebot.cjs",
+        "baselineSha256": null,
+        "candidateSha256": "f6f9f72985e5af2697b5ca5f1f477e37fbb2d6e14f438ef48581de5cf35a22f6"
+      },
+      {
+        "path": "scripts/test-verified-googlebot.cjs",
+        "baselineSha256": null,
+        "candidateSha256": "560367ddef26e9fc60edd67d1449a3a9177f3c71149816281f6c6d80aec205e4"
+      },
+      {
+        "baselineSha256": "3b325846f0f75f975df1f7ebd8bea3680925e9dbf1f2ca634954833a3415a606",
+        "candidateSha256": "95651511b6c3d1b143f56c5536864927b59738aa717a3bb266e19adeda000ef2",
+        "path": "scripts/public-ui-test-loader.cjs"
+      },
+      {
+        "baselineSha256": "341c7c6e2d54cd6b4b4af9f325f54cb18bbf164421f650159c6c18788c329b56",
+        "candidateSha256": "5bfcc54ba7328bf401150afa3fc6b48188eb79c23470b19b1f91f57591b8f4ad",
+        "path": "scripts/test-detail-auxiliary-budget.cjs"
+      },
+      {
+        "path": "scripts/test-crawl-playback.cjs",
+        "candidateSha256": "c53d30f9f7e499c03a3f4dc7af95c6206e3d852beaad3742cf7055a64c436af4",
+        "baselineSha256": "3c67ae430126a3fb2715c8beb5042bf119bd215b3f9cf2155235e20cc99a7bb5"
+      }
+    ],
+    "release": "twizou-verified-googlebot-v1-20261105-local",
+    "target": "local",
+    "expectedBuild": "0igk4TPQwlVAMXqh19Obn",
+    "archiveSha256": "6a7cf61a67a891a407e85c48f29475139179f3b74779f5bfb7dc6bce547eb94f"
+  },
+  {
+    "files": [
+      {
+        "path": "app/components/AgeGate.tsx",
+        "baselineSha256": "88a1a4f3269c34e2ddcb9d3e72be6bb69e37e735d0d38fef9ed139a998528e91",
+        "candidateSha256": "0d04e1a3b1f62c91f545799561966e28ae5a3b9e073e0fa28c4d100c48baa5b9"
+      },
+      {
+        "path": "app/p/[id]/page.tsx",
+        "baselineSha256": "4415341f7db86fdeae2079d49caed4838618398aea6e2a6511bab3aebfad687b",
+        "candidateSha256": "d31db4190d81e005e24f64296c699be1ce0399f81193cce725e9c8636110dbd7"
+      },
+      {
+        "path": "scripts/public-response-cache.cjs",
+        "baselineSha256": "bf66bf165a0e1db73b4c9db3d1b1020dc472b2831014abbbfd3b221136ef617a",
+        "candidateSha256": "0847dca38c84387c62af5c4c3d7a438fbb855a8a8dd20cf3e743813dbaadd732"
+      },
+      {
+        "path": "scripts/install-public-response-cache.cjs",
+        "baselineSha256": "1c6a61d8ab3298093e3115093a794988199926e4273255fa7a0859cc20d2cad6",
+        "candidateSha256": "f596caac73d1766b3f82d5e17b1e18368dbdd7e8c7823ccb49358aea7906f638"
+      },
+      {
+        "path": "scripts/verified-googlebot.cjs",
+        "baselineSha256": null,
+        "candidateSha256": "f6f9f72985e5af2697b5ca5f1f477e37fbb2d6e14f438ef48581de5cf35a22f6"
+      },
+      {
+        "path": "scripts/test-verified-googlebot.cjs",
+        "baselineSha256": null,
+        "candidateSha256": "560367ddef26e9fc60edd67d1449a3a9177f3c71149816281f6c6d80aec205e4"
+      },
+      {
+        "baselineSha256": "3b325846f0f75f975df1f7ebd8bea3680925e9dbf1f2ca634954833a3415a606",
+        "candidateSha256": "95651511b6c3d1b143f56c5536864927b59738aa717a3bb266e19adeda000ef2",
+        "path": "scripts/public-ui-test-loader.cjs"
+      },
+      {
+        "baselineSha256": "341c7c6e2d54cd6b4b4af9f325f54cb18bbf164421f650159c6c18788c329b56",
+        "candidateSha256": "5bfcc54ba7328bf401150afa3fc6b48188eb79c23470b19b1f91f57591b8f4ad",
+        "path": "scripts/test-detail-auxiliary-budget.cjs"
+      },
+      {
+        "path": "scripts/test-crawl-playback.cjs",
+        "candidateSha256": "c53d30f9f7e499c03a3f4dc7af95c6206e3d852beaad3742cf7055a64c436af4",
+        "baselineSha256": "3c67ae430126a3fb2715c8beb5042bf119bd215b3f9cf2155235e20cc99a7bb5"
+      }
+    ],
+    "release": "twizou-verified-googlebot-v1-20261105-production",
+    "target": "production",
+    "expectedBuild": "0igk4TPQwlVAMXqh19Obn",
+    "archiveSha256": "00c02dab957b01224ceed2f29779be51b4d081292c73f1ab653deca7a0e7c3cb"
+  },
+  {
+    "files": [
+      {
+        "candidateSha256": "1c5b5f707ec6fffb3af0f04e6c3fb1c7b4e4eb472076057355a7f8d55941c8b6",
+        "baselineSha256": "f6f9f72985e5af2697b5ca5f1f477e37fbb2d6e14f438ef48581de5cf35a22f6",
+        "path": "scripts/verified-googlebot.cjs"
+      },
+      {
+        "candidateSha256": "53e9d30309b3e8a81b42a8c3907b488f0d001850ca31e4de8cdb211fdfa1eba8",
+        "baselineSha256": "560367ddef26e9fc60edd67d1449a3a9177f3c71149816281f6c6d80aec205e4",
+        "path": "scripts/test-verified-googlebot.cjs"
+      }
+    ],
+    "release": "twizou-googlebot-header-probe-v1-20261106-production",
+    "target": "production",
+    "expectedBuild": "iRn4DshMRP2DIWDt-SiKh",
+    "archiveSha256": "b1cc3ceb439b4269ade12b127e8e42d300a80f03d18533851b45004b059b75b5"
+  },
+  {
+    "files": [
+      {
+        "path": "app/sitemap.ts",
+        "baselineSha256": "cc5590e61e43da2b9336c39583cea464779b3f29685ee21d2d7b392bca74a780",
+        "candidateSha256": "31427ca257350f19cdbc4b0ee20cd992acedefddb0e623334ed842ad3ead777d"
+      },
+      {
+        "path": "scripts/test-site-priority.cjs",
+        "baselineSha256": "6b3d683b34d6ef078999d5e148bb57cd83287effcc6e42afd3eea839d4ec9208",
+        "candidateSha256": "cb4ac8acb12ea130d46cdbd1a18caedd2073eb1cd35fe6c827e0146c1b43f694"
+      }
+    ],
+    "release": "twizou-sitemap-latency-v1-20261107-production",
+    "target": "production",
+    "expectedBuild": "RjIfrGpsfJYVgE8_839tz",
+    "archiveSha256": "a84d83049a50978cbc3081eab2b8381cabd5bb7d19cc8a476fbf4f087ff0ad6a"
+  },
+  {
+    "files": [
+      {
+        "path": "app/accounts/[key]/page.tsx",
+        "baselineSha256": "1fc11e7fd774742dfae9c598c0a306672b7946bfb2ae6e2e649ae57cd778fe83",
+        "candidateSha256": "a93aded40fe5080a68f03e6248a96469514ad7fae693fc1f20e436833e8fc2e3"
+      },
+      {
+        "path": "scripts/test-factual-seo.cjs",
+        "baselineSha256": "c5564fdf79d0dcf50f309018c73e9ffed04e6abc1574cb9465170fb2dbffc79e",
+        "candidateSha256": "c76597ff8ff091e75d085930f69ec3641e6122d18d00310297e3b43058c0bd56"
+      }
+    ],
+    "release": "twizou-author-entry-pilot-v1-20261107-local",
+    "target": "local",
+    "expectedBuild": null,
+    "archiveSha256": "f6e7030f093947b7eef05a5cf8a5622cd15b3929dcea531d3287e575cf1517a2"
+  },
+  {
+    "files": [
+      {
+        "path": "app/accounts/[key]/page.tsx",
+        "baselineSha256": "1fc11e7fd774742dfae9c598c0a306672b7946bfb2ae6e2e649ae57cd778fe83",
+        "candidateSha256": "a93aded40fe5080a68f03e6248a96469514ad7fae693fc1f20e436833e8fc2e3"
+      },
+      {
+        "path": "scripts/test-factual-seo.cjs",
+        "baselineSha256": "c5564fdf79d0dcf50f309018c73e9ffed04e6abc1574cb9465170fb2dbffc79e",
+        "candidateSha256": "c76597ff8ff091e75d085930f69ec3641e6122d18d00310297e3b43058c0bd56"
+      }
+    ],
+    "release": "twizou-author-entry-pilot-v1-fix1-20261107-production",
+    "target": "production",
+    "expectedBuild": "4X137ua8SE7DG--9oUcjR",
+    "archiveSha256": "9704acdf0c1437d326247012c239be08e056eeec51eb0f3e420f4c3ff04c9c9d"
+  },
+  {
+    "files": [
+      {
+        "path": "app/accounts/[key]/page.tsx",
+        "baselineSha256": "a93aded40fe5080a68f03e6248a96469514ad7fae693fc1f20e436833e8fc2e3",
+        "candidateSha256": "9ae551d9cd3bddbbe623adb9a3a66d60be624f60ed594ebebd98be04c77f23d9"
+      },
+      {
+        "path": "app/globals.css",
+        "baselineSha256": "762d70cd8b530faafe8108d5297bb5c6757af567c171685c3d5e24a3263b4b49",
+        "candidateSha256": "21327162f3fb92a4a05c23aa9f7987699dba291728571c9232da84d2600b09d7"
+      },
+      {
+        "path": "scripts/test-factual-seo.cjs",
+        "baselineSha256": "c76597ff8ff091e75d085930f69ec3641e6122d18d00310297e3b43058c0bd56",
+        "candidateSha256": "4873d8839b9f596a4a527b2f0ce40781f7123ff5bc90fd55ed80bbc797d7c0c4"
+      }
+    ],
+    "release": "twizou-author-buttons-v1-20261107-production",
+    "target": "production",
+    "expectedBuild": "H9xeIzuZVy1wp_KOWHKjK",
+    "archiveSha256": "5ed733e3ccbf3afbf809d71b93c14857dd7a1310947ab546e5205b1000125231"
+  },
+  {
+    "files": [
+      {
+        "path": "app/accounts/[key]/page.tsx",
+        "baselineSha256": "a93aded40fe5080a68f03e6248a96469514ad7fae693fc1f20e436833e8fc2e3",
+        "candidateSha256": "4ffc82f137fe6b2e752da66ff038c5179f8667432f437e46fa9dde1ff17be23a"
+      },
+      {
+        "path": "app/globals.css",
+        "baselineSha256": "762d70cd8b530faafe8108d5297bb5c6757af567c171685c3d5e24a3263b4b49",
+        "candidateSha256": "21327162f3fb92a4a05c23aa9f7987699dba291728571c9232da84d2600b09d7"
+      },
+      {
+        "path": "scripts/test-factual-seo.cjs",
+        "baselineSha256": "c76597ff8ff091e75d085930f69ec3641e6122d18d00310297e3b43058c0bd56",
+        "candidateSha256": "33159f41d38bf44880fce59e493b1069ce5e462585eed6d583179dd683cbeabe"
+      }
+    ],
+    "release": "twizou-author-navigation-v1-20261107-local",
+    "target": "local",
+    "expectedBuild": null,
+    "archiveSha256": "c3b571e6db004abe8ac87b9ca3f81cf626e982e37a2d0e656e3c4dc3d34cd89a"
+  },
+  {
+    "files": [
+      {
+        "path": "app/accounts/[key]/page.tsx",
+        "baselineSha256": "9ae551d9cd3bddbbe623adb9a3a66d60be624f60ed594ebebd98be04c77f23d9",
+        "candidateSha256": "4ffc82f137fe6b2e752da66ff038c5179f8667432f437e46fa9dde1ff17be23a"
+      },
+      {
+        "path": "scripts/test-factual-seo.cjs",
+        "baselineSha256": "4873d8839b9f596a4a527b2f0ce40781f7123ff5bc90fd55ed80bbc797d7c0c4",
+        "candidateSha256": "33159f41d38bf44880fce59e493b1069ce5e462585eed6d583179dd683cbeabe"
+      }
+    ],
+    "release": "twizou-author-navigation-v1-20261107-production",
+    "target": "production",
+    "expectedBuild": "TGQbaXnSwRApQxXEB6sJL",
+    "archiveSha256": "0a38b4208cf047793fb13611aa89c291d781401a58325945effa8783b374980c"
+  },
+  {
+    "files": [
+      {
+        "path": "app/components/DedicatedRankingPage.tsx",
+        "baselineSha256": "42828aa8ffded4e9daae9bfd872e8a15c83cd3671f422fda1a50b63bf9c5e3cd",
+        "candidateSha256": "538ba0dd26209fb564bf8ee206483cd5e239356ceb27121edc23741f41f6c9fb"
+      },
+      {
+        "path": "app/rising/page.tsx",
+        "baselineSha256": "7a4a8ace257c6117acfe52931cd5f3e8e70e354a3582c0c94c4f287f9d7482fe",
+        "candidateSha256": "cccde8e7a07789c51a8f9f2cb02694b13d9e234f6de7ec8deb39e22fbfd29047"
+      },
+      {
+        "path": "scripts/test-brand-ui.cjs",
+        "baselineSha256": "992332b5ef99488d7dd60c3ac97be0a552840697385f9a60915c758a66629a70",
+        "candidateSha256": "da9f12f775010eea756845dbe0710c6fee9626c20e49bf9748f4b0b7832747df"
+      }
+    ],
+    "release": "twizou-ranking-copy-v1-20261107-local",
+    "target": "local",
+    "expectedBuild": null,
+    "archiveSha256": "817bf8cfd1a52afc4cf8cc402bc273ad580b37c7fe9122fff84efb6687eee196"
+  },
+  {
+    "files": [
+      {
+        "path": "app/components/DedicatedRankingPage.tsx",
+        "baselineSha256": "77908ff02fb448422020f07d437d6f50e91acbe16742ca66cbc7658c2a56d9ae",
+        "candidateSha256": "1b2aa87b3e748aa72196f086da6ddf76b1c6a0d4f0a4534923ed3555caaec4c8"
+      },
+      {
+        "path": "app/rising/page.tsx",
+        "baselineSha256": "7a4a8ace257c6117acfe52931cd5f3e8e70e354a3582c0c94c4f287f9d7482fe",
+        "candidateSha256": "cccde8e7a07789c51a8f9f2cb02694b13d9e234f6de7ec8deb39e22fbfd29047"
+      },
+      {
+        "path": "scripts/test-brand-ui.cjs",
+        "baselineSha256": "992332b5ef99488d7dd60c3ac97be0a552840697385f9a60915c758a66629a70",
+        "candidateSha256": "da9f12f775010eea756845dbe0710c6fee9626c20e49bf9748f4b0b7832747df"
+      }
+    ],
+    "release": "twizou-ranking-copy-v1-20261107-production",
+    "target": "production",
+    "expectedBuild": "ZWoJGqSeqs8Uk8X7oykmJ",
+    "archiveSha256": "f8e4a491cec4a991a3a2cd58e9be11457fc45a90ac66285d8f603566822c357a"
+  },
+  {
+    "files": [
+      {
+        "path": "app/accounts/[key]/page.tsx",
+        "baselineSha256": "4ffc82f137fe6b2e752da66ff038c5179f8667432f437e46fa9dde1ff17be23a",
+        "candidateSha256": "f22c691bdccb1bdbbefb6f855f21f9932961f904d2b7e5f9aee46da772325d6c"
+      },
+      {
+        "path": "scripts/test-factual-seo.cjs",
+        "baselineSha256": "33159f41d38bf44880fce59e493b1069ce5e462585eed6d583179dd683cbeabe",
+        "candidateSha256": "c94e293d48949346a28aa3931a8ef22086cc67f05fec8c6a06643135a556d9b0"
+      }
+    ],
+    "release": "twizou-author-search-title-v1-20261108-local",
+    "target": "local",
+    "expectedBuild": null,
+    "archiveSha256": "563af366c0bf21716e39e996afeda1b1ddfd4a26d7ebd7011b110adca6f7e7d8"
+  },
+  {
+    "files": [
+      {
+        "path": "app/accounts/[key]/page.tsx",
+        "baselineSha256": "4ffc82f137fe6b2e752da66ff038c5179f8667432f437e46fa9dde1ff17be23a",
+        "candidateSha256": "f22c691bdccb1bdbbefb6f855f21f9932961f904d2b7e5f9aee46da772325d6c"
+      },
+      {
+        "path": "scripts/test-factual-seo.cjs",
+        "baselineSha256": "33159f41d38bf44880fce59e493b1069ce5e462585eed6d583179dd683cbeabe",
+        "candidateSha256": "c94e293d48949346a28aa3931a8ef22086cc67f05fec8c6a06643135a556d9b0"
+      }
+    ],
+    "release": "twizou-author-search-title-v1-20261108-production",
+    "target": "production",
+    "expectedBuild": "qhJV2fqIV1HY8UHXOVJ_I",
+    "archiveSha256": "ab0c4d003192b633bf476d7065b9a0a8f67df573d3abc38885db2f80de49968f"
+  },
+  {
+    "files": [
+      {
+        "path": "app/page.tsx",
+        "baselineSha256": "eb0f73a851586e051bbafa04c436056a24696c85061efb5d72359f6b6e5d685d",
+        "candidateSha256": "52886f063bc4254d76efc241b5f0990d5c75ab094dc817b912669d03ecce3429"
+      },
+      {
+        "path": "app/components/DedicatedRankingPage.tsx",
+        "baselineSha256": "538ba0dd26209fb564bf8ee206483cd5e239356ceb27121edc23741f41f6c9fb",
+        "candidateSha256": "d6cc31e5a6557f4b182562ac5600849bd6edcb24306dc701eb1b3d17b7724ce5"
+      },
+      {
+        "path": "scripts/test-newest500-pages.cjs",
+        "baselineSha256": "907f9ce9239affe22eb48df0ae535670dd79e49ae06b6eb3dd9e0b9a4a261658",
+        "candidateSha256": "cf067b08d10d19c51d5d384b8215282a0f6a03c6e7d39ce67190eabf9b66cecf"
+      },
+      {
+        "path": "scripts/test-prewarm-thumbnail.cjs",
+        "baselineSha256": "edeb70669919961972de739cefda7250b256e3e8ba8b367bf127126a5af62d3e",
+        "candidateSha256": "5675030636c2136438f2e594a58eb81743d5fbf831dcb572622608d2c333766b"
+      }
+    ],
+    "release": "twizou-ranking-links-v1-20261108-local",
+    "target": "local",
+    "expectedBuild": null,
+    "archiveSha256": "d473ee354e674f957f2d231f3a0c7c6b97d63d648eb9f7d68e7c88901abc3150"
+  },
+  {
+    "files": [
+      {
+        "path": "app/page.tsx",
+        "baselineSha256": "eb0f73a851586e051bbafa04c436056a24696c85061efb5d72359f6b6e5d685d",
+        "candidateSha256": "52886f063bc4254d76efc241b5f0990d5c75ab094dc817b912669d03ecce3429"
+      },
+      {
+        "path": "app/components/DedicatedRankingPage.tsx",
+        "baselineSha256": "1b2aa87b3e748aa72196f086da6ddf76b1c6a0d4f0a4534923ed3555caaec4c8",
+        "candidateSha256": "2503874f626347d77ddeadfb8294012a92f67c405ee8e853838ed50cb12e3fe5"
+      },
+      {
+        "path": "scripts/test-newest500-pages.cjs",
+        "baselineSha256": "907f9ce9239affe22eb48df0ae535670dd79e49ae06b6eb3dd9e0b9a4a261658",
+        "candidateSha256": "cf067b08d10d19c51d5d384b8215282a0f6a03c6e7d39ce67190eabf9b66cecf"
+      },
+      {
+        "path": "scripts/test-prewarm-thumbnail.cjs",
+        "baselineSha256": "edeb70669919961972de739cefda7250b256e3e8ba8b367bf127126a5af62d3e",
+        "candidateSha256": "5675030636c2136438f2e594a58eb81743d5fbf831dcb572622608d2c333766b"
+      }
+    ],
+    "release": "twizou-ranking-links-v1-20261108-production",
+    "target": "production",
+    "expectedBuild": "zM1PuoYHNvfOfgVIQH3Sz",
+    "archiveSha256": "4a155071f83ca2f38446bfe1a22c0c5db941142a9ab42da767b2bdceba5b4730"
+  },
+  {
+    "files": [
+      {
+        "path": "app/sitemap-video-pilot.xml/route.ts",
+        "baselineSha256": null,
+        "candidateSha256": "b048445d219d3c401c49ccc394eed38265f3a55faa8cb64e4c1301f2fb296dd9"
+      },
+      {
+        "path": "lib/video-sitemap-pilot.ts",
+        "baselineSha256": null,
+        "candidateSha256": "a40313710e45e3d33c9a55094f12fe7376a404fc647e1c7579c0f6008ad006f3"
+      },
+      {
+        "path": "lib/video-sitemap-pilot-source.ts",
+        "baselineSha256": null,
+        "candidateSha256": "8b8e0d534a4ad364a1be052cce82d5283b0b1c01d44e9d33e09a644438645fd4"
+      },
+      {
+        "path": "scripts/test-video-sitemap-pilot.cjs",
+        "baselineSha256": null,
+        "candidateSha256": "3f995433b15dad98745ef79b97f277a8aef2bfcf1ced7ed689ef42bce5de65b9"
+      }
+    ],
+    "release": "twizou-video-sitemap-pilot-v1-20261108-local",
+    "target": "local",
+    "expectedBuild": null,
+    "archiveSha256": "1f60bc807de98aeac8dab4f7d6f6dc5adf9b4c09de1eb8ab40e43a8bb90dca30"
+  },
+  {
+    "files": [
+      {
+        "path": "app/sitemap-video-pilot.xml/route.ts",
+        "baselineSha256": null,
+        "candidateSha256": "b048445d219d3c401c49ccc394eed38265f3a55faa8cb64e4c1301f2fb296dd9"
+      },
+      {
+        "path": "lib/video-sitemap-pilot.ts",
+        "baselineSha256": null,
+        "candidateSha256": "a40313710e45e3d33c9a55094f12fe7376a404fc647e1c7579c0f6008ad006f3"
+      },
+      {
+        "path": "lib/video-sitemap-pilot-source.ts",
+        "baselineSha256": null,
+        "candidateSha256": "b1e9e50ce10adcf3b02e59e31bcfa6098647620700d047c97c1664d2b4fcc44d"
+      },
+      {
+        "path": "scripts/test-video-sitemap-pilot.cjs",
+        "baselineSha256": null,
+        "candidateSha256": "3f995433b15dad98745ef79b97f277a8aef2bfcf1ced7ed689ef42bce5de65b9"
+      }
+    ],
+    "release": "twizou-video-sitemap-pilot-v1-20261108-production",
+    "target": "production",
+    "expectedBuild": "47-9YD0HENa3Vd_njUFB3",
+    "archiveSha256": "8539aa16f393bdd1d3b52e1eefe210bede9278a823cdde85f21b1594279bc7ef"
+  },
+  {
+    "files": [
+      {
+        "path": "lib/public-video-core.ts",
+        "baselineSha256": "35438e7d207c8f2641d6bd2afb94863f52ec428082dd4a6257a1003350be4452",
+        "candidateSha256": "82133e055012422d0c6b490ca94950fc52d19e53e0560b9d7ddc66f5cfe6c140"
+      },
+      {
+        "path": "app/components/SiteBrand.tsx",
+        "baselineSha256": "f4358bc7f119a9de59229a2bb0ef62eedec71d1bb28ab64f5de52b0b8caaa90c",
+        "candidateSha256": "8bd9e94012329ba57b5e0529f34dbbe41811f356ef99fde02ca7978dd9ed91a6"
+      },
+      {
+        "path": "app/components/DiscoveryBrowser.tsx",
+        "baselineSha256": "ce80dbba9d2ce3a2db84ac72144ae8f7bdbf9aefe3fe7c1a13352bef3c8747f9",
+        "candidateSha256": "d5be192201d5b28011f3585432e12c7192e084484a95dc511ba389b008cac045"
+      },
+      {
+        "path": "app/components/PublicVideoCards.tsx",
+        "baselineSha256": "27cb611c9aadfb55c0211abcbf7c119e87dc7d417794282451d13b5d38ba8a39",
+        "candidateSha256": "1d0039632b95dfc8e2435dca65234cfa520d48e2fd42568effc474ddd4f5922a"
+      },
+      {
+        "path": "app/components/DedicatedRankingPage.tsx",
+        "baselineSha256": "d6cc31e5a6557f4b182562ac5600849bd6edcb24306dc701eb1b3d17b7724ce5",
+        "candidateSha256": "f77de56d0d825f3a551cb6d5dde5afaf3c7715bc97068f1d33bea3482fcde622"
+      },
+      {
+        "path": "app/page.tsx",
+        "baselineSha256": "52886f063bc4254d76efc241b5f0990d5c75ab094dc817b912669d03ecce3429",
+        "candidateSha256": "0bf79fa2fd9158d4e783198bfed744449491b0431fe65e50979de72a032630c0"
+      },
+      {
+        "path": "app/rising/page.tsx",
+        "baselineSha256": "cccde8e7a07789c51a8f9f2cb02694b13d9e234f6de7ec8deb39e22fbfd29047",
+        "candidateSha256": "a5aad700674cec2044ad5612b202220e79b323e3890eae0e2ba484acd8553ded"
+      },
+      {
+        "path": "app/globals.css",
+        "baselineSha256": "21327162f3fb92a4a05c23aa9f7987699dba291728571c9232da84d2600b09d7",
+        "candidateSha256": "56bfe156e2950fa50fc3ecc236b014a1af346330101730f34d5b8bf9343ac50d"
+      },
+      {
+        "path": "scripts/test-search-ux-pilot.cjs",
+        "baselineSha256": null,
+        "candidateSha256": "0f18db188b5164282443f562d045669fcdc19916cb3a43ed81cfc587d1ac3268"
+      }
+    ],
+    "release": "twizou-search-ux-v1-20261109-local",
+    "target": "local",
+    "expectedBuild": null,
+    "archiveSha256": "eb49307f2699ee4363c4d9c6b618dac1f2287035fd299dd7d56c666ba2c9a0ed"
+  },
+  {
+    "files": [
+      {
+        "path": "lib/public-video-core.ts",
+        "baselineSha256": "35438e7d207c8f2641d6bd2afb94863f52ec428082dd4a6257a1003350be4452",
+        "candidateSha256": "82133e055012422d0c6b490ca94950fc52d19e53e0560b9d7ddc66f5cfe6c140"
+      },
+      {
+        "path": "app/components/SiteBrand.tsx",
+        "baselineSha256": "f4358bc7f119a9de59229a2bb0ef62eedec71d1bb28ab64f5de52b0b8caaa90c",
+        "candidateSha256": "8bd9e94012329ba57b5e0529f34dbbe41811f356ef99fde02ca7978dd9ed91a6"
+      },
+      {
+        "path": "app/components/DiscoveryBrowser.tsx",
+        "baselineSha256": "ce80dbba9d2ce3a2db84ac72144ae8f7bdbf9aefe3fe7c1a13352bef3c8747f9",
+        "candidateSha256": "d5be192201d5b28011f3585432e12c7192e084484a95dc511ba389b008cac045"
+      },
+      {
+        "path": "app/components/PublicVideoCards.tsx",
+        "baselineSha256": "27cb611c9aadfb55c0211abcbf7c119e87dc7d417794282451d13b5d38ba8a39",
+        "candidateSha256": "1d0039632b95dfc8e2435dca65234cfa520d48e2fd42568effc474ddd4f5922a"
+      },
+      {
+        "path": "app/components/DedicatedRankingPage.tsx",
+        "baselineSha256": "2503874f626347d77ddeadfb8294012a92f67c405ee8e853838ed50cb12e3fe5",
+        "candidateSha256": "6f5a8df8a55adb707a0497543d68d172a0ae0a92ee89d7434b18e2637f575b86"
+      },
+      {
+        "path": "app/page.tsx",
+        "baselineSha256": "52886f063bc4254d76efc241b5f0990d5c75ab094dc817b912669d03ecce3429",
+        "candidateSha256": "0bf79fa2fd9158d4e783198bfed744449491b0431fe65e50979de72a032630c0"
+      },
+      {
+        "path": "app/rising/page.tsx",
+        "baselineSha256": "cccde8e7a07789c51a8f9f2cb02694b13d9e234f6de7ec8deb39e22fbfd29047",
+        "candidateSha256": "a5aad700674cec2044ad5612b202220e79b323e3890eae0e2ba484acd8553ded"
+      },
+      {
+        "path": "app/globals.css",
+        "baselineSha256": "21327162f3fb92a4a05c23aa9f7987699dba291728571c9232da84d2600b09d7",
+        "candidateSha256": "56bfe156e2950fa50fc3ecc236b014a1af346330101730f34d5b8bf9343ac50d"
+      },
+      {
+        "path": "scripts/test-search-ux-pilot.cjs",
+        "baselineSha256": null,
+        "candidateSha256": "0f18db188b5164282443f562d045669fcdc19916cb3a43ed81cfc587d1ac3268"
+      }
+    ],
+    "release": "twizou-search-ux-v1-fix1-20261109-production",
+    "target": "production",
+    "expectedBuild": "8hJTLn4Zb5AB4gWfiXBPC",
+    "archiveSha256": "3acc09a59cfcdbeb7595ec668aa719a849c417088dc433fdf42110622f91e4f7"
+  },
+  {
+    "files": [
+      {
+        "path": "scripts/origin-pilot.cjs",
+        "baselineSha256": null,
+        "candidateSha256": "1caad0c1ff2ce9746bb68fc75a8fb7925c58308988b24204ae5ccd841c98eefb"
+      },
+      {
+        "path": "scripts/public-response-cache.cjs",
+        "baselineSha256": "0847dca38c84387c62af5c4c3d7a438fbb855a8a8dd20cf3e743813dbaadd732",
+        "candidateSha256": "9b16ba5e8eee482cd4ec3a265abfcc5c6d007d57009b16cebaacb6fc54ae25bc"
+      },
+      {
+        "path": "scripts/install-public-response-cache.cjs",
+        "baselineSha256": "f596caac73d1766b3f82d5e17b1e18368dbdd7e8c7823ccb49358aea7906f638",
+        "candidateSha256": "0b2d3ba5d708535c63287437e275d99b40981b0066811487e5009127dcddc172"
+      }
+    ],
+    "release": "twizou-googlebot-production-canary-20261110-origin",
+    "target": "production",
+    "expectedBuild": "v7x4e-MKe1YsYzV5EHK3l",
+    "archiveSha256": "67da82bb40654fe204a327bbe6e48f48934d14e6c0f20c3cf7585696657360b1"
+  },
+  {
+    "files": [
+      {
+        "path": "app/x-promotion/page.tsx",
+        "baselineSha256": "c1395b41936396f557e225eed8724f929c5287814147f0c1d20c038be5d0e939",
+        "candidateSha256": "208bca5e26cf962329825dbff71b4b0dc140a8b92c968bd9706f8bae0c40ad3f"
+      },
+      {
+        "path": "app/api/x-promotion/route.ts",
+        "baselineSha256": "53146b46d9653faf005e05c1804e85cc1e5e3dd149ef58a19f9652d9cc725803",
+        "candidateSha256": "2a944f06933d7c4c752282fef217069d0d04143f73336c1256ca4caacbaefffc"
+      },
+      {
+        "path": "lib/x-promotion-planner.ts",
+        "baselineSha256": null,
+        "candidateSha256": "96010b4aa5ddbc5d39a34d0b07742aff6450d5ae5d098b26ec3187ec27af4f17"
+      },
+      {
+        "path": "lib/x-promotion-analysis.ts",
+        "baselineSha256": null,
+        "candidateSha256": "96fa1fce7e5e3edebef44d0d7e02cc43cfe5d89e59268a08c0c2f9581759320b"
+      },
+      {
+        "path": "lib/x-promotion-kit.ts",
+        "baselineSha256": null,
+        "candidateSha256": "19143669891b2edb9952b475263f5bafed7ef43a411f075833b523e478820e97"
+      },
+      {
+        "path": "lib/x-promotion-manual-posts.ts",
+        "baselineSha256": null,
+        "candidateSha256": "be10bae9577981a8c3c01e54a649493b1f7f945e43aac3645c1f08e01719e8f7"
+      }
+    ],
+    "release": "twizou-sns-ops-v1-20261107-local",
+    "target": "local",
+    "expectedBuild": null,
+    "archiveSha256": "371b2ef8dd3cca803889eda0aeb5a8e00693abcfb5f3a48a76a408c9d4a4fd7b"
+  }
+]

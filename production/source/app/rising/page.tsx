@@ -23,9 +23,9 @@ export default async function RisingPage() {
   const { posts, updatedAt } = await loadRisingRanking(waitForRefresh ? {} : { deferRefresh: after });
   return <main data-rising-updated-at={updatedAt}>
     <header className="ranking-page-header">
-      <SiteBrand />
+      <SiteBrand showSearch />
       <h1 className="ranking-page-title">急上昇ランキング</h1>
-      <p className="ranking-page-description">twizou内で人気の動画をまとめました！</p>
+      <p className="ranking-page-description">X（Twitter）動画の急上昇ランキング。twizouで直近7日間に開かれた回数と、これまでの保存操作の回数をもとに並べています。</p>
     </header>
     <nav className="ranking-page-nav" aria-label="ランキングを選択">
       <Link prefetch={false} href="/rising" className="active" aria-current="page">急上昇</Link>

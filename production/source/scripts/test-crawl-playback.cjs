@@ -3,7 +3,7 @@ const fs=require('fs'),path=require('path'),assert=require('assert/strict'),ts=r
 const {resolveRobots}=require('next/dist/build/webpack/loaders/metadata/resolve-route-data');
 const {NextRequest}=require('next/server');
 const root=path.resolve(__dirname,'..');
-function load(file,resolve=require){resolve=require("./public-ui-test-loader.cjs").wrap(resolve);const m={exports:{}};new Function('require','module','exports',ts.transpileModule(fs.readFileSync(path.join(root,file),'utf8'),{compilerOptions:{module:ts.ModuleKind.CommonJS,target:ts.ScriptTarget.ES2022,jsx:ts.JsxEmit.ReactJSX,esModuleInterop:true}}).outputText)(resolve,m,m.exports);return m.exports;}
+function load(file,resolve=require){const original=resolve,wrapped=require("./public-ui-test-loader.cjs").wrap(original);resolve=n=>n.endsWith("AgeGate")?original(n):wrapped(n);const m={exports:{}};new Function('require','module','exports',ts.transpileModule(fs.readFileSync(path.join(root,file),'utf8'),{compilerOptions:{module:ts.ModuleKind.CommonJS,target:ts.ScriptTarget.ES2022,jsx:ts.JsxEmit.ReactJSX,esModuleInterop:true}}).outputText)(resolve,m,m.exports);return m.exports;}
 const robots=load('app/robots.ts',n=>n.endsWith('/seo')?{SITE_URL:'https://twizou.net'}:require(n)).default();
 const text=resolveRobots(robots);
 for(const line of ['Allow: /api/video-playback-url$','Allow: /api/video-playback-url?','Disallow: /api/','Sitemap: https://twizou.net/sitemap.xml'])assert(text.includes(line),line);

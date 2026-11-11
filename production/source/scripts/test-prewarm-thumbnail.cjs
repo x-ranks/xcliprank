@@ -24,6 +24,16 @@ const {run}=require('./ranking-prewarm.cjs');
    assert.equal(props.prefetch,false);assert.equal(requests.length,0,'No page-load prefetch');props.onPointerEnter({pointerType:'touch'});assert.equal(requests.length,0);
    props.onFocus({});assert.equal(focusEvents,1);assert.equal(requests[0].url,'/api/rankings?range=daily&edition='+bucket+'-abcdefabcdef');assert.equal(requests[0].options.cache,'no-store');
    props.onTouchStart({});assert.equal(requests.length,1,'Repeated intent within 15 seconds is coalesced');tick+=16000;props.onTouchStart({});assert.equal(requests.length,2);cleanup();assert(requests[1].options.signal.aborted,'Unmount cancels pending metadata prefetch');await new Promise(resolve=>setImmediate(resolve));
+   for(const [href,url] of [["/","/api/rankings?range=trending&page=1"],["/ranking/daily","/api/rankings?range=daily"],["/ranking/weekly","/api/rankings?range=weekly"]]){
+    const nav=navModule.exports.default({href}).props;
+    const before=requests.length;
+    assert.equal(nav.prefetch,false);
+    nav.onFocus({});
+    assert.equal(requests.length,before+1);
+    assert.equal(requests.at(-1).url,url);
+    cleanup();
+   }
+   await new Promise(resolve=>setImmediate(resolve));
   }finally{global.fetch=originalFetch;global.window=originalWindow;Date.now=originalNow;}
   console.log('PASS prewarm once per edition, delayed readiness retry, known public paths only, safe CDN thumbnail variants and external/signed/GIF preservation; no real network');
  }finally{await fs.rm(scratch,{recursive:true,force:true});}

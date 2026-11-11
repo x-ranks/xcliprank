@@ -1,0 +1,6 @@
+{
+  "name": "twizou-edge-proof-probe",
+  "private": true,
+  "type": "module",
+  "dependencies": { "ipaddr.js": "2.5.0" }
+}

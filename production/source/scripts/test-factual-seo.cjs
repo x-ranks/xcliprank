@@ -47,6 +47,60 @@ async function main(){
  const ap=load('app/accounts/[key]/page.tsx',resolve),tp=load('app/tags/[name]/page.tsx',resolve),aprops={params:Promise.resolve({key:'fixture'}),searchParams:Promise.resolve({page:'2'})},tprops={params:Promise.resolve({name:'タグA'})};
  const am=await ap.generateMetadata(aprops),tm=await tp.generateMetadata(tprops);assert(am.title.absolute.includes('投稿者A(@fixture)'));assert(am.title.absolute.includes('2ページ'));assert(am.description.includes('62件'));assert(tm.description.includes('124件'));assert(tm.description.includes('2投稿者'));assert.equal(tm.robots.index,tag.index);assert.equal(am.robots.index,account.index);
  const ah=renderToStaticMarkup(await ap.default(aprops)),th=renderToStaticMarkup(await tp.default(tprops));assert(ah.includes('よく付くタグ'));assert(ah.includes('タグB'));assert(th.includes('一緒に付けられているタグ'));assert(th.includes('124件'));assert(!th.includes('古いタグ'));
+ const pilotProps = { params: Promise.resolve({ key: "gulililucky" }) };
+ const pilotRows = [
+  { ...base, id: "1001", handle: "gulililucky", views: 5 },
+  { ...base, id: "1002", handle: "gulililucky", views: 12 },
+  { ...base, id: "1003", handle: "gulililucky", views: null },
+ ];
+ bridge.readPublicAccount = async () => ({ ...account, handle: "gulililucky", canonicalKey: "gulililucky", videos: pilotRows });
+ const pilotHtml = renderToStaticMarkup(await ap.default(pilotProps));
+ const pilotMeta = await ap.generateMetadata(pilotProps);
+ assert(pilotHtml.includes("@gulililucky"));
+ assert.match(pilotHtml, /<nav class="public-author-actions"[^>]*><a href="#latest-videos">新着動画を見る<\/a>/);
+ assert.match(pilotHtml, /<nav class="public-post-tags"[^>]*><span>よく付くタグ<\/span>/);
+ assert(!ah.includes('class="public-author-actions"'));
+ assert(pilotHtml.includes('href="#latest-videos"') && pilotHtml.includes('id="latest-videos"'));
+ assert.match(pilotHtml, /href="\/p\/1002"[^>]*>Xで表示回数が多い動画を見る（このページ内）<\/a>/);
+ assert.equal((pilotHtml.match(/class="video-card"/g) ?? []).length, 3);
+ assert.equal(pilotMeta.alternates.canonical, "https://twizou.net/accounts/gulililucky");
+ assert.equal(pilotMeta.robots.index, account.index);
+ assert.equal(pilotMeta.title.absolute, "@gulililucky（投稿者A）のX動画一覧・保存｜twizou");
+ assert.equal(pilotMeta.openGraph.title, pilotMeta.title.absolute);
+ assert.equal(pilotMeta.twitter.title, pilotMeta.title.absolute);
+ const readPilotAccount = bridge.readPublicAccount;
+ bridge.readPublicAccount = async () => ({ ...await readPilotAccount(), name: "@GuliliLucky" });
+ assert.equal((await ap.generateMetadata(pilotProps)).title.absolute, "@gulililuckyのX動画一覧・保存｜twizou");
+ bridge.readPublicAccount = readPilotAccount;
+ const pilotPage2 = { ...pilotProps, searchParams: Promise.resolve({ page: "2" }) };
+ assert(!renderToStaticMarkup(await ap.default(pilotPage2)).includes('id="latest-videos"'));
+ const pilotPage2Meta = await ap.generateMetadata(pilotPage2);
+ assert.equal(pilotPage2Meta.alternates.canonical, "https://twizou.net/accounts/gulililucky?page=2");
+ assert.equal(pilotPage2Meta.title.absolute, "投稿者A(@gulililucky)のTwitter動画一覧・保存｜2ページ｜twizou");
+ assert(!ah.includes('id="latest-videos"'));
+ const otherProps = { params: Promise.resolve({ key: "fixture" }) };
+ const otherRows = pilotRows.map(row => ({ ...row, handle: "fixture" }));
+ async function renderOther(videos) {
+  bridge.readPublicAccount = async () => ({ ...account, videos });
+  return renderToStaticMarkup(await ap.default(otherProps));
+ }
+ const otherHtml = await renderOther(otherRows);
+ assert(otherHtml.includes('class="public-author-actions"'));
+ assert.match(otherHtml, /href="\/p\/1002"[^>]*>Xで表示回数が多い動画を見る（このページ内）<\/a>/);
+ const otherMeta = await ap.generateMetadata(otherProps);
+ assert.equal(otherMeta.alternates.canonical, "https://twizou.net/accounts/fixture");
+ assert.equal(otherMeta.title.absolute, "投稿者A(@fixture)のTwitter動画一覧・保存｜twizou");
+ const singleHtml = await renderOther(otherRows.slice(0, 1));
+ assert(!singleHtml.includes('class="public-author-actions"'));
+ assert(!singleHtml.includes('id="latest-videos"'));
+ const missingViewsHtml = await renderOther([otherRows[0], otherRows[2]]);
+ assert(missingViewsHtml.includes('href="#latest-videos"'));
+ assert(!missingViewsHtml.includes("Xで表示回数が多い動画を見る"));
+ const measuredZeroHtml = await renderOther([otherRows[0], { ...otherRows[1], views: 0 }]);
+ assert.match(measuredZeroHtml, /href="\/p\/1001"[^>]*>Xで表示回数が多い動画を見る（このページ内）<\/a>/);
+ const zeroOnlyHtml = await renderOther(otherRows.map(row => ({ ...row, views: 0 })));
+ assert(zeroOnlyHtml.includes('id="latest-videos"'));
+ assert(!zeroOnlyHtml.includes("Xで表示回数が多い動画を見る"));
  const preview=process.env.FACTUAL_PREVIEW_DIR;if(preview){fs.mkdirSync(preview,{recursive:true});fs.copyFileSync(path.join(root,'public/twizou-mark.svg'),path.join(preview,'twizou-mark.svg'));const css=fs.readFileSync(path.join(root,'app/globals.css'),'utf8');fs.writeFileSync(path.join(preview,'preview.html'),'<!doctype html><html lang="ja"><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>変更内容の見本（架空データ）</title><style>'+css+'</style><body><p>変更内容の見本です。投稿者・数値は架空。動画は取得・再生しません。</p>'+[['動画詳細',html],['投稿者ページ',ah],['タグページ',th]].map(([name,body])=>'<section><h2>'+name+'</h2>'+body.replace(/<video[\s\S]*?<\/video>/g,'<div style="height:220px;background:#1b2d39;display:grid;place-items:center">動画プレーヤー（見本）</div>').replace(/<img[^>]*>/g,'<div style="height:120px;background:#213345">サムネイル（見本）</div>').replaceAll('src="/twizou-mark.svg"','src="twizou-mark.svg"')+'</section>').join('')+'</body></html>');}
  console.log('PASS FACTUAL SEO: valid/missing metrics, JST, source-matched technical data, clean canonical/schema, player first, current permission tag batch counts, stale/inactive tags, consistent pagination, author identity and contextual timestamped sharing. No network/media/writes.');
 }

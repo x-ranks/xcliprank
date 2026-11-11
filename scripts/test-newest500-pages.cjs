@@ -52,6 +52,13 @@ function resolve(n){if(n.endsWith("SiteBrand"))return load("app/components/SiteB
  if(n.endsWith('DedicatedRankingPage'))return load('app/components/DedicatedRankingPage.tsx',resolve).default;
  throw Error('Unexpected page import '+n);
 }
+function assertCanonicalRankingLinks(html){
+ const nav=html.match(/<nav[^>]*aria-label="ランキングを選択"[^>]*>([\s\S]*?)<\/nav>/)?.[1];
+ assert(nav);
+ const hrefs=[...nav.matchAll(/href="([^"]+)"/g)].map(match=>match[1]);
+ for(const href of ["/","/ranking/daily","/ranking/weekly"]) assert(hrefs.includes(href),href);
+ assert(!hrefs.some(href=>href.includes("edition=")));
+}
 (async()=>{
  const home=load('app/page.tsx',resolve);
  const firstMetadata=await home.generateMetadata({searchParams:Promise.resolve({})});assert(firstMetadata.title.absolute.startsWith('Twitter動画ランキング'));
@@ -73,7 +80,10 @@ function resolve(n){if(n.endsWith("SiteBrand"))return load("app/components/SiteB
  assert(html.includes('一覧更新：'));assert(html.includes('2026/10/14 18:35'));assert(html.includes('dateTime="2026-10-14T09:35:00.000Z"'));assert(html.includes('<a href="/">最新の一覧を表示</a>'));
  assert(html.includes('さらに表示（次の50件）'));assert(html.includes('page=3&amp;edition='+edition));
  assert(html.includes('position":51'));assert(html.includes('numberOfItems":50'));assert(html.includes('#51'));
- assert(html.includes('/ranking/daily?edition='+edition));assert(html.includes('/ranking/weekly?edition='+edition));
+ assertCanonicalRankingLinks(html);
+ assert(html.includes('href="/?edition='+edition+'"'),'previous page keeps its edition');
+ assert(!html.includes('href="/ranking/daily?edition='));
+ assert(!html.includes('href="/ranking/weekly?edition='));
  assert.deepEqual(requests[0],['trending',2,edition]);
  await assert.rejects(home.default({searchParams:Promise.resolve({page:'11'})}),/NOT_FOUND/);
  status=410;await assert.rejects(home.default({searchParams:Promise.resolve({page:'2',edition})}),/REDIRECT \//);
@@ -82,7 +92,7 @@ function resolve(n){if(n.endsWith("SiteBrand"))return load("app/components/SiteB
  for(const range of ['daily','weekly']){
   const page=load('app/ranking/'+range+'/page.tsx',resolve);
   const rendered=renderToStaticMarkup(await page.default({searchParams:Promise.resolve({edition})}));
-  assert(rendered.includes('/?edition='+edition));assert(rendered.includes('2026/10/14 18:35'));assert(rendered.includes('<a href="/ranking/'+range+'">最新の一覧を表示</a>'));assert.equal(requests.at(-1)[0],range);assert.equal(requests.at(-1)[2],edition);
+  assertCanonicalRankingLinks(rendered);assert(!/href="[^"]*[?&]edition=/.test(rendered));assert(rendered.includes('2026/10/14 18:35'));assert(rendered.includes('<a href="/ranking/'+range+'">最新の一覧を表示</a>'));assert.equal(requests.at(-1)[0],range);assert.equal(requests.at(-1)[2],edition);
  }
- console.log('PASS NEWEST500 SSR: actual Home/RankingClient/dedicated pages;50 cards; crawlable next/prev; canonical pages1-10 through actual Next resolver; matching ItemList51-100; edition kept across tabs; invalid404/expired reset/error refusal; unchanged missing components stubbed; no HTTP or effects.');
+ console.log('PASS NEWEST500 SSR: actual Home/RankingClient/dedicated pages;50 cards; crawlable next/prev; canonical pages1-10 through actual Next resolver; matching ItemList51-100; clean tab links with pinned pagination; invalid404/expired reset/error refusal; unchanged missing components stubbed; no HTTP or effects.');
 })().catch(e=>{console.error(e);process.exitCode=1;});

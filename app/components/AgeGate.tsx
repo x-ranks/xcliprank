@@ -14,15 +14,17 @@ const EXEMPT_PATHS = new Set([
   "/removal-request",
 ]);
 
-export default function AgeGate() {
+export default function AgeGate({ verifiedGooglebot = false, forceForPost = false }: { verifiedGooglebot?: boolean; forceForPost?: boolean }) {
   const pathname = usePathname();
-  const exempt = EXEMPT_PATHS.has(pathname);
+  // Video pages render their own gate after the server verifies the crawler.
+  const postPath = /^\/p\/[1-9][0-9]{1,24}\/?$/.test(pathname);
+  const exempt = verifiedGooglebot || EXEMPT_PATHS.has(pathname) || (!forceForPost && postPath);
   const [visible, setVisible] = useState(!exempt);
 
   useEffect(() => {
     if (exempt) {
       setVisible(false);
-      document.body.classList.remove("age-gate-open");
+      if (forceForPost || !postPath) document.body.classList.remove("age-gate-open");
       return;
     }
 
@@ -39,7 +41,7 @@ export default function AgeGate() {
     document.body.classList.toggle("age-gate-open", !accepted);
 
     return () => document.body.classList.remove("age-gate-open");
-  }, [exempt]);
+  }, [exempt, forceForPost, postPath]);
 
   function accept() {
     try {

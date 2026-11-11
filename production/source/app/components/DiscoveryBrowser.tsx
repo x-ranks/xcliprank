@@ -63,7 +63,7 @@ export default function DiscoveryBrowser({ personalPage = false }: { personalPag
   const returnTo = (personalPage ? "/favorites?" : "/discover?") + returnParams.toString();
   useEffect(() => { if (initialized && location.pathname === (personalPage ? "/favorites" : "/discover")) history.replaceState(history.state, "", returnTo); }, [initialized, personalPage, returnTo]);
   return <div className="discovery-browser"><nav className="discovery-tabs" aria-label="動画の探し方">
-    {(personalPage ? [["favorites", "お気に入り"], ["saveHistory", "保存履歴"]] : [["random", "全期間"], ["tier", "Tier別"], ["month", "月別"], ["search", "検索"]]).map(([value, label]) => <button key={value} type="button" aria-pressed={mode === value} onClick={() => setMode(value as Mode)}>{label}</button>)}
+    {(personalPage ? [["favorites", "お気に入り"], ["saveHistory", "保存履歴"]] : [["random", "ランダム"], ["tier", "Tierで探す"], ["month", "月別"], ["search", "検索"]]).map(([value, label]) => <button key={value} type="button" aria-pressed={mode === value} onClick={() => setMode(value as Mode)}>{label}</button>)}
   </nav>
   {personalPage && <p>この端末のブラウザに記録します。お気に入りは最大1000件、保存履歴は新しい順に最大1000件です。保存履歴は保存操作の記録で、端末への保存完了を保証するものではありません。</p>}
   {mode === "search" && <form onSubmit={event => { event.preventDefault(); setTerm(q.trim()); }}><label>タグ・本文・投稿者名 <input value={q} maxLength={80} onChange={event => setQ(event.target.value)} /></label> <button type="submit">検索</button></form>}

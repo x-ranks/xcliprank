@@ -1,5 +1,3 @@
-import { loadRankingPage } from "../lib/initial-ranking";
-import { newestPageHref } from "../lib/ranking-pagination";
 import { readPublicIndex } from "../lib/public-video-server";
 export const dynamic = "force-dynamic";
 import type { MetadataRoute } from "next";
@@ -10,15 +8,11 @@ import { tagHref } from "../lib/public-video-core";
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   // Fail visibly on a database error; an empty sitemap would falsely signal removals.
-  const [index, newest] = await Promise.all([
-    readPublicIndex(), loadRankingPage("trending", 1).catch(() => null),
-  ]);
-  const reportedPages = newest?.status === 200 ? newest.pagination?.totalPages : undefined;
-  const newestPages = typeof reportedPages === "number" && Number.isInteger(reportedPages) && reportedPages > 0
-    ? Math.min(10, reportedPages) : 1;
+  // Newest pagination is linked from the listing. Building its ranking here
+  // would make every sitemap fetch wait for a separate ranking hydration.
+  const index = await readPublicIndex();
   return [
     { url: SITE_URL },
-    ...Array.from({ length: newestPages - 1 }, (_, i) => ({ url: SITE_URL + newestPageHref(i + 2) })),
     { url: `${SITE_URL}/ranking/daily` },
     { url: `${SITE_URL}/ranking/weekly` },
     { url: `${SITE_URL}/rising` },

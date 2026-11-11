@@ -25,7 +25,7 @@ async function main(){
  assert(rising.metadata.title.absolute === '急上昇のTwitter動画ランキング・保存｜twizou');
  assert.equal(rising.metadata.alternates.canonical,'/rising');
  const html=renderToStaticMarkup(await rising.default());
- assert(html.includes('twizou内で人気の動画をまとめました！'));
+ assert(html.includes('X（Twitter）動画の急上昇ランキング。twizouで直近7日間に開かれた回数と、これまでの保存操作の回数をもとに並べています。'));
  assert(html.includes('Twitter動画ランキングについて'));assert(html.includes('18歳未満の方は利用できません。'));
  for(const href of ['/browse','/accounts','/tags','/privacy','/terms','/copyright','/advertising-disclosure','/contact','/removal-request'])assert(html.includes('href="'+href+'"'),href);
  assert(html.indexOf('about-ranking')>html.indexOf('video-grid'));assert(html.indexOf('<footer>')>html.indexOf('about-ranking'));
@@ -36,9 +36,9 @@ async function main(){
  assert(html.includes('/reels'));assert(html.includes('/download'));assert(html.includes('0:30'));
  assert(html.includes('サイトで開いた回数 5回'));assert(html.includes('保存操作 2回'));
  const daily=renderToStaticMarkup(React.createElement(load('app/components/DedicatedRankingPage.tsx').default,{range:'daily',initialPosts:[]}));
- assert(daily.includes('毎日入れ替わる動画を紹介！'));
+ assert(daily.includes('直近24時間のX（Twitter）動画と、過去のおすすめを日替わりで紹介します。'));
  const weekly=renderToStaticMarkup(React.createElement(load('app/components/DedicatedRankingPage.tsx').default,{range:'weekly',initialPosts:[]}));
- assert(weekly.includes('直近1週間の人気動画を紹介！'));
+ assert(weekly.includes('直近1週間のX（Twitter）動画を中心に、人気やtwizouでの評価をもとに選んでいます。'));
  if(process.env.XCLIP_BRAND_PREVIEW_DIR){const out=path.resolve(process.env.XCLIP_BRAND_PREVIEW_DIR);fs.mkdirSync(out,{recursive:true});for(const [name,body] of Object.entries({rising:html,daily,weekly})){fs.writeFileSync(path.join(out,name+'.html'),'<html lang="ja"><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><style>'+fs.readFileSync(path.join(root,'app/globals.css'),'utf8')+'</style>'+body+'</html>');}}
  console.log('PASS brand masthead SSR, rising home link, decorative monochrome icon, ranking copy, duration, counts and canonical');
 }

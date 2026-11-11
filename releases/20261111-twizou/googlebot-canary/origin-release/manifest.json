@@ -1,0 +1,21 @@
+{
+  "release": "twizou-googlebot-production-canary-20261110-origin",
+  "expectedLiveBuildId": "v7x4e-MKe1YsYzV5EHK3l",
+  "files": [
+    {
+      "path": "scripts/origin-pilot.cjs",
+      "baselineSha256": null,
+      "candidateSha256": "1caad0c1ff2ce9746bb68fc75a8fb7925c58308988b24204ae5ccd841c98eefb"
+    },
+    {
+      "path": "scripts/public-response-cache.cjs",
+      "baselineSha256": "0847dca38c84387c62af5c4c3d7a438fbb855a8a8dd20cf3e743813dbaadd732",
+      "candidateSha256": "9b16ba5e8eee482cd4ec3a265abfcc5c6d007d57009b16cebaacb6fc54ae25bc"
+    },
+    {
+      "path": "scripts/install-public-response-cache.cjs",
+      "baselineSha256": "f596caac73d1766b3f82d5e17b1e18368dbdd7e8c7823ccb49358aea7906f638",
+      "candidateSha256": "0b2d3ba5d708535c63287437e275d99b40981b0066811487e5009127dcddc172"
+    }
+  ]
+}

@@ -40,6 +40,11 @@ export function publicVideoIndexable(video: PublicVideo, labels: PublicLabel[] =
   return isIndexable({ type: "post", permitted: video.eligible, hasAuthor: Boolean(authorHref(video)),
     hasDescription: Boolean(compact(video.text, 58) || video.posterUrl || labels.some(label => compact(label.name, 24))) });
 }
+const DESCRIPTION_PILOT_IDS = new Set([
+  "2096572807497060638",
+  "2093153066023576024",
+]);
+
 export function videoMetadata(video: PublicVideo, record: CatalogRecord | null, labels: PublicLabel[] = []) {
   const author = compact(video.authorName || (video.handle ? "@" + video.handle : null), 36) || "投稿者";
   const labelText = labels.map(label => compact(label.name, 24)).filter(Boolean).slice(0, 2).join("・");
@@ -52,9 +57,11 @@ export function videoMetadata(video: PublicVideo, record: CatalogRecord | null, 
   const description = compact(video.text, 120)
     ? `${compact(video.text, 120)}${labelText ? `｜タグ：${labelText}` : ""}${date ? `｜投稿日：${date}` : ""}`
     : videoSummary(video, labels);
+  const excerpt = DESCRIPTION_PILOT_IDS.has(video.id) && index ? compact(video.text, 70) : "";
+  const searchDescription = excerpt ? [videoSummary(video, labels), "元の投稿文：" + excerpt].join("｜") : description;
   const technical = record?.technical?.sourceHash === video.sourceHash ? record.technical : null;
   const duration = durationText(technical);
-  return { title: `${author}のTwitter動画 ${subject}${text && labelText ? `｜${labelText}` : ""}｜twizou`, description: compact([description, duration ? `再生時間：${duration}` : null].filter(Boolean).join("｜"), 170), canonical: PUBLIC_SITE + postHref(video.id), index, follow: true,
+  return { title: `${author}のTwitter動画 ${subject}${text && labelText ? `｜${labelText}` : ""}｜twizou`, description: compact([searchDescription, duration ? `再生時間：${duration}` : null].filter(Boolean).join("｜"), 170), canonical: PUBLIC_SITE + postHref(video.id), index, follow: true,
     saveCount: observedSave ? record!.saves : null, firstSavedAt: observedSave ? record!.firstSavedAt : null };
 }
 export function visibleLabels(catalog: PublicCatalog, id: string) {

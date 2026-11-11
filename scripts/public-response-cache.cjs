@@ -3,6 +3,7 @@
 const http=require('http'),fs=require('fs/promises'),path=require('path'),os=require('os'),crypto=require('crypto'),{AsyncLocalStorage}=require('async_hooks');
 const SYMBOL=Symbol.for('twizou.public-response-context.v1');
 const context=globalThis[SYMBOL]??=new AsyncLocalStorage();
+const {wrapVerifiedGooglebot,MARKER}=require('./verified-googlebot.cjs');
 // A browser may reuse anonymous ranking HTML/RSC for five minutes. The worker
 // cache still rechecks publication control files on every request.
 const PRIVATE='private, max-age=300, must-revalidate';
@@ -41,6 +42,7 @@ function createControlSignature(files){
  };
 }
 function requestKey(req){
+ if(req.headers[MARKER])return null;
  if(req.method!=='GET'||req.headers.authorization||req.headers.cookie||req.headers.range||req.url.length>2200)return null;
  if(/no-cache|no-store/i.test(req.headers['cache-control']||''))return null;
  const host=req.headers.host||'';if(!/^(?:twizou\.net|localhost|127\.0\.0\.1)(?::\d+)?$/.test(host))return null;
@@ -110,6 +112,6 @@ function install(){
  if(process.env.NODE_ENV!=='production'||process.env.XCLIP_HTML_CACHE_DISABLED==='1')return;
  const original=http.createServer,cache=createPublicResponseCache();
  // Intercept the one standalone Next listener, then restore the Node API.
- http.createServer=function(...args){http.createServer=original;const index=args.length-1;if(typeof args[index]!=='function')throw Error('PUBLIC_CACHE_NEXT_LISTENER_NOT_FOUND');args[index]=cache.wrap(args[index]);return original.apply(this,args);};
+ http.createServer=function(...args){http.createServer=original;const index=args.length-1;if(typeof args[index]!=='function')throw Error('PUBLIC_CACHE_NEXT_LISTENER_NOT_FOUND');args[index]=wrapVerifiedGooglebot(cache.wrap(args[index]));return original.apply(this,args);};
 }
 module.exports={createPublicResponseCache,createControlSignature,requestKey,controlFiles,context,install};
