@@ -43,7 +43,7 @@ export default async function PostPage(props: Props) {
     ] }} />
     <PublicPostClose postId={v.id} returnTo={sourcePage ?? undefined} />
     <nav aria-label="現在位置"><Link href="/rising">twizou</Link> ／ <Link href={authorHref(v)!}>{v.authorName ?? v.handle ?? "投稿者"}</Link> ／ 動画</nav>
-    <h1>{v.authorName ?? v.handle ?? "投稿者"}の動画</h1>
+    <h1>{postHeading(v)}</h1>
     <div className="public-post-player">
       <DirectPlaybackVideo trackQualifiedView engagementSourcePage={sourcePage} postId={v.id} src={v.videoUrl} poster={v.posterUrl ?? undefined} controls playsInline preload="metadata" aria-label={(v.authorName ?? v.handle ?? "投稿者") + "の動画プレーヤー"} style={{ width: "100%", maxHeight: "70vh", background: "#000" }} />
     </div>
@@ -63,6 +63,14 @@ export default async function PostPage(props: Props) {
       <PostRelated id={v.id} returnTo={returnTo} />
     </Suspense>
   </main></>;
+}
+
+// The heading names the post, not only the author: a bare "k" or emoji-only name says nothing to search.
+function postHeading(v: { authorName?: string | null; handle?: string | null; text?: string | null }) {
+  const author = v.authorName ?? v.handle ?? "投稿者";
+  const text = (v.text ?? "").replace(/https?:\/\/\S+/g, " ").replace(/\s+/g, " ").trim();
+  const excerpt = text.length > 40 ? text.slice(0, 40) + "…" : text;
+  return excerpt ? `${author}の動画「${excerpt}」` : `${author}の動画`;
 }
 
 // Nonessential panels must not keep the streamed player response open indefinitely.
