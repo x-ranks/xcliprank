@@ -19,6 +19,12 @@ try{
   const api=loaded.exports.middleware(new NextRequest('https://'+host+'/api/engagement'));
   assert.equal(api.status,200,'legacy API remains reachable on '+host);
  }
+ for(const [from,to] of [['/p/2111989753172345043?from=%2Fbrowse%3Fpage%3D2','/p/2111989753172345043'],['/p/2111989753172345043?from=/accounts/x&utm_source=x','/p/2111989753172345043?utm_source=x'],['/p/2111989753172345043/?from=/','/p/2111989753172345043']]){
+  const response=loaded.exports.middleware(new NextRequest('https://twizou.net'+from));
+  assert.equal(response.status,301,from);assert.equal(response.headers.get('location'),'https://twizou.net'+to,from);
+ }
+ assert.equal(loaded.exports.middleware(new NextRequest('https://twizou.net/p/2111989753172345043')).status,200,'clean video URL is served');
+ assert.equal(loaded.exports.middleware(new NextRequest('https://twizou.net/tags/%E5%80%8B%E4%BA%BA%E6%92%AE%E5%BD%B1?from=old')).status,200,'only video pages redirect');
  assert.equal(loaded.exports.middleware(new NextRequest('https://twizou.net/manual-ranking')).status,404);
  console.log('PASS SEO MIDDLEWARE: new canonical host, path-preserving permanent redirects, legacy APIs, protected admin route');
 }finally{if(previous===undefined)delete process.env.NODE_ENV;else process.env.NODE_ENV=previous;}
