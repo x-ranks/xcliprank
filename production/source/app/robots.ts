@@ -10,6 +10,9 @@ export default function robots(): MetadataRoute.Robots {
       allow: ["/", "/api/video-playback-url$", "/api/video-playback-url?"],
       disallow: [
         "/api/",
+        // Snapshot tokens create a new URL every update; every one canonicalises to the base list.
+        // Do NOT add "from=" here: those URLs must stay crawlable so the 301 is seen.
+        "/*edition=",
         "/curated-authors",
         "/learning-tools",
         "/preference-model",

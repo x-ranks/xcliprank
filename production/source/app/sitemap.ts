@@ -6,6 +6,12 @@ import { browsePageCount, browseHref, accountPageCount, accountListHref } from "
 import { isIndexable } from "../lib/indexability";
 import { tagHref } from "../lib/public-video-core";
 
+// Only a real catalog timestamp is used; a missing, unparsable or future value yields no lastmod.
+function lastmod(value?: string): { lastModified?: string } {
+  const time = value ? Date.parse(value) : NaN;
+  return Number.isFinite(time) && time <= Date.now() ? { lastModified: new Date(time).toISOString() } : {};
+}
+
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   // Fail visibly on a database error; an empty sitemap would falsely signal removals.
   // Newest pagination is linked from the listing. Building its ranking here
@@ -20,10 +26,11 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     ...(isIndexable({ type: "tag-hub", activeTags: index.tags.filter(tag => tag.count > 0).length }) ? [{ url: `${SITE_URL}/tags` }] : []),
     ...Array.from({ length: browsePageCount(index.posts.length) }, (_, i) => ({ url: SITE_URL + browseHref(i + 1) })),
     ...Array.from({ length: accountPageCount(index.accounts.length) }, (_, i) => ({ url: SITE_URL + accountListHref(i + 1) })),
-    // The catalog records first-observed events and label publication, not the
-    // last meaningful change to the full page. Omit lastmod until reliable.
-    ...index.posts.map(p => ({ url: `${SITE_URL}/p/${p.id}` })),
-    ...index.accounts.map(a => ({ url: `${SITE_URL}/accounts/${encodeURIComponent(a.key)}` }))
+    // lastmod = when the post was first saved/published or its labels last published. A post page
+    // does not otherwise change, so this is when its own content last changed. Account pages take
+    // the newest of their posts. Related/ranking blocks on a page change constantly and are ignored.
+    ...index.posts.map(p => ({ url: `${SITE_URL}/p/${p.id}`, ...lastmod(p.modifiedAt) })),
+    ...index.accounts.map(a => ({ url: `${SITE_URL}/accounts/${encodeURIComponent(a.key)}`, ...lastmod(a.modifiedAt) }))
     ,...index.tags.filter(tag => tag.index).map(tag => ({ url: SITE_URL + tagHref({ ...tag, active: true }) }))
   ];
 }

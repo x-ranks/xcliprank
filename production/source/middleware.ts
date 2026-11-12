@@ -95,6 +95,20 @@ export function middleware(request: NextRequest) {
     return NextResponse.redirect(canonicalUrl, 301);
   }
 
+  // Old list links carried "?from=<list>" on video pages. Return context now lives in
+  // sessionStorage, so those URLs are pure duplicates. Redirect them (instead of blocking them
+  // in robots.txt) so Google can follow the 301 and consolidate onto the clean URL.
+  const legacyPost = request.nextUrl.pathname.match(/^\/p\/([1-9][0-9]{1,24})\/?$/);
+  if (legacyPost && request.nextUrl.searchParams.has("from")) {
+    const cleanUrl = request.nextUrl.clone();
+    cleanUrl.protocol = "https";
+    cleanUrl.hostname = CANONICAL_HOST;
+    cleanUrl.port = "";
+    cleanUrl.pathname = "/p/" + legacyPost[1];
+    cleanUrl.searchParams.delete("from");
+    return NextResponse.redirect(cleanUrl, 301);
+  }
+
   if (isPublicPath(request.nextUrl.pathname)) {
     const response = NextResponse.next();
     response.headers.set("Referrer-Policy", "same-origin");

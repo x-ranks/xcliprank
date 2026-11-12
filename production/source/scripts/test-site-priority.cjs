@@ -54,8 +54,9 @@ async function main(){
  assert(!urls.some(v=>v.url.startsWith(core.PUBLIC_SITE+'/?page=')));
  assert(!urls.some(v=>v.url.includes('edition=')||v.url.includes('from=')));
  assert(!urls.some(v=>v.url.includes(encodeURIComponent('空タグ'))));
- assert.equal(urls.find(v=>v.url.endsWith('/p/'+id)).lastModified,undefined);
- assert.equal(urls.find(v=>v.url.endsWith('/accounts/sample_author')).lastModified,undefined);
+ assert.equal(urls.find(v=>v.url.endsWith('/p/'+id)).lastModified,'2026-10-20T12:00:00.000Z');
+ assert.equal(urls.find(v=>v.url.endsWith('/accounts/sample_author')).lastModified,'2026-10-20T12:00:00.000Z');
+ assert.equal(urls.find(v=>v.url===core.PUBLIC_SITE+'/rising').lastModified,undefined);
  const tags=load('app/tags/page.tsx',resolve),tagsHtml=renderToStaticMarkup(await tags.default());assert(!tagsHtml.includes('空タグ'));assert(tagsHtml.includes('タグA'));
  const storedLabels=labels;labels=labels.map(l=>({...l,count:0,index:false}));assert.equal((await tags.generateMetadata()).robots.index,false);assert(renderToStaticMarkup(await tags.default()).includes('現在表示できるタグはありません。'));labels=storedLabels;
  const tag=load('app/tags/[name]/page.tsx',resolve),tagHtml=renderToStaticMarkup(await tag.default({params:Promise.resolve({name:'タグA'})}));assert(tagHtml.includes('タグの掲載動画'));assert(tagHtml.includes('再生・保存'));assert(tagHtml.includes('aria-label="一緒に付けられているタグ"'));assert(tagHtml.includes('/tags/'+encodeURIComponent('タグB')));assert(!tagHtml.includes('空タグ'));
