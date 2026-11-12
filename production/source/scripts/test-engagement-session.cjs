@@ -10,7 +10,8 @@ const setup=(search,referrer,path='/p/1',session=store())=>{
  global.Blob=class{constructor(parts){this.text=parts.join('');}};
 };
 Date.now=()=>now;
-const m={exports:{}};new Function('require','module','exports',code)(require,m,m.exports);
+const m={exports:{}};const surfaceModule=(()=>{const x={exports:{}};new Function('module','exports',ts.transpileModule(fs.readFileSync('lib/engagement-surface.ts','utf8'),{compilerOptions:{module:ts.ModuleKind.CommonJS,target:ts.ScriptTarget.ES2022}}).outputText)(x,x.exports);return x.exports;})();
+new Function('require','module','exports',code)(n=>n.endsWith('engagement-surface')?surfaceModule:require(n),m,m.exports);
 const track=()=>{sent=[];m.exports.trackEngagement({eventType:'page_view',path:'/p/1'});return JSON.parse(sent[0].text);};
 // 1. first visit from X with UTM keeps the attribution
 setup('?utm_source=x&utm_medium=post&utm_campaign=a','https://t.co/abc');

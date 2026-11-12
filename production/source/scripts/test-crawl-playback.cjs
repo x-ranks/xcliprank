@@ -19,6 +19,7 @@ const layout=load('app/layout.tsx',n=>{
  if(n.endsWith('PublicDetailViewer'))return{__esModule:true,default:()=>null};
  if(n.endsWith('/seo'))return{SITE_NAME:'twizou',SITE_URL:'https://twizou.net'};
  if(n.endsWith('AgeGate'))return{__esModule:true,default:()=>React.createElement('aside',{'data-age-gate':'retained'},'18歳以上ですか？')};
+ if(n.endsWith('InstallPrompt'))return{__esModule:true,default:()=>null};
  if(n.endsWith('EngagementVisitTracker'))return{__esModule:true,default:()=>React.createElement('span',{'data-site-tracker':'retained'})};
  if(n.includes('@vercel/analytics'))throw Error('VERCEL_SCRIPT_MUST_NOT_LOAD');
  return require(n);

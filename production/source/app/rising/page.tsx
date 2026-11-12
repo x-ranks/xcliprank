@@ -2,6 +2,7 @@ import { headers } from "next/headers";
 import { after } from "next/server";
 import SiteFooter from "../components/SiteFooter";
 import SiteBrand from "../components/SiteBrand";
+import NewSinceVisit from "../components/NewSinceVisit";
 import type { Metadata } from "next";
 import Link from "next/link";
 import PublicPostLink from "../components/PublicPostLink";
@@ -32,6 +33,7 @@ export default async function RisingPage() {
       <Link prefetch={false} href="/">新着</Link><Link prefetch={false} href="/ranking/daily">24時間</Link><Link prefetch={false} href="/ranking/weekly">週間</Link>
       <Link prefetch={false} href="/reels">リール</Link><Link prefetch={false} href="/download">動画保存</Link>
     </nav>
+    <NewSinceVisit ids={posts.map(post => String(post.x_post_id))} />
     {posts.length ? <div className="video-grid">{posts.map((post, index) => <article className="video-card" key={post.x_post_id}>
       <PublicPostLink id={post.x_post_id} returnTo="/rising" ariaLabel={`${index + 1}位の動画を開く`} style={{ display: "block", color: "inherit", textDecoration: "none" }}>
         <div className="thumb-wrap">

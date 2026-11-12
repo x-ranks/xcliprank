@@ -59,6 +59,9 @@ type Stats = {
   rangeOpens: Record<string, number>;
   pageViewsByPath: Record<string, number>;
   acquisitionSessions: Record<string, number>;
+  returnByAcquisition?: Record<string, { users: number; returningUsers: number }>;
+  returnBySurface?: Record<string, { users: number; returningUsers: number }>;
+  bounce?: { sessions: number; bounceSessions: number; bounceRate: number };
   xContentSessions: Record<string, number>;
 };
 
@@ -72,6 +75,23 @@ function acquisitionLabel(key: string) {
   if (key.startsWith("campaign:")) return `キャンペーン: ${key.slice(9)}`;
   if (key.startsWith("referral:")) return `参照元: ${key.slice(9)}`;
   return key;
+}
+
+function surfaceLabel(key: string) {
+  if (key === "installed") return "ホーム画面から起動";
+  if (key === "x-app") return "Xアプリ内（判別できたもの）";
+  if (key === "other-app") return "その他アプリ内（判別できたもの）";
+  if (key === "browser") return "ブラウザ（アプリ内の一部を含む）";
+  return "不明（旧データ）";
+}
+
+function ReturnTable({ rows, label }: { rows: Record<string, { users: number; returningUsers: number }>; label: (key: string) => string }) {
+  const entries = Object.entries(rows).sort((a, b) => b[1].users - a[1].users);
+  if (entries.length === 0) return <p className="engagement-empty">まだデータがありません。</p>;
+  return <div className="engagement-table-wrap"><table><thead><tr><th>区分</th><th>端末</th><th>再訪</th><th>再訪率</th></tr></thead><tbody>
+    {entries.map(([key, row]) => <tr key={key}><th>{label(key)}</th><td>{number(row.users)}</td><td>{number(row.returningUsers)}</td>
+      <td>{row.users ? ((row.returningUsers / row.users) * 100).toFixed(1) : "0.0"}%</td></tr>)}
+  </tbody></table></div>;
 }
 
 export default function EngagementAdminPage() {
@@ -273,6 +293,15 @@ export default function EngagementAdminPage() {
               <strong>{number(stats.totals.rankingChange)}</strong>
               <small>タブを切り替えた回数</small>
             </article>
+          </section>
+
+          <section className="engagement-panel">
+            <div className="engagement-panel-heading"><div><h2>再訪の内訳</h2><p>「再訪」は期間内に2日以上来た端末です。最初に来た経路と、表示している場所（ホーム画面・アプリ内・ブラウザ）で分けています。</p></div></div>
+            <h3>最初の流入元別</h3>
+            <ReturnTable rows={stats.returnByAcquisition ?? {}} label={acquisitionLabel} />
+            <h3>表示している場所別</h3>
+            <ReturnTable rows={stats.returnBySurface ?? {}} label={surfaceLabel} />
+            {stats.bounce && <p className="engagement-footnote">動画を1本も開かず、1ページだけ見て帰った訪問：{number(stats.bounce.bounceSessions)} / {number(stats.bounce.sessions)}訪問（{stats.bounce.bounceRate.toFixed(1)}%）</p>}
           </section>
 
           <section className="engagement-panel">

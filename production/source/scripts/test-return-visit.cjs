@@ -26,3 +26,21 @@ assert.equal(r.recordRecent(s,'0abc'),false);assert.equal(r.recordRecent(s,'<x>'
 for(let i=0;i<150;i++)r.recordRecent(s,String(1000+i));assert.equal(r.readRecent(s).length,100);assert.equal(r.readRecent(s)[0],'1149');
 assert.deepEqual(r.readRecent({getItem:()=>'{broken'}),[]);assert.equal(r.recordRecent({getItem(){throw Error('x')},setItem(){throw Error('x')}},'123'),false);
 console.log('PASS RETURN VISIT: new-since-visit counts/positions/30-minute gap/bad input, numeric id ordering, recent list order/dedupe/limit/storage failure.');
+// Visit baseline: fixed at the start of a visit and shared by every list opened in that visit.
+{
+  const b=v.nextBaseline,prev={top:'2097567908347936941',at:now-5*HOUR};
+  const first=b(null,prev,now);
+  assert.deepEqual(first,{top:'2097567908347936941',at:now-5*HOUR,touched:now},'a new visit starts from the stored previous record');
+  // Another list in the same visit keeps that reference even though the stored record was already updated.
+  const again=b(first,{top:'2117117404014915944',at:now},now+60_000);
+  assert.equal(again.top,'2097567908347936941');assert.equal(again.at,now-5*HOUR);assert.equal(again.touched,now+60_000);
+  assert.deepEqual(v.newSinceVisit(ids,again.top,again.at,now+60_000).indexes,[0,1],'the banner repeats on the second list');
+  // After 30 idle minutes the tab starts a new visit from the then-stored record.
+  const later=b(again,{top:'2117117404014915944',at:now+60_000},now+60_000+31*60_000);
+  assert.equal(later.top,'2117117404014915944');
+  // Bad session data or no previous record is safe.
+  assert.deepEqual(b({top:'x',at:1,touched:now},null,now),{top:null,at:null,touched:now});
+  assert.deepEqual(b('garbage',null,now),{top:null,at:null,touched:now});
+  assert.equal(v.newSinceVisit(ids,b(null,null,now).top,b(null,null,now).at,now),null,'first-ever visit shows no banner');
+}
+console.log('PASS RETURN VISIT: shared visit baseline across lists.');
