@@ -4,9 +4,11 @@ const root=p.resolve(__dirname,'..'),{NextRequest}=require('next/server');
 function load(file,resolve=require){const m={exports:{}};new Function('require','module','exports',ts.transpileModule(fs.readFileSync(p.join(root,file),'utf8'),{compilerOptions:{module:ts.ModuleKind.CommonJS,target:ts.ScriptTarget.ES2022,esModuleInterop:true,jsx:ts.JsxEmit.ReactJSX}}).outputText)(resolve,m,m.exports);return m.exports;}
 const middleware=load('middleware.ts'),previous=process.env.NODE_ENV;process.env.NODE_ENV='production';
 try{
- for(const path of ['/','/rising','/ranking/daily','/ranking/weekly','/reels','/download','/p/2110660690478301409','/p/2110660690478301409?from=%2Frising','/accounts/fixture','/tags/test','/api/video-playback-url?postId=123']){
+ for(const path of ['/','/rising','/ranking/daily','/ranking/weekly','/reels','/download','/p/2110660690478301409','/accounts/fixture','/tags/test','/api/video-playback-url?postId=123']){
   const response=middleware.middleware(new NextRequest('https://twizou.net'+path));assert.equal(response.status,200);assert.equal(response.headers.get('Referrer-Policy'),'same-origin',path);
  }
+ // Legacy ?from= video URLs now 301 to the clean URL (return context lives in sessionStorage).
+ const legacy=middleware.middleware(new NextRequest('https://twizou.net/p/2110660690478301409?from=%2Frising'));assert.equal(legacy.status,301);assert.equal(legacy.headers.get('location'),'https://twizou.net/p/2110660690478301409');
  assert.equal(middleware.middleware(new NextRequest('https://twizou.net/curated-manager')).status,404);
  assert.equal(middleware.middleware(new NextRequest('https://xcliprank.com/p/123')).status,301);
  const layout=load('app/layout.tsx',n=>n.endsWith('/seo')?{SITE_NAME:'twizou',SITE_URL:'https://twizou.net'}:n.endsWith('.css')||n.includes('/components/')?{}:require(n));assert.equal(layout.metadata.referrer,'same-origin','Client transitions/local dev retain document policy');
