@@ -5,6 +5,7 @@ import Link from "next/link";
 import type { RankingUpdate } from "../../lib/ranking-update";
 import RankingClient, { type RankPost } from "./RankingClient";
 import SiteFooter from "./SiteFooter";
+import NewSinceVisit from "./NewSinceVisit";
 import StructuredData from "./StructuredData";
 import { rankingBreadcrumb, rankingItemList } from "../../lib/seo";
 import { INITIAL_RANKING_COUNTS } from "../../lib/ranking-display";
@@ -82,6 +83,8 @@ export default function DedicatedRankingPage({
         <RankingNavLink href="/reels">リール</RankingNavLink>
         <RankingNavLink href="/download">動画保存</RankingNavLink>
       </nav>
+
+      <NewSinceVisit ids={initialPosts.map(post => String(post.x_post_id))} />
 
       <RankingClient
         range={range}

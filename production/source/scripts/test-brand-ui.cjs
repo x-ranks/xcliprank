@@ -8,6 +8,7 @@ function resolve(n){
  if(n==='next/headers')return {headers:async()=>new Headers()};
  if(n==='next/server')return {after:()=>{}};
  if(n==='next/link')return Link;
+ if(n.endsWith('NewSinceVisit'))return ()=>null; // client-only personalisation
  if(n.endsWith('SiteFooter'))return load('app/components/SiteFooter.tsx').default;
  if(n.endsWith('SiteBrand'))return load('app/components/SiteBrand.tsx').default;
  if(n.endsWith('rising-ranking'))return {loadRisingRanking:async()=>({posts:[{x_post_id:'123',author_name:'Sample',video_url:'https://example.invalid/video.mp4',siteOpens:5,siteSaves:2}]})};

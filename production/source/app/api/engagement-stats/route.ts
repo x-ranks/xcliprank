@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { isCronAuthorized } from "../../../lib/cron-auth";
 import { errorMessage } from "../../../lib/error-message";
 import { supabaseAdmin } from "../../../lib/supabase-admin";
+import { acquisitionOf, summarizeRetention, textMetadata } from "../../../lib/engagement-retention";
 
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
@@ -44,31 +45,6 @@ function japaneseDate(value: string) {
     month: "2-digit",
     day: "2-digit",
   }).format(new Date(value));
-}
-
-function textMetadata(metadata: Record<string, unknown> | null, key: string) {
-  const value = metadata?.[key];
-  return typeof value === "string" ? value.toLowerCase() : "";
-}
-
-function acquisitionOf(row: EngagementRow) {
-  const utmSource = textMetadata(row.metadata, "utmSource");
-  const referrerHost = textMetadata(row.metadata, "referrerHost");
-
-  if (
-    utmSource === "x" ||
-    utmSource === "twitter" ||
-    referrerHost === "x.com" ||
-    referrerHost.endsWith(".x.com") ||
-    referrerHost === "twitter.com" ||
-    referrerHost.endsWith(".twitter.com") ||
-    referrerHost === "t.co"
-  ) {
-    return "x";
-  }
-  if (utmSource) return `campaign:${utmSource}`;
-  if (referrerHost) return `referral:${referrerHost}`;
-  return "direct";
 }
 
 function emptyDailyBucket(): DailyBucket {
@@ -244,6 +220,7 @@ export async function GET(request: NextRequest) {
         rangeOpens,
         pageViewsByPath,
         acquisitionSessions,
+        ...summarizeRetention(rows),
         xContentSessions: Object.fromEntries(
           Array.from(xContentSessionSets.entries()).map(([key, value]) => [
             key,

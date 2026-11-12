@@ -1,5 +1,7 @@
 "use client";
 
+import { detectSurface, isStandaloneDisplay } from "./engagement-surface";
+
 export type EngagementEventType =
   | "page_view"
   | "video_open"
@@ -134,6 +136,7 @@ export function trackEngagement(payload: EngagementPayload) {
       ...(["page_view", "video_open", "qualified_view"].includes(payload.eventType) ? { pageViewId: payload.occurrenceId ?? createEngagementEventId() } : {}),
       metadata: {
         ...session.acquisition,
+        surface: detectSurface(isStandaloneDisplay(window), navigator.userAgent),
         ...(payload.metadata ?? {}),
       },
       anonymousId: getAnonymousId(),

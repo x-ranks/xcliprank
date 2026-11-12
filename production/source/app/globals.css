@@ -1561,4 +1561,9 @@ html[data-age-confirmed="yes"] body.age-gate-open { overflow:auto; }
 /* 2026-11-11: return-visit banner and X follow chip. */
 .new-since-visit { margin:8px 2px 4px; padding:9px 12px; border:1px solid #ff3347; border-radius:10px; background:#2a1519; color:#ffd9de; font-size:13px; line-height:1.5; }
 .new-since-visit strong { color:#fff; }
+.install-prompt { position:fixed; left:10px; right:10px; bottom:10px; z-index:40; display:flex; gap:10px; align-items:center; justify-content:space-between; flex-wrap:wrap; max-width:640px; margin:0 auto; padding:10px 12px; border:1px solid #2b3445; border-radius:12px; background:#141922; color:#e8edf5; font-size:13px; line-height:1.5; box-shadow:0 6px 24px #0008; }
+.install-prompt p { margin:0; flex:1 1 220px; }
+.install-prompt div { display:flex; gap:8px; }
+.install-prompt button { min-height:36px; padding:0 14px; border-radius:8px; border:1px solid #2b3445; background:#0d1117; color:#e8edf5; font-size:13px; cursor:pointer; }
+.install-prompt .install-prompt-add { background:#fff; color:#090b0e; border-color:#fff; font-weight:700; }
 .site-discovery-nav a.site-x-link { border-color:#3b5873; background:#16222d; color:#bcd8f2; }
