@@ -29,9 +29,6 @@ export const metadata: Metadata = {
     description: "選別済みのX動画を、縦スワイプのリール形式で楽しめます。",
     images: [`${SITE_URL}/twizou-share.png`],
   },
-  other: {
-    rating: "adult",
-  },
 };
 
 export default function ReelsPage() {

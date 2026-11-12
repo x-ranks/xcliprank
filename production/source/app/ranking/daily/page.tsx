@@ -31,9 +31,6 @@ export const metadata: Metadata = {
       "毎日更新のX動画24時間ランキングです。",
     images: ["/twizou-share.png"]
   },
-  other: {
-    rating: "adult"
-  }
 };
 
 export default async function DailyRankingPage({ searchParams }: { searchParams: Promise<{ edition?: string | string[] }> }) {

@@ -31,9 +31,6 @@ export const metadata: Metadata = {
       "直近1週間のX動画を紹介する週間ランキングです。",
     images: ["/twizou-share.png"]
   },
-  other: {
-    rating: "adult"
-  }
 };
 
 export default async function WeeklyRankingPage({ searchParams }: { searchParams: Promise<{ edition?: string | string[] }> }) {

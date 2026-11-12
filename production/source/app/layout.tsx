@@ -16,10 +16,6 @@ export const metadata: Metadata = {
   description:
     "Xに投稿された動画を新着・24時間・週間ランキングで紹介する動画ランキングサイトです。",
   applicationName: SITE_NAME,
-  // The whole site sits behind an 18+ age gate, so every page is labelled as adult content
-  // (Google's SafeSearch guidance asks for this when Googlebot is let past the age gate).
-  // Pages that set their own `other` metadata repeat the same value.
-  other: { rating: "adult" },
   icons: {
     icon: [
       { url: "/favicon.ico", sizes: "48x48" },
@@ -59,6 +55,10 @@ export default function RootLayout({
     <html lang="ja" suppressHydrationWarning>
       <head>
         <script dangerouslySetInnerHTML={{ __html: `try{if(localStorage.getItem("xcliprank_age_confirmed_v1")==="yes")document.documentElement.setAttribute("data-age-confirmed","yes")}catch{}` }} />
+        {/* The whole site sits behind an 18+ age gate, so every page is labelled as adult content (Google's
+            SafeSearch guidance asks for this). Rendered here, not via metadata `other`: Next.js did not
+            inherit a layout-level `other` into pages without their own, so those pages went out unlabelled. */}
+        <meta name="rating" content="adult" />
         <link rel="preconnect" href="https://pbs.twimg.com" />
         <link rel="preconnect" href="https://video.twimg.com" />
       </head>
