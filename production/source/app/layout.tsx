@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import { SITE_NAME, SITE_URL } from "../lib/seo";
-import AgeGate from "./components/AgeGate";
+import RequestAgeGate from "./components/RequestAgeGate";
 import PublicDetailViewer from "./components/PublicDetailViewer";
 import EngagementVisitTracker from "./components/EngagementVisitTracker";
 import "./globals.css";
@@ -65,7 +65,7 @@ export default function RootLayout({
       <body>
         {children}
         <PublicDetailViewer />
-        <AgeGate />
+        <RequestAgeGate />
         <EngagementVisitTracker />
       </body>
     </html>
