@@ -6,3 +6,9 @@ preview_urls = false
 
 # Attach the exact production route only after DNS and origin verification.
 routes = []
+
+# Workers Logs: the Worker writes one JSON line per Google-looking request to the test URL (see worker.mjs).
+# Keep this table last: any key placed after it would belong to it, not to the top level.
+[observability]
+enabled = true
+head_sampling_rate = 1
