@@ -100,12 +100,11 @@ export function middleware(request: NextRequest) {
   // in robots.txt) so Google can follow the 301 and consolidate onto the clean URL.
   const legacyPost = request.nextUrl.pathname.match(/^\/p\/([1-9][0-9]{1,24})\/?$/);
   if (legacyPost && request.nextUrl.searchParams.has("from")) {
-    const cleanUrl = request.nextUrl.clone();
-    cleanUrl.protocol = "https";
-    cleanUrl.hostname = CANONICAL_HOST;
-    cleanUrl.port = "";
-    cleanUrl.pathname = "/p/" + legacyPost[1];
-    cleanUrl.searchParams.delete("from");
+    // Built from scratch (not NextURL.clone) so a trailing slash on the request is not carried over.
+    const cleanUrl = new URL("/p/" + legacyPost[1], "https://" + CANONICAL_HOST);
+    request.nextUrl.searchParams.forEach((value, key) => {
+      if (key !== "from") cleanUrl.searchParams.append(key, value);
+    });
     return NextResponse.redirect(cleanUrl, 301);
   }
 
