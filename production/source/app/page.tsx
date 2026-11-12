@@ -41,9 +41,6 @@ const homeMetadata: Metadata = {
       "Twitter（X）の動画ランキング。気になる動画を再生・保存し、投稿者やタグから探せます。",
     images: [`${SITE_URL}/twizou-share.png`]
   },
-  other: {
-    rating: "adult"
-  }
 };
 
 type Search = Promise<{ page?: string | string[]; edition?: string | string[] }>;
