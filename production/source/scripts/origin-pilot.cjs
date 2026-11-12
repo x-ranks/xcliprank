@@ -1,23 +1,32 @@
 'use strict';
+// Origin side of the Googlebot age-gate exception. The Cloudflare Worker signs one request (method + full URL +
+// time + single-use nonce) with a secret shared with this server; only a valid, fresh, unused proof from the Worker
+// lets this process mark that single request as a verified Googlebot. Nothing a client sends can create the marker.
 const fs = require('node:fs/promises');
 const path = require('node:path');
 const crypto = require('node:crypto');
 
-const PILOT_PATH = '/p/2091860611881967725';
+const ORIGIN = 'https://twizou.net';
 const PROOF = 'x-twizou-edge-pilot';
 const MARKER = 'x-twizou-verified-googlebot';
-const AUDIENCE = 'https://twizou.net' + PILOT_PATH;
-const WINDOW = 30;
+const WINDOW = 30; // seconds a proof stays valid after it was issued
+const MAX_WINDOW_SECONDS = 30 * 86400; // longest an enabled.json "until" may lie in the future
 const NO_STORE = 'private, no-cache, no-store, max-age=0, must-revalidate';
 const noncePattern = /^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/;
 const state = '/home/rbxfxmfd/.xclip-edge-production-canary-v1';
 const removedCacheHeaders = new Set(['cache-control', 'cdn-cache-control', 'cloudflare-cdn-cache-control',
   'surrogate-control', 'expires', 'etag', 'last-modified']);
 
+// The proof is bound to the exact URL the Worker saw: scheme + host are fixed, path and query come from the request.
+function audience(request) {
+  return ORIGIN + request.url;
+}
+
 function createPilotVerifier({ directory = state, now = Date.now } = {}) {
   let pruneAt = 0;
   return async function verify(request, values) {
-    if (request.method !== 'GET' || request.url !== PILOT_PATH ||
+    if (request.method !== 'GET' || typeof request.url !== 'string' || !request.url.startsWith('/') ||
+        request.url.startsWith('//') || request.url.length > 2200 ||
         request.headers.host !== 'twizou.net' ||
         request.headers.cookie || request.headers.authorization || request.headers.range ||
         request.headers.rsc || request.headers['next-router-prefetch'] ||
@@ -31,9 +40,10 @@ function createPilotVerifier({ directory = state, now = Date.now } = {}) {
 
     const settings = JSON.parse(await fs.readFile(path.join(directory, 'enabled.json'), 'utf8'));
     if (!/^[0-9a-f]{64}$/.test(settings.secret ?? '') || !['observe', 'active'].includes(settings.mode) ||
-        !Number.isSafeInteger(settings.until) || settings.until <= time || settings.until - time > 86400) return false;
+        !Number.isSafeInteger(settings.until) || settings.until <= time ||
+        settings.until - time > MAX_WINDOW_SECONDS) return false;
     const expected = crypto.createHmac('sha256', settings.secret)
-      .update(['v2', AUDIENCE, 'GET', issued, nonce, kind].join('\n')).digest();
+      .update(['v2', audience(request), 'GET', issued, nonce, kind].join('\n')).digest();
     if (!crypto.timingSafeEqual(expected, Buffer.from(mac, 'hex'))) return false;
 
     const nonces = path.join(directory, 'nonces');
@@ -65,14 +75,16 @@ function disableResponseCaching(response) {
   };
 }
 
+// `handler` serves the request; `fallback` serves every request that carries no proof (the ordinary traffic path,
+// which must stay byte-for-byte what it was before this exception existed).
 function wrapPilot(handler, fallback, verify = createPilotVerifier(), log = console.info) {
   return (request, response) => {
     const values = request.headersDistinct?.[PROOF];
     delete request.headers[PROOF];
-    if (request.url?.split('?')[0] !== PILOT_PATH) return fallback(request, response);
     delete request.headers[MARKER];
+    if (!values) return fallback(request, response);
+    // A response to a request that carried a proof is never stored by a browser, proxy or shared cache.
     disableResponseCaching(response);
-    if (!values) return handler(request, response);
     return verify(request, values).catch(() => false).then(mode => {
       if (mode === 'active') request.headers[MARKER] = '1';
       if (mode === 'active' || mode === 'observe') log('TWIZOU_PRODUCTION_CANARY_GOOGLEBOT mode=' + mode);
@@ -81,4 +93,4 @@ function wrapPilot(handler, fallback, verify = createPilotVerifier(), log = cons
   };
 }
 
-module.exports = { PILOT_PATH, AUDIENCE, PROOF, MARKER, NO_STORE, createPilotVerifier, wrapPilot };
+module.exports = { ORIGIN, PROOF, MARKER, NO_STORE, MAX_WINDOW_SECONDS, audience, createPilotVerifier, wrapPilot };

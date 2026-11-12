@@ -26,7 +26,7 @@ const settings = JSON.parse(fs.readFileSync(file, 'utf8'));
 if (settings.mode !== 'observe' || !/^[a-f0-9]{64}$/.test(settings.secret ?? '') ||
     !Number.isSafeInteger(settings.started) || settings.started > now ||
     settings.until !== Number(process.env.EXPECTED_UNTIL) ||
-    settings.until <= now || settings.until - now > 86400) {
+    settings.until <= now || settings.until - now > 30 * 86400) {
   throw Error('ACTIVE_OBSERVATION_WINDOW_INVALID');
 }
 
