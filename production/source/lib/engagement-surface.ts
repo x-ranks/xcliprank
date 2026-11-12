@@ -15,9 +15,9 @@ export function detectSurface(standalone: boolean, userAgent: string): Surface {
   return "browser";
 }
 
-export function isStandaloneDisplay(win: { matchMedia?: (query: string) => { matches: boolean }; navigator?: { standalone?: boolean } }): boolean {
+export function isStandaloneDisplay(win: { matchMedia?: (query: string) => { matches: boolean }; navigator?: object }): boolean {
   try {
-    return Boolean(win.matchMedia?.("(display-mode: standalone)").matches) || win.navigator?.standalone === true;
+    return Boolean(win.matchMedia?.("(display-mode: standalone)").matches) || (win.navigator as { standalone?: boolean } | undefined)?.standalone === true;
   } catch {
     return false;
   }
