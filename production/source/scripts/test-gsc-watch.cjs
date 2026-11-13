@@ -38,6 +38,6 @@ render(Engagement,{postId:id,sourcePage:'/ranking/daily'},true);assert.equal(tra
 // Storage unavailable still leaves a usable link and legacy URL navigation fallback.
 global.sessionStorage={getItem(){throw Error('disabled');},setItem(){throw Error('disabled');}};
 renderToStaticMarkup(React.createElement(Open,openProps));assert.doesNotThrow(()=>lastLink.onClick({button:0,preventDefault(){}}));render(Close,{postId:id,returnTo:'/ranking/daily'},true);html=render(Close,{postId:id,returnTo:'/ranking/daily'});assert(html.includes('href="/ranking/daily"'));
-const page=fs.readFileSync(p.join(root,'app/p/[id]/page.tsx'),'utf8');assert(page.indexOf('className="public-post-player"')<page.indexOf('className="public-post-actions"'));assert(page.includes('postId={v.id} returnTo={sourcePage ?? undefined}'));assert(page.includes('canonical: d.metadata.canonical'));
+const page=fs.readFileSync(p.join(root,'app/p/[id]/page.tsx'),'utf8');assert(page.indexOf('className="public-post-player"')<page.indexOf('<PostActionBar'));assert(page.includes('postId={v.id} returnTo={sourcePage ?? undefined}'));assert(page.includes('canonical: d.metadata.canonical'));
 delete global.window;delete global.sessionStorage;
 console.log('PASS GSC WATCH: clean SSR links, legacy/safe return, page+edition+scroll restore, related transfer, unrelated/expired context rejection, storage-disabled fallback, analytics range and single event, prominent player. No network/media/DB.');

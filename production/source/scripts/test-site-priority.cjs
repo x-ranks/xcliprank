@@ -23,7 +23,7 @@ function resolve(n){if(n==='react')return React;if(n.endsWith('public-video-sche
  if(n.endsWith('/seo'))return{SITE_URL:core.PUBLIC_SITE,SITE_NAME:'twizou'};
  if(n.endsWith('share-video'))return load('lib/share-video.ts',resolve);
  if(/(?:DirectPlaybackVideo|VideoDownloadButton|PublicPostEngagement|PublicPostClose)$/.test(n))return ()=>null;
- if(/(?:PublicPostText|PublicVideoCards|PublicPostLink|PublicListRestore|SiteBrand|StructuredData)$/.test(n))return load('app/components/'+n.split('/').at(-1)+'.tsx',resolve).default;
+ if(/(?:PostActionBar|PublicPostText|PublicVideoCards|PublicPostLink|PublicListRestore|SiteBrand|StructuredData)$/.test(n))return load('app/components/'+n.split('/').at(-1)+'.tsx',resolve).default;
  throw Error('UNEXPECTED_IMPORT '+n);
 }
 async function main(){

@@ -10,15 +10,13 @@ import PublicPostClose from "../../components/PublicPostClose";
 import { safePublicReturn } from "../../../lib/public-return-navigation";
 import { notFound } from "next/navigation";
 import DirectPlaybackVideo from "../../components/DirectPlaybackVideo";
-import VideoDownloadButton from "../../components/VideoDownloadButton";
-import FavoriteButton from "../../components/FavoriteButton";
+import PostActionBar from "../../components/PostActionBar";
 import PublicVideoCards from "../../components/PublicVideoCards";
 import StructuredData from "../../components/StructuredData";
 import FollowButton from "../../components/FollowButton";
 import PublicPostEngagement from "../../components/PublicPostEngagement";
 import { accountKey, authorHref, originalHref, publicPostId, tagHref, publicVideoFacts } from "../../../lib/public-video-core";
 import { readPublicDetailCore, readPublicRelated } from "../../../lib/public-video-server";
-import { shareVideoHref } from "../../../lib/share-video";
 export const dynamic = "force-dynamic";
 type Props = { params: Promise<{ id: string }>; searchParams?: Promise<{ from?: string | string[] }> };
 async function data({ params }: Props) { const { id } = await params; if (!publicPostId(id)) return null; return readPublicDetailCore(id); }
@@ -48,24 +46,7 @@ export default async function PostPage(props: Props) {
     </div>
     <h1>{postHeading(v)}</h1>
     {accountKey(v) ? <div className="post-author-follow"><Link className="post-author-name" href={authorHref(v)!}>{v.authorName ?? v.handle ?? "投稿者"}</Link><FollowButton accountKey={accountKey(v)!} compact /></div> : null}
-    <div className="public-post-actions" aria-label="動画の操作">
-      <VideoDownloadButton postId={v.id} showCaption={false} />
-      <FavoriteButton id={v.id} />
-      <a className="share-to-x" href={shareVideoHref(v.id, null, { author: v.authorName ?? v.handle })!} target="_blank" rel="noopener noreferrer" aria-label="この動画をXで共有">
-        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"><path d="M12 15V4M8 8l4-4 4 4" /><path d="M5 12v6.5A1.5 1.5 0 0 0 6.5 20h11a1.5 1.5 0 0 0 1.5-1.5V12" /></svg>
-        <span className="visually-hidden">Xで共有</span>
-      </a>
-      <details className="post-more">
-        <summary aria-label="その他の操作">
-          <svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><circle cx="5" cy="12" r="1.6" /><circle cx="12" cy="12" r="1.6" /><circle cx="19" cy="12" r="1.6" /></svg>
-        </summary>
-        <div className="post-more-menu">
-          <a href={originalHref(v)} target="_blank" rel="noopener noreferrer">元投稿をXで開く</a>
-          {authorHref(v) ? <Link href={authorHref(v)!}>投稿者ページを見る</Link> : null}
-          <Link href={`/removal-request?post=${v.id}`} prefetch={false} rel="nofollow">この動画を報告する</Link>
-        </div>
-      </details>
-    </div>
+    <PostActionBar video={v} />
     {facts.length ? <dl className="public-video-facts" aria-label="動画の情報">{facts.map(fact => <div key={fact.label}><dt>{fact.label}</dt><dd>{fact.dateTime ? <time dateTime={fact.dateTime}>{fact.value}</time> : fact.value}</dd></div>)}</dl> : null}
     <PostTags detail={d} />
     <nav className="post-breadcrumb" aria-label="現在位置"><Link href="/rising">twizou</Link> ／ <Link href={authorHref(v)!}>{v.authorName ?? v.handle ?? "投稿者"}</Link> ／ 動画</nav>

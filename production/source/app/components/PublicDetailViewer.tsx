@@ -4,13 +4,12 @@ import { usePathname } from "next/navigation";
 import Link from "next/link";
 import SiteBrand from "./SiteBrand";
 import DirectPlaybackVideo from "./DirectPlaybackVideo";
-import VideoDownloadButton from "./VideoDownloadButton";
-import FavoriteButton from "./FavoriteButton";
+import PostActionBar from "./PostActionBar";
+import FollowButton from "./FollowButton";
 import PublicPostText from "./PublicPostText";
 import PublicPostEngagement from "./PublicPostEngagement";
 import PublicVideoCards from "./PublicVideoCards";
-import { authorHref, originalHref, publicVideoFacts, tagHref } from "../../lib/public-video-core";
-import { shareVideoHref } from "../../lib/share-video";
+import { accountKey, authorHref, publicVideoFacts, tagHref } from "../../lib/public-video-core";
 import { safePublicReturn } from "../../lib/public-return-navigation";
 import { PUBLIC_DETAIL_OPEN_EVENT } from "../../lib/public-detail-navigation";
 import type { createPublicVideoService } from "../../lib/public-video-service";
@@ -102,20 +101,14 @@ export default function PublicDetailViewer() {
       {view.phase === "failed" ? <><h1>動画を開けませんでした</h1><p><a href={"/p/" + view.id} onClick={event => { event.preventDefault(); window.location.assign("/p/" + view.id); }}>通常の動画ページで開く</a></p></> : null}
       {v && d && view.phase === "ready" ? <>
         <PublicPostEngagement postId={v.id} sourcePage={view.from} />
-        <nav aria-label="現在位置"><Link href="/rising" prefetch={false}>twizou</Link> ／ <Link href={authorHref(v)!} prefetch={false}>{v.authorName ?? v.handle ?? "投稿者"}</Link> ／ 動画</nav>
-        <h1>{v.authorName ?? v.handle ?? "投稿者"}の動画</h1>
         <div className="public-post-player"><DirectPlaybackVideo trackQualifiedView engagementSourcePage={view.from} key={v.id} postId={v.id} src={v.videoUrl} poster={v.posterUrl ?? undefined} controls playsInline preload="metadata" aria-label="動画プレーヤー" style={{ width: "100%", maxHeight: "70vh", background: "#000" }} /></div>
-        <div className="public-post-actions" aria-label="動画の操作">
-          <VideoDownloadButton postId={v.id} showCaption={false} />
-          <FavoriteButton id={v.id} />
-          <a className="share-to-x" href={shareVideoHref(v.id, null, { author: v.authorName ?? v.handle })!} target="_blank" rel="noopener noreferrer">Xで共有</a>
-          <Link href={"/removal-request?post=" + v.id} prefetch={false} rel="nofollow">この動画を報告する</Link>
-          <a href={originalHref(v)} target="_blank" rel="noopener noreferrer">元投稿をXで開く</a>
-          <Link href={authorHref(v)!} prefetch={false}>投稿者ページを見る</Link>
-        </div>
+        <h1>{v.authorName ?? v.handle ?? "投稿者"}の動画</h1>
+        {accountKey(v) ? <div className="post-author-follow"><Link className="post-author-name" href={authorHref(v)!} prefetch={false}>{v.authorName ?? v.handle ?? "投稿者"}</Link><FollowButton accountKey={accountKey(v)!} compact /></div> : null}
+        <PostActionBar video={v} />
         {v.text?.trim() ? <PublicPostText text={v.text} tags={d.labels.map(label => ({ name: label.name, href: tagHref(label) }))} /> : null}
         {d.labels.length ? <section aria-label="この動画のタグ"><h2>この動画に付けられたタグ</h2><nav className="public-post-tags">{d.labels.map(label => <Link key={label.id} href={tagHref(label)} prefetch={false}>{label.name}</Link>)}</nav></section> : null}
         {facts.length ? <dl className="public-video-facts" aria-label="動画の情報">{facts.map(fact => <div key={fact.label}><dt>{fact.label}</dt><dd>{fact.dateTime ? <time dateTime={fact.dateTime}>{fact.value}</time> : fact.value}</dd></div>)}</dl> : null}
+        <nav className="post-breadcrumb" aria-label="現在位置"><Link href="/rising" prefetch={false}>twizou</Link> ／ <Link href={authorHref(v)!} prefetch={false}>{v.authorName ?? v.handle ?? "投稿者"}</Link> ／ 動画</nav>
         {d.metadata.saveCount !== null && d.metadata.saveCount > 0 ? <p>サイト内の保存操作：{d.metadata.saveCount}件</p> : null}
         {view.related ? <><section><h2>同じ投稿者の他動画</h2><PublicVideoCards videos={view.related.sameAuthor} returnTo={view.from} /></section><section><h2>関連動画</h2><PublicVideoCards videos={view.related.related.length ? view.related.related : view.related.recommended ?? []} returnTo={view.from} /></section></> : <p>ほかの動画は<Link href="/browse" prefetch={false}>動画一覧</Link>からご覧ください。</p>}
       </> : null}
