@@ -44,3 +44,14 @@ export function isNewForFollower(createdAt: string | null, seen: number): boolea
   const time = Date.parse(createdAt);
   return Number.isFinite(time) && time > seen;
 }
+
+/** Adds imported account keys after the existing ones, up to the follow limit. Returns how many were new, or null when storage fails. */
+export function mergeFollows(storage: StorageLike, incoming: unknown): number | null {
+  try {
+    const current = readFollows(storage), have = new Set(current);
+    const extra = (Array.isArray(incoming) ? [...new Set(incoming.filter(validAccountKey))] : []).filter(key => !have.has(key));
+    const take = extra.slice(0, Math.max(0, FOLLOW_LIMIT - current.length));
+    storage.setItem(KEY, JSON.stringify([...current, ...take]));
+    return take.length;
+  } catch { return null; }
+}
