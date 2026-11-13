@@ -12,6 +12,13 @@ function lastmod(value?: string): { lastModified?: string } {
   return Number.isFinite(time) && time <= Date.now() ? { lastModified: new Date(time).toISOString() } : {};
 }
 
+// Newest valid modifiedAt among entries; undefined when none has one.
+function newest(rows: { modifiedAt?: string }[]): string | undefined {
+  let best: string | undefined, bestTime = -Infinity;
+  for (const row of rows) { const time = row.modifiedAt ? Date.parse(row.modifiedAt) : NaN; if (Number.isFinite(time) && time <= Date.now() && time > bestTime) { best = row.modifiedAt; bestTime = time; } }
+  return best;
+}
+
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   // Fail visibly on a database error; an empty sitemap would falsely signal removals.
   // Newest pagination is linked from the listing. Building its ranking here
@@ -23,14 +30,15 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     { url: `${SITE_URL}/ranking/weekly` },
     { url: `${SITE_URL}/rising` },
     { url: `${SITE_URL}/download` },
-    ...(isIndexable({ type: "tag-hub", activeTags: index.tags.filter(tag => tag.count > 0).length }) ? [{ url: `${SITE_URL}/tags` }] : []),
-    ...Array.from({ length: browsePageCount(index.posts.length) }, (_, i) => ({ url: SITE_URL + browseHref(i + 1) })),
-    ...Array.from({ length: accountPageCount(index.accounts.length) }, (_, i) => ({ url: SITE_URL + accountListHref(i + 1) })),
+    ...(isIndexable({ type: "tag-hub", activeTags: index.tags.filter(tag => tag.count > 0).length }) ? [{ url: `${SITE_URL}/tags`, ...lastmod(newest(index.tags.filter(tag => tag.count > 0))) }] : []),
+    // List pages: the newest change among the entries they show (same page sizes as the pages themselves).
+    ...Array.from({ length: browsePageCount(index.posts.length) }, (_, i) => ({ url: SITE_URL + browseHref(i + 1), ...lastmod(newest(index.posts.slice(i * 100, (i + 1) * 100))) })),
+    ...Array.from({ length: accountPageCount(index.accounts.length) }, (_, i) => ({ url: SITE_URL + accountListHref(i + 1), ...lastmod(newest(index.accounts.slice(i * 40, (i + 1) * 40))) })),
     // lastmod = when the post was first saved/published or its labels last published. A post page
     // does not otherwise change, so this is when its own content last changed. Account pages take
     // the newest of their posts. Related/ranking blocks on a page change constantly and are ignored.
     ...index.posts.map(p => ({ url: `${SITE_URL}/p/${p.id}`, ...lastmod(p.modifiedAt) })),
     ...index.accounts.map(a => ({ url: `${SITE_URL}/accounts/${encodeURIComponent(a.key)}`, ...lastmod(a.modifiedAt) }))
-    ,...index.tags.filter(tag => tag.index).map(tag => ({ url: SITE_URL + tagHref({ ...tag, active: true }) }))
+    ,...index.tags.filter(tag => tag.index).map(tag => ({ url: SITE_URL + tagHref({ ...tag, active: true }), ...lastmod(tag.modifiedAt) }))
   ];
 }
