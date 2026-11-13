@@ -10,7 +10,7 @@ const video={id,authorId:'123',handle:'sample_author',authorName:'サンプル�
 let labels=[{id:'a',name:'タグA',count:4,index:true},{id:'b',name:'タグB',count:3,index:true},{id:'empty',name:'空タグ',count:0,index:false}];
 const index={posts:[{id,modifiedAt:'2026-10-20T12:00:00Z'}],accounts:[{key:'sample_author',modifiedAt:'2026-10-20T12:00:00Z'}],tags:labels};
 const Link=({children,href,prefetch,...props})=>React.createElement('a',{href,...props},children);
-const bridge={readPublicIndex:async()=>index,readPublicBrowse:async page=>page===1||page===2?{page,totalCount:101,totalPages:2,videos:[video]}:null,readPublicLabels:async()=>labels,
+const bridge={readPublicMonths:async()=>[],readPublicIndex:async()=>index,readPublicBrowse:async page=>page===1||page===2?{page,totalCount:101,totalPages:2,videos:[video]}:null,readPublicLabels:async()=>labels,
  readPublicTag:async()=>({label:{id:'a',name:'タグA',active:true},videos:[video],index:true,totalCount:4,totalPages:1,facts:{authorCount:1,tags:[{id:"b",name:"タグB",count:1}]}}),
  readPublicDetail:async()=>({video,metadata:core.videoMetadata(video,null,labels.filter(l=>l.count>0)),labels:labels.filter(l=>l.count>0),sameAuthor:[],related:[],recommended:[]})};
 function resolve(n){if(n==='react')return React;if(n.endsWith('public-video-schema'))return load('lib/public-video-schema.ts',resolve);if(n.endsWith('video-technical'))return load('lib/video-technical.ts',resolve);if(n.endsWith('video-duration-format'))return load('lib/video-duration-format.ts',resolve);

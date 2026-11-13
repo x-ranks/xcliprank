@@ -16,7 +16,7 @@ export default function SiteBrand({ showSearch = false }: { showSearch?: boolean
       {!showSearch && <a className="site-search-link" href="/discover?mode=search">動画を検索</a>}
       <a href="/discover?mode=random">ランダム</a>
       <a href="/discover?mode=tier">Tierで探す</a>
-      <a href="/discover?mode=month">月別</a>
+      <a href="/months">月別</a>
       <Link href="/following" prefetch={false}>フォロー新着</Link>
       <Link href="/favorites" prefetch={false}>☆ お気に入り・履歴</Link>
       <a className="site-x-link" href="https://x.com/twizou_rank" target="_blank" rel="noopener noreferrer">Xで新着情報</a>

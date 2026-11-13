@@ -185,6 +185,46 @@ export function createPublicVideoService(deps: PublicVideoDeps, options: { readO
     return { posts, accounts: [...accounts.values()].filter(a => isIndexable({ type: "account", permittedVideos: a.count }))
       .map(({ key, modifiedAt }) => ({ key, ...(modifiedAt ? { modifiedAt } : {}) })).sort((a, b) => a.key.localeCompare(b.key)), tags };
   }
+  // Monthly pages: built only from the site's own indexable posts (Japan-time month) and their recorded X view counts.
+  const MONTH_PATTERN = /^\d{4}-(0[1-9]|1[0-2])$/;
+  const monthOf = (video: PublicVideo) => { const t = video.createdAt ? Date.parse(video.createdAt) : NaN; return Number.isFinite(t) ? new Date(t + 9 * 3600000).toISOString().slice(0, 7) : null; };
+  async function monthGroups() {
+    const [catalog, rows] = await Promise.all([readCatalog(), deps.indexVideos ? deps.indexVideos() : deps.posts([])]);
+    const groups = new Map<string, PublicVideo[]>(), seen = new Set<string>();
+    for (const video of rows) {
+      if (seen.has(video.id) || !authorHref(video) || !publicVideoIndexable(video, videoLabels(catalog, video))) continue;
+      seen.add(video.id);
+      const month = monthOf(video); if (!month) continue;
+      const group = groups.get(month); if (group) group.push(video); else groups.set(month, [video]);
+    }
+    const listed = [...groups.keys()].filter(key => isIndexable({ type: "month", permittedVideos: groups.get(key)!.length })).sort();
+    return { catalog, groups, listed };
+  }
+  async function months() {
+    const { catalog, groups, listed } = await monthGroups();
+    return listed.map(month => {
+      const rows = groups.get(month)!; let modifiedAt: string | undefined;
+      for (const video of rows) modifiedAt = newer(modifiedAt, videoModified(catalog, video));
+      return { month, count: rows.length, ...(modifiedAt ? { modifiedAt } : {}) };
+    }).reverse();
+  }
+  async function month(key: string) {
+    if (!MONTH_PATTERN.test(key)) return null;
+    const { catalog, groups, listed } = await monthGroups();
+    const rows = groups.get(key); if (!rows) return null;
+    const known = rows.filter(v => typeof v.views === "number" && Number.isFinite(v.views) && v.views >= 0);
+    const byViews = known.length >= 5;
+    const ranked = byViews ? [...known].sort((a, b) => (b.views as number) - (a.views as number) || b.id.localeCompare(a.id)).slice(0, 24)
+      : [...rows].sort((a, b) => (b.createdAt ?? "").localeCompare(a.createdAt ?? "") || b.id.localeCompare(a.id)).slice(0, 24);
+    const authors = new Map<string, { key: string; name: string; count: number }>();
+    for (const v of rows) { const k = accountKey(v); if (!k) continue; const row = authors.get(k) ?? { key: k, name: v.authorName ?? v.handle ?? k, count: 0 }; row.count++; authors.set(k, row); }
+    const topAuthors = [...authors.values()].sort((a, b) => b.count - a.count || a.key.localeCompare(b.key)).slice(0, 5);
+    const facts = hubFacts(rows, catalog), at = listed.indexOf(key);
+    let modifiedAt: string | undefined; for (const v of rows) modifiedAt = newer(modifiedAt, videoModified(catalog, v));
+    return { month: key, total: rows.length, authorCount: authors.size, topAuthors: topAuthors.length >= 2 ? topAuthors : [], tags: facts.tags, byViews, measured: byViews ? known.length : 0,
+      viewsTotal: byViews ? known.reduce((sum, v) => sum + (v.views as number), 0) : 0, ranked, prev: at > 0 ? listed[at - 1] : null, next: at >= 0 && at < listed.length - 1 ? listed[at + 1] : null,
+      index: at >= 0, ...(modifiedAt ? { modifiedAt } : {}) };
+  }
   async function browse(page = 1) {
     if (!Number.isSafeInteger(page) || page < 1) return null;
     const [catalog, indexedRows] = await Promise.all([readCatalog(), deps.indexVideos ? deps.indexVideos() : deps.posts([])]);
@@ -309,5 +349,5 @@ export function createPublicVideoService(deps: PublicVideoDeps, options: { readO
     if (!rows.some(video => video.id === input.id && video.eligible && video.sourceHash === input.sourceHash)) return { result: "unavailable" };
     await deps.catalog.technical(input.id, input.sourceHash, input.metadata, Date.now(), "mp4-range-v1"); return { result: "published" };
   }
-  return { technicalPage, technicalPublish, detailCore, detailRelated, detail, account, tag, activeLabels, indexable, browse, discovery, personalVideos, followFeed, publish, saved, inspect, status, candidates, autoPage, autoPublish };
+  return { technicalPage, technicalPublish, detailCore, detailRelated, detail, account, tag, activeLabels, indexable, months, month, browse, discovery, personalVideos, followFeed, publish, saved, inspect, status, candidates, autoPage, autoPublish };
 }

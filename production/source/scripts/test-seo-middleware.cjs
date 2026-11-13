@@ -6,7 +6,7 @@ const js=ts.transpileModule(fs.readFileSync(file,'utf8'),{compilerOptions:{modul
 new Function('require','module','exports',js)(require,loaded,loaded.exports);
 const previous=process.env.NODE_ENV;process.env.NODE_ENV='production';
 try{
- for(const path of ['/browse','/browse?page=2','/accounts','/accounts?page=2','/tags','/tags/%E7%84%A1%E4%BF%AE%E6%AD%A3','/api/manual-ranking','/rising']){
+ for(const path of ['/browse','/browse?page=2','/accounts','/accounts?page=2','/tags','/tags/%E7%84%A1%E4%BF%AE%E6%AD%A3','/months','/months/2026-10','/api/manual-ranking','/rising']){
   const response=loaded.exports.middleware(new NextRequest('https://twizou.net'+path));
   assert.equal(response.status,200,path);
  }
