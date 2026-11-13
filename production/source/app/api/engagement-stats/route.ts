@@ -16,7 +16,7 @@ const EVENT_TYPES = [
   "ranking_change",
   "outbound_x",
 ] as const;
-const RANGES = ["trending", "daily", "weekly", "rising", "reels", "discover", "favorites", "browse", "accounts", "tags", "landing"] as const;
+const RANGES = ["trending", "daily", "weekly", "rising", "reels", "discover", "favorites", "following", "browse", "accounts", "tags", "landing"] as const;
 
 type EngagementRow = {
   occurred_at: string;

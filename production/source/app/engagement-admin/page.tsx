@@ -14,6 +14,7 @@ const RANGE_LABELS: Record<string, string> = {
   reels: "おすすめリール",
   discover: "動画を探す",
   favorites: "お気に入り・保存履歴",
+  following: "フォロー中の新着",
   browse: "動画一覧",
   accounts: "投稿者",
   tags: "タグ",

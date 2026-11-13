@@ -1,7 +1,7 @@
 // Public navigation policy only. No network, storage, server modules or side effects.
 const PUBLIC_PAGES = new Set([
   "/", "/rising", "/ranking/daily", "/ranking/weekly", "/reels", "/browse", "/accounts", "/tags",
-  "/discover", "/favorites", "/download", "/download-policy", "/privacy", "/terms", "/contact", "/copyright",
+  "/discover", "/favorites", "/following", "/download", "/download-policy", "/privacy", "/terms", "/contact", "/copyright",
   "/advertising-disclosure", "/removal-request",
 ]);
 
@@ -26,6 +26,7 @@ export function engagementRange(path: string): string | undefined {
   if (path === "/reels") return "reels";
   if (path === "/discover") return "discover";
   if (path === "/favorites") return "favorites";
+  if (path === "/following") return "following";
   if (path === "/browse") return "browse";
   if (path === "/accounts" || path.startsWith("/accounts/")) return "accounts";
   if (path === "/tags" || path.startsWith("/tags/")) return "tags";

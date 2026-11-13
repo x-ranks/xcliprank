@@ -15,6 +15,7 @@ function rankingRange(sourcePage: string | null) {
   if (path === "/reels") return "reels";
   if (path === "/discover") return "discover";
   if (path === "/favorites") return "favorites";
+  if (path === "/following") return "following";
   if (path === "/browse") return "browse";
   if (path === "/accounts" || path.startsWith("/accounts/")) return "accounts";
   if (path === "/tags" || path.startsWith("/tags/")) return "tags";

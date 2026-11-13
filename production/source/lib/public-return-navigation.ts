@@ -4,7 +4,7 @@ export function safePublicReturn(raw: unknown): string | null {
   if (typeof raw !== "string" || raw.length > 1600 || !raw.startsWith("/") || raw.startsWith("//") || /[\\\u0000-\u0020\u007f]/.test(raw)) return null;
   try {
     const u = new URL(raw, origin); if (u.origin !== origin || u.hash) return null;
-    if (!(["/", "/ranking/daily", "/ranking/weekly", "/rising", "/reels", "/browse", "/discover", "/favorites"].includes(u.pathname) || /^\/accounts\/[A-Za-z0-9_-]{1,68}$/.test(u.pathname) || /^\/tags\/[^/]{1,500}$/.test(u.pathname))) return null;
+    if (!(["/", "/ranking/daily", "/ranking/weekly", "/rising", "/reels", "/browse", "/discover", "/favorites", "/following"].includes(u.pathname) || /^\/accounts\/[A-Za-z0-9_-]{1,68}$/.test(u.pathname) || /^\/tags\/[^/]{1,500}$/.test(u.pathname))) return null;
     if (u.pathname === "/discover" || u.pathname === "/favorites") {
       for (const key of u.searchParams.keys()) if (!["mode", "q", "month", "tier", "seed"].includes(key) || u.searchParams.getAll(key).length !== 1) return null;
       const mode = u.searchParams.get("mode"), q = u.searchParams.get("q"), month = u.searchParams.get("month"), tier = u.searchParams.get("tier"), seed = u.searchParams.get("seed");

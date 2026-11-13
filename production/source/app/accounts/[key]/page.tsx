@@ -4,6 +4,7 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import PublicVideoCards from "../../components/PublicVideoCards";
 import PublicPostLink from "../../components/PublicPostLink";
+import FollowButton from "../../components/FollowButton";
 import type { PublicVideo } from "../../../lib/public-video-core";
 import { PUBLIC_SITE, tagHref } from "../../../lib/public-video-core";
 import { readPublicAccount } from "../../../lib/public-video-server";
@@ -47,7 +48,7 @@ export default async function AccountPage(props: Props) {
     }
   }
   const handle = d.handle ? `@${d.handle}` : null;
-  return <main style={{ maxWidth: 1120, margin: "0 auto", padding: 24 }}><SiteBrand /><Link href="/accounts">投稿者一覧</Link><h1>{d.name}のTwitter動画一覧</h1>{handle ? <p>{handle}</p> : null}
+  return <main style={{ maxWidth: 1120, margin: "0 auto", padding: 24 }}><SiteBrand /><Link href="/accounts">投稿者一覧</Link><h1>{d.name}のTwitter動画一覧</h1>{handle ? <p>{handle}</p> : null}<FollowButton accountKey={d.canonicalKey} />
     <p>掲載中の最新動画{d.totalCount ?? d.videos.length}件を新しい順に紹介。再生・保存や元投稿の確認ができます。</p>
     {showActions ? <nav className="public-author-actions" aria-label="動画を探す">
       <a href="#latest-videos">新着動画を見る</a>

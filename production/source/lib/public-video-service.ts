@@ -19,6 +19,9 @@ export type PublicVideoDeps = {
 // Only the ordered browse IDs are cached. Each page still rechecks its posts.
 let browseIndexCache: { rows: PublicVideo[]; revision: number; until: number; ids: string[] } | null = null;
 let discoveryCache: { rows: PublicVideo[]; revision: number; index: DiscoveryIndex } | null = null;
+// Follow feed: a short per-account cache keeps repeated visits from re-reading the database.
+const FOLLOW_CACHE_MS = 120000, FOLLOW_CACHE_MAX = 400, FOLLOW_PER_ACCOUNT = 8, FOLLOW_FEED_LIMIT = 48;
+const followCache = new Map<string, { until: number; rows: PublicVideo[] }>();
 function discoveryCard(v: PublicVideo) {
   return { id: v.id, handle: v.handle, authorName: v.authorName, text: v.text ? Array.from(v.text).slice(0, 240).join("") : null, posterUrl: v.posterUrl, createdAt: v.createdAt };
 }
@@ -190,6 +193,26 @@ export function createPublicVideoService(deps: PublicVideoDeps, options: { readO
     const visible = new Map(fresh.filter(v => v.eligible && authorHref(v)).map(v => [v.id, v]));
     return unique.flatMap(id => { const v = visible.get(id); return v ? [discoveryCard(v)] : []; });
   }
+  /** Latest videos of the followed accounts, newest first. Only currently visible videos are returned. */
+  async function followFeed(keys: string[]) {
+    if (!Array.isArray(keys) || keys.length > 30 || keys.some(key => typeof key !== "string" || !/^(?:[a-z0-9_]{1,15}|id-[A-Za-z0-9_-]{1,64})$/.test(key))) throw Error("PUBLIC_INVALID_INPUT");
+    const unique = [...new Set(keys)], now = Date.now(), failed: string[] = [];
+    const groups = await Promise.all(unique.map(async key => {
+      const hit = followCache.get(key);
+      if (hit && hit.until > now) return hit.rows;
+      try {
+        const rows = await deps.authorVideos(key, FOLLOW_PER_ACCOUNT);
+        if (followCache.size >= FOLLOW_CACHE_MAX) followCache.delete(followCache.keys().next().value as string);
+        followCache.set(key, { until: now + FOLLOW_CACHE_MS, rows });
+        return rows;
+      } catch { failed.push(key); return hit?.rows ?? []; }
+    }));
+    const wanted = new Set(unique), seen = new Set<string>();
+    const videos = groups.flat().filter(v => v.eligible && publicPostId(v.id) && wanted.has(accountKey(v) ?? "") && !seen.has(v.id) && !!seen.add(v.id))
+      .sort((a, b) => (b.createdAt ?? "").localeCompare(a.createdAt ?? "") || b.id.localeCompare(a.id))
+      .slice(0, FOLLOW_FEED_LIMIT).map(discoveryCard);
+    return { videos, failedKeys: failed };
+  }
   async function publish(input: Parameters<PublicVideoDeps["catalog"]["labels"]>[0]) {
     if (!input || !Array.isArray(input.posts) || input.posts.length > 100 || new Set(input.posts.map(p => p.id)).size !== input.posts.length || input.posts.some(p => !publicPostId(p.id) || p.basis === "model_auto")) throw Error("PUBLIC_INVALID_INPUT");
     const rows = await deps.posts(input.posts.map(p => p.id)), allowed = new Map(rows.filter(v => v.eligible).map(v => [v.id, v]));
@@ -256,5 +279,5 @@ export function createPublicVideoService(deps: PublicVideoDeps, options: { readO
     if (!rows.some(video => video.id === input.id && video.eligible && video.sourceHash === input.sourceHash)) return { result: "unavailable" };
     await deps.catalog.technical(input.id, input.sourceHash, input.metadata, Date.now(), "mp4-range-v1"); return { result: "published" };
   }
-  return { technicalPage, technicalPublish, detailCore, detailRelated, detail, account, tag, activeLabels, indexable, browse, discovery, personalVideos, publish, saved, inspect, status, candidates, autoPage, autoPublish };
+  return { technicalPage, technicalPublish, detailCore, detailRelated, detail, account, tag, activeLabels, indexable, browse, discovery, personalVideos, followFeed, publish, saved, inspect, status, candidates, autoPage, autoPublish };
 }
