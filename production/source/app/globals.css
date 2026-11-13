@@ -1598,3 +1598,8 @@ html[data-age-confirmed="yes"] body.age-gate-open { overflow:auto; }
 .transfer-panel textarea{display:block;width:100%;box-sizing:border-box;margin:8px 0;padding:10px;border:1px solid #3c4a59;border-radius:8px;background:#0b1117;color:#eef4fa;font:inherit;font-size:.85rem;word-break:break-all}
 .transfer-panel button{min-height:44px;padding:8px 18px;border-radius:999px;border:1px solid #6b7480;background:#18222d;color:#eef4fa;font-weight:700;cursor:pointer;margin-right:8px}
 .transfer-panel button:disabled{opacity:.5;cursor:default}
+
+/* 2026-11-13: opt-in new-video notification switch on the follow page. */
+.push-toggle{margin:24px 0;padding:12px 14px;border:1px solid #2f3b48;border-radius:12px;background:#121a22}
+.push-toggle .follow-button{min-height:44px}
+.push-note{margin:24px 0;opacity:.85}
