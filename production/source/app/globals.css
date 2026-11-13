@@ -1567,3 +1567,12 @@ html[data-age-confirmed="yes"] body.age-gate-open { overflow:auto; }
 .install-prompt button { min-height:36px; padding:0 14px; border-radius:8px; border:1px solid #2b3445; background:#0d1117; color:#e8edf5; font-size:13px; cursor:pointer; }
 .install-prompt .install-prompt-add { background:#fff; color:#090b0e; border-color:#fff; font-weight:700; }
 .site-discovery-nav a.site-x-link { border-color:#3b5873; background:#16222d; color:#bcd8f2; }
+.follow-control{display:flex;flex-wrap:wrap;align-items:center;gap:10px;margin:8px 0 12px}
+.follow-button{min-height:40px;padding:8px 16px;border-radius:999px;border:1px solid #6b7480;background:#101820;color:#f2f5f8;font-weight:700;cursor:pointer}
+.follow-button[aria-pressed="true"]{background:#1b3a5a;border-color:#4d9bdc}
+.follow-feed-link{font-size:.9rem}
+.follow-list{display:flex;flex-wrap:wrap;gap:8px 16px;padding:0;margin:12px 0;list-style:none}
+.follow-list button{margin-left:4px;padding:2px 8px;border-radius:6px;border:1px solid #6b7480;background:transparent;color:inherit;cursor:pointer}
+.follow-new-note{padding:10px 12px;border:1px solid #8b3a3a;border-radius:10px;background:#2a1215}
+.follow-new{outline:2px solid #c04a4a;outline-offset:-2px;position:relative}
+.follow-new-badge{display:inline-block;margin:6px 0 0 8px;padding:2px 8px;border-radius:6px;background:#c04a4a;color:#fff;font-size:.75rem;font-weight:700}
