@@ -114,7 +114,11 @@ export function createPublicVideoService(deps: PublicVideoDeps, options: { readO
     const permittedVideos = matches.filter(v => publicVideoIndexable(v, videoLabels(c, v))).length;
     const totalPages = Math.max(1, Math.ceil(matches.length / 100));
     if (page > totalPages) return null;
-    return { facts: hubFacts(matches, c, [label.name]), label, videos: matches.slice((page - 1) * 100, page * 100), page, totalPages, totalCount: matches.length,
+    const profile = accountProfile(matches), byId = new Map(matches.map(v => [v.id, v])), authors = new Map<string, { key: string; name: string; count: number }>();
+    for (const v of matches) { const key = accountKey(v); if (!key) continue; const row = authors.get(key) ?? { key, name: v.authorName ?? v.handle ?? key, count: 0 }; row.count++; authors.set(key, row); }
+    const topAuthors = [...authors.values()].sort((a, b) => b.count - a.count || a.key.localeCompare(b.key)).slice(0, 5);
+    return { facts: hubFacts(matches, c, [label.name]), profile, topAuthors: topAuthors.length >= 2 ? topAuthors : [], topVideos: profile.top.flatMap(t => { const v = byId.get(t.id); return v ? [{ video: v, views: t.views }] : []; }),
+      label, videos: matches.slice((page - 1) * 100, page * 100), page, totalPages, totalCount: matches.length,
       index: isIndexable({ type: "tag", permittedVideos, hasImage: matches.some(v => Boolean(v.posterUrl)) }) };
   }
   function labelStats(catalog: Awaited<ReturnType<PublicVideoDeps["catalog"]["read"]>>, rows: PublicVideo[]) {
