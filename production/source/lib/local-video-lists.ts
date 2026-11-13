@@ -29,3 +29,18 @@ export function setVideoListEntry(storage: StorageLike, kind: VideoListKind, id:
     return true;
   } catch { return false; }
 }
+
+export const VIDEO_LIST_LIMIT = LIMIT;
+/** Adds imported IDs after the existing ones (existing order wins). Returns how many were new, or null when storage fails. */
+export function mergeVideoLists(storage: StorageLike, incoming: Partial<Lists>): { favorites: number; saveHistory: number } | null {
+  try {
+    const current = readVideoLists(storage), added = { favorites: 0, saveHistory: 0 };
+    for (const kind of ["favorites", "saveHistory"] as const) {
+      const have = new Set(current[kind]), extra = normalize(incoming[kind]).filter(id => !have.has(id));
+      const room = Math.max(0, LIMIT - current[kind].length);
+      current[kind] = [...current[kind], ...extra.slice(0, room)]; added[kind] = Math.min(extra.length, room);
+    }
+    storage.setItem(KEY, JSON.stringify(current));
+    return added;
+  } catch { return null; }
+}

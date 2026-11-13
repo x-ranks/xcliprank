@@ -1590,3 +1590,11 @@ html[data-age-confirmed="yes"] body.age-gate-open { overflow:auto; }
 .post-author-follow .post-author-name{font-weight:700;min-width:0;flex:1 1 8em}
 .post-author-follow .follow-control{margin:0;flex:0 1 auto;justify-content:flex-end}
 .post-author-follow .follow-button{min-height:44px;padding:8px 20px}
+
+/* 2026-11-13: copy-and-paste transfer of favorites/follows between browsers. */
+.transfer-panel{margin:24px 0;padding:12px 14px;border:1px solid #2f3b48;border-radius:12px;background:#121a22}
+.transfer-panel summary{min-height:44px;display:flex;align-items:center;cursor:pointer;font-weight:700}
+.transfer-panel h2{font-size:1rem;margin:16px 0 8px}
+.transfer-panel textarea{display:block;width:100%;box-sizing:border-box;margin:8px 0;padding:10px;border:1px solid #3c4a59;border-radius:8px;background:#0b1117;color:#eef4fa;font:inherit;font-size:.85rem;word-break:break-all}
+.transfer-panel button{min-height:44px;padding:8px 18px;border-radius:999px;border:1px solid #6b7480;background:#18222d;color:#eef4fa;font-weight:700;cursor:pointer;margin-right:8px}
+.transfer-panel button:disabled{opacity:.5;cursor:default}
