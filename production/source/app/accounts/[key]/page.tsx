@@ -75,6 +75,7 @@ export default async function AccountPage(props: Props) {
       {measuredVideos >= 2 && featured ? <PublicPostLink id={featured.id} returnTo={base}>Xで表示回数が多い動画を見る（このページ内）</PublicPostLink> : null}
     </nav> : null}
     {d.facts?.tags.length ? <nav className="public-post-tags" aria-label="この投稿者の動画によく付くタグ">{showActions ? <span>よく付くタグ</span> : null}{d.facts.tags.map(tag => <Link key={tag.name} href={tagHref({ ...tag, active: true })}>{tag.name} {tag.count}件</Link>)}</nav> : null}
+    {page === 1 && d.relatedAuthors?.length ? <nav className="public-post-tags" aria-label="同じタグの人気投稿者"><span>同じタグの投稿者</span>{d.relatedAuthors.map(author => <Link key={author.key} href={`/accounts/${encodeURIComponent(author.key)}`}>{author.name}</Link>)}</nav> : null}
     {showActions ? <h2 id="latest-videos" style={{ scrollMarginTop: 96 }}>新着動画</h2> : null}
     <p>{page} / {d.totalPages}ページ</p><PublicVideoCards priorityCount={4} videos={d.videos} returnTo={page > 1 ? `${base}?page=${page}` : base} />
     <nav aria-label="投稿者の動画ページ" style={{ display: "flex", gap: 12, flexWrap: "wrap" }}>

@@ -41,7 +41,18 @@ const { createPublicVideoService } = require('../lib/public-video-service.ts');
   assert.deepEqual(td.topAuthors.map(a => [a.key, a.count]), [['a', 2], ['b', 1]]);
   const oneAuthor = createPublicVideoService({ catalog: { read: async () => catalogWithTag }, posts: async ids => tagRows.filter(r => ids.includes(r.id) && r.handle === 'a'), authorVideos: async () => [], candidates: async () => [], secret: async () => '' });
   assert.deepEqual((await oneAuthor.tag('タグ', 1)).topAuthors, [], 'a single author is not a ranking');
+  // Related authors: same-tag authors, never the author itself, at least two or nothing.
+  const mk = (id, handle) => ({ ...v(id, '2026-11-0' + (Number(id) % 9 + 1) + 'T00:00:00Z', 10), handle, authorId: handle, authorName: handle.toUpperCase() });
+  const relRows = [mk('30', 'self'), mk('31', 'bob'), mk('32', 'bob'), mk('33', 'cat'), mk('34', 'dan')];
+  const relCatalog = { version: 1, revision: 1, labels: [{ id: 't1', name: 'タグ', active: true }], records: Object.fromEntries(relRows.map(r => [r.id, { id: r.id, labelIds: ['t1'], sourceHash: 'h', basis: 'manual', modelRevision: null, labelPublishedAt: '2026-11-12T00:00:00Z', saves: 0, firstSavedAt: null, firstRankedAt: null, receipts: [] }])) };
+  const relSvc = (rowsForPosts, own) => createPublicVideoService({ catalog: { read: async () => relCatalog }, posts: async ids => rowsForPosts.filter(r => ids.includes(r.id)), authorVideos: async () => own, candidates: async () => [], secret: async () => '' });
+  const rd = await relSvc(relRows, [relRows[0]]).account('self', 1);
+  assert.deepEqual(rd.relatedAuthors.map(a => [a.key, a.count]), [['bob', 2], ['cat', 1], ['dan', 1]]);
+  assert.deepEqual((await relSvc(relRows.slice(0, 2), [relRows[0]]).account('self', 1)).relatedAuthors, [], 'a single related author is not listed');
+  const failing = createPublicVideoService({ catalog: { read: async () => relCatalog }, posts: async () => { throw Error('db'); }, authorVideos: async () => [relRows[0]], candidates: async () => [], secret: async () => '' });
+  assert.deepEqual((await failing.account('self', 1)).relatedAuthors, [], 'failure shows nothing instead of breaking the page');
   const tagPage = fs.readFileSync('app/tags/[name]/page.tsx', 'utf8');
+  assert(fs.readFileSync('app/accounts/[key]/page.tsx', 'utf8').includes('d.relatedAuthors?.length'));
   assert(tagPage.includes('d.profile && d.profile.total >= 3') && tagPage.includes('"@type": "CollectionPage"') && tagPage.includes('page === 1 ?'));
   const page = fs.readFileSync('app/accounts/[key]/page.tsx', 'utf8');
   assert(page.includes('d.profile && d.profile.total >= 2') && page.includes('d.profile.measured >= 2'), 'thin or unmeasured accounts show no data block');
