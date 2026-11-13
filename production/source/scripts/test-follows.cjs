@@ -70,6 +70,7 @@ const req = (body, headers = {}) => new Request('https://twizou.net/api/follow-f
   // Wiring in pages.
   const read = f => fs.readFileSync(f, 'utf8');
   assert(read('app/accounts/[key]/page.tsx').includes('<FollowButton accountKey={d.canonicalKey} />'));
+  assert(read('app/p/[id]/page.tsx').includes('<FollowButton accountKey={accountKey(v)!} />'), 'video page has the follow button');
   assert(read('app/components/SiteBrand.tsx').includes('href="/following"'));
   assert(read('app/following/page.tsx').includes('<FollowFeed />') && read('app/following/page.tsx').includes('index: false'));
   assert(read('app/components/FollowFeed.tsx').startsWith('"use client"') && read('app/components/FollowButton.tsx').startsWith('"use client"'));
