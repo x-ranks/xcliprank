@@ -43,23 +43,32 @@ export default async function PostPage(props: Props) {
       { "@type": "ListItem", position: 3, name: (v.authorName ?? v.handle ?? "投稿者") + "の動画", item: m.canonical },
     ] }} />
     <PublicPostClose postId={v.id} returnTo={sourcePage ?? undefined} />
-    <nav aria-label="現在位置"><Link href="/rising">twizou</Link> ／ <Link href={authorHref(v)!}>{v.authorName ?? v.handle ?? "投稿者"}</Link> ／ 動画</nav>
-    {accountKey(v) ? <div className="post-author-follow"><span className="post-author-name">投稿者：{v.authorName ?? v.handle ?? "投稿者"}</span><FollowButton accountKey={accountKey(v)!} compact /></div> : null}
-    <h1>{postHeading(v)}</h1>
     <div className="public-post-player">
       <DirectPlaybackVideo trackQualifiedView engagementSourcePage={sourcePage} postId={v.id} src={v.videoUrl} poster={v.posterUrl ?? undefined} controls playsInline preload="metadata" aria-label={(v.authorName ?? v.handle ?? "投稿者") + "の動画プレーヤー"} style={{ width: "100%", maxHeight: "70vh", background: "#000" }} />
     </div>
-
+    <h1>{postHeading(v)}</h1>
+    {accountKey(v) ? <div className="post-author-follow"><Link className="post-author-name" href={authorHref(v)!}>{v.authorName ?? v.handle ?? "投稿者"}</Link><FollowButton accountKey={accountKey(v)!} compact /></div> : null}
     <div className="public-post-actions" aria-label="動画の操作">
       <VideoDownloadButton postId={v.id} showCaption={false} />
       <FavoriteButton id={v.id} />
-      <a className="share-to-x" href={shareVideoHref(v.id, null, { author: v.authorName ?? v.handle })!} target="_blank" rel="noopener noreferrer" aria-label="この動画をXで共有">Xで共有</a>
-      <Link href={`/removal-request?post=${v.id}`} prefetch={false} rel="nofollow">この動画を報告する</Link>
-      <a href={originalHref(v)} target="_blank" rel="noopener noreferrer">元投稿をXで開く</a>
-      {authorHref(v) ? <Link href={authorHref(v)!}>投稿者ページを見る</Link> : null}
+      <a className="share-to-x" href={shareVideoHref(v.id, null, { author: v.authorName ?? v.handle })!} target="_blank" rel="noopener noreferrer" aria-label="この動画をXで共有">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"><path d="M12 15V4M8 8l4-4 4 4" /><path d="M5 12v6.5A1.5 1.5 0 0 0 6.5 20h11a1.5 1.5 0 0 0 1.5-1.5V12" /></svg>
+        <span className="visually-hidden">Xで共有</span>
+      </a>
+      <details className="post-more">
+        <summary aria-label="その他の操作">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><circle cx="5" cy="12" r="1.6" /><circle cx="12" cy="12" r="1.6" /><circle cx="19" cy="12" r="1.6" /></svg>
+        </summary>
+        <div className="post-more-menu">
+          <a href={originalHref(v)} target="_blank" rel="noopener noreferrer">元投稿をXで開く</a>
+          {authorHref(v) ? <Link href={authorHref(v)!}>投稿者ページを見る</Link> : null}
+          <Link href={`/removal-request?post=${v.id}`} prefetch={false} rel="nofollow">この動画を報告する</Link>
+        </div>
+      </details>
     </div>
-    <PostTags detail={d} />
     {facts.length ? <dl className="public-video-facts" aria-label="動画の情報">{facts.map(fact => <div key={fact.label}><dt>{fact.label}</dt><dd>{fact.dateTime ? <time dateTime={fact.dateTime}>{fact.value}</time> : fact.value}</dd></div>)}</dl> : null}
+    <PostTags detail={d} />
+    <nav className="post-breadcrumb" aria-label="現在位置"><Link href="/rising">twizou</Link> ／ <Link href={authorHref(v)!}>{v.authorName ?? v.handle ?? "投稿者"}</Link> ／ 動画</nav>
     {m.saveCount !== null && m.saveCount > 0 ? <p>サイト内の保存操作：{m.saveCount}件</p> : null}
     <Suspense fallback={<section aria-label="関連動画を準備中" style={{ minHeight: 280 }}><h2>関連動画</h2><p role="status">動画を読み込んでいます…</p></section>}>
       <PostRelated id={v.id} returnTo={returnTo} />

@@ -7,6 +7,9 @@ export default function SiteBrand({ showSearch = false }: { showSearch?: boolean
       <img src="/twizou-mark.svg" width="64" height="64" alt="" aria-hidden="true" />
       <span>twizou</span>
     </Link>
+    <a className="site-search-icon" href="/discover?mode=search" aria-label="動画を検索">
+      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" aria-hidden="true"><circle cx="11" cy="11" r="6.5" /><path d="M16 16l4.5 4.5" /></svg>
+    </a>
     {showSearch && <form className="site-search-form" action="/discover" method="get" role="search" aria-label="サイト内の動画検索">
       <input type="hidden" name="mode" value="search" />
       <input type="search" name="q" aria-label="タグ・本文・投稿者名" placeholder="タグ・本文・投稿者名" maxLength={80} required />

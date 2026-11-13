@@ -1603,3 +1603,71 @@ html[data-age-confirmed="yes"] body.age-gate-open { overflow:auto; }
 .push-toggle{margin:24px 0;padding:12px 14px;border:1px solid #2f3b48;border-radius:12px;background:#121a22}
 .push-toggle .follow-button{min-height:44px}
 .push-note{margin:24px 0;opacity:.85}
+
+/* ---- UI refresh: simple header, bottom tabs, tidy video actions, compact author page ---- */
+.visually-hidden { position:absolute !important; width:1px; height:1px; margin:-1px; padding:0; overflow:hidden; clip:rect(0 0 0 0); white-space:nowrap; border:0; }
+.site-search-icon, .bottom-tabs, .bottom-tabs-spacer { display:none; }
+
+/* Video page actions: one primary save button, two icon buttons, a "more" menu. */
+.public-post-page .public-post-actions { display:flex; flex-wrap:nowrap; gap:8px; align-items:stretch; margin:12px 0 14px; }
+.public-post-page .public-post-actions > .video-download { flex:1 1 auto; min-width:0; width:auto; margin:0; padding:0; display:flex; }
+.public-post-page .public-post-actions .video-download-trigger { width:100%; min-height:48px; border-radius:12px; background:#216c9d; border-color:#5ca8d4; font-size:15px; font-weight:800; }
+.public-post-page .public-post-actions .video-download-trigger:hover { background:#2a7db4; }
+.public-post-page .public-post-actions > .favorite-control { flex:none; display:flex; padding:0; }
+.public-post-page .public-post-actions .favorite-control button { width:48px; height:48px; min-height:48px; padding:0; border-radius:12px; font-size:0; line-height:1; background:#121a22; border:1px solid #2f3b48; color:#fff; }
+.public-post-page .public-post-actions .favorite-control button::before { content:"☆"; font-size:24px; }
+.public-post-page .public-post-actions .favorite-control button[aria-pressed="true"]::before { content:"★"; color:#ffd666; }
+.public-post-page .public-post-actions .favorite-control [role="status"] { position:absolute; font-size:12px; }
+.public-post-page .public-post-actions > a.share-to-x { flex:none; width:48px; min-height:48px; padding:0; display:flex; align-items:center; justify-content:center; border:1px solid #2f3b48; border-radius:12px; background:#121a22; color:#fff; }
+.post-more { position:relative; flex:none; }
+.post-more > summary { list-style:none; width:48px; height:48px; display:flex; align-items:center; justify-content:center; border:1px solid #2f3b48; border-radius:12px; background:#121a22; color:#fff; cursor:pointer; }
+.post-more > summary::-webkit-details-marker { display:none; }
+.post-more > summary:focus-visible { outline:3px solid #a8d4ff; outline-offset:3px; }
+.post-more-menu { position:absolute; right:0; top:54px; z-index:20; width:230px; padding:6px; border:1px solid #4a5868; border-radius:14px; background:#121a22; box-shadow:0 8px 24px #0008; }
+.post-more-menu a { display:flex; align-items:center; min-height:44px; padding:0 12px; border-radius:8px; color:#eef4fa; font-size:14px; text-decoration:none; }
+.post-more-menu a:hover { background:#1c2833; }
+.post-author-follow { background:transparent; border:0; padding:0; margin:6px 0 4px; min-height:48px; }
+.post-author-follow .post-author-name { color:#fff; font-size:15px; font-weight:800; text-decoration:none; }
+.public-video-facts { color:#a3afbb; font-size:13px; gap:4px 14px; margin:10px 0; }
+.post-breadcrumb { margin:12px 0; font-size:13px; color:#a3afbb; }
+
+/* Author page: name and follow on one line, three number chips, videos first. */
+.author-head { display:flex; align-items:center; justify-content:space-between; gap:12px; margin:6px 0 10px; }
+.author-head-name { min-width:0; }
+.author-head-name h1 { margin:0; font-size:clamp(18px,4.6vw,28px); line-height:1.3; }
+.author-head-name p { margin:2px 0 0; color:#a3afbb; font-size:13px; }
+.author-head .follow-control { margin:0; flex:none; }
+.author-chips { display:flex; gap:8px; margin:0 0 12px; }
+.author-chips > div { flex:1 1 0; min-width:0; padding:8px 6px; text-align:center; border:1px solid #2f3b48; border-radius:12px; background:#121a22; }
+.author-chips b { display:block; font-size:16px; }
+.author-chips span { display:block; margin-top:2px; color:#a3afbb; font-size:11px; }
+.author-lead { margin:0 0 12px; color:#a3afbb; font-size:13px; line-height:1.6; }
+
+@media (max-width:720px) {
+  /* Header: logo and a search icon only; discovery links live in the bottom tabs. */
+  .site-brand-band { display:flex; align-items:center; justify-content:space-between; gap:8px; margin:0 0 8px; padding:4px 2px 4px 4px; border:0; border-radius:0; background:transparent; box-shadow:none; }
+  .site-brand-link { min-height:44px; gap:8px; }
+  .site-brand-link img { width:32px; height:32px; }
+  .site-brand-link span { font-size:20px; letter-spacing:-.02em; }
+  .site-brand-band .site-discovery-nav, .site-brand-band .site-search-form { display:none; }
+  .site-search-icon { display:flex; align-items:center; justify-content:center; width:44px; height:44px; border-radius:50%; color:#fff; }
+  .public-post-page .site-brand-band { padding-right:62px; }
+  /* Bottom tabs. */
+  .bottom-tabs { position:fixed; left:0; right:0; bottom:0; z-index:30; display:flex; padding-bottom:env(safe-area-inset-bottom); background:rgba(13,17,23,.97); border-top:1px solid #2f3b48; }
+  .bottom-tabs a { position:relative; flex:1; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:3px; min-height:56px; color:#a3afbb; font-size:11px; font-weight:700; text-decoration:none; }
+  .bottom-tabs a[aria-current="page"] { color:#fff; }
+  .bottom-tabs a[aria-current="page"]::before { content:""; position:absolute; top:0; width:28px; height:3px; border-radius:0 0 3px 3px; background:#ff3347; }
+  .bottom-tabs a:focus-visible { outline:3px solid #a8d4ff; outline-offset:-3px; }
+  .bottom-tabs-spacer { display:block; height:calc(60px + env(safe-area-inset-bottom)); }
+  .install-prompt { bottom:calc(66px + env(safe-area-inset-bottom)); }
+  /* Video page: the player is capped so title, follow and save stay on the first screen. */
+  .public-post-page { padding-top:8px; }
+  .public-post-page .public-post-player video { max-height:46svh; }
+  .public-post-page h1 { margin:10px 0 4px; padding-right:0; font-size:17px; line-height:1.4; }
+  .public-post-close { top:max(6px,env(safe-area-inset-top)); right:6px; }
+  /* Cards: one short numbers line. */
+  .public-card-x-stats span:not(:first-child) { display:none; }
+  .video-card p { font-size:13px; }
+  .ranking-page-header { margin-bottom:6px; }
+  .ranking-page-title { font-size:20px; margin:4px 0; }
+}

@@ -4,6 +4,7 @@ import RequestAgeGate from "./components/RequestAgeGate";
 import PublicDetailViewer from "./components/PublicDetailViewer";
 import EngagementVisitTracker from "./components/EngagementVisitTracker";
 import InstallPrompt from "./components/InstallPrompt";
+import BottomTabs from "./components/BottomTabs";
 import "./globals.css";
 
 export const metadata: Metadata = {
@@ -71,6 +72,7 @@ export default function RootLayout({
         <PublicDetailViewer />
         <RequestAgeGate />
         <EngagementVisitTracker />
+        <BottomTabs />
         <InstallPrompt />
       </body>
     </html>

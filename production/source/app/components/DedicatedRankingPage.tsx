@@ -80,6 +80,7 @@ export default function DedicatedRankingPage({
         >
           週間
         </RankingNavLink>
+        <RankingNavLink href="/months">月別</RankingNavLink>
         <RankingNavLink href="/reels">リール</RankingNavLink>
         <RankingNavLink href="/download">動画保存</RankingNavLink>
       </nav>
