@@ -121,8 +121,15 @@ export function createPublicVideoService(deps: PublicVideoDeps, options: { readO
       label, videos: matches.slice((page - 1) * 100, page * 100), page, totalPages, totalCount: matches.length,
       index: isIndexable({ type: "tag", permittedVideos, hasImage: matches.some(v => Boolean(v.posterUrl)) }) };
   }
+  // When a post page last changed: label publication, first save or first ranking, else its own creation time.
+  function videoModified(catalog: Awaited<ReturnType<typeof readCatalog>>, video: PublicVideo) {
+    const record = catalog.records[video.id] ?? null;
+    const recorded = record?.sourceHash === video.sourceHash ? record.labelPublishedAt ?? record.firstSavedAt ?? record.firstRankedAt ?? undefined : undefined;
+    return recorded ?? (video.createdAt && Number.isFinite(Date.parse(video.createdAt)) ? video.createdAt : undefined);
+  }
+  const newer = (a?: string, b?: string) => !b ? a : !a || Date.parse(b) > Date.parse(a) ? b : a;
   function labelStats(catalog: Awaited<ReturnType<PublicVideoDeps["catalog"]["read"]>>, rows: PublicVideo[]) {
-    const groups = new Map<string, { id: string; name: string; count: number; hasImage: boolean }>();
+    const groups = new Map<string, { id: string; name: string; count: number; hasImage: boolean; modifiedAt?: string }>();
     for (const label of catalog.labels.filter(label => label.active)) {
       const name = canonicalTagName(label.name);
       if (!groups.has(name)) groups.set(name, { id: label.id, name, count: 0, hasImage: false });
@@ -131,7 +138,7 @@ export function createPublicVideoService(deps: PublicVideoDeps, options: { readO
       const labels = videoLabels(catalog, video);
       if (!publicVideoIndexable(video, labels)) continue;
       for (const name of new Set(labels.map(label => canonicalTagName(label.name)))) {
-        const group = groups.get(name); if (group) { group.count++; group.hasImage ||= Boolean(video.posterUrl); }
+        const group = groups.get(name); if (group) { group.count++; group.hasImage ||= Boolean(video.posterUrl); group.modifiedAt = newer(group.modifiedAt, videoModified(catalog, video)); }
       }
     }
     return [...groups.values()].map(group => ({ ...group, index: isIndexable({ type: "tag", permittedVideos: group.count, hasImage: group.hasImage }) }))
@@ -147,9 +154,9 @@ export function createPublicVideoService(deps: PublicVideoDeps, options: { readO
     const posts: { id: string; modifiedAt?: string }[] = [], accounts = new Map<string, { key: string; count: number; modifiedAt?: string }>();
     for (const video of rows) {
       const key = accountKey(video); if (!key) continue;
-      const record = c.records[video.id] ?? null, labels = videoLabels(c, video);
+      const labels = videoLabels(c, video);
       if (!publicVideoIndexable(video, labels)) continue;
-      const modifiedAt = record?.sourceHash === video.sourceHash ? record.labelPublishedAt ?? record.firstSavedAt ?? record.firstRankedAt ?? undefined : undefined;
+      const modifiedAt = videoModified(c, video);
       posts.push({ id: video.id, ...(modifiedAt ? { modifiedAt } : {}) });
       const account = accounts.get(key) ?? { key, count: 0 };
       account.count++;

@@ -41,6 +41,15 @@ const { createPublicVideoService } = require('../lib/public-video-service.ts');
   assert.deepEqual(td.topAuthors.map(a => [a.key, a.count]), [['a', 2], ['b', 1]]);
   const oneAuthor = createPublicVideoService({ catalog: { read: async () => catalogWithTag }, posts: async ids => tagRows.filter(r => ids.includes(r.id) && r.handle === 'a'), authorVideos: async () => [], candidates: async () => [], secret: async () => '' });
   assert.deepEqual((await oneAuthor.tag('タグ', 1)).topAuthors, [], 'a single author is not a ranking');
+  // Sitemap dates: record timestamp wins; without one the post's own creation time is used; tags take the newest of their videos.
+  const idx = [{ ...v('40', '2026-10-01T00:00:00Z', 1), handle: 'x', authorId: 'x' }, { ...v('41', '2026-10-05T00:00:00Z', 1), handle: 'x', authorId: 'x' }, { ...v('42', null, 1), handle: 'y', authorId: 'y' }];
+  const idxCatalog = { version: 1, revision: 1, labels: [{ id: 't1', name: 'タグ', active: true }], records: { 40: { id: '40', labelIds: ['t1'], sourceHash: 'h', labelPublishedAt: '2026-11-02T00:00:00Z' }, 42: { id: '42', labelIds: ['t1'], sourceHash: 'other', labelPublishedAt: '2026-11-09T00:00:00Z' } } };
+  const idxSvc = createPublicVideoService({ catalog: { read: async () => idxCatalog }, posts: async () => [], indexVideos: async () => idx, authorVideos: async () => [], candidates: async () => [], secret: async () => '' });
+  const ix = await idxSvc.indexable();
+  const mod = Object.fromEntries(ix.posts.map(p => [p.id, p.modifiedAt]));
+  assert.equal(mod['40'], '2026-11-02T00:00:00Z'); assert.equal(mod['41'], '2026-10-05T00:00:00Z', 'no record: creation time'); assert.equal(mod['42'], undefined, 'no usable date: no lastmod');
+  assert.equal(ix.tags.find(t => t.name === 'タグ').modifiedAt, '2026-11-02T00:00:00Z');
+  assert.equal(ix.accounts.find(a => a.key === 'x')?.modifiedAt, '2026-11-02T00:00:00Z');
   const tagPage = fs.readFileSync('app/tags/[name]/page.tsx', 'utf8');
   assert(tagPage.includes('d.profile && d.profile.total >= 3') && tagPage.includes('"@type": "CollectionPage"') && tagPage.includes('page === 1 ?'));
   const page = fs.readFileSync('app/accounts/[key]/page.tsx', 'utf8');
