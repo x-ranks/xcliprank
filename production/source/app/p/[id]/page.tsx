@@ -44,12 +44,12 @@ export default async function PostPage(props: Props) {
     ] }} />
     <PublicPostClose postId={v.id} returnTo={sourcePage ?? undefined} />
     <nav aria-label="現在位置"><Link href="/rising">twizou</Link> ／ <Link href={authorHref(v)!}>{v.authorName ?? v.handle ?? "投稿者"}</Link> ／ 動画</nav>
+    {accountKey(v) ? <div className="post-author-follow"><span className="post-author-name">投稿者：{v.authorName ?? v.handle ?? "投稿者"}</span><FollowButton accountKey={accountKey(v)!} compact /></div> : null}
     <h1>{postHeading(v)}</h1>
     <div className="public-post-player">
       <DirectPlaybackVideo trackQualifiedView engagementSourcePage={sourcePage} postId={v.id} src={v.videoUrl} poster={v.posterUrl ?? undefined} controls playsInline preload="metadata" aria-label={(v.authorName ?? v.handle ?? "投稿者") + "の動画プレーヤー"} style={{ width: "100%", maxHeight: "70vh", background: "#000" }} />
     </div>
 
-    {accountKey(v) ? <div className="post-author-follow"><span className="post-author-name">{v.authorName ?? v.handle ?? "投稿者"}</span><FollowButton accountKey={accountKey(v)!} /></div> : null}
     <div className="public-post-actions" aria-label="動画の操作">
       <VideoDownloadButton postId={v.id} showCaption={false} />
       <FavoriteButton id={v.id} />
