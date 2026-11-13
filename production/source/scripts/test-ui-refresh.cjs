@@ -16,11 +16,13 @@ const read = f => fs.readFileSync(path.join(root, f), 'utf8');
 assert(read('app/layout.tsx').includes('<BottomTabs />'));
 assert(read('app/components/SiteBrand.tsx').includes('className="site-search-icon"') && read('app/components/SiteBrand.tsx').includes('aria-label="動画を検索"'));
 // Video page: save, favorite, share, then a "more" menu holding original post / author page / report.
-const post = read('app/p/[id]/page.tsx'), at = s => post.indexOf(s);
+const page = read('app/p/[id]/page.tsx'), viewer = read('app/components/PublicDetailViewer.tsx'), post = read('app/components/PostActionBar.tsx'), at = s => post.indexOf(s);
+assert(page.includes('<PostActionBar video={v} />') && viewer.includes('<PostActionBar video={v} />'), 'page and in-list viewer share the same action bar');
+assert(viewer.indexOf('<DirectPlaybackVideo') < viewer.indexOf('<h1>{v.authorName') && viewer.indexOf('<h1>{v.authorName') < viewer.indexOf('post-author-follow') && viewer.indexOf('post-author-follow') < viewer.indexOf('<PostActionBar'), 'viewer: player, title, follow, actions');
 assert(at('<VideoDownloadButton') < at('<FavoriteButton') && at('<FavoriteButton') < at('share-to-x') && at('share-to-x') < at('post-more'));
 const menu = post.slice(at('post-more-menu'), at('</details>'));
 for (const s of ['元投稿をXで開く', '投稿者ページを見る', '/removal-request?post=']) assert(menu.includes(s), s + ' is in the more menu');
-assert(post.indexOf('<h1>') > at('public-post-player') && post.includes('className="post-breadcrumb"'));
+assert(page.indexOf('<h1>') > page.indexOf('public-post-player') && page.includes('className="post-breadcrumb"') && viewer.includes('className="post-breadcrumb"'));
 // Author page: three chips, videos before the long data section.
 const acc = read('app/accounts/[key]/page.tsx');
 assert(acc.includes('className="author-chips"') && acc.indexOf('<PublicVideoCards') < acc.indexOf('{dataSection}') && acc.indexOf('{dataSection}') < acc.indexOf('d.relatedAuthors'));
