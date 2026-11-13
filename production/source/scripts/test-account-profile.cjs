@@ -50,7 +50,18 @@ const { createPublicVideoService } = require('../lib/public-video-service.ts');
   assert.equal(mod['40'], '2026-11-02T00:00:00Z'); assert.equal(mod['41'], '2026-10-05T00:00:00Z', 'no record: creation time'); assert.equal(mod['42'], undefined, 'no usable date: no lastmod');
   assert.equal(ix.tags.find(t => t.name === 'タグ').modifiedAt, '2026-11-02T00:00:00Z');
   assert.equal(ix.accounts.find(a => a.key === 'x')?.modifiedAt, '2026-11-02T00:00:00Z');
+  // Related authors: same-tag authors, never the author itself, at least two or nothing.
+  const mk = (id, handle) => ({ ...v(id, '2026-11-0' + (Number(id) % 9 + 1) + 'T00:00:00Z', 10), handle, authorId: handle, authorName: handle.toUpperCase() });
+  const relRows = [mk('30', 'self'), mk('31', 'bob'), mk('32', 'bob'), mk('33', 'cat'), mk('34', 'dan')];
+  const relCatalog = { version: 1, revision: 1, labels: [{ id: 't1', name: 'タグ', active: true }], records: Object.fromEntries(relRows.map(r => [r.id, { id: r.id, labelIds: ['t1'], sourceHash: 'h', basis: 'manual', modelRevision: null, labelPublishedAt: '2026-11-12T00:00:00Z', saves: 0, firstSavedAt: null, firstRankedAt: null, receipts: [] }])) };
+  const relSvc = (rowsForPosts, own) => createPublicVideoService({ catalog: { read: async () => relCatalog }, posts: async ids => rowsForPosts.filter(r => ids.includes(r.id)), authorVideos: async () => own, candidates: async () => [], secret: async () => '' });
+  const rd = await relSvc(relRows, [relRows[0]]).account('self', 1);
+  assert.deepEqual(rd.relatedAuthors.map(a => [a.key, a.count]), [['bob', 2], ['cat', 1], ['dan', 1]]);
+  assert.deepEqual((await relSvc(relRows.slice(0, 2), [relRows[0]]).account('self', 1)).relatedAuthors, [], 'a single related author is not listed');
+  const failing = createPublicVideoService({ catalog: { read: async () => relCatalog }, posts: async () => { throw Error('db'); }, authorVideos: async () => [relRows[0]], candidates: async () => [], secret: async () => '' });
+  assert.deepEqual((await failing.account('self', 1)).relatedAuthors, [], 'failure shows nothing instead of breaking the page');
   const tagPage = fs.readFileSync('app/tags/[name]/page.tsx', 'utf8');
+  assert(fs.readFileSync('app/accounts/[key]/page.tsx', 'utf8').includes('d.relatedAuthors?.length'));
   assert(tagPage.includes('d.profile && d.profile.total >= 3') && tagPage.includes('"@type": "CollectionPage"') && tagPage.includes('page === 1 ?'));
   const page = fs.readFileSync('app/accounts/[key]/page.tsx', 'utf8');
   assert(page.includes('d.profile && d.profile.total >= 2') && page.includes('d.profile.measured >= 2'), 'thin or unmeasured accounts show no data block');
