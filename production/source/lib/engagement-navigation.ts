@@ -1,7 +1,7 @@
 // Public navigation policy only. No network, storage, server modules or side effects.
 const PUBLIC_PAGES = new Set([
   "/", "/rising", "/ranking/daily", "/ranking/weekly", "/reels", "/browse", "/accounts", "/tags",
-  "/discover", "/favorites", "/following", "/download", "/download-policy", "/privacy", "/terms", "/contact", "/copyright",
+  "/discover", "/favorites", "/following", "/download", "/download/iphone", "/download/android", "/download-policy", "/privacy", "/terms", "/contact", "/copyright",
   "/advertising-disclosure", "/removal-request",
 ]);
 

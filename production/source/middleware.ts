@@ -37,6 +37,8 @@ const PUBLIC_EXACT_PATHS = new Set([
   "/api/video-download",
   "/api/video-resolve",
   "/download",
+  "/download/iphone",
+  "/download/android",
   "/download-policy",
   "/api/engagement",
   "/api/engagement-stats",

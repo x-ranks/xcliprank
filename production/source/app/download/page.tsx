@@ -13,7 +13,7 @@ export const metadata: Metadata = {
 export default function DownloadPage() { return <><DownloadForm /><section className="download-guide" id="save-guide" aria-labelledby="save-guide-title">
   <h2 id="save-guide-title">iPhone・Androidで動画を保存する方法</h2>
   <p>まずは下の基本手順で保存してください。保存先やボタンの表示は、端末・ブラウザの設定によって異なります。</p>
-  <nav className="download-guide-nav" aria-label="保存方法の目次"><a href="#save-steps">基本手順</a><a href="#save-iphone">iPhone</a><a href="#save-android">Android</a><a href="#save-trouble">保存できないとき</a></nav>
+  <nav className="download-guide-nav" aria-label="保存方法の目次"><a href="#save-steps">基本手順</a><a href="#save-iphone">iPhone</a><a href="#save-android">Android</a><a href="#save-trouble">保存できないとき</a><Link href="/download/iphone">iPhone専用ガイド</Link><Link href="/download/android">Android専用ガイド</Link></nav>
   <section id="save-steps"><h3>投稿URLから保存する基本手順</h3>
     <ol><li>Xの投稿URLを入力し、保存の許可と注意事項を確認して「動画を確認する」を押します。</li><li>見つかった動画の「動画を保存」を押します。動画詳細ページから保存する場合は、この操作から始められます。</li><li>保存画面の注意事項を確認し、同意のチェックを入れて「動画を保存する」を押します。</li><li>受信が終わるまで待ち、ブラウザのダウンロード一覧で完了を確認します。</li></ol>
   </section>

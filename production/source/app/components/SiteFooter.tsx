@@ -15,6 +15,8 @@ export default function SiteFooter() {
         <Link prefetch={false} href="/accounts">投稿者一覧</Link>
         <Link prefetch={false} href="/tags">タグ一覧</Link>
         <Link prefetch={false} href="/months">月別ランキング</Link>
+        <Link prefetch={false} href="/download/iphone">iPhoneで動画保存</Link>
+        <Link prefetch={false} href="/download/android">Androidで動画保存</Link>
         <a href="https://x.com/twizou_rank" target="_blank" rel="noopener noreferrer">Xで新着情報</a>
         <Link prefetch={false} href="/privacy">プライバシー</Link>
         <Link prefetch={false} href="/terms">利用規約</Link>
