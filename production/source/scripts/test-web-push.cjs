@@ -97,6 +97,10 @@ const read = f => fs.readFileSync(f, 'utf8');
   assert(wp.readVapidConfig(lines)); assert(lines.PUSH_SEND_SECRET.length >= 24);
 
   // Wiring and safety.
+  // New routes are denied by middleware unless listed (this was missed once): every push route must be public there.
+  const middleware = read('middleware.ts');
+  for (const route of ['/api/push', '/api/push/send']) assert(middleware.includes(`"${route}",`), route + ' is in PUBLIC_EXACT_PATHS');
+  for (const dir of ['app/api/push/route.ts', 'app/api/push/send/route.ts', 'app/sw.js/route.ts']) assert(fs.existsSync(dir), dir);
   assert(read('app/following/page.tsx').includes('<PushToggle />'));
   const toggle = read('app/components/PushToggle.tsx'), client = read('lib/push-client.ts');
   assert(!/requestPermission/.test(toggle) && /requestPermission/.test(client), 'permission is asked only from the button handler path, never on load');
