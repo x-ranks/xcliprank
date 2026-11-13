@@ -3,7 +3,8 @@ export type IndexableKind =
   | { type: "post"; permitted: boolean; hasAuthor: boolean; hasDescription: boolean }
   | { type: "account"; permittedVideos: number }
   | { type: "tag"; permittedVideos: number; hasImage: boolean }
-  | { type: "tag-hub"; activeTags: number };
+  | { type: "tag-hub"; activeTags: number }
+  | { type: "month"; permittedVideos: number };
 
 export function isIndexable(value: IndexableKind): boolean {
   switch (value.type) {
@@ -11,5 +12,7 @@ export function isIndexable(value: IndexableKind): boolean {
     case "account": return value.permittedVideos >= 1;
     case "tag": return value.permittedVideos >= 3 && value.hasImage;
     case "tag-hub": return value.activeTags > 0;
+    // A month page is only worth indexing when it has enough posts to rank and summarise.
+    case "month": return value.permittedVideos >= 10;
   }
 }
