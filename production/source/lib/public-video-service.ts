@@ -75,6 +75,23 @@ export function createPublicVideoService(deps: PublicVideoDeps, options: { readO
     }
     return { authorCount: authors.size, latestAt, tags: [...tags.values()].sort((a, b) => b.count - a.count || a.name.localeCompare(b.name, "ja")).slice(0, 6) };
   }
+  // Authors whose videos carry the same tags as this author's newest tagged videos. Optional: any failure shows nothing.
+  async function relatedAuthors(catalog: Awaited<ReturnType<typeof readCatalog>>, matches: PublicVideo[], self: string) {
+    try {
+      const seeds = matches.filter(v => videoLabels(catalog, v).length).slice(0, 3);
+      const ids = [...new Set(seeds.flatMap(v => relatedIds(catalog, v.id, 30)))].slice(0, 90);
+      if (!ids.length) return [];
+      const own = new Set(matches.map(v => v.id)), tally = new Map<string, { key: string; name: string; count: number }>();
+      for (const v of await deps.posts(ids)) {
+        const key = accountKey(v); if (!key || key.toLowerCase() === self.toLowerCase() || own.has(v.id) || !v.eligible) continue;
+        // Only link to author pages that are allowed to be indexed (at least one permitted video).
+        if (!publicVideoIndexable(v, videoLabels(catalog, v))) continue;
+        const row = tally.get(key) ?? { key, name: v.authorName ?? v.handle ?? key, count: 0 }; row.count++; tally.set(key, row);
+      }
+      const rows = [...tally.values()].sort((a, b) => b.count - a.count || a.key.localeCompare(b.key)).slice(0, 6);
+      return rows.length >= 2 ? rows : [];
+    } catch { return []; }
+  }
   async function account(key: string, page = 1) {
     if (!/^(?:[a-zA-Z0-9_]{1,15}|id-[A-Za-z0-9_-]{1,64})$/.test(key) || !Number.isInteger(page) || page < 1) return null;
     // Resolve an account from its own current videos. The site-wide inventory can
@@ -86,7 +103,7 @@ export function createPublicVideoService(deps: PublicVideoDeps, options: { readO
     const totalPages = Math.max(1, Math.ceil(matches.length / 24));
     if (!matches.length || page > totalPages) return null;
     const profile = accountProfile(matches), byId = new Map(matches.map(v => [v.id, v]));
-    return { facts: hubFacts(matches, catalog), profile, topVideos: profile.top.flatMap(t => { const v = byId.get(t.id); return v ? [{ video: v, views: t.views }] : []; }),
+    return { facts: hubFacts(matches, catalog), profile, relatedAuthors: page === 1 ? await relatedAuthors(catalog, matches, key) : [], topVideos: profile.top.flatMap(t => { const v = byId.get(t.id); return v ? [{ video: v, views: t.views }] : []; }),
       handle: matches[0].handle, key, canonicalKey: accountKey(matches[0])!, name: matches[0].authorName ?? matches[0].handle ?? key,
       videos: matches.slice((page - 1) * 24, page * 24), page, totalPages, totalCount: matches.length,
       index: isIndexable({ type: "account", permittedVideos }) };
