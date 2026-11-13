@@ -13,6 +13,8 @@ const PUBLIC_EXACT_PATHS = new Set([
   "/api/discovery",
   "/discover",
   "/favorites",
+  "/following",
+  "/api/follow-feed",
   "/api/manual-ranking",
   "/api/public-label-admin",
   "/api/public-save-event",

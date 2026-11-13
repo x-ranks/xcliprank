@@ -73,5 +73,8 @@ const req = (body, headers = {}) => new Request('https://twizou.net/api/follow-f
   assert(read('app/components/SiteBrand.tsx').includes('href="/following"'));
   assert(read('app/following/page.tsx').includes('<FollowFeed />') && read('app/following/page.tsx').includes('index: false'));
   assert(read('app/components/FollowFeed.tsx').startsWith('"use client"') && read('app/components/FollowButton.tsx').startsWith('"use client"'));
+  // The public allow-list is deny-by-default: new routes answer 404 unless listed there.
+  const middleware = read('middleware.ts');
+  assert(middleware.includes('"/following",') && middleware.includes('"/api/follow-feed",'), 'new routes must be on the public allow-list');
   console.log('PASS FOLLOWS: local follows, NEW rule, request guard, feed order/cache/visibility, navigation and page wiring.');
 })().catch(e => { console.error(e); process.exitCode = 1; });
