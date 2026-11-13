@@ -1576,3 +1576,11 @@ html[data-age-confirmed="yes"] body.age-gate-open { overflow:auto; }
 .follow-new-note{padding:10px 12px;border:1px solid #8b3a3a;border-radius:10px;background:#2a1215}
 .follow-new{outline:2px solid #c04a4a;outline-offset:-2px;position:relative}
 .follow-new-badge{display:inline-block;margin:6px 0 0 8px;padding:2px 8px;border-radius:6px;background:#c04a4a;color:#fff;font-size:.75rem;font-weight:700}
+.public-author-profile{margin:16px 0;padding:14px 16px;border:1px solid #2b3744;border-radius:12px;background:#0d141b}
+.public-author-profile h2{margin:0 0 8px;font-size:1.1rem}
+.public-author-profile h3{margin:14px 0 6px;font-size:1rem}
+.public-author-profile dl{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:8px 16px;margin:0}
+.public-author-profile dl div{display:flex;flex-direction:column}
+.public-author-profile dt{font-size:.8rem;opacity:.75}
+.public-author-profile dd{margin:0;font-weight:700}
+.public-author-top{margin:0;padding-left:1.4em}

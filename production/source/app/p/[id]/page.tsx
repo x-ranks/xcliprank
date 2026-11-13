@@ -14,8 +14,9 @@ import VideoDownloadButton from "../../components/VideoDownloadButton";
 import FavoriteButton from "../../components/FavoriteButton";
 import PublicVideoCards from "../../components/PublicVideoCards";
 import StructuredData from "../../components/StructuredData";
+import FollowButton from "../../components/FollowButton";
 import PublicPostEngagement from "../../components/PublicPostEngagement";
-import { authorHref, originalHref, publicPostId, tagHref, publicVideoFacts } from "../../../lib/public-video-core";
+import { accountKey, authorHref, originalHref, publicPostId, tagHref, publicVideoFacts } from "../../../lib/public-video-core";
 import { readPublicDetailCore, readPublicRelated } from "../../../lib/public-video-server";
 import { shareVideoHref } from "../../../lib/share-video";
 export const dynamic = "force-dynamic";
@@ -55,6 +56,7 @@ export default async function PostPage(props: Props) {
       <Link href={`/removal-request?post=${v.id}`} prefetch={false} rel="nofollow">この動画を報告する</Link>
       <a href={originalHref(v)} target="_blank" rel="noopener noreferrer">元投稿をXで開く</a>
       {authorHref(v) ? <Link href={authorHref(v)!}>投稿者ページを見る</Link> : null}
+      {accountKey(v) ? <FollowButton accountKey={accountKey(v)!} /> : null}
     </div>
     <PostTags detail={d} />
     {facts.length ? <dl className="public-video-facts" aria-label="動画の情報">{facts.map(fact => <div key={fact.label}><dt>{fact.label}</dt><dd>{fact.dateTime ? <time dateTime={fact.dateTime}>{fact.value}</time> : fact.value}</dd></div>)}</dl> : null}

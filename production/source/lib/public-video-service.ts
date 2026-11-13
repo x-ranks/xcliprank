@@ -1,6 +1,6 @@
 import { matchingVideoTechnical, validVideoTechnical, type VideoTechnical } from "./video-technical";
 import { createPublicCatalog } from "./public-catalog-store";
-import { accountKey, authorHref, labelDefinition, publicPostId, relatedIds, videoLabels, videoMetadata, publicVideoIndexable, type PublicVideo } from "./public-video-core";
+import { accountKey, accountProfile, authorHref, labelDefinition, publicPostId, relatedIds, videoLabels, videoMetadata, publicVideoIndexable, type PublicVideo } from "./public-video-core";
 import { verifySaveReceipt } from "./public-save-receipt";
 import { isIndexable } from "./indexability";
 import { canonicalTagName } from "./tag-aliases";
@@ -85,7 +85,9 @@ export function createPublicVideoService(deps: PublicVideoDeps, options: { readO
     const permittedVideos = matches.filter(v => publicVideoIndexable(v, videoLabels(catalog, v))).length;
     const totalPages = Math.max(1, Math.ceil(matches.length / 24));
     if (!matches.length || page > totalPages) return null;
-    return { facts: hubFacts(matches, catalog), handle: matches[0].handle, key, canonicalKey: accountKey(matches[0])!, name: matches[0].authorName ?? matches[0].handle ?? key,
+    const profile = accountProfile(matches), byId = new Map(matches.map(v => [v.id, v]));
+    return { facts: hubFacts(matches, catalog), profile, topVideos: profile.top.flatMap(t => { const v = byId.get(t.id); return v ? [{ video: v, views: t.views }] : []; }),
+      handle: matches[0].handle, key, canonicalKey: accountKey(matches[0])!, name: matches[0].authorName ?? matches[0].handle ?? key,
       videos: matches.slice((page - 1) * 24, page * 24), page, totalPages, totalCount: matches.length,
       index: isIndexable({ type: "account", permittedVideos }) };
   }

@@ -92,3 +92,44 @@ export function publicVideoFacts(video: PublicVideo, technical?: { durationSecon
   }
   return facts;
 }
+
+// Account page facts (computed only from the videos already shown; nothing is estimated).
+export type AccountProfile = {
+  total: number;
+  firstAt: string | null;
+  latestAt: string | null;
+  /** Videos whose view count is known, their sum and the most viewed ones. Empty when fewer than two are known. */
+  measured: number;
+  viewsTotal: number;
+  top: { id: string; views: number }[];
+  /** Posts per month in Japan time, newest month first, last six months that have at least one post. */
+  months: { month: string; count: number }[];
+};
+
+const profileTime = (value: string | null) => { const t = value ? Date.parse(value) : NaN; return Number.isFinite(t) ? t : null; };
+const jstMonth = (t: number) => new Date(t + 9 * 3600000).toISOString().slice(0, 7);
+
+/** Facts computed only from the videos already shown on the account; nothing is estimated. */
+export function accountProfile(videos: PublicVideo[]): AccountProfile {
+  const seen = new Set<string>();
+  const rows = videos.filter(v => !seen.has(v.id) && !!seen.add(v.id));
+  const times = rows.map(v => profileTime(v.createdAt)).filter((t): t is number => t !== null);
+  const known = rows.filter(v => typeof v.views === "number" && Number.isFinite(v.views) && v.views >= 0);
+  const months = new Map<string, number>();
+  for (const t of times) months.set(jstMonth(t), (months.get(jstMonth(t)) ?? 0) + 1);
+  const enough = known.length >= 2;
+  return {
+    total: rows.length,
+    firstAt: times.length ? new Date(Math.min(...times)).toISOString() : null,
+    latestAt: times.length ? new Date(Math.max(...times)).toISOString() : null,
+    measured: enough ? known.length : 0,
+    viewsTotal: enough ? known.reduce((sum, v) => sum + (v.views as number), 0) : 0,
+    top: enough ? [...known].sort((a, b) => (b.views as number) - (a.views as number) || b.id.localeCompare(a.id)).slice(0, 3).map(v => ({ id: v.id, views: v.views as number })) : [],
+    months: [...months.entries()].sort((a, b) => b[0].localeCompare(a[0])).slice(0, 6).map(([month, count]) => ({ month, count })),
+  };
+}
+
+// Formatters are created on first use so importing this module allocates none.
+let jstDate: Intl.DateTimeFormat | undefined, plainNumber: Intl.NumberFormat | undefined;
+export const profileDate = (value: string | null) => { const t = profileTime(value); return t === null ? null : (jstDate ??= new Intl.DateTimeFormat("ja-JP", { timeZone: "Asia/Tokyo", year: "numeric", month: "long", day: "numeric" })).format(t); };
+export const profileNumber = (value: number) => (plainNumber ??= new Intl.NumberFormat("ja-JP")).format(value);
