@@ -64,7 +64,7 @@ const { createPublicVideoService } = require('../lib/public-video-service.ts');
   assert(fs.readFileSync('app/accounts/[key]/page.tsx', 'utf8').includes('d.relatedAuthors?.length'));
   assert(tagPage.includes('d.profile && d.profile.total >= 3') && tagPage.includes('"@type": "CollectionPage"') && tagPage.includes('page === 1 ?'));
   const page = fs.readFileSync('app/accounts/[key]/page.tsx', 'utf8');
-  assert(page.includes('d.profile && d.profile.total >= 2') && page.includes('d.profile.measured >= 2'), 'thin or unmeasured accounts show no data block');
+  assert(page.includes('d.profile && d.profile.total >= 2') && page.includes('prof.measured >= 2'), 'thin or unmeasured accounts show no data block');
   assert(page.includes('"@type": "CollectionPage"') && page.includes('"@type": "BreadcrumbList"') && page.includes('page === 1 ?'));
   console.log('PASS ACCOUNT PROFILE: duplicates, JST months, no stats from a single number, bad dates ignored, service output, page wiring.');
 })().catch(e => { console.error(e); process.exitCode = 1; });

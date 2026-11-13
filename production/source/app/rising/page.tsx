@@ -31,7 +31,7 @@ export default async function RisingPage() {
     <nav className="ranking-page-nav" aria-label="ランキングを選択">
       <Link prefetch={false} href="/rising" className="active" aria-current="page">急上昇</Link>
       <Link prefetch={false} href="/">新着</Link><Link prefetch={false} href="/ranking/daily">24時間</Link><Link prefetch={false} href="/ranking/weekly">週間</Link>
-      <Link prefetch={false} href="/reels">リール</Link><Link prefetch={false} href="/download">動画保存</Link>
+      <Link prefetch={false} href="/months">月別</Link><Link prefetch={false} href="/reels">リール</Link><Link prefetch={false} href="/download">動画保存</Link>
     </nav>
     <NewSinceVisit ids={posts.map(post => String(post.x_post_id))} />
     {posts.length ? <div className="video-grid">{posts.map((post, index) => <article className="video-card" key={post.x_post_id}>
