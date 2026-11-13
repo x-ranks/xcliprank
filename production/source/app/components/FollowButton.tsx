@@ -3,7 +3,7 @@ import { useEffect, useState } from "react";
 import { FOLLOW_EVENT, FOLLOW_LIMIT, readFollows, setFollow, validAccountKey } from "../../lib/follows";
 
 /** Follows an account in this browser only. The key is the public account key (lower-case). */
-export default function FollowButton({ accountKey }: { accountKey: string }) {
+export default function FollowButton({ accountKey, compact = false }: { accountKey: string; compact?: boolean }) {
   const key = accountKey.toLowerCase();
   const [active, setActive] = useState(false), [error, setError] = useState(false);
   useEffect(() => {
@@ -17,5 +17,5 @@ export default function FollowButton({ accountKey }: { accountKey: string }) {
     catch { setError(true); }
   }}>{active ? "✓ フォロー中" : "＋ フォロー"}</button>
     {error && <span role="status">フォローできませんでした。上限{FOLLOW_LIMIT}人またはブラウザの保存設定をご確認ください。</span>}
-    <a className="follow-feed-link" href="/following">フォロー中の新着を見る</a></span>;
+    {compact ? null : <a className="follow-feed-link" href="/following">フォロー中の新着を見る</a>}</span>;
 }

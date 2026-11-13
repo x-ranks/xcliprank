@@ -70,8 +70,8 @@ const req = (body, headers = {}) => new Request('https://twizou.net/api/follow-f
   // Wiring in pages.
   const read = f => fs.readFileSync(f, 'utf8');
   assert(read('app/accounts/[key]/page.tsx').includes('<FollowButton accountKey={d.canonicalKey} />'));
-  assert(read('app/p/[id]/page.tsx').includes('<FollowButton accountKey={accountKey(v)!} />'), 'video page has the follow button');
-  { const src = read('app/p/[id]/page.tsx'); assert(src.indexOf('post-author-follow') > src.indexOf('public-post-player') && src.indexOf('post-author-follow') < src.indexOf('className="public-post-actions"'), 'follow sits right under the player, above the action grid'); }
+  assert(read('app/p/[id]/page.tsx').includes('<FollowButton accountKey={accountKey(v)!} compact />'), 'video page has the follow button');
+  { const src = read('app/p/[id]/page.tsx'); assert(src.indexOf('post-author-follow') > src.indexOf('aria-label="現在位置"') && src.indexOf('post-author-follow') < src.indexOf('public-post-player'), 'follow sits above the player so a tall video cannot push it off screen'); }
   assert(read('app/components/SiteBrand.tsx').includes('href="/following"'));
   assert(read('app/following/page.tsx').includes('<FollowFeed />') && read('app/following/page.tsx').includes('index: false'));
   assert(read('app/components/FollowFeed.tsx').startsWith('"use client"') && read('app/components/FollowButton.tsx').startsWith('"use client"'));
