@@ -2,7 +2,7 @@
 const fs=require('fs'),p=require('path'),assert=require('assert/strict'),ts=require('typescript');
 const root=p.resolve(__dirname,'..'),{NextRequest}=require('next/server');
 function load(file,resolve=require){const m={exports:{}};new Function('require','module','exports',ts.transpileModule(fs.readFileSync(p.join(root,file),'utf8'),{compilerOptions:{module:ts.ModuleKind.CommonJS,target:ts.ScriptTarget.ES2022,esModuleInterop:true,jsx:ts.JsxEmit.ReactJSX}}).outputText)(resolve,m,m.exports);return m.exports;}
-const middleware=load('middleware.ts'),previous=process.env.NODE_ENV;process.env.NODE_ENV='production';
+const middleware=load('middleware.ts',n=>n==='./lib/edge-cache'?load('lib/edge-cache.ts'):require(n)),previous=process.env.NODE_ENV;process.env.NODE_ENV='production';
 try{
  for(const path of ['/','/rising','/ranking/daily','/ranking/weekly','/reels','/download','/p/2110660690478301409','/accounts/fixture','/tags/test','/api/video-playback-url?postId=123']){
   const response=middleware.middleware(new NextRequest('https://twizou.net'+path));assert.equal(response.status,200);assert.equal(response.headers.get('Referrer-Policy'),'same-origin',path);

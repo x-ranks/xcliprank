@@ -13,7 +13,7 @@ function permitted(url){const matches=rules.filter(r=>{const end=r.path.endsWith
 for(const url of ['/','/rising','/p/2061469959365280142','/api/video-playback-url','/api/video-playback-url?postId=2061469959365280142','/api/video-playback-url?postId=22&extra=1'])assert(permitted(url),url);
 for(const url of ['/api/video-playback-url-admin','/api/video-playback-url/private','/api/video?url=x','/api/engagement','/api/public-label-admin','/api/removal-requests','/api/video-download','/review','/ranking-admin'])assert(!permitted(url),url);
 const previous=process.env.NODE_ENV;process.env.NODE_ENV='production';
-try{const response=load('middleware.ts').middleware(new NextRequest('https://twizou.net/api/video-playback-url?postId=22'));assert.equal(response.status,200);assert.equal(response.headers.get('X-Robots-Tag'),'noindex, nofollow, noarchive');}finally{if(previous===undefined)delete process.env.NODE_ENV;else process.env.NODE_ENV=previous;}
+try{const response=load('middleware.ts',n=>n==='./lib/edge-cache'?load('lib/edge-cache.ts'):require(n)).middleware(new NextRequest('https://twizou.net/api/video-playback-url?postId=22'));assert.equal(response.status,200);assert.equal(response.headers.get('X-Robots-Tag'),'noindex, nofollow, noarchive');}finally{if(previous===undefined)delete process.env.NODE_ENV;else process.env.NODE_ENV=previous;}
 const layout=load('app/layout.tsx',n=>{
  if(n==='./globals.css')return{};
  if(n.endsWith('PublicDetailViewer'))return{__esModule:true,default:()=>null};
