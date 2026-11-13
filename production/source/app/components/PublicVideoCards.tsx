@@ -3,7 +3,7 @@ import PublicThumbnail from "./PublicThumbnail";
 import PublicPostLink from "./PublicPostLink";
 import PublicListRestore from "./PublicListRestore";
 import FavoriteButton from "./FavoriteButton";
-import { authorHref, type PublicVideo } from "../../lib/public-video-core";
+import { authorHref, cardDate, type PublicVideo } from "../../lib/public-video-core";
 
 function excerpt(text: string | null): string {
   return Array.from(text?.replace(/\s+/g, " ").trim() ?? "").slice(0, 120).join("");
@@ -14,6 +14,7 @@ export default function PublicVideoCards({ videos, returnTo = "/", nativeNavigat
     const author = v.authorName?.trim() || (v.handle ? `@${v.handle}` : "投稿者");
     const summary = excerpt(v.text);
     const authorPage = authorHref(v);
+    const posted = cardDate(v.createdAt);
     return <article className="video-card" key={v.id}>
       <PublicPostLink id={v.id} returnTo={returnTo} nativeNavigation={nativeNavigation} ariaLabel={`${author}の動画を開く${summary ? `：${summary}` : ""}`} style={{ display: "block", color: "inherit", textDecoration: "none" }}>
         {v.posterUrl
@@ -26,7 +27,7 @@ export default function PublicVideoCards({ videos, returnTo = "/", nativeNavigat
           {v.likes != null && <span className="public-card-x-likes">いいね {v.likes.toLocaleString()}</span>}
         </p>}
       </PublicPostLink>
-      <p style={{ padding: "0 11px 11px" }}>{authorPage ? <Link prefetch={false} href={authorPage}>{author}</Link> : author}</p><FavoriteButton id={v.id} />
+      <p className="public-card-byline" style={{ padding: "0 11px 11px" }}>{authorPage ? <Link prefetch={false} href={authorPage}>{author}</Link> : author}{posted && <time className="public-card-date" dateTime={posted.iso}>{posted.text}</time>}</p><FavoriteButton id={v.id} />
     </article>;
   })}</div>;
 }

@@ -30,6 +30,8 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     { url: `${SITE_URL}/ranking/weekly` },
     { url: `${SITE_URL}/rising` },
     { url: `${SITE_URL}/download` },
+    { url: `${SITE_URL}/download/iphone` },
+    { url: `${SITE_URL}/download/android` },
     ...(months.length ? [{ url: `${SITE_URL}/months`, ...lastmod(newest(months)) }] : []),
     ...months.map(m => ({ url: `${SITE_URL}/months/${m.month}`, ...lastmod(m.modifiedAt) })),
     ...(isIndexable({ type: "tag-hub", activeTags: index.tags.filter(tag => tag.count > 0).length }) ? [{ url: `${SITE_URL}/tags`, ...lastmod(newest(index.tags.filter(tag => tag.count > 0))) }] : []),

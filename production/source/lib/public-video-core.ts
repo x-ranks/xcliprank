@@ -22,6 +22,19 @@ export function tagHref(label: PublicLabel) { return "/tags/" + encodeURICompone
 const POST_DATE_FORMAT = new Intl.DateTimeFormat("ja-JP", { timeZone: "Asia/Tokyo", year: "numeric", month: "2-digit", day: "2-digit" });
 const SUMMARY_DATE_FORMAT = new Intl.DateTimeFormat("ja-JP", { timeZone: "Asia/Tokyo", year: "numeric", month: "long", day: "numeric" });
 const PUBLIC_NUMBER_FORMAT = new Intl.NumberFormat("ja-JP");
+// Short post date for list cards (JST). Same year -> "11/10", other year -> "2025/11/10". Reuses POST_DATE_FORMAT.
+function jstDateParts(date: Date) {
+  const out: Record<string, string> = {};
+  for (const part of POST_DATE_FORMAT.formatToParts(date)) out[part.type] = part.value;
+  return { year: out.year, month: String(Number(out.month)), day: String(Number(out.day)) };
+}
+export function cardDate(createdAt: string | null | undefined, now: Date = new Date()): { text: string; iso: string } | null {
+  if (!createdAt) return null;
+  const date = new Date(createdAt);
+  if (Number.isNaN(date.getTime())) return null;
+  const p = jstDateParts(date);
+  return { text: p.year === jstDateParts(now).year ? `${p.month}/${p.day}` : `${p.year}/${p.month}/${p.day}`, iso: date.toISOString() };
+}
 function durationText(value: { durationSeconds: number } | null | undefined) {
   if (!value || !Number.isFinite(value.durationSeconds) || value.durationSeconds <= 0) return null;
   const seconds = Math.max(1, Math.round(value.durationSeconds));

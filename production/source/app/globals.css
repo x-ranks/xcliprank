@@ -1671,3 +1671,12 @@ html[data-age-confirmed="yes"] body.age-gate-open { overflow:auto; }
   .ranking-page-header { margin-bottom:6px; }
   .ranking-page-title { font-size:20px; margin:4px 0; }
 }
+
+/* Card byline (author + post date) and device save guides */
+.public-card-byline { display:flex; align-items:baseline; gap:8px; min-width:0; }
+.public-card-byline > a { min-width:0; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
+.public-card-date { margin-left:auto; flex:none; color:#8fa0b2; font-size:12px; }
+.device-guide-page .download-guide { padding:0; margin-top:8px; }
+.device-guide-cta { margin:18px 0; }
+.device-guide-cta a { display:inline-flex; align-items:center; justify-content:center; min-height:48px; padding:10px 22px; text-decoration:none; }
+.device-guide-page h2 { color:#f6f8fb; font-size:19px; line-height:1.5; margin:0 0 12px; }

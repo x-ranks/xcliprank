@@ -51,7 +51,7 @@ assert.match(compact, /href="\/rising"/);
 const Cards = load('app/components/PublicVideoCards.tsx', name => {
   if (name === 'next/link') return anchor;
   if (name.endsWith('PublicPostLink')) return ({ children, id }) => React.createElement('a', { href: '/p/' + id }, children);
-  if (name.endsWith('public-video-core')) return { authorHref: () => '/accounts/example' };
+  if (name.endsWith('public-video-core')) return { authorHref: () => '/accounts/example', cardDate: () => null };
   if (name.startsWith('./')) return () => null;
   return require(name);
 }).default;

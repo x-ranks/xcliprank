@@ -8,7 +8,7 @@ async function main(){
  assert.deepEqual(initial.rankingClientRows([raw]),[{x_post_id:'123',author_username:'fixture',bookmarks:0,has_video:true}]);
  const client=fs.readFileSync(p.join(root,'app/components/RankingClient.tsx'),'utf8');assert(!client.includes('blockSignature'));assert(client.includes('posts.filter(p => !isUnavailablePost(p, blocked))'),'Current exclusions are still filtered locally');
  const Link=({href,prefetch,children,...props})=>React.createElement('a',{href,...props},children);
- const cards=load('app/components/PublicVideoCards.tsx',n=>n==='next/link'?Link:n.endsWith('PublicPostLink')?({id,children})=>React.createElement('a',{href:'/p/'+id},children):n.endsWith('PublicListRestore')?()=>null:n.endsWith('public-video-core')?{authorHref:()=>'/accounts/fixture'}:require(n)).default;
+ const cards=load('app/components/PublicVideoCards.tsx',n=>n==='next/link'?Link:n.endsWith('PublicPostLink')?({id,children})=>React.createElement('a',{href:'/p/'+id},children):n.endsWith('PublicListRestore')?()=>null:n.endsWith('public-video-core')?{authorHref:()=>'/accounts/fixture',cardDate:()=>null}:require(n)).default;
  const html=renderToStaticMarkup(React.createElement(cards,{videos:[{id:'123',handle:'fixture',authorName:'Fixture',posterUrl:null,text:null,views:0,likes:0,bookmarks:0}]}));assert(!html.includes('Xで共有'));assert(html.includes('/accounts/fixture'));assert(html.includes('/p/123'));
  assert(!fs.readFileSync(p.join(root,'app/rising/page.tsx'),'utf8').includes('Xで共有'));
  const css=fs.readFileSync(p.join(root,'app/globals.css'),'utf8');assert(css.includes('min-height:44px'));assert(css.includes('grid-template-columns:repeat(3,minmax(0,1fr))'));
