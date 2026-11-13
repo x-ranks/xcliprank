@@ -32,6 +32,17 @@ const { createPublicVideoService } = require('../lib/public-video-service.ts');
   const svc = createPublicVideoService({ catalog: { read: async () => ({ version: 1, revision: 1, labels: [], records: {} }) }, posts: async () => [], authorVideos: async () => rows, candidates: async () => [], secret: async () => '' });
   const d = await svc.account('a', 1);
   assert.equal(d.profile.total, 3); assert.deepEqual(d.topVideos.map(t => [t.video.id, t.views]), [['11', 9000], ['10', 500], ['12', 20]]);
+  // Tag service output: profile, top authors (only when at least two) and top videos.
+  const tagRows = [{ ...v('20', '2026-11-12T00:00:00Z', 300), handle: 'a', authorId: '1' }, { ...v('21', '2026-11-11T00:00:00Z', 4000), handle: 'a', authorId: '1' }, { ...v('22', '2026-11-10T00:00:00Z', 50), handle: 'b', authorId: '2', authorName: 'B' }];
+  const catalogWithTag = { version: 1, revision: 1, labels: [{ id: 't1', name: 'タグ', active: true }], records: Object.fromEntries(tagRows.map(r => [r.id, { id: r.id, labelIds: ['t1'], sourceHash: 'h', basis: 'manual', modelRevision: null, labelPublishedAt: '2026-11-12T00:00:00Z', saves: 0, firstSavedAt: null, firstRankedAt: null, receipts: [] }])) };
+  const tagSvc = createPublicVideoService({ catalog: { read: async () => catalogWithTag }, posts: async ids => tagRows.filter(r => ids.includes(r.id)), authorVideos: async () => [], candidates: async () => [], secret: async () => '' });
+  const td = await tagSvc.tag('タグ', 1);
+  assert.equal(td.profile.total, 3); assert.deepEqual(td.topVideos.map(t => t.video.id), ['21', '20', '22']);
+  assert.deepEqual(td.topAuthors.map(a => [a.key, a.count]), [['a', 2], ['b', 1]]);
+  const oneAuthor = createPublicVideoService({ catalog: { read: async () => catalogWithTag }, posts: async ids => tagRows.filter(r => ids.includes(r.id) && r.handle === 'a'), authorVideos: async () => [], candidates: async () => [], secret: async () => '' });
+  assert.deepEqual((await oneAuthor.tag('タグ', 1)).topAuthors, [], 'a single author is not a ranking');
+  const tagPage = fs.readFileSync('app/tags/[name]/page.tsx', 'utf8');
+  assert(tagPage.includes('d.profile && d.profile.total >= 3') && tagPage.includes('"@type": "CollectionPage"') && tagPage.includes('page === 1 ?'));
   const page = fs.readFileSync('app/accounts/[key]/page.tsx', 'utf8');
   assert(page.includes('d.profile && d.profile.total >= 2') && page.includes('d.profile.measured >= 2'), 'thin or unmeasured accounts show no data block');
   assert(page.includes('"@type": "CollectionPage"') && page.includes('"@type": "BreadcrumbList"') && page.includes('page === 1 ?'));
