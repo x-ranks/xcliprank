@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
+import { EDGE_CACHE_CONTROL, edgeCacheable } from "./lib/edge-cache";
 
 const CANONICAL_HOST = "twizou.net";
 const REDIRECT_HOSTS = new Set([
@@ -116,6 +117,9 @@ export function middleware(request: NextRequest) {
   if (isPublicPath(request.nextUrl.pathname)) {
     const response = NextResponse.next();
     response.headers.set("Referrer-Policy", "same-origin");
+    if (edgeCacheable(request.method, request.nextUrl.pathname, request.headers.get("user-agent"), request.headers.get("x-twizou-verified-googlebot"))) {
+      response.headers.set("Cache-Control", EDGE_CACHE_CONTROL);
+    }
 
     if (
       request.nextUrl.pathname.startsWith("/api/") ||
