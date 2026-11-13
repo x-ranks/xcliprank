@@ -1584,3 +1584,10 @@ html[data-age-confirmed="yes"] body.age-gate-open { overflow:auto; }
 .public-author-profile dt{font-size:.8rem;opacity:.75}
 .public-author-profile dd{margin:0;font-weight:700}
 .public-author-top{margin:0;padding-left:1.4em}
+
+/* 2026-11-13: follow button directly under the player, visible on phones without scrolling. */
+.post-author-follow{display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:6px 12px;margin:12px 0 0;padding:10px 12px;border:1px solid #2f3b48;border-radius:12px;background:#121a22}
+.post-author-follow .post-author-name{font-weight:700;min-width:0;flex:1 1 8em}
+.post-author-follow .follow-control{margin:0;flex:0 1 auto;justify-content:flex-end}
+.post-author-follow .follow-button{min-height:44px;padding:8px 20px}
+.post-author-follow .follow-feed-link{flex-basis:100%;text-align:right}

@@ -49,6 +49,7 @@ export default async function PostPage(props: Props) {
       <DirectPlaybackVideo trackQualifiedView engagementSourcePage={sourcePage} postId={v.id} src={v.videoUrl} poster={v.posterUrl ?? undefined} controls playsInline preload="metadata" aria-label={(v.authorName ?? v.handle ?? "投稿者") + "の動画プレーヤー"} style={{ width: "100%", maxHeight: "70vh", background: "#000" }} />
     </div>
 
+    {accountKey(v) ? <div className="post-author-follow"><span className="post-author-name">{v.authorName ?? v.handle ?? "投稿者"}</span><FollowButton accountKey={accountKey(v)!} /></div> : null}
     <div className="public-post-actions" aria-label="動画の操作">
       <VideoDownloadButton postId={v.id} showCaption={false} />
       <FavoriteButton id={v.id} />
@@ -56,7 +57,6 @@ export default async function PostPage(props: Props) {
       <Link href={`/removal-request?post=${v.id}`} prefetch={false} rel="nofollow">この動画を報告する</Link>
       <a href={originalHref(v)} target="_blank" rel="noopener noreferrer">元投稿をXで開く</a>
       {authorHref(v) ? <Link href={authorHref(v)!}>投稿者ページを見る</Link> : null}
-      {accountKey(v) ? <FollowButton accountKey={accountKey(v)!} /> : null}
     </div>
     <PostTags detail={d} />
     {facts.length ? <dl className="public-video-facts" aria-label="動画の情報">{facts.map(fact => <div key={fact.label}><dt>{fact.label}</dt><dd>{fact.dateTime ? <time dateTime={fact.dateTime}>{fact.value}</time> : fact.value}</dd></div>)}</dl> : null}
