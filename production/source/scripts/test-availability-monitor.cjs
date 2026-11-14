@@ -43,7 +43,7 @@ const missing=()=>Response.json({code:404,message:'NOT_FOUND'},{status:404});
    providerCalls++;const tail=decodeURIComponent(url.split('/').at(-1));
    if(url.includes('/profile/'))return Response.json({...profile,user:{...profile.user,id:tail.slice(3)}});
    const row=many.find(p=>p.x_post_id===tail),body=publicPost(tail);body.status.author.id=row.author_id;return Response.json(body);
-  }});assert.equal(stats.author_checked,12);assert.equal(stats.post_checked,100);assert.equal(providerCalls,112);assert.equal(pauseCalls,112);
+  }});assert.equal(stats.author_checked,40);assert.equal(stats.post_checked,160);assert.equal(providerCalls,200);assert.equal(pauseCalls,200);
   const migrated=await dir();await writeAuthorState({version:1,entries:{'id:123':{status:'suspended',checkedAt:time,confirmedAt:time,nextCheckAt:time+60000}},cooldownUntil:0},migrated);
   time+=3*HOUR;stats=await scanAvailabilityStatuses(async()=>[post('7777')],{...opts,directory:migrated});assert.equal(stats.author_checked,0);assert.equal(stats.post_checked,0);assert((await unavailableKeys(migrated)).has('id:123'));
   const outage=await dir(),two=[post('6001'),post('6000')];const all404=async url=>url.includes('/profile/')?Response.json(profile):missing();await scanAvailabilityStatuses(async()=>two,{...opts,directory:outage,fetcher:all404});

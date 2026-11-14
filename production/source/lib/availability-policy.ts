@@ -7,11 +7,13 @@ export const PRIORITY_RECHECK_INTERVAL = HOUR;
 export const POST_RECHECK_INTERVAL = 6 * HOUR;
 export const MISSING_CONFIRM_INTERVAL = HOUR;
 export const AUTHOR_RECHECK_INTERVAL = 6 * HOUR;
-export const AUTHOR_BATCH_LIMIT = 12;
-export const POST_BATCH_LIMIT = 100;
+// Per hourly run: 160 post checks (up to 85 for the current top rankings, the rest for the full rotation) and 40 authors.
+export const AUTHOR_BATCH_LIMIT = 40;
+export const POST_BATCH_LIMIT = 160;
+export const PRIORITY_BATCH_LIMIT = 85;
 export const REQUEST_SPACING = 5000;
-export const MONITOR_REQUEST_MIN_MS = 8000;
-export const MONITOR_REQUEST_MAX_MS = 20000;
+export const MONITOR_REQUEST_MIN_MS = 5000;
+export const MONITOR_REQUEST_MAX_MS = 12000;
 export const monitorRequestDelayMs = () => randomInt(MONITOR_REQUEST_MIN_MS, MONITOR_REQUEST_MAX_MS + 1);
 export const pauseMonitorRequest = () => new Promise<void>(resolve => setTimeout(resolve, monitorRequestDelayMs()));
 export const FAILURE_COOLDOWN = 6 * HOUR;
