@@ -29,7 +29,8 @@ export function classifyPostResponse(post: PostIdentity, http: number, body: any
   if (status.author.protected || status.unavailable === true || status.withheld === true || status.is_private === true) return "hidden";
   // A public text response alone cannot prove that the original video is available.
   const videos = Array.isArray(status.media?.videos) ? status.media.videos : status.media?.all;
-  if (!Array.isArray(videos)) return "unknown";
+  // No media at all (e.g. a quote whose video belonged to a since-deleted account; verified on X 2026-11-14): nothing to play.
+  if (!Array.isArray(videos)) return status.media == null ? "hidden" : "unknown";
   const playableUrl = (value: unknown) => {
     if (typeof value !== "string" || value.length > 4096) return false;
     try { const url = new URL(value); return url.protocol === "https:" && url.hostname === "video.twimg.com" &&
@@ -59,6 +60,6 @@ export function explainUnknownPost(post: PostIdentity, http: number, body: any):
   const returned = authorKey({ author_id: status.author.id, author_username: status.author.screen_name }), expected = authorKey(post);
   if (!expected || !(expected.startsWith("id:") ? returned === expected : String(status.author.screen_name ?? "").toLowerCase() === expected.slice(5))) return "author_mismatch";
   const videos = Array.isArray(status.media?.videos) ? status.media.videos : status.media?.all;
-  if (!Array.isArray(videos)) return "no_media_list";
+  if (!Array.isArray(videos)) return status.media == null ? "no_media" : "media_shape";
   return "other";
 }
