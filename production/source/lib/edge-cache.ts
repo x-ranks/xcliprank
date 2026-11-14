@@ -2,7 +2,7 @@
 // Never for crawlers: the verified-Googlebot header and any "google" user agent get the normal uncached response, so a
 // cached human page can never be served to Googlebot (and the reverse).
 export const EDGE_CACHE_CONTROL = "public, max-age=0, s-maxage=60, stale-while-revalidate=300";
-const EXACT = new Set(["/rising", "/browse", "/months", "/reels"]);
+const EXACT = new Set(["/rising", "/browse", "/months", "/reels", "/accounts"]);
 const PREFIXES = ["/ranking/", "/tags/", "/months/", "/accounts/"];
 export function edgeCacheable(method: string, pathname: string, userAgent: string | null, verifiedGooglebot: string | null): boolean {
   if (method !== "GET" && method !== "HEAD") return false;
