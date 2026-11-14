@@ -11,12 +11,14 @@ import { canDownloadPost } from "./video-download";
 import { createPublicCatalog } from "./public-catalog-store";
 import { publicCatalogDirectory, publicSaveSecret } from "./public-save-secret";
 import { createPublicVideoService } from "./public-video-service";
+import { createStaleCache } from "./stale-cache";
 import { publicPostId, type PublicVideo } from "./public-video-core";
 import { eligibleManualXIds } from "./manual-x-permissions";
 import { readManualState } from "./manual-ranking";
 const fields = "x_post_id,author_id,author_username,author_name,text,preview_image_url,video_url,created_at,views,likes,bookmarks,is_visible,moderation_blocked,review_required,content_category,adult_tier,manual_tier";
 // Cache the bounded inventory in this server process so sitemap requests do not rescan Supabase.
-let indexCache: { until: number; authorFingerprint: string; value: Promise<PublicVideo[]> } | null = null;
+// An outdated index is served at once while one background rebuild runs, so no visitor or crawler waits for the full scan.
+const indexCache = createStaleCache<PublicVideo[]>({ freshMs: 12 * 60 * 60 * 1000, staleMaxMs: 24 * 60 * 60 * 1000, retryMs: 30 * 1000 });
 let authorFingerprintCache: { until: number; value: Promise<string> } | null = null;
 async function activeAuthorFingerprint() {
   if (authorFingerprintCache && Date.now() < authorFingerprintCache.until) return authorFingerprintCache.value;
@@ -145,9 +147,10 @@ export function productionPublicBackend(options: { readOnlyRender?: boolean } = 
     return { videos: await videos(rows), hasMore: rows.length === 50 && offset + 50 <= 20000 };
   }
   async function indexVideos() {
-    const authorFingerprint = await activeAuthorFingerprint();
-    if (indexCache && Date.now() < indexCache.until && indexCache.authorFingerprint === authorFingerprint) return indexCache.value;
-    const value = (async () => {
+    // If the change marker cannot be read right now, keep serving the cached index instead of failing the page.
+    let fingerprintError: unknown = null;
+    const authorFingerprint = await activeAuthorFingerprint().catch(error => { fingerprintError = error; return null; });
+    return indexCache.get(authorFingerprint, async () => {
       const result: PublicVideo[] = [];
       for (let offset = 0; offset < 20000; offset += 500) {
         const r = await query(fields).order("x_post_id", { ascending: false }).range(offset, offset + 499);
@@ -157,10 +160,7 @@ export function productionPublicBackend(options: { readOnlyRender?: boolean } = 
         if (rows.length < 500) return result;
       }
       throw Error("PUBLIC_INDEX_SCAN_LIMIT");
-    })();
-    indexCache = { until: Date.now() + 12 * 60 * 60 * 1000, authorFingerprint, value };
-    value.catch(() => { if (indexCache?.value === value) indexCache = null; });
-    return value;
+    }).catch(error => { throw fingerprintError ?? error; });
   }
   async function automaticReady() {
     try { await fs.lstat(path.join(os.homedir(), ".xclip-production-deploy.lock")); return false; }
