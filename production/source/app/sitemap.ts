@@ -1,4 +1,4 @@
-import { readPublicIndex, readPublicMonths, readPublicPopular } from "../lib/public-video-server";
+import { readPublicIndex, readPublicMonths, readPublicPopular, readPublicRankDays } from "../lib/public-video-server";
 export const dynamic = "force-dynamic";
 import type { MetadataRoute } from "next";
 import { SITE_URL } from "../lib/seo";
@@ -23,7 +23,9 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   // Fail visibly on a database error; an empty sitemap would falsely signal removals.
   // Newest pagination is linked from the listing. Building its ranking here
   // would make every sitemap fetch wait for a separate ranking hydration.
-  const [index, months, popular30, popularAll] = await Promise.all([readPublicIndex(), readPublicMonths(), readPublicPopular("30days"), readPublicPopular("all")]);
+  const [index, months, popular30, popularAll, rankDays] = await Promise.all([readPublicIndex(), readPublicMonths(), readPublicPopular("30days"), readPublicPopular("all"), readPublicRankDays().catch(() => [])]);
+  // Finished Japan-time days with enough recorded videos (the page itself rechecks what is still visible).
+  const todayJst = new Date(Date.now() + 9 * 3600000).toISOString().slice(0, 10), pastRankDays = rankDays.filter(d => d.day < todayJst && d.count >= 10);
   return [
     { url: SITE_URL },
     { url: `${SITE_URL}/ranking/daily` },
@@ -34,6 +36,8 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     { url: `${SITE_URL}/download` },
     { url: `${SITE_URL}/download/iphone` },
     { url: `${SITE_URL}/download/android` },
+    ...(pastRankDays.length >= 2 ? [{ url: `${SITE_URL}/ranking/history` }] : []),
+    ...pastRankDays.map(d => ({ url: `${SITE_URL}/ranking/history/${d.day}` })),
     ...(months.length ? [{ url: `${SITE_URL}/months`, ...lastmod(newest(months)) }] : []),
     ...months.map(m => ({ url: `${SITE_URL}/months/${m.month}`, ...lastmod(m.modifiedAt) })),
     ...(isIndexable({ type: "tag-hub", activeTags: index.tags.filter(tag => tag.count > 0).length }) ? [{ url: `${SITE_URL}/tags`, ...lastmod(newest(index.tags.filter(tag => tag.count > 0))) }] : []),

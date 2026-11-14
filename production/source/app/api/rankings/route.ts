@@ -1,6 +1,7 @@
 import { createRankingReadCache } from "../../../lib/ranking-read-cache";
 import { readCuratedReferences, eligibleCuratedReferences, referencePermitsPost } from "../../../lib/curated-video-references";
 import { rememberRanking } from "../../../lib/public-ranking-history";
+import { createRankHistoryStore } from "../../../lib/rank-history-store";
 import { applyManualPlacements, readManualState, type ManualPlacement } from "../../../lib/manual-ranking";
 import { eligibleManualXIds } from "../../../lib/manual-x-permissions";
 import { createPublicCatalog } from "../../../lib/public-catalog-store";
@@ -1382,10 +1383,13 @@ async function rankingResponse(
 }
 
 
+let rankHistoryStore: ReturnType<typeof createRankHistoryStore> | undefined;
 async function uncachedRanking(req: NextRequest) {
   const started = performance.now();
   const response = await rankingResponse(req), historyStarted = performance.now();
-  const result = await rememberRanking(response, (ids, at) => createPublicCatalog(publicCatalogDirectory()).ranked(ids, at));
+  const query = req.nextUrl.searchParams, current = !query.get("edition") && !query.get("page") && !query.has("visual");
+  const result = await rememberRanking(response, (ids, at) => createPublicCatalog(publicCatalogDirectory()).ranked(ids, at),
+    current ? (range, ids, at) => (rankHistoryStore ??= createRankHistoryStore(publicCatalogDirectory())).record(range, ids, at) : null);
   result.headers.append("Server-Timing", `history;dur=${(performance.now()-historyStarted).toFixed(1)}, ranking;dur=${(performance.now()-started).toFixed(1)}`);
   return result;
 }

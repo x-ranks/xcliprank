@@ -106,6 +106,20 @@ export function publicVideoFacts(video: PublicVideo, technical?: { durationSecon
   return facts;
 }
 
+// Ranking facts for one video: recorded positions in twizou's own 24-hour ranking, and the first day it was listed.
+export type PublicRankStats = { best: number; days: number; firstDay: string; lastDay: string };
+const rankDayText = (day: string) => `${Number(day.slice(0, 4))}年${Number(day.slice(5, 7))}月${Number(day.slice(8, 10))}日`;
+export function publicRankFacts(rank: PublicRankStats | null | undefined, firstRankedAt?: string | null) {
+  const facts: { label: string; value: string; dateTime?: string }[] = [];
+  if (rank && Number.isSafeInteger(rank.best) && rank.best >= 1 && Number.isSafeInteger(rank.days) && rank.days >= 1) {
+    facts.push({ label: "twizou 24時間ランキング最高順位", value: `${rank.best}位（${rankDayText(rank.firstDay)}以降の記録）` });
+    facts.push({ label: "ランクイン日数", value: `${PUBLIC_NUMBER_FORMAT.format(rank.days)}日` });
+  }
+  const t = firstRankedAt ? Date.parse(firstRankedAt) : NaN;
+  if (Number.isFinite(t)) facts.push({ label: "twizouのランキング初掲載", value: POST_DATE_FORMAT.format(new Date(t)), dateTime: new Date(t).toISOString() });
+  return facts;
+}
+
 // Account page facts (computed only from the videos already shown; nothing is estimated).
 export type AccountProfile = {
   total: number;

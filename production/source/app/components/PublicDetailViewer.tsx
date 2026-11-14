@@ -9,7 +9,7 @@ import FollowButton from "./FollowButton";
 import PublicPostText from "./PublicPostText";
 import PublicPostEngagement from "./PublicPostEngagement";
 import PublicVideoCards from "./PublicVideoCards";
-import { accountKey, authorHref, publicVideoFacts, tagHref } from "../../lib/public-video-core";
+import { accountKey, authorHref, publicVideoFacts, publicRankFacts, tagHref } from "../../lib/public-video-core";
 import { safePublicReturn } from "../../lib/public-return-navigation";
 import { PUBLIC_DETAIL_OPEN_EVENT } from "../../lib/public-detail-navigation";
 import type { createPublicVideoService } from "../../lib/public-video-service";
@@ -90,7 +90,7 @@ export default function PublicDetailViewer() {
     return () => { if (node.open) node.close(); };
   }, [view?.id]);
   if (!view) return null;
-  const d = view.detail, v = d?.video, facts = v ? publicVideoFacts(v, d.technical) : [];
+  const d = view.detail, v = d?.video, facts = v ? [...publicVideoFacts(v, d.technical), ...publicRankFacts(d.rank, d.firstRankedAt)] : [];
   function close() { if (active.current && window.history.state?.twizouFastDetail === active.current.id) window.history.back(); else window.location.assign(view!.from); }
   return <dialog ref={dialog} aria-label="動画" aria-modal="true" data-twizou-fast-detail={view.id} onCancel={event => { if (event.target !== event.currentTarget) return; event.preventDefault(); close(); }} style={{ position: "fixed", inset: 0, width: "100vw", height: "100dvh", maxWidth: "none", maxHeight: "none", margin: 0, padding: "20px max(12px, env(safe-area-inset-right))", border: 0, background: "#080c10", color: "#f6f7f8", overflow: "auto", boxSizing: "border-box" }}>
     <main className="public-post-page" style={{ maxWidth: 1100, margin: "0 auto" }}>

@@ -4,6 +4,7 @@ import { accountKey, accountProfile, authorHref, labelDefinition, publicPostId, 
 import { verifySaveReceipt } from "./public-save-receipt";
 import { isIndexable } from "./indexability";
 import { canonicalTagName } from "./tag-aliases";
+import type { RankStats } from "./rank-history-store";
 import { buildDiscoveryIndex, matchesDiscovery, selectDiscovery, type DiscoveryIndex, type DiscoveryQuery } from "./discovery-index";
 export type PublicVideoDeps = {
   catalog: ReturnType<typeof createPublicCatalog>;
@@ -14,6 +15,8 @@ export type PublicVideoDeps = {
   scanPage?: (cursor: string | null, upper: string | null) => Promise<{ videos: PublicVideo[]; nextCursor: string | null; upper: string | null; done: boolean; scanned: number }>;
   indexVideos?: () => Promise<PublicVideo[]>;
   tierPage?: (tier: string, offset: number) => Promise<{ videos: PublicVideo[]; hasMore: boolean }>;
+  /** Daily record of the site's own rankings. Optional: without it, ranking-history facts and pages are simply absent. */
+  rankHistory?: () => Promise<RankStats>;
   secret: () => Promise<string>;
 };
 // Only the ordered browse IDs are cached. Each page still rechecks its posts.
@@ -29,13 +32,16 @@ export function createPublicVideoService(deps: PublicVideoDeps, options: { readO
   // This promise belongs to one render only. Admin writers always read fresh state.
   let catalogRead: ReturnType<PublicVideoDeps["catalog"]["read"]> | undefined;
   const readCatalog = () => options.readOnlyRender ? (catalogRead ??= deps.catalog.read()) : deps.catalog.read();
+  const rankStatsOrNull = async () => { try { return deps.rankHistory ? await deps.rankHistory() : null; } catch { return null; } };
   async function detailCore(id: string) {
     if (!publicPostId(id)) return null;
     const [catalog, rows] = await Promise.all([options.readOnlyRender && deps.catalog.readForIds ? deps.catalog.readForIds([id]) : readCatalog(), deps.posts([id])]);
     const video = rows.find(p => p.id === id && p.eligible);
     if (!video || !authorHref(video)) return null;
     const labels = videoLabels(catalog, video);
+    const history = await rankStatsOrNull();
     return { video, technical: matchingVideoTechnical(catalog.records[id]?.technical, video.sourceHash),
+      rank: history?.posts.get(id) ?? null, firstRankedAt: catalog.records[id]?.firstRankedAt ?? null,
       labelBasis: catalog.records[id]?.sourceHash === video.sourceHash ? catalog.records[id]?.basis ?? null : null,
       labels, metadata: videoMetadata(video, catalog.records[id] ?? null, labels) };
   }
@@ -92,6 +98,33 @@ export function createPublicVideoService(deps: PublicVideoDeps, options: { readO
       return rows.length >= 2 ? rows : [];
     } catch { return []; }
   }
+  // Author standing and ranking history. Optional facts: any failure or missing data leaves the field null.
+  async function accountRanking(catalog: Awaited<ReturnType<typeof readCatalog>>, matches: PublicVideo[], key: string) {
+    const everRanked = matches.filter(v => catalog.records[v.id]?.firstRankedAt).length;
+    const history = await rankStatsOrNull();
+    let best: number | null = null, rankedVideos = 0; const days = new Set<string>();
+    if (history) for (const v of matches) {
+      const row = history.posts.get(v.id); if (!row) continue;
+      rankedVideos++; best = best === null ? row.best : Math.min(best, row.best);
+    }
+    if (history && rankedVideos) { const own = new Set(matches.map(v => v.id)); for (const day of history.days) if ((history.day(day)?.daily ?? []).some(id => own.has(id))) days.add(day); }
+    let standing: { authors: number; byViews: number | null; byCount: number } | null = null;
+    try {
+      if (deps.indexVideos) {
+        const totals = new Map<string, { count: number; views: number }>(), seen = new Set<string>();
+        for (const v of await deps.indexVideos()) {
+          const k = accountKey(v); if (!k || seen.has(v.id) || !publicVideoIndexable(v, videoLabels(catalog, v))) continue;
+          seen.add(v.id); const row = totals.get(k) ?? { count: 0, views: 0 }; row.count++; row.views += typeof v.views === "number" && Number.isFinite(v.views) && v.views > 0 ? v.views : 0; totals.set(k, row);
+        }
+        const mine = totals.get(accountKey(matches[0]) ?? key.toLowerCase());
+        if (mine && totals.size >= 5) {
+          const rows = [...totals.values()];
+          standing = { authors: rows.length, byViews: mine.views > 0 ? 1 + rows.filter(r => r.views > mine.views).length : null, byCount: 1 + rows.filter(r => r.count > mine.count).length };
+        }
+      }
+    } catch { standing = null; }
+    return { everRanked, rankedVideos, best, rankedDays: days.size, since: history?.days.at(-1) ?? null, standing };
+  }
   async function account(key: string, page = 1) {
     if (!/^(?:[a-zA-Z0-9_]{1,15}|id-[A-Za-z0-9_-]{1,64})$/.test(key) || !Number.isInteger(page) || page < 1) return null;
     // Resolve an account from its own current videos. The site-wide inventory can
@@ -103,7 +136,8 @@ export function createPublicVideoService(deps: PublicVideoDeps, options: { readO
     const totalPages = Math.max(1, Math.ceil(matches.length / 24));
     if (!matches.length || page > totalPages) return null;
     const profile = accountProfile(matches), byId = new Map(matches.map(v => [v.id, v]));
-    return { facts: hubFacts(matches, catalog), profile, relatedAuthors: page === 1 ? await relatedAuthors(catalog, matches, key) : [], topVideos: profile.top.flatMap(t => { const v = byId.get(t.id); return v ? [{ video: v, views: t.views }] : []; }),
+    const ranking = page === 1 ? await accountRanking(catalog, matches, key) : null;
+    return { ranking, facts: hubFacts(matches, catalog), profile, relatedAuthors: page === 1 ? await relatedAuthors(catalog, matches, key) : [], topVideos: profile.top.flatMap(t => { const v = byId.get(t.id); return v ? [{ video: v, views: t.views }] : []; }),
       handle: matches[0].handle, key, canonicalKey: accountKey(matches[0])!, name: matches[0].authorName ?? matches[0].handle ?? key,
       videos: matches.slice((page - 1) * 24, page * 24), page, totalPages, totalCount: matches.length,
       index: isIndexable({ type: "account", permittedVideos }) };
@@ -278,6 +312,32 @@ export function createPublicVideoService(deps: PublicVideoDeps, options: { readO
       // Needs enough measured posts to be a meaningful ranking.
       index: known.length >= 10, ...(modifiedAt ? { modifiedAt } : {}) };
   }
+  // Ranking archive: one page per recorded Japan-time day of the 24-hour ranking. Every video is rechecked against current permissions.
+  async function rankDays() {
+    const history = await rankStatsOrNull(); if (!history) return [];
+    return history.days.flatMap(day => { const list = history.day(day)?.daily ?? []; return list.length ? [{ day, count: list.length }] : []; });
+  }
+  async function rankDay(day: string, today: string = new Date(Date.now() + 9 * 3600000).toISOString().slice(0, 10)) {
+    if (!/^\d{4}-\d{2}-\d{2}$/.test(day)) return null;
+    const history = await rankStatsOrNull(); if (!history) return null;
+    const list = history.day(day)?.daily; if (!list?.length) return null;
+    const rows: PublicVideo[] = [];
+    for (let start = 0; start < list.length; start += 100) rows.push(...await deps.posts(list.slice(start, start + 100)));
+    const visible = new Map(rows.filter(v => v.eligible && authorHref(v)).map(v => [v.id, v]));
+    const entries = list.flatMap((id, index) => { const video = visible.get(id); return video ? [{ rank: index + 1, video }] : []; });
+    const authors = new Map<string, { key: string; name: string; count: number; best: number }>();
+    for (const { rank, video } of entries) { const k = accountKey(video); if (!k) continue; const row = authors.get(k) ?? { key: k, name: video.authorName?.trim() || video.handle || k, count: 0, best: rank }; row.count++; authors.set(k, row); }
+    const known = entries.filter(e => typeof e.video.views === "number" && Number.isFinite(e.video.views) && e.video.views >= 0);
+    const listed = history.days.filter(d => (history.day(d)?.daily ?? []).length).sort(), at = listed.indexOf(day);
+    const yesterday = at > 0 ? new Set(history.day(listed[at - 1])?.daily ?? []) : null;
+    return { day, recorded: list.length, entries, authorCount: authors.size, measured: known.length, viewsTotal: known.reduce((sum, e) => sum + (e.video.views as number), 0),
+      topAuthors: [...authors.values()].filter(a => a.count >= 2).sort((a, b) => b.count - a.count || a.best - b.best).slice(0, 5),
+      // Videos that were not in the previous recorded day's list.
+      newEntries: yesterday ? entries.filter(e => !yesterday.has(e.video.id)).length : null,
+      prev: at > 0 ? listed[at - 1] : null, next: at >= 0 && at < listed.length - 1 ? listed[at + 1] : null,
+      // A finished day with enough videos still visible.
+      index: day < today && entries.length >= 10 };
+  }
   async function browse(page = 1) {
     if (!Number.isSafeInteger(page) || page < 1) return null;
     const [catalog, indexedRows] = await Promise.all([readCatalog(), deps.indexVideos ? deps.indexVideos() : deps.posts([])]);
@@ -402,5 +462,5 @@ export function createPublicVideoService(deps: PublicVideoDeps, options: { readO
     if (!rows.some(video => video.id === input.id && video.eligible && video.sourceHash === input.sourceHash)) return { result: "unavailable" };
     await deps.catalog.technical(input.id, input.sourceHash, input.metadata, Date.now(), "mp4-range-v1"); return { result: "published" };
   }
-  return { technicalPage, technicalPublish, detailCore, detailRelated, detail, account, tag, activeLabels, indexable, accountCards, months, month, popular, browse, discovery, personalVideos, followFeed, publish, saved, inspect, status, candidates, autoPage, autoPublish };
+  return { technicalPage, technicalPublish, detailCore, detailRelated, detail, account, tag, activeLabels, indexable, accountCards, months, month, popular, rankDays, rankDay, browse, discovery, personalVideos, followFeed, publish, saved, inspect, status, candidates, autoPage, autoPublish };
 }

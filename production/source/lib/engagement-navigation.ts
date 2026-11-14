@@ -1,6 +1,6 @@
 // Public navigation policy only. No network, storage, server modules or side effects.
 const PUBLIC_PAGES = new Set([
-  "/", "/rising", "/ranking/daily", "/ranking/weekly", "/ranking/30days", "/ranking/all", "/reels", "/browse", "/accounts", "/tags",
+  "/", "/rising", "/ranking/daily", "/ranking/weekly", "/ranking/30days", "/ranking/all", "/ranking/history", "/reels", "/browse", "/accounts", "/tags",
   "/discover", "/favorites", "/following", "/download", "/download/iphone", "/download/android", "/download-policy", "/privacy", "/terms", "/contact", "/copyright",
   "/advertising-disclosure", "/removal-request",
 ]);
@@ -8,6 +8,7 @@ const PUBLIC_PAGES = new Set([
 export function publicEngagementPath(raw: string): string | null {
   const path = raw.length > 1 ? raw.replace(/\/$/, "") : raw;
   if (PUBLIC_PAGES.has(path)) return path;
+  if (/^\/ranking\/history\/\d{4}-\d{2}-\d{2}$/.test(path)) return path;
   if (/^\/p\/[1-9][0-9]{1,24}$/.test(path) || /^\/accounts\/[A-Za-z0-9_-]{1,68}$/.test(path)) return path;
   if (/^\/tags\/[^/]{1,500}$/.test(path)) {
     try {

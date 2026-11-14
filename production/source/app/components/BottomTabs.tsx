@@ -23,6 +23,7 @@ const MENU_SECTIONS = [
     { href: "/ranking/weekly", label: "週間ランキング" },
     { href: "/ranking/30days", label: "30日ランキング" },
     { href: "/ranking/all", label: "全期間ランキング" },
+    { href: "/ranking/history", label: "過去のランキング" },
     { href: "/months", label: "月別ランキング" },
     { href: "/reels", label: "リール" },
   ] },
