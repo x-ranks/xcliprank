@@ -21,6 +21,10 @@ export type PublicVideoDeps = {
 };
 // Only the ordered browse IDs are cached. Each page still rechecks its posts.
 let browseIndexCache: { rows: PublicVideo[]; revision: number; until: number; ids: string[] } | null = null;
+// Author totals for the "standing" facts: recomputed only when the index or the catalog changes.
+let standingCache: { rows: PublicVideo[]; revision: number; totals: Map<string, { count: number; views: number }> } | null = null;
+const STANDING_WAIT_MS = 150;
+const popularCache = new Map<string, { rows: PublicVideo[]; revision: number; until: number; value: unknown }>();
 let discoveryCache: { rows: PublicVideo[]; revision: number; index: DiscoveryIndex } | null = null;
 // Follow feed: a short per-account cache keeps repeated visits from re-reading the database.
 const FOLLOW_CACHE_MS = 120000, FOLLOW_CACHE_MAX = 400, FOLLOW_PER_ACCOUNT = 8, FOLLOW_FEED_LIMIT = 48;
@@ -110,11 +114,18 @@ export function createPublicVideoService(deps: PublicVideoDeps, options: { readO
     if (history && rankedVideos) { const own = new Set(matches.map(v => v.id)); for (const day of history.days) if ((history.day(day)?.daily ?? []).some(id => own.has(id))) days.add(day); }
     let standing: { authors: number; byViews: number | null; byCount: number } | null = null;
     try {
-      if (deps.indexVideos) {
-        const totals = new Map<string, { count: number; views: number }>(), seen = new Set<string>();
-        for (const v of await deps.indexVideos()) {
-          const k = accountKey(v); if (!k || seen.has(v.id) || !publicVideoIndexable(v, videoLabels(catalog, v))) continue;
-          seen.add(v.id); const row = totals.get(k) ?? { count: 0, views: 0 }; row.count++; row.views += typeof v.views === "number" && Number.isFinite(v.views) && v.views > 0 ? v.views : 0; totals.set(k, row);
+      // Optional fact: never make the author page wait for a cold site-wide index (it keeps building in the background).
+      const rows = deps.indexVideos ? await Promise.race([deps.indexVideos(), new Promise<null>(resolve => setTimeout(() => resolve(null), STANDING_WAIT_MS))]) : null;
+      if (rows) {
+        let totals: Map<string, { count: number; views: number }>;
+        if (standingCache && standingCache.rows === rows && standingCache.revision === catalog.revision) totals = standingCache.totals;
+        else {
+          totals = new Map(); const seen = new Set<string>();
+          for (const v of rows) {
+            const k = accountKey(v); if (!k || seen.has(v.id) || !publicVideoIndexable(v, videoLabels(catalog, v))) continue;
+            seen.add(v.id); const row = totals.get(k) ?? { count: 0, views: 0 }; row.count++; row.views += typeof v.views === "number" && Number.isFinite(v.views) && v.views > 0 ? v.views : 0; totals.set(k, row);
+          }
+          standingCache = { rows, revision: catalog.revision, totals };
         }
         const mine = totals.get(accountKey(matches[0]) ?? key.toLowerCase());
         if (mine && totals.size >= 5) {
@@ -284,6 +295,13 @@ export function createPublicVideoService(deps: PublicVideoDeps, options: { readO
     if (!Object.prototype.hasOwnProperty.call(POPULAR_DAYS, range)) return null;
     const days = POPULAR_DAYS[range], since = days === null ? null : Date.now() - days * 86400000;
     const [catalog, rows] = await Promise.all([readCatalog(), deps.indexVideos ? deps.indexVideos() : deps.posts([])]);
+    // Same index and catalog within a minute: reuse the result instead of re-sorting every video.
+    const cached = popularCache.get(range);
+    if (cached && cached.rows === rows && cached.revision === catalog.revision && Date.now() < cached.until) return cached.value as ReturnType<typeof build>;
+    const value = build();
+    popularCache.set(range, { rows, revision: catalog.revision, until: Date.now() + 60000, value });
+    return value;
+    function build() {
     const seen = new Set<string>(), pool: PublicVideo[] = [];
     for (const video of rows) {
       if (seen.has(video.id) || !authorHref(video) || !publicVideoIndexable(video, videoLabels(catalog, video))) continue;
@@ -311,6 +329,7 @@ export function createPublicVideoService(deps: PublicVideoDeps, options: { readO
       topAuthors: topAuthors.length >= 2 ? topAuthors : [], months: range === "all" && months.length >= 2 ? months : [], firstAt, latestAt,
       // Needs enough measured posts to be a meaningful ranking.
       index: known.length >= 10, ...(modifiedAt ? { modifiedAt } : {}) };
+    }
   }
   // Ranking archive: one page per recorded Japan-time day of the 24-hour ranking. Every video is rechecked against current permissions.
   async function rankDays() {

@@ -21,9 +21,27 @@ const fields = "x_post_id,author_id,author_username,author_name,text,preview_ima
 // An outdated index is served at once while one background rebuild runs, so no visitor or crawler waits for the full scan.
 const indexCache = createStaleCache<PublicVideo[]>({ freshMs: 12 * 60 * 60 * 1000, staleMaxMs: 24 * 60 * 60 * 1000, retryMs: 30 * 1000 });
 let authorFingerprintCache: { until: number; value: Promise<string> } | null = null;
+// The last successfully computed marker. Once one exists, callers never wait for the database again:
+// an expired marker is returned at once and refreshed in the background (changes are noticed one check later).
+let lastAuthorFingerprint: string | null = null, authorFingerprintRefreshing = false;
 async function activeAuthorFingerprint() {
   if (authorFingerprintCache && Date.now() < authorFingerprintCache.until) return authorFingerprintCache.value;
-  const value = (async () => {
+  if (lastAuthorFingerprint !== null) {
+    if (!authorFingerprintRefreshing) {
+      authorFingerprintRefreshing = true;
+      computeAuthorFingerprint().then(value => { lastAuthorFingerprint = value; authorFingerprintCache = { until: Date.now() + 60 * 1000, value: Promise.resolve(value) }; },
+        () => { authorFingerprintCache = { until: Date.now() + 15 * 1000, value: Promise.resolve(lastAuthorFingerprint as string) }; })
+        .finally(() => { authorFingerprintRefreshing = false; });
+    }
+    return lastAuthorFingerprint;
+  }
+  const value = computeAuthorFingerprint();
+  authorFingerprintCache = { until: Date.now() + 60 * 1000, value };
+  value.then(result => { lastAuthorFingerprint = result; }, () => { if (authorFingerprintCache?.value === value) authorFingerprintCache = null; });
+  return value;
+}
+function computeAuthorFingerprint(): Promise<string> {
+  return (async () => {
     const hash = createHash("sha256");
     let complete = false;
     for (let offset = 0; offset < 10000; offset += 500) {
@@ -47,9 +65,6 @@ async function activeAuthorFingerprint() {
     hash.update("manual:").update(String((await readManualState()).revision));
     return hash.digest("hex");
   })();
-  authorFingerprintCache = { until: Date.now() + 60 * 1000, value };
-  value.catch(() => { if (authorFingerprintCache?.value === value) authorFingerprintCache = null; });
-  return value;
 }
 let rankHistoryStore: ReturnType<typeof createRankHistoryStore> | undefined;
 export function productionPublicBackend(options: { readOnlyRender?: boolean } = {}) {
