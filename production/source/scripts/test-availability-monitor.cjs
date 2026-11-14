@@ -8,7 +8,7 @@ const profile={code:200,message:'OK',user:{type:'profile',id:'123',screen_name:'
 const missing=()=>Response.json({code:404,message:'NOT_FOUND'},{status:404});
 (async()=>{
  const p=post('9999');assert.equal(classifyPostResponse(p,404,{code:404,message:'NOT_FOUND'}),'missing');assert.equal(classifyPostResponse(p,200,publicPost('9999')),'public');
- for(const [http,b] of [[503,{code:404,message:'NOT_FOUND'}],[404,{code:404}],[200,publicPost('9998')],[404,{code:404,message:'NOT_FOUND',id:'9998'}],[200,{...publicPost('9999'),status:{...publicPost('9999').status,author:{id:'456',protected:false}}}],[200,{...publicPost('9999'),status:{...publicPost('9999').status,author:{id:'123',protected:true}}}]])assert.equal(classifyPostResponse(p,http,b),b.status?.author?.protected===true?'hidden':'unknown');
+ for(const [http,b] of [[503,{code:404,message:'NOT_FOUND'}],[404,{code:404}],[200,publicPost('9998')],[404,{code:404,message:'NOT_FOUND',id:'9998'}],[200,{...publicPost('9999'),status:{...publicPost('9999').status,author:{id:'456',protected:false}}}],[200,{...publicPost('9999'),status:{...publicPost('9999').status,author:{id:'123',protected:true}}}]])assert.equal(classifyPostResponse(p,http,b),b.status?.author?.protected===true?'hidden':(http===404&&b.code===404&&b.message===undefined&&b.id===undefined?'missing':'unknown'));
  const quoted=publicPost('9999');quoted.status.quote={type:'tombstone',reason:'deleted',id:'8888'};assert.equal(classifyPostResponse(p,200,quoted),'public');
  assert.equal(classifyPostResponse(p,404,{code:404,status:{type:'tombstone',provider:'twitter',reason:'deleted',id:'9999'}}),'missing');
  assert(isUnavailablePost(p,new Set(['post:9999'])));assert(!isUnavailablePost(post('8888'),new Set(['post:9999'])));

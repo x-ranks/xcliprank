@@ -1,5 +1,5 @@
 'use strict';
-// "unknown" post checks are explained, but the decision itself is unchanged. Fixture only.
+// "unknown" post checks are explained; 404-without-message is missing and 401 is hidden (confirmed on X); the rest stays unknown. Fixture only.
 const assert = require('node:assert/strict'), fs = require('node:fs'), Module = require('node:module'), ts = require('typescript');
 Module._extensions['.ts'] = (m, f) => m._compile(ts.transpileModule(fs.readFileSync(f, 'utf8'), { compilerOptions: { module: ts.ModuleKind.CommonJS, target: ts.ScriptTarget.ES2022, esModuleInterop: true } }).outputText, f);
 const { classifyPostResponse, explainUnknownPost } = require('../lib/post-status.ts');
@@ -20,10 +20,11 @@ const cases = [
 ];
 for (const [http, body, why] of cases) {
   assert.equal(explainUnknownPost(post, http, body), why, why);
-  // Diagnostics must not change decisions: everything explained here besides the deleted tombstone stays "unknown".
-  if (why !== 'tombstone_deleted') assert.equal(classifyPostResponse(post, http, body), 'unknown', 'unchanged: ' + why);
+  // Verified on X (2026-11-14): 404 without message = post gone, 401 = owner-restricted. Everything else stays "unknown".
+  const expected = why === 'tombstone_deleted' || why === 'not_found_no_message' ? 'missing' : why === 'unauthorized_401' ? 'hidden' : 'unknown';
+  assert.equal(classifyPostResponse(post, http, body), expected, 'decision: ' + why);
 }
 assert.equal(classifyPostResponse(post, 200, ok()), 'public');
 assert.equal(classifyPostResponse(post, 404, { code: 404, message: 'NOT_FOUND', status: null }), 'missing');
 assert.equal(explainUnknownPost({ x_post_id: 'x' }, 200, {}), 'bad_post_id');
-console.log('PASS UNKNOWN DIAGNOSTICS: reasons for 404-without-message/401/403/author/media/shape; classification unchanged. Fixture only.');
+console.log('PASS UNKNOWN DIAGNOSTICS + 404/401 DECISIONS: 404 no-message=missing, 401=hidden, 403/author/media/shape stay unknown. Fixture only.');
