@@ -25,9 +25,13 @@ assert(read('app/components/SiteBrand.tsx').includes('className="site-search-ico
 const page = read('app/p/[id]/page.tsx'), viewer = read('app/components/PublicDetailViewer.tsx'), post = read('app/components/PostActionBar.tsx'), at = s => post.indexOf(s);
 assert(page.includes('<PostActionBar video={v} />') && viewer.includes('<PostActionBar video={v} />'), 'page and in-list viewer share the same action bar');
 assert(viewer.indexOf('<DirectPlaybackVideo') < viewer.indexOf('<h1>{v.authorName') && viewer.indexOf('<h1>{v.authorName') < viewer.indexOf('post-author-follow') && viewer.indexOf('post-author-follow') < viewer.indexOf('<PostActionBar'), 'viewer: player, title, follow, actions');
-assert(at('<VideoDownloadButton') < at('<FavoriteButton') && at('<FavoriteButton') < at('share-to-x') && at('share-to-x') < at('post-more'));
+assert(at('<VideoDownloadButton') < at('<FavoriteButton') && at('<FavoriteButton') < at('share-to-x') && at('share-to-x') < at('post-report') && at('post-report') < at('post-more'));
 const menu = post.slice(at('post-more-menu'), at('</details>'));
-for (const s of ['元投稿をXで開く', '投稿者ページを見る', '/removal-request?post=']) assert(menu.includes(s), s + ' is in the more menu');
+for (const s of ['元投稿をXで開く', '投稿者ページを見る']) assert(menu.includes(s), s + ' is in the more menu');
+// Reporting is one click: a visible button in the bar itself, not an item inside the "more" menu.
+assert(!menu.includes('/removal-request'), 'report is not hidden in the more menu');
+const report = post.slice(at('post-report') - 20, at('post-more'));
+assert(report.includes('/removal-request?post=${v.id}') && report.includes('aria-label="この動画を報告する"') && report.includes('rel="nofollow"'), 'visible report button links to the form with the post id');
 assert(page.indexOf('<h1>') > page.indexOf('public-post-player') && page.includes('className="post-breadcrumb"') && viewer.includes('className="post-breadcrumb"'));
 // Author page: three chips, videos before the long data section.
 const acc = read('app/accounts/[key]/page.tsx');
