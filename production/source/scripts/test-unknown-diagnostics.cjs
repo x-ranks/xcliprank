@@ -11,7 +11,8 @@ const cases = [
   [401, { code: 401 }, 'unauthorized_401'],
   [403, { code: 403 }, 'forbidden_403'],
   [200, ok({ author: { id: '999', screen_name: 'other', protected: false } }), 'author_mismatch'],
-  [200, ok({ media: undefined }), 'no_media_list'],
+  [200, ok({ media: undefined }), 'no_media'],      // quote of a deleted account's video (verified on X)
+  [200, ok({ media: { videos: 'x' } }), 'media_shape'],
   [200, ok({ id: '5' }), 'id_mismatch'],
   [200, ok({ text: undefined }), 'status_shape'],
   [200, { code: 200, message: 'BAD', status: ok().status }, 'message_not_ok'],
@@ -21,10 +22,10 @@ const cases = [
 for (const [http, body, why] of cases) {
   assert.equal(explainUnknownPost(post, http, body), why, why);
   // Verified on X (2026-11-14): 404 without message = post gone, 401 = owner-restricted. Everything else stays "unknown".
-  const expected = why === 'tombstone_deleted' || why === 'not_found_no_message' ? 'missing' : why === 'unauthorized_401' ? 'hidden' : 'unknown';
+  const expected = why === 'tombstone_deleted' || why === 'not_found_no_message' ? 'missing' : why === 'unauthorized_401' || why === 'no_media' ? 'hidden' : 'unknown';
   assert.equal(classifyPostResponse(post, http, body), expected, 'decision: ' + why);
 }
 assert.equal(classifyPostResponse(post, 200, ok()), 'public');
 assert.equal(classifyPostResponse(post, 404, { code: 404, message: 'NOT_FOUND', status: null }), 'missing');
 assert.equal(explainUnknownPost({ x_post_id: 'x' }, 200, {}), 'bad_post_id');
-console.log('PASS UNKNOWN DIAGNOSTICS + 404/401 DECISIONS: 404 no-message=missing, 401=hidden, 403/author/media/shape stay unknown. Fixture only.');
+console.log('PASS UNKNOWN DIAGNOSTICS + 404/401 DECISIONS: 404 no-message=missing, 401 and no-media=hidden, 403/author/shape stay unknown. Fixture only.');

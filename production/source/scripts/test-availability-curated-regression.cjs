@@ -22,7 +22,7 @@ const author={id:'123',username:'test',name:'Test',expectedTier:'S'};
   const quote=normal('9000');quote.status.quote=privatePost('9001').status;assert.equal(classifyPostResponse(p,200,quote),'public');
   const protectedPost=normal('9000');protectedPost.status.author.protected=true;assert.equal(classifyPostResponse(p,200,protectedPost),'hidden');
   const explicitError=normal('9000');explicitError.message='ERROR';assert.equal(classifyPostResponse(p,200,explicitError),'unknown');
-  const noMedia=normal('9000');delete noMedia.status.media;assert.equal(classifyPostResponse(p,200,noMedia),'unknown');
+  const noMedia=normal('9000');delete noMedia.status.media;assert.equal(classifyPostResponse(p,200,noMedia),'hidden');const oddMedia=normal('9000');oddMedia.status.media={videos:'x'};assert.equal(classifyPostResponse(p,200,oddMedia),'unknown');
   const removedVideo=normal('9000');removedVideo.status.media.videos=[];assert.equal(classifyPostResponse(p,200,removedVideo),'hidden');
   const externalVideo=normal('9000');externalVideo.status.media.videos[0].url='https://evil.test/a.mp4';assert.equal(classifyPostResponse(p,200,externalVideo),'hidden');
   let time=100*DAY,mode='hidden',calls=0;
