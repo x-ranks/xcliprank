@@ -2,7 +2,7 @@ import { authorKey, isSuspendedAuthor } from "./author-status";
 import { manualCuratedKeys } from "./curated-removals";
 import { authorStateDirectory, readAuthorState } from "./author-status-store";
 import { scanAuthorStatuses } from "./author-status-scan";
-import { classifyPostResponse, postKey, type PostIdentity } from "./post-status";
+import { classifyPostResponse, explainUnknownPost, postKey, type PostIdentity } from "./post-status";
 import { entryPost, readPostState, writePostState, POST_STATE_LIMIT, type PostEntry } from "./post-status-store";
 import { DAY, PRIORITY_RECHECK_INTERVAL, POST_RECHECK_INTERVAL, MISSING_CONFIRM_INTERVAL, BATCH_INTERVAL, POST_BATCH_LIMIT, PRIORITY_BATCH_LIMIT, pauseMonitorRequest, FAILURE_COOLDOWN, fetchMonitorJson } from "./availability-policy";
 
@@ -16,7 +16,7 @@ export async function scanAvailabilityStatuses(loadPage: (cursor: string | null)
   const stats = { feature: "availability_monitor", skipped: false, author_checked: 0, suspended: 0, author_restored: 0,
     post_checked: 0, post_missing: 0, post_hidden: 0, post_restored: 0, post_unknown: 0, stopped: false,
     cycle_complete: false, next_batch_at: state.nextBatchAt, paid_x_requests: 0,
-    retry_checked: 0, priority_checked: 0, rotation_checked: 0, priority_daily_checked: 0, priority_trending_checked: 0, priority_weekly_checked: 0, priority_unclassified_checked: 0, post_public: 0, post_fetch_failed: 0, post_limited: 0, skipped_recent: 0, skipped_duplicate: 0, skipped_blocked_author: 0, startedAt: new Date(started).toISOString() };
+    retry_checked: 0, priority_checked: 0, rotation_checked: 0, priority_daily_checked: 0, priority_trending_checked: 0, priority_weekly_checked: 0, priority_unclassified_checked: 0, post_public: 0, post_fetch_failed: 0, post_limited: 0, skipped_recent: 0, skipped_duplicate: 0, skipped_blocked_author: 0, unknown_reasons: {} as Record<string, number>, unknown_samples: [] as { id: string; reason: string }[], startedAt: new Date(started).toISOString() };
   if (Math.max(state.nextBatchAt, state.cooldownUntil, authorsBefore.cooldownUntil) > started) { stats.skipped = true; return { ...stats, finishedAt: new Date(now()).toISOString() }; }
   // Five minutes of tolerance for Cron start jitter; an immediate repeat still has no DB/API calls.
   state.nextBatchAt = started + BATCH_INTERVAL - 5 * 60000;
@@ -59,6 +59,11 @@ export async function scanAvailabilityStatuses(loadPage: (cursor: string | null)
     await pause();
     const reply = await fetchMonitorJson(`/2/status/${id}`, options.fetcher), outcome = classifyPostResponse(post, reply.http, reply.body);
     stats.post_checked++;
+    if (outcome === "unknown") {
+      const why = reply.failed ? "fetch_failed" : explainUnknownPost(post, reply.http, reply.body);
+      stats.unknown_reasons[why] = (stats.unknown_reasons[why] ?? 0) + 1;
+      if (stats.unknown_samples.length < 12) stats.unknown_samples.push({ id, reason: why });
+    }
     stats[phase === "retry" ? "retry_checked" : phase === "priority" ? "priority_checked" : "rotation_checked"]++;
     if (phase === "priority") {
       const group = (post as PostIdentity & { monitorPriority?: string }).monitorPriority;

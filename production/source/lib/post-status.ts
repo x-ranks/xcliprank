@@ -35,3 +35,27 @@ export function classifyPostResponse(post: PostIdentity, http: number, body: any
   return videos.some((video: any) => video?.type === "video" && (playableUrl(video.url) ||
     Array.isArray(video.formats) && video.formats.some((format: any) => playableUrl(format?.url)))) ? "public" : "hidden";
 }
+
+// Diagnostic only: why classifyPostResponse said "unknown". Never changes a decision.
+export function explainUnknownPost(post: PostIdentity, http: number, body: any): string {
+  if (!postKey(post)) return "bad_post_id";
+  if (![200, 401, 403, 404].includes(http) || !body || ![200, 401, 403, 404].includes(body.code)) return "bad_http_or_body";
+  const id = String(post.x_post_id), status = body.status;
+  if ((body.id !== undefined && String(body.id) !== id) || (status?.id !== undefined && String(status.id) !== id)) return "id_mismatch";
+  if (status?.type === "tombstone") {
+    if (status.id !== id || status.provider !== "twitter") return "tombstone_other_provider";
+    const reason = String(status.reason ?? "");
+    return /^[a-z_]{1,20}$/.test(reason) ? "tombstone_" + reason : "tombstone_other";
+  }
+  if (body.code === 404 && !status) return body.message === undefined ? "not_found_no_message" : "not_found_other_message";
+  if (http === 401 || body.code === 401) return "unauthorized_401";
+  if (http === 403 || body.code === 403) return "forbidden_403";
+  if (http !== 200 || body.code !== 200) return "http_code_mismatch";
+  if (body.message !== undefined && body.message !== "OK") return "message_not_ok";
+  if (status?.type !== "status" || status.provider !== "twitter" || status.id !== id || typeof status.author?.protected !== "boolean" || typeof status.text !== "string") return "status_shape";
+  const returned = authorKey({ author_id: status.author.id, author_username: status.author.screen_name }), expected = authorKey(post);
+  if (!expected || !(expected.startsWith("id:") ? returned === expected : String(status.author.screen_name ?? "").toLowerCase() === expected.slice(5))) return "author_mismatch";
+  const videos = Array.isArray(status.media?.videos) ? status.media.videos : status.media?.all;
+  if (!Array.isArray(videos)) return "no_media_list";
+  return "other";
+}
