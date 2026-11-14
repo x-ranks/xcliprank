@@ -13,6 +13,8 @@ export const readPublicLabels = cache(() => renderBackend().service.activeLabels
 export const readPublicMonths = cache(() => renderBackend().service.months());
 export const readPublicMonth = cache((month: string) => renderBackend().service.month(month));
 export const readPublicPopular = cache((range: string) => renderBackend().service.popular(range));
+export const readPublicRankDays = cache(() => renderBackend().service.rankDays());
+export const readPublicRankDay = cache((day: string) => renderBackend().service.rankDay(day));
 export const readPublicIndex = cache(() => renderBackend().service.indexable());
 export const readPublicAccountCards = cache(() => renderBackend().service.accountCards());
 

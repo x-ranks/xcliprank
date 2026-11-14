@@ -52,6 +52,7 @@ export default async function AccountPage(props: Props) {
   }
   const handle = d.handle ? `@${d.handle}` : null;
   const prof = page === 1 && d.profile && d.profile.total >= 2 ? d.profile : null;
+  const rk = d.ranking ?? null, rankDayLabel = (day: string) => `${Number(day.slice(0, 4))}年${Number(day.slice(5, 7))}月${Number(day.slice(8, 10))}日`;
   const dataSection = prof ? <section className="public-author-profile" aria-labelledby="author-profile-heading">
       <h2 id="author-profile-heading">{d.name}の動画データ</h2>
       <dl>
@@ -59,6 +60,10 @@ export default async function AccountPage(props: Props) {
         {profileDate(prof.latestAt) ? <div><dt>最新の投稿</dt><dd>{profileDate(prof.latestAt)}</dd></div> : null}
         {profileDate(prof.firstAt) && prof.firstAt !== prof.latestAt ? <div><dt>最も古い掲載動画</dt><dd>{profileDate(prof.firstAt)}</dd></div> : null}
         {prof.measured >= 2 ? <div><dt>Xでの表示回数（確認できた{prof.measured}件の合計）</dt><dd>{profileNumber(prof.viewsTotal)}回</dd></div> : null}
+        {rk?.standing?.byViews ? <div><dt>表示回数の合計の順位（twizou掲載の投稿者{profileNumber(rk.standing.authors)}人中）</dt><dd>{profileNumber(rk.standing.byViews)}位</dd></div> : null}
+        {rk?.standing ? <div><dt>掲載動画数の順位（同{profileNumber(rk.standing.authors)}人中）</dt><dd>{profileNumber(rk.standing.byCount)}位</dd></div> : null}
+        {rk && rk.everRanked > 0 ? <div><dt>twizouのランキングに載った動画</dt><dd>{profileNumber(rk.everRanked)}本</dd></div> : null}
+        {rk && rk.best !== null ? <div><dt>24時間ランキング最高順位{rk.since ? `（${rankDayLabel(rk.since)}以降の記録）` : ""}</dt><dd>{rk.best}位（ランクイン{profileNumber(rk.rankedDays)}日）</dd></div> : null}
       </dl>
       {prof.months.length >= 2 ? <p>月ごとの投稿数：{prof.months.map(m => `${m.month.replace("-", "年")}月 ${m.count}件`).join("、")}。</p> : null}
       {d.topVideos?.length ? <><h3>Xで表示回数の多い動画</h3><ol className="public-author-top">{d.topVideos.map(({ video, views }) => <li key={video.id}>

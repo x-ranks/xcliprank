@@ -12,6 +12,7 @@ import { createPublicCatalog } from "./public-catalog-store";
 import { publicCatalogDirectory, publicSaveSecret } from "./public-save-secret";
 import { createPublicVideoService } from "./public-video-service";
 import { createStaleCache } from "./stale-cache";
+import { createRankHistoryStore } from "./rank-history-store";
 import { publicPostId, type PublicVideo } from "./public-video-core";
 import { eligibleManualXIds } from "./manual-x-permissions";
 import { readManualState } from "./manual-ranking";
@@ -50,6 +51,7 @@ async function activeAuthorFingerprint() {
   value.catch(() => { if (authorFingerprintCache?.value === value) authorFingerprintCache = null; });
   return value;
 }
+let rankHistoryStore: ReturnType<typeof createRankHistoryStore> | undefined;
 export function productionPublicBackend(options: { readOnlyRender?: boolean } = {}) {
   const catalog = createPublicCatalog(publicCatalogDirectory());
   const active = new Set<string>(), checked = new Set<string>();
@@ -166,5 +168,5 @@ export function productionPublicBackend(options: { readOnlyRender?: boolean } = 
     try { await fs.lstat(path.join(os.homedir(), ".xclip-production-deploy.lock")); return false; }
     catch (e) { if ((e as NodeJS.ErrnoException).code === "ENOENT") return true; throw Error("PUBLIC_DEPLOYMENT_BUSY"); }
   }
-  return { service: createPublicVideoService({ catalog, posts, authorVideos, candidates, scanPage, indexVideos, tierPage, automaticReady, secret: publicSaveSecret }, options), catalog };
+  return { service: createPublicVideoService({ catalog, posts, authorVideos, candidates, scanPage, indexVideos, tierPage, automaticReady, rankHistory: () => (rankHistoryStore ??= createRankHistoryStore(publicCatalogDirectory())).read(), secret: publicSaveSecret }, options), catalog };
 }

@@ -30,7 +30,7 @@ export default async function PopularRankingPage({ range }: { range: PopularRang
   const d = await readPublicPopular(range); if (!d) notFound();
   const c = COPY[range], hasData = d.measured > 0;
   const period = range === "all" ? [jstDay(d.firstAt), jstDay(d.latestAt)].filter(Boolean).join("〜") : "";
-  const tabs: [string, string, boolean][] = [["/ranking/daily", "24時間", false], ["/ranking/weekly", "週間", false], ["/ranking/30days", "30日", range === "30days"], ["/ranking/all", "全期間", range === "all"]];
+  const tabs: [string, string, boolean][] = [["/ranking/daily", "24時間", false], ["/ranking/weekly", "週間", false], ["/ranking/30days", "30日", range === "30days"], ["/ranking/all", "全期間", range === "all"], ["/ranking/history", "過去", false]];
   return <main style={{ maxWidth: 1120, margin: "0 auto", padding: 24 }}>
     <SiteBrand active="ranking" />
     <nav className="ranking-page-nav" aria-label="ランキングを選択">{tabs.map(([href, label, active]) => <a key={href} href={href} className={active ? "active" : undefined} aria-current={active ? "page" : undefined}>{label}</a>)}</nav>

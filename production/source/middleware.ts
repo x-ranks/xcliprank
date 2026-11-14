@@ -27,6 +27,7 @@ const PUBLIC_EXACT_PATHS = new Set([
   "/ranking/weekly",
   "/ranking/30days",
   "/ranking/all",
+  "/ranking/history",
   "/rising",
   "/reels",
   "/browse",
@@ -74,7 +75,7 @@ const NOINDEX_PATHS = new Set([
 ]);
 
 function isPublicPath(pathname: string) {
-  if (/^\/p\/[1-9][0-9]{1,24}\/?$/.test(pathname) || /^\/accounts\/[A-Za-z0-9_-]{1,68}\/?$/.test(pathname) || /^\/tags\/[^/]{1,500}\/?$/.test(pathname) || /^\/months\/\d{4}-(0[1-9]|1[0-2])\/?$/.test(pathname)) return true;
+  if (/^\/p\/[1-9][0-9]{1,24}\/?$/.test(pathname) || /^\/accounts\/[A-Za-z0-9_-]{1,68}\/?$/.test(pathname) || /^\/tags\/[^/]{1,500}\/?$/.test(pathname) || /^\/months\/\d{4}-(0[1-9]|1[0-2])\/?$/.test(pathname) || /^\/ranking\/history\/\d{4}-\d{2}-\d{2}\/?$/.test(pathname)) return true;
   if (PUBLIC_EXACT_PATHS.has(pathname)) {
     return true;
   }

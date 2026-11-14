@@ -15,7 +15,7 @@ import PublicVideoCards from "../../components/PublicVideoCards";
 import StructuredData from "../../components/StructuredData";
 import FollowButton from "../../components/FollowButton";
 import PublicPostEngagement from "../../components/PublicPostEngagement";
-import { accountKey, authorHref, originalHref, publicPostId, tagHref, publicVideoFacts } from "../../../lib/public-video-core";
+import { accountKey, authorHref, originalHref, publicPostId, tagHref, publicVideoFacts, publicRankFacts } from "../../../lib/public-video-core";
 import { readPublicDetailCore, readPublicRelated } from "../../../lib/public-video-server";
 export const dynamic = "force-dynamic";
 type Props = { params: Promise<{ id: string }>; searchParams?: Promise<{ from?: string | string[] }> };
@@ -29,7 +29,7 @@ export async function generateMetadata(props: Props): Promise<Metadata> {
 export default async function PostPage(props: Props) {
   const verifiedGooglebot = (await headers()).get("x-twizou-verified-googlebot") === "1";
   const d = await data(props); if (!d) notFound(); const { video: v, metadata: m } = d;
-  const facts = publicVideoFacts(v, d.technical);
+  const facts = [...publicVideoFacts(v, d.technical), ...publicRankFacts(d.rank, d.firstRankedAt)];
   const query = await props.searchParams; const sourcePage = safePublicReturn(query?.from); const returnTo = sourcePage ?? "/";
   return <><AgeGate verifiedGooglebot={verifiedGooglebot} forceForPost /><main className="public-post-page">
     <SiteBrand />
