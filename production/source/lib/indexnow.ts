@@ -4,7 +4,7 @@
 // - Pages without a lastmod that change all day (top, rankings, rising) are re-sent at most once per Japan-time day.
 // - Runs are spaced out, capped, and stop at the first refusal; the state is saved only for batches the service accepted.
 import { promises as fs } from "node:fs";
-import path from "node:path";
+import { join } from "node:path";
 import { randomUUID } from "node:crypto";
 
 // The key is public by design: the same text is served at /<key>.txt so the engines can verify ownership.
@@ -70,7 +70,7 @@ export async function submitBatch(urls: string[], fetchImpl: typeof fetch = fetc
 
 let running = false;
 export async function runIndexNow(options: { rows: () => Promise<SitemapRow[]>; dir: string; now?: () => number; fetchImpl?: typeof fetch }): Promise<IndexNowSummary> {
-  const now = options.now ?? Date.now, file = path.join(options.dir, INDEXNOW_STATE_FILE);
+  const now = options.now ?? Date.now, file = join(options.dir, INDEXNOW_STATE_FILE);
   if (running) return { skipped: "busy", planned: 0, submitted: 0, pending: 0 };
   running = true;
   try {
