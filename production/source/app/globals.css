@@ -1682,12 +1682,11 @@ html[data-age-confirmed="yes"] body.age-gate-open { overflow:auto; }
 .device-guide-page h2 { color:#f6f8fb; font-size:19px; line-height:1.5; margin:0 0 12px; }
 
 /* ---- 2026-11 navigation refresh: flat sticky header, underline sub-tabs, bottom tabs with MENU sheet, author cards ---- */
-body { overflow-x: clip; }
 body.menu-open { overflow: hidden; }
 /* The header must be a direct child of <main> so it can stay pinned for the whole page. */
 .hero:has(> .site-brand-band), .ranking-page-header:has(> .site-brand-band) { display: contents; }
-.site-brand-band { position: sticky; top: 0; z-index: 35; display: flex; align-items: center; gap: 26px; min-height: 60px; margin: 0 0 22px; padding: 0; border: 0; border-radius: 0; background: transparent; box-shadow: none; }
-.site-brand-band::before { content: ""; position: absolute; inset: 0 -100vmax; z-index: -1; background: rgba(9,12,16,.96); border-bottom: 1px solid #222a35; backdrop-filter: blur(10px); }
+.site-brand-band { position: sticky; top: 0; z-index: 35; display: flex; align-items: center; gap: 26px; min-height: 60px; margin: 0 0 22px; padding: 0; border: 0; border-radius: 0; background: rgba(9,12,16,.97); /* Full-width background by box-shadow: unlike a wide child box it never adds horizontal scroll on phones. */ box-shadow: 0 0 0 100vmax rgba(9,12,16,.97); clip-path: inset(0 -100vmax -1px 0); }
+.site-brand-band::after { content: ""; position: absolute; left: 0; right: 0; bottom: -1px; height: 1px; background: #222a35; box-shadow: 0 0 0 100vmax #222a35; clip-path: inset(0 -100vmax); pointer-events: none; }
 .site-brand-link { min-height: 44px; gap: 9px; flex: none; }
 .site-brand-link img { width: 28px; height: 28px; }
 .site-brand-link span { font-size: 22px; font-weight: 900; letter-spacing: -.03em; }
@@ -1706,7 +1705,7 @@ body.menu-open { overflow: hidden; }
 .site-fav-link { color: #9aa9b8; font-size: 20px; line-height: 1; text-decoration: none; }
 .site-fav-link:hover, .site-brand-tools .site-x-link:hover { color: #f1f4f8; }
 .site-brand-tools .site-x-link { color: #9aa9b8; font-size: 13px; font-weight: 700; text-decoration: none; white-space: nowrap; }
-.site-brand-band a:focus-visible, .site-brand-band button:focus-visible { outline: 3px solid #a8d4ff; outline-offset: 3px; }
+.site-brand-band a:focus-visible, .site-brand-band button:focus-visible { outline: 3px solid #a8d4ff; outline-offset: -3px; }
 .site-brand-band + .ranking-page-title { margin-top: 30px; }
 .public-post-page .site-brand-band { padding-right: 0; }
 .public-post-page .site-brand-band .site-brand-tools { margin-right: 56px; }
@@ -1760,6 +1759,8 @@ body.menu-open { overflow: hidden; }
   .site-brand-tools { gap: 0; }
   .site-search-icon { display: flex; align-items: center; justify-content: center; width: 44px; height: 44px; color: #cfdae6; }
   .public-post-page .site-brand-band .site-brand-tools { margin-right: 52px; }
+  /* On phones the ranking switch lives in the bottom tabs and the MENU sheet, so the top tab strip is hidden. */
+  .ranking-page-nav[aria-label="ランキングを選択"] { display: none; }
   .ranking-page-nav { gap: 18px; margin-bottom: 10px; }
   .ranking-page-nav a, .ranking-page-nav button { min-height: 42px; padding: 0 2px; font-size: 13px; }
   .bottom-tabs a, .bottom-tabs button { position: relative; flex: 1 1 0; min-width: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 3px; min-height: 56px; padding: 0; border: 0; background: transparent; color: #a3afbb; font: inherit; font-size: 10px; font-weight: 700; text-decoration: none; cursor: pointer; }

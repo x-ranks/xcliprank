@@ -55,5 +55,8 @@ const Link = ({ children, href, prefetch, ...p }) => React.createElement('a', { 
   // CSS: pinned header (sticky), full-width background, six-tab phone bar with MENU sheet.
   const css = fs.readFileSync(path.join(root, 'app/globals.css'), 'utf8');
   assert(/\.site-brand-band \{ position: sticky; top: 0;/.test(css) && /display: contents/.test(css) && /\.menu-sheet-backdrop \{ position: fixed/.test(css));
+  // Phones: no wide child box (it caused sideways scrolling and pushed the layout past the phone breakpoint), top ranking tabs hidden.
+  assert(!/\.site-brand-band::before/.test(css) && /\.site-brand-band \{[^}]*box-shadow: 0 0 0 100vmax/.test(css), 'full-width header background uses a shadow, not a wide box');
+  assert(/@media \(max-width: 720px\) \{[^]*\.ranking-page-nav\[aria-label="ランキングを選択"\] \{ display: none; \}/.test(css), 'phone hides the top ranking tabs');
   console.log('PASS NAV REFRESH: header links/current marker, author cards (thumbs, counts, sort, noindex), sticky/MENU CSS. Fixture only.');
 })().catch(e => { console.error(e); process.exit(1); });
