@@ -16,7 +16,10 @@ export function classifyPostResponse(post: PostIdentity, http: number, body: any
     if (status.id !== id || status.provider !== "twitter") return "unknown";
     return status.reason === "deleted" ? "missing" : ["private", "blocked", "suspended", "unavailable"].includes(status.reason) ? "hidden" : "unknown";
   }
-  if (body.code === 404 && body.message === "NOT_FOUND" && !status) return "missing";
+  // FxTwitter (2026-11) returns {"status":null,"thread":null,"author":null,"code":404} with no message for a missing post.
+  if (body.code === 404 && !status && (body.message === undefined || body.message === "NOT_FOUND")) return "missing";
+  // 401 with no status body: the owner restricted/protected the account. Still needs the usual two separated confirmations.
+  if (http === 401 && body.code === 401 && !status) return "hidden";
   if (http !== 200 || body.code !== 200 || (body.message !== undefined && body.message !== "OK") || status?.type !== "status" || status.provider !== "twitter" ||
       status.id !== id || typeof status.author?.protected !== "boolean" || typeof status.text !== "string") return "unknown";
   const returned = authorKey({ author_id: status.author.id, author_username: status.author.screen_name }), expected = authorKey(post);
