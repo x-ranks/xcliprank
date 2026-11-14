@@ -25,7 +25,7 @@ export default async function MonthPage(props: Props) {
   const base = monthHref(d.month), label = monthLabel(d.month);
   const available = (await readPublicLabels().catch(() => [])).filter(tag => tag.index && tag.count > 0);
   const tags = d.tags.filter(tag => available.some(a => a.name === tag.name));
-  return <main style={{ maxWidth: 1120, margin: "0 auto", padding: 24 }}><SiteBrand /><a href="/months">月別一覧</a>
+  return <main style={{ maxWidth: 1120, margin: "0 auto", padding: 24 }}><SiteBrand active="months" /><a href="/months">月別一覧</a>
     <h1>{label}のTwitter動画{d.byViews ? "人気ランキング" : "一覧"}</h1>
     <p>{label}に投稿された掲載動画は{profileNumber(d.total)}件・{profileNumber(d.authorCount)}投稿者。{d.byViews ? "Xでの表示回数が多い順に紹介します。" : "新しい順に紹介します。"}動画を再生・保存し、元投稿を確認できます。</p>
     <section className="public-author-profile" aria-labelledby="month-data-heading">

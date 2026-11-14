@@ -9,11 +9,17 @@ const tabs = load('app/components/BottomTabs.tsx', { 'next/link': Link, 'next/na
 const html = p => { current = p; return renderToStaticMarkup(React.createElement(tabs.default)); };
 for (const p of ['/', '/rising', '/ranking/daily', '/browse', '/discover', '/tags/x', '/accounts/a', '/months/2026-10', '/following', '/favorites', '/p/1850123456789012345']) assert(html(p).includes('メインメニュー'), p + ' shows the tabs');
 for (const p of ['/privacy', '/contact', '/removal-request', '/ranking-admin']) assert.equal(html(p), '', p + ' has no tabs');
-assert(html('/rising').includes('href="/rising" aria-current="page"') && !html('/rising').includes('href="/discover" aria-current'));
-assert.equal(tabs.activeTab('/accounts/x'), '/discover'); assert.equal(tabs.activeTab('/months'), '/discover'); assert.equal(tabs.activeTab('/following'), '/following'); assert.equal(tabs.activeTab('/favorites'), '/favorites'); assert.equal(tabs.activeTab('/p/1'), null);
-for (const t of ['急上昇', '探す', 'フォロー', '保存']) assert(html('/').includes(`<span>${t}</span>`));
+assert(html('/rising').includes('href="/rising" aria-current="page"') && !html('/rising').includes('href="/discover?mode=search" aria-current'));
+assert.equal(tabs.activeTab('/accounts/x'), 'menu'); assert.equal(tabs.activeTab('/months'), 'menu'); assert.equal(tabs.activeTab('/following'), 'menu'); assert.equal(tabs.activeTab('/favorites'), '/favorites'); assert.equal(tabs.activeTab('/p/1'), null);
+assert.equal(tabs.activeTab('/'), '/'); assert.equal(tabs.activeTab('/browse'), '/'); assert.equal(tabs.activeTab('/ranking/weekly'), '/ranking/daily'); assert.equal(tabs.activeTab('/reels'), 'menu');
+assert.equal(tabs.activeTab('/discover'), '/discover?mode=search'); assert.equal(tabs.activeTab('/discover', 'search'), '/discover?mode=search'); assert.equal(tabs.activeTab('/discover', 'random'), 'menu'); assert.equal(tabs.activeTab('/discover', 'tier'), 'menu');
+for (const t of ['急上昇', 'ランキング', '新着', '保存', '検索', 'MENU']) assert(html('/').includes(`<span>${t}</span>`));
 const read = f => fs.readFileSync(path.join(root, f), 'utf8');
 assert(read('app/layout.tsx').includes('<BottomTabs />'));
+// Six tabs; the MENU sheet (closed on first render) holds the rest and is a labelled dialog when opened.
+assert.equal((html('/').match(/<span>/g) || []).length, 6);
+const tabSrc = read('app/components/BottomTabs.tsx'); for (const s of ['ランダム', '投稿者一覧', 'Tierで探す', '月別ランキング', 'フォロー新着', 'お気に入り・履歴', 'URLから保存', 'iPhoneでの保存方法', 'Androidでの保存方法', 'role="dialog"']) assert(tabSrc.includes(s), s + ' is in the MENU sheet');
+assert(!html('/').includes('role="dialog"'), 'MENU sheet starts closed');
 assert(read('app/components/SiteBrand.tsx').includes('className="site-search-icon"') && read('app/components/SiteBrand.tsx').includes('aria-label="動画を検索"'));
 // Video page: save, favorite, share, then a "more" menu holding original post / author page / report.
 const page = read('app/p/[id]/page.tsx'), viewer = read('app/components/PublicDetailViewer.tsx'), post = read('app/components/PostActionBar.tsx'), at = s => post.indexOf(s);

@@ -24,7 +24,7 @@ export default async function RisingPage() {
   const { posts, updatedAt } = await loadRisingRanking(waitForRefresh ? {} : { deferRefresh: after });
   return <main data-rising-updated-at={updatedAt}>
     <header className="ranking-page-header">
-      <SiteBrand showSearch />
+      <SiteBrand showSearch active="rising" />
       <h1 className="ranking-page-title">急上昇ランキング</h1>
       <p className="ranking-page-description">X（Twitter）動画の急上昇ランキング。twizouで直近7日間に開かれた回数と、これまでの保存操作の回数をもとに並べています。</p>
     </header>

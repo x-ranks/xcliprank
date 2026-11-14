@@ -100,7 +100,7 @@ export default async function Home({ searchParams }: { searchParams: Search }) {
     <main>
       <StructuredData data={structuredData} />
       <header className="hero branded-page-header">
-        <SiteBrand showSearch />
+        <SiteBrand showSearch active="new" />
         <h1 className="ranking-page-title">新着ランキング</h1>
         <p>新着動画を紹介！</p>
       </header>

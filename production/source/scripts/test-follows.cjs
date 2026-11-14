@@ -72,7 +72,7 @@ const req = (body, headers = {}) => new Request('https://twizou.net/api/follow-f
   assert(read('app/accounts/[key]/page.tsx').includes('<FollowButton accountKey={d.canonicalKey} />'));
   assert(read('app/p/[id]/page.tsx').includes('<FollowButton accountKey={accountKey(v)!} compact />'), 'video page has the follow button');
   { const src = read('app/p/[id]/page.tsx'), css = read('app/globals.css'); assert(src.indexOf('post-author-follow') > src.indexOf('public-post-player') && src.indexOf('post-author-follow') < src.indexOf('<PostActionBar'), 'follow sits right under the player and above the actions'); assert(/\.public-post-page \.public-post-player video \{ max-height:46svh;/.test(css), 'on phones the player is capped so follow and save stay on the first screen'); }
-  assert(read('app/components/SiteBrand.tsx').includes('href="/following"'));
+  assert(read('app/components/SiteBrand.tsx').includes('href: "/following"'));
   assert(read('app/following/page.tsx').includes('<FollowFeed />') && read('app/following/page.tsx').includes('index: false'));
   assert(read('app/components/FollowFeed.tsx').startsWith('"use client"') && read('app/components/FollowButton.tsx').startsWith('"use client"'));
   // The public allow-list is deny-by-default: new routes answer 404 unless listed there.

@@ -185,6 +185,25 @@ export function createPublicVideoService(deps: PublicVideoDeps, options: { readO
     return { posts, accounts: [...accounts.values()].filter(a => isIndexable({ type: "account", permittedVideos: a.count }))
       .map(({ key, modifiedAt }) => ({ key, ...(modifiedAt ? { modifiedAt } : {}) })).sort((a, b) => a.key.localeCompare(b.key)), tags };
   }
+  // Author list cards: same eligibility as indexable(), plus a few recent thumbnails and totals for browsing.
+  async function accountCards() {
+    const c = await readCatalog();
+    const rows = deps.indexVideos ? await deps.indexVideos() : await deps.posts(Object.values(c.records).slice(0, 100).map(r => r.id));
+    type Card = { key: string; name: string; count: number; views: number; latest: string; thumbs: { id: string; at: string; url: string }[] };
+    const cards = new Map<string, Card>();
+    for (const video of rows) {
+      const key = accountKey(video); if (!key || !publicVideoIndexable(video, videoLabels(c, video))) continue;
+      const card = cards.get(key) ?? { key, name: video.authorName?.trim() || video.handle || key, count: 0, views: 0, latest: "", thumbs: [] };
+      card.count++; card.views += Math.max(0, video.views ?? 0);
+      const at = video.createdAt ?? "";
+      if (at > card.latest) { card.latest = at; if (video.authorName?.trim()) card.name = video.authorName.trim(); }
+      if (video.posterUrl) card.thumbs.push({ id: video.id, at, url: video.posterUrl });
+      cards.set(key, card);
+    }
+    return [...cards.values()].filter(card => isIndexable({ type: "account", permittedVideos: card.count }))
+      .map(card => ({ ...card, thumbs: card.thumbs.sort((a, b) => b.at.localeCompare(a.at) || b.id.localeCompare(a.id)).slice(0, 3).map(t => ({ id: t.id, url: t.url })) }))
+      .sort((a, b) => b.count - a.count || a.key.localeCompare(b.key));
+  }
   // Monthly pages: built only from the site's own indexable posts (Japan-time month) and their recorded X view counts.
   const MONTH_PATTERN = /^\d{4}-(0[1-9]|1[0-2])$/;
   const monthOf = (video: PublicVideo) => { const t = video.createdAt ? Date.parse(video.createdAt) : NaN; return Number.isFinite(t) ? new Date(t + 9 * 3600000).toISOString().slice(0, 7) : null; };
@@ -349,5 +368,5 @@ export function createPublicVideoService(deps: PublicVideoDeps, options: { readO
     if (!rows.some(video => video.id === input.id && video.eligible && video.sourceHash === input.sourceHash)) return { result: "unavailable" };
     await deps.catalog.technical(input.id, input.sourceHash, input.metadata, Date.now(), "mp4-range-v1"); return { result: "published" };
   }
-  return { technicalPage, technicalPublish, detailCore, detailRelated, detail, account, tag, activeLabels, indexable, months, month, browse, discovery, personalVideos, followFeed, publish, saved, inspect, status, candidates, autoPage, autoPublish };
+  return { technicalPage, technicalPublish, detailCore, detailRelated, detail, account, tag, activeLabels, indexable, accountCards, months, month, browse, discovery, personalVideos, followFeed, publish, saved, inspect, status, candidates, autoPage, autoPublish };
 }

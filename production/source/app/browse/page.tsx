@@ -24,7 +24,7 @@ export default async function BrowsePage({ searchParams }: Props) {
   const page = pageNumber((await searchParams).page), data = await readPublicBrowse(page);
   if (!data) notFound();
   return <main style={{ maxWidth: 1120, margin: "0 auto", padding: 24 }}>
-    <SiteBrand /><Link href="/">新着ランキング</Link> ／ <Link href="/accounts">投稿者一覧</Link>
+    <SiteBrand active="new" /><Link href="/">新着ランキング</Link> ／ <Link href="/accounts">投稿者一覧</Link>
     <h1>動画一覧</h1><p>掲載中の動画を投稿IDの新しい順に表示しています。全{data.totalCount}件、{page} / {data.totalPages}ページ。</p>
     <nav aria-label="動画一覧のページ" style={{ display: "flex", flexWrap: "wrap", gap: 12, marginBottom: 20 }}>
       {Array.from({ length: data.totalPages }, (_, i) => <Link key={i} href={browseHref(i + 1)} aria-current={page === i + 1 ? "page" : undefined}>{i + 1}</Link>)}

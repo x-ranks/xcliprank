@@ -64,7 +64,7 @@ export default async function AccountPage(props: Props) {
       {d.topVideos?.length ? <><h3>Xで表示回数の多い動画</h3><ol className="public-author-top">{d.topVideos.map(({ video, views }) => <li key={video.id}>
         <PublicPostLink id={video.id} returnTo={base}>{Array.from(video.text?.replace(/https?:\/\/t\.co\/\S+/gi, " ").replace(/\s+/g, " ").trim() || "動画を見る").slice(0, 60).join("")}</PublicPostLink>（{profileNumber(views)}回）</li>)}</ol></> : null}
     </section> : null;
-  return <main className="author-page" style={{ maxWidth: 1120, margin: "0 auto", padding: 24 }}><SiteBrand /><Link href="/accounts">投稿者一覧</Link>
+  return <main className="author-page" style={{ maxWidth: 1120, margin: "0 auto", padding: 24 }}><SiteBrand active="accounts" /><Link href="/accounts">投稿者一覧</Link>
     <div className="author-head"><div className="author-head-name"><h1>{d.name}のTwitter動画一覧</h1>{handle ? <p>{handle}</p> : null}</div><FollowButton accountKey={d.canonicalKey} /></div>
     {prof ? <div className="author-chips" role="group" aria-label="動画の数字">
       <div><b>{profileNumber(prof.total)}本</b><span>投稿</span></div>
