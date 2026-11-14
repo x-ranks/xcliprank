@@ -47,6 +47,11 @@ export type RankPost = {
   manual_title?: string;
 };
 
+// Rank shown at the bottom-left of a card, the same on every ranking page: yellow, top 5 stronger, a crown for 1st.
+function RankLabel({ rank }: { rank: number }) {
+  return <b className={rank <= 5 ? "public-card-rank public-card-rank-top" : "public-card-rank"} data-rank={rank}>{rank === 1 ? <span className="public-card-crown" aria-hidden="true">👑</span> : null}{rank}位</b>;
+}
+
 // Thumbnail alt text: who posted it and when (the rank is already shown by the badge), so cards are not all the same sentence.
 function thumbnailAlt(p: RankPost) {
   const name = p.author_name ?? p.author_username ?? "投稿者";
@@ -286,10 +291,6 @@ export default function RankingClient({
                 </div>
               )}
 
-              <span className="rank-badge">
-                #{p.ranking_position ?? index + 1}
-              </span>
-
               {(p.has_video || p.video_url) && !p.manual_id && <VideoDurationBadge postId={p.x_post_id} />}
 
               <div
@@ -302,6 +303,7 @@ export default function RankingClient({
 
             <div className="card-body">
               <div className="author-row">
+                <RankLabel rank={p.ranking_position ?? index + 1} />
                 <strong>
                   {p.author_name ??
                     p.author_username ??
