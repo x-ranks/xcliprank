@@ -54,11 +54,9 @@ function resolve(n){if(n.endsWith("SiteBrand"))return load("app/components/SiteB
  throw Error('Unexpected page import '+n);
 }
 function assertCanonicalRankingLinks(html){
- const nav=html.match(/<nav[^>]*aria-label="ランキングを選択"[^>]*>([\s\S]*?)<\/nav>/)?.[1];
- assert(nav);
- const hrefs=[...nav.matchAll(/href="([^"]+)"/g)].map(match=>match[1]);
+ const hrefs=[...html.matchAll(/href="([^"]+)"/g)].map(match=>match[1]);
  for(const href of ["/","/ranking/daily","/ranking/weekly"]) assert(hrefs.includes(href),href);
- assert(!hrefs.some(href=>href.includes("edition=")));
+ assert(!hrefs.some(href=>href.startsWith("/ranking/")&&href.includes("edition=")));
 }
 (async()=>{
  const home=load('app/page.tsx',resolve);

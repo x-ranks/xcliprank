@@ -47,9 +47,13 @@ async function main(){
     await assert.rejects(fourHourSnapshot(root,"../escape",collect,valid),/NAME_INVALID/);
     const page=fs.readFileSync(path.join(__dirname,"../app/rising/page.tsx"),"utf8");
     assert(page.includes("twizou内で人気の動画をまとめました！"));
-    for(const tab of ["/rising","/","/ranking/daily","/ranking/weekly","/reels","/download"])
-      assert(page.includes(`href="${tab}"`),tab);
-    assert(page.indexOf('href="/rising"')<page.indexOf('href="/">新着'));
+    // The ranking tabs moved into the shared header (SiteBrand): rising first, then new, ranking, reels and the save button.
+    const brand=fs.readFileSync(path.join(__dirname,"../app/components/SiteBrand.tsx"),"utf8");
+    assert(page.includes('<SiteBrand showSearch active="rising" />'));
+    for(const tab of ["/rising","/","/ranking/daily","/reels","/download"])
+      assert(brand.includes(`href: "${tab}"`)||brand.includes(`href="${tab}"`),tab);
+    assert(page.includes('href="/ranking/weekly"'));
+    assert(brand.indexOf('href: "/rising"')<brand.indexOf('href: "/"')&&brand.indexOf('href: "/"')<brand.indexOf('href: "/ranking/daily"'));
     assert(page.includes("<VideoDurationBadge postId={post.x_post_id}"));
     console.log("PASS rising 4h snapshot, concurrent deduplication, corrupt snapshot recovery, all tabs, duration and concise copy");
   } finally {fs.rmSync(root,{recursive:true,force:true});}

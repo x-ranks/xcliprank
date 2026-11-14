@@ -28,11 +28,6 @@ export default async function RisingPage() {
       <h1 className="ranking-page-title">急上昇ランキング</h1>
       <p className="ranking-page-description">X（Twitter）動画の急上昇ランキング。twizouで直近7日間に開かれた回数と、これまでの保存操作の回数をもとに並べています。</p>
     </header>
-    <nav className="ranking-page-nav" aria-label="ランキングを選択">
-      <Link prefetch={false} href="/rising" className="active" aria-current="page">急上昇</Link>
-      <Link prefetch={false} href="/">新着</Link><Link prefetch={false} href="/ranking/daily">24時間</Link><Link prefetch={false} href="/ranking/weekly">週間</Link>
-      <Link prefetch={false} href="/months">月別</Link><Link prefetch={false} href="/reels">リール</Link><Link prefetch={false} href="/download">動画保存</Link>
-    </nav>
     <NewSinceVisit ids={posts.map(post => String(post.x_post_id))} />
     {posts.length ? <div className="video-grid">{posts.map((post, index) => <article className="video-card" key={post.x_post_id}>
       <PublicPostLink id={post.x_post_id} returnTo="/rising" ariaLabel={`${index + 1}位の動画を開く`} style={{ display: "block", color: "inherit", textDecoration: "none" }}>
