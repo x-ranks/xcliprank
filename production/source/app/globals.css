@@ -1782,3 +1782,9 @@ body.menu-open { overflow: hidden; }
   .account-meta { grid-area: meta; }
   .account-stats { grid-area: stats; padding-left: 44px; }
 }
+
+/* Ranking page guide: short headings and native disclosure for the FAQ. */
+.seo-info h3 { margin: 14px 0 4px; color: #dce2e9; font-size: 13px; }
+.seo-faq details { border-top: 1px solid #202733; padding: 7px 0; }
+.seo-faq summary { cursor: pointer; color: #dce2e9; font-weight: 700; }
+.seo-faq details p { margin-top: 5px; }

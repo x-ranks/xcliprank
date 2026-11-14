@@ -36,7 +36,7 @@ export default function DownloadForm() {
         <Link href="/download" className="active" aria-current="page">動画保存</Link>
       </nav>
       <Link href="/">← ランキングへ戻る</Link>
-      <h1>投稿URLから動画を保存</h1>
+      <h1>X動画を投稿URLから保存</h1>
       <p>X・Twitterの公開投稿URLを貼り付けてください。</p>
       <div className="download-notice">
         <strong>権利者が保存を許可した動画のみ利用できます。</strong>
