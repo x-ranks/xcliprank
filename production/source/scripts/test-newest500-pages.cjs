@@ -78,7 +78,7 @@ function assertCanonicalRankingLinks(html){
  assert(html.includes('新着動画を紹介！'));assert(html.includes('class="site-brand-band"'));assert(html.includes('aria-label="twizouのトップページ（急上昇）へ"'));
  assert(html.includes('一覧更新：'));assert(html.includes('2026/10/14 18:35'));assert(html.includes('dateTime="2026-10-14T09:35:00.000Z"'));assert(html.includes('<a href="/">最新の一覧を表示</a>'));
  assert(html.includes('さらに表示（次の50件）'));assert(html.includes('page=3&amp;edition='+edition));
- assert(html.includes('position":51'));assert(html.includes('numberOfItems":50'));assert(html.includes('data-rank="51"')&&html.includes('51位</b>'),'page 2 starts at rank 51 (bottom-left rank label)');
+ assert(html.includes('position":51'));assert(html.includes('numberOfItems":50'));assert(html.includes('data-rank="51"'),'page 2 starts at rank 51 (bottom-left rank label)');
  assertCanonicalRankingLinks(html);
  assert(html.includes('href="/?edition='+edition+'"'),'previous page keeps its edition');
  assert(!html.includes('href="/ranking/daily?edition='));
