@@ -37,6 +37,6 @@ const svcFor = rows => createPublicVideoService({ catalog: { read: async () => (
   const mw = fs.readFileSync('middleware.ts', 'utf8');
   assert.match(mw, /"\/months"/); assert.ok(mw.includes('months\\/'), 'middleware allows /months/YYYY-MM');
   assert.ok(fs.readFileSync('app/sitemap.ts', 'utf8').includes('/months/${m.month}'), 'sitemap lists month pages');
-  assert.ok(fs.readFileSync('app/components/SiteBrand.tsx', 'utf8').includes('href="/months"'), 'masthead links to the month hub');
+  assert.ok(fs.readFileSync('app/components/SiteBrand.tsx', 'utf8').includes('href: "/months"'), 'masthead links to the month hub');
   console.log('PASS MONTH PAGES: Japan-time months, ranking by X views, recency fallback, thresholds, 404s, middleware/sitemap/nav wiring. Fixture only.');
 })().catch(e => { console.error(e); process.exit(1); });

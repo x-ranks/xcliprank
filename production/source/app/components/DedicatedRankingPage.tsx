@@ -58,7 +58,7 @@ export default function DedicatedRankingPage({
     <main>
       <StructuredData data={structuredData} />
       <header className="ranking-page-header">
-        <SiteBrand showSearch />
+        <SiteBrand showSearch active="ranking" />
         <h1 className="ranking-page-title">{copy.title}</h1>
         <p className="ranking-page-description">{copy.description}</p>
       </header>

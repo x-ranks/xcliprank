@@ -13,7 +13,7 @@ export async function generateMetadata(): Promise<Metadata> {
 }
 export default async function MonthsPage() {
   const months = await readPublicMonths();
-  return <main style={{ maxWidth: 900, margin: "0 auto", padding: 24 }}><SiteBrand /><a href="/rising">急上昇ランキング</a>
+  return <main style={{ maxWidth: 900, margin: "0 auto", padding: 24 }}><SiteBrand active="months" /><a href="/rising">急上昇ランキング</a>
     <h1>月別のTwitter動画ランキング</h1>
     <p>twizouに掲載した動画を、投稿された月ごとにまとめています。各月のページでは、Xでの表示回数が多い動画、人気のタグ、動画が多い投稿者を確認できます。</p>
     {months.length ? null : <p>現在表示できる月はありません。</p>}
