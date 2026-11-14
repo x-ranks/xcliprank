@@ -47,6 +47,15 @@ export type RankPost = {
   manual_title?: string;
 };
 
+// Thumbnail alt text: who posted it and when (the rank is already shown by the badge), so cards are not all the same sentence.
+function thumbnailAlt(p: RankPost) {
+  const name = p.author_name ?? p.author_username ?? "投稿者";
+  const t = Date.parse(p.created_at);
+  if (!Number.isFinite(t)) return `${name}のX動画`;
+  const d = new Date(t + 9 * 3600000);
+  return `${name}のX動画（${d.getUTCMonth() + 1}月${d.getUTCDate()}日の投稿）`;
+}
+
 export type Range = "trending" | "daily" | "weekly";
 
 type RankingClientProps = {
@@ -263,11 +272,7 @@ export default function RankingClient({
               {p.preview_image_url ? (
                 <PublicThumbnail
                   src={p.preview_image_url}
-                  alt={`${
-                    p.author_name ??
-                    p.author_username ??
-                    "投稿者"
-                  }の動画（ランキング${p.ranking_position ?? index + 1}位）`}
+                  alt={thumbnailAlt(p)}
                   className="thumb"
                   width={392}
                   height={220}
