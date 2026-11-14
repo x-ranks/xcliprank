@@ -60,6 +60,18 @@ const O = 'https://twizou.net';
   const flaky = async () => ({ status: ++n === 2 ? 429 : 200 });
   r = await nx.runIndexNow({ rows: async () => many, dir: dir3, now: () => clock, fetchImpl: flaky });
   assert.deepEqual([r.submitted, r.pending, r.failedStatus], [1000, 5200, 429], 'stops at the refusal; accepted batch kept');
+  assert.equal(nx.INDEXNOW_ENDPOINT, 'https://www.bing.com/indexnow');
+  // 429 (too many requests) waits the full interval; other refusals are retried after 30 minutes, not 5 hours.
+  clock += 31 * 60e3; sizes.length = 0; const okAfter = async (u, init) => { sizes.push(JSON.parse(init.body).urlList.length); return { status: 200 }; };
+  r = await nx.runIndexNow({ rows: async () => many, dir: dir3, now: () => clock, fetchImpl: okAfter });
+  assert.equal(r.skipped, 'interval', '429 keeps the full interval: too-frequent sending is what it complains about');
+  const dir5 = fs.mkdtempSync(path.join(os.tmpdir(), 'indexnow-')); clock = T0;
+  r = await nx.runIndexNow({ rows: async () => rows, dir: dir5, now: () => clock, fetchImpl: async () => ({ status: 403 }) });
+  assert.equal(r.submitted, 0); clock += 10 * 60e3;
+  r = await nx.runIndexNow({ rows: async () => { throw Error('must not read'); }, dir: dir5, now: () => clock, fetchImpl: async () => ({ status: 200 }) });
+  assert.equal(r.skipped, 'interval', 'not retried within 30 minutes');
+  clock += 25 * 60e3; r = await nx.runIndexNow({ rows: async () => rows, dir: dir5, now: () => clock, fetchImpl: async () => ({ status: 200 }) });
+  assert.equal(r.submitted, 7, 'nothing was ever accepted, so the retry runs after 30 minutes');
   const dir4 = fs.mkdtempSync(path.join(os.tmpdir(), 'indexnow-')); n = 0;
   r = await nx.runIndexNow({ rows: async () => rows, dir: dir4, now: () => clock, fetchImpl: async () => { throw Error('offline'); } });
   assert.deepEqual([r.submitted, r.failedStatus], [0, 0], 'network failure is reported, nothing marked as sent');

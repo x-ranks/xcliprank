@@ -10,14 +10,17 @@ import { randomUUID } from "node:crypto";
 // The key is public by design: the same text is served at /<key>.txt so the engines can verify ownership.
 export const INDEXNOW_KEY = "bdf0f506e6af0e8a3249367f80a50c87";
 export const INDEXNOW_HOST = "twizou.net";
-export const INDEXNOW_ENDPOINT = "https://api.indexnow.org/indexnow";
+// Bing's own endpoint (the shared api.indexnow.org answered 403 for a new key). Engines share submissions with each other.
+export const INDEXNOW_ENDPOINT = "https://www.bing.com/indexnow";
 export const INDEXNOW_MIN_INTERVAL_MS = 5 * 3600e3;
+// After a failure (or while nothing has ever been accepted) the next try may come sooner.
+export const INDEXNOW_RETRY_MS = 30 * 60e3;
 export const INDEXNOW_BATCH = 1000;
 export const INDEXNOW_RUN_LIMIT = 5000;
 export const INDEXNOW_STATE_FILE = "indexnow-state.json";
 
 export type SitemapRow = { url: string; lastModified?: string | Date };
-export type IndexNowState = { version: 1; lastRunAt: number; urls: Record<string, string> };
+export type IndexNowState = { version: 1; lastRunAt: number; urls: Record<string, string>; retry?: true };
 export type IndexNowSummary = { skipped?: "interval" | "busy"; planned: number; submitted: number; pending: number; failedStatus?: number };
 
 const ORIGIN = `https://${INDEXNOW_HOST}`;
@@ -39,7 +42,7 @@ export function parseState(text: string): IndexNowState {
   if (!raw || raw.version !== 1 || !raw.urls || typeof raw.urls !== "object" || typeof raw.lastRunAt !== "number") return blank;
   const urls: Record<string, string> = {};
   for (const [url, mark] of Object.entries(raw.urls as Record<string, unknown>)) if (typeof mark === "string") urls[url] = mark;
-  return { version: 1, lastRunAt: raw.lastRunAt, urls };
+  return { version: 1, lastRunAt: raw.lastRunAt, urls, ...(raw.retry === true ? { retry: true as const } : {}) };
 }
 
 /** Which sitemap pages still need to be announced. Hub pages first, then videos (newest first), then authors. */
@@ -75,7 +78,8 @@ export async function runIndexNow(options: { rows: () => Promise<SitemapRow[]>; 
   running = true;
   try {
     const state = parseState(await fs.readFile(file, "utf8").catch(() => ""));
-    if (now() - state.lastRunAt < INDEXNOW_MIN_INTERVAL_MS) return { skipped: "interval", planned: 0, submitted: 0, pending: 0 };
+    const wait = state.retry || Object.keys(state.urls).length === 0 ? INDEXNOW_RETRY_MS : INDEXNOW_MIN_INTERVAL_MS;
+    if (now() - state.lastRunAt < wait) return { skipped: "interval", planned: 0, submitted: 0, pending: 0 };
     const startedAt = now(), plan = planSubmission(await options.rows(), state, startedAt);
     if (!plan.due.length) return { planned: 0, submitted: 0, pending: 0 };
     let submitted = 0, failedStatus: number | undefined;
@@ -88,7 +92,9 @@ export async function runIndexNow(options: { rows: () => Promise<SitemapRow[]>; 
       for (const item of batch) state.urls[item.url] = item.mark;
       submitted += batch.length;
     }
+    // A refusal other than "too many requests" is retried after 30 minutes instead of the full interval.
     state.lastRunAt = startedAt;
+    if (failedStatus !== undefined && failedStatus !== 429) state.retry = true; else delete state.retry;
     await fs.mkdir(options.dir, { recursive: true });
     const temp = `${file}.${randomUUID()}.tmp`;
     await fs.writeFile(temp, JSON.stringify(state), { mode: 0o600 }); await fs.rename(temp, file);
