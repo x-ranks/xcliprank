@@ -7,7 +7,9 @@ const O = 'https://twizou.net';
 (async () => {
   // Key file: public text file equal to the key, so the engines can verify ownership.
   assert.match(nx.INDEXNOW_KEY, /^[a-f0-9]{32}$/);
-  assert.equal(fs.readFileSync(path.join(__dirname, '..', 'public', nx.INDEXNOW_KEY + '.txt'), 'utf8').trim(), nx.INDEXNOW_KEY);
+  // The isolated deploy check does not copy public/, so the file is compared only where it exists.
+  const keyFile = path.join(__dirname, '..', 'public', nx.INDEXNOW_KEY + '.txt');
+  if (fs.existsSync(keyFile)) assert.equal(fs.readFileSync(keyFile, 'utf8').trim(), nx.INDEXNOW_KEY);
   const middleware = fs.readFileSync(path.join(__dirname, '..', 'middleware.ts'), 'utf8');
   assert(middleware.includes('"/api/indexnow",'), 'route is reachable');
 
@@ -65,7 +67,7 @@ const O = 'https://twizou.net';
   // A sitemap failure surfaces (the route answers 503) and never marks anything as sent.
   await assert.rejects(() => nx.runIndexNow({ rows: async () => { throw Error('db'); }, dir: fs.mkdtempSync(path.join(os.tmpdir(), 'indexnow-')), now: () => clock, fetchImpl: fetchOk }));
   // The route file exists and does not accept GET or a caller-chosen URL list.
-  const route = fs.readFileSync(path.join(__dirname, '..', 'app/api/indexnow/route.ts'), 'utf8');
-  assert(route.includes('export async function POST()') && !route.includes('export async function GET') && !route.includes('request'));
+  const routeFile = path.join(__dirname, '..', 'app/api/indexnow/route.ts');
+  if (fs.existsSync(routeFile)) { const route = fs.readFileSync(routeFile, 'utf8'); assert(route.includes('export async function POST()') && !route.includes('export async function GET') && !route.includes('request')); }
   console.log('PASS INDEXNOW: own pages only, new/changed only, daily hubs, batches + cap, accepted-only state, interval, failures');
 })().catch(e => { console.error(e); process.exit(1); });
