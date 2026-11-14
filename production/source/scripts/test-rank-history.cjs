@@ -88,3 +88,24 @@ const ids = (from, n) => Array.from({ length: n }, (_, i) => String(from + i));
   assert.ok(fs.readFileSync('app/p/[id]/page.tsx', 'utf8').includes('publicRankFacts(d.rank, d.firstRankedAt)') && fs.readFileSync('app/components/PublicDetailViewer.tsx', 'utf8').includes('publicRankFacts(d.rank, d.firstRankedAt)'));
   console.log('PASS RANK HISTORY: daily store (throttle, top 100, JST, junk-safe), video/author statistics, archive days with rechecks and thresholds, optional everywhere, wiring.');
 })().catch(e => { console.error(e); process.exit(1); });
+// Speed: optional author standing never waits for a cold index, and repeated requests reuse the totals.
+(async () => {
+  const assert = require('node:assert/strict'), fs = require('node:fs');
+  const { createPublicVideoService } = require('../lib/public-video-service.ts');
+  const v = (id, handle) => ({ id, authorId: handle, handle, authorName: handle, text: 't', posterUrl: null, videoUrl: 'u', createdAt: '2026-11-01T00:00:00Z', sourceHash: 'h', eligible: true, views: 10 });
+  const pool = ['a', 'b', 'c', 'd', 'e'].map((h, i) => v('70' + i, h)), catalog = { version: 1, revision: 7, labels: [], records: {} };
+  const base = { catalog: { read: async () => catalog }, posts: async () => [], authorVideos: async key => pool.filter(x => x.handle === key), candidates: async () => [], secret: async () => '' };
+  const started = Date.now();
+  const cold = await createPublicVideoService({ ...base, indexVideos: () => new Promise(resolve => setTimeout(() => resolve(pool), 3000)) }).account('a');
+  assert.equal(cold.ranking.standing, null, 'cold index: standing is skipped'); assert.ok(Date.now() - started < 1500, 'author page did not wait for the index');
+  let reads = 0; const getter = v2 => ({ ...v2, get handle() { reads++; return v2.handle; } });
+  const tracked = pool.map(x => { const { handle, ...rest } = x; const o = { ...rest }; Object.defineProperty(o, 'handle', { enumerable: true, get() { reads++; return handle; } }); return o; });
+  const warm = createPublicVideoService({ ...base, indexVideos: async () => tracked });
+  assert.deepEqual((await warm.account('a')).ranking.standing, { authors: 5, byViews: 1, byCount: 1 }); const first = reads;
+  await warm.account('b'); assert.equal(reads, first, 'totals are reused while the index and catalog are unchanged');
+  const pop1 = await warm.popular('all'), pop2 = await warm.popular('all'); assert.equal(pop1, pop2, 'popular ranking result is reused within a minute');
+  const src = fs.readFileSync('lib/public-video-production.ts', 'utf8');
+  assert.ok(src.includes('if (lastAuthorFingerprint !== null) {') && src.includes('return lastAuthorFingerprint;'), 'change marker is served stale and refreshed in the background');
+  console.log('PASS SPEED: author page never waits for a cold index; totals and popular results are reused; change marker is non-blocking.');
+  setTimeout(() => process.exit(process.exitCode ?? 0), 10);
+})().catch(e => { console.error(e); process.exit(1); });
