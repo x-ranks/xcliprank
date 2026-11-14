@@ -42,7 +42,7 @@ const route=load('app/api/rankings/route.ts',name=>{
    const result=[...posts];for(const row of entries){const at=row.positions[range];if(at!==null)result.splice(at-1,0,{...row,x_post_id:'manual:'+row.id});}
    return result.slice(0,limit).map((row,index)=>({...row,ranking_position:index+1}));
  }};
- if(name.endsWith('public-ranking-history'))return load('lib/public-ranking-history.ts',id=>id.endsWith('public-video-core')?load('lib/public-video-core.ts',n=>n.endsWith('indexability')?load('lib/indexability.ts'):require(n)):require(id));
+ if(name.endsWith('rank-history-store'))return {createRankHistoryStore:()=>({record:async()=>false,read:async()=>({days:[],day:()=>null,posts:new Map()})})};if(name.endsWith('public-ranking-history'))return load('lib/public-ranking-history.ts',id=>id.endsWith('public-video-core')?load('lib/public-video-core.ts',n=>n.endsWith('indexability')?load('lib/indexability.ts'):require(n)):require(id));
  if(name.endsWith('public-catalog-store'))return {createPublicCatalog:()=>({ranked:async()=>{}})};
  if(name.endsWith('public-save-secret'))return {publicCatalogDirectory:()=>'/isolated-mock-catalog'};
  throw Error('Unexpected module '+name);

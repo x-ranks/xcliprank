@@ -22,7 +22,7 @@ async function ranking(){
  if(n.endsWith('ranking-update'))return load('lib/ranking-update.ts');
  if(n.endsWith('content-filter'))return {classifyContent:text=>({category:text==='reject'?'PROMO':'PASS'})};
  if(n.endsWith('manual-ranking'))return {readManualState:async()=>({entries:manual}),applyManualPlacements:(data,entries)=>{const result=[...data];for(const row of entries)result.splice(row.positions.trending-1,0,{...row,x_post_id:'manual:'+row.id});return result.slice(0,500);}};
- if(n.endsWith('public-ranking-history'))return {rememberRanking:async r=>r};
+ if(n.endsWith('rank-history-store'))return {createRankHistoryStore:()=>({record:async()=>false,read:async()=>({days:[],day:()=>null,posts:new Map()})})};if(n.endsWith('public-ranking-history'))return {rememberRanking:async r=>r};
  return {};
  };
  const full=load('app/api/rankings/route.ts',resolver,s=>s.replace('.select(options.ids?.every(id => options.summaryIds?.has(id)) ? ELIGIBILITY_FIELDS : "*")','.select("*")'));
