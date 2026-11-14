@@ -9,7 +9,7 @@ function excerpt(text: string | null): string {
   return Array.from(text?.replace(/\s+/g, " ").trim() ?? "").slice(0, 120).join("");
 }
 
-export default function PublicVideoCards({ videos, returnTo = "/", nativeNavigation = false, priorityCount = 0 }: { videos: PublicVideo[]; returnTo?: string; nativeNavigation?: boolean; priorityCount?: number }) {
+export default function PublicVideoCards({ videos, returnTo = "/", nativeNavigation = false, priorityCount = 0, ranked = false }: { videos: PublicVideo[]; returnTo?: string; nativeNavigation?: boolean; priorityCount?: number; ranked?: boolean }) {
   return <div className="video-grid"><PublicListRestore />{videos.map((v, index) => {
     const author = v.authorName?.trim() || (v.handle ? `@${v.handle}` : "投稿者");
     const summary = excerpt(v.text);
@@ -27,7 +27,7 @@ export default function PublicVideoCards({ videos, returnTo = "/", nativeNavigat
           {v.likes != null && <span className="public-card-x-likes">いいね {v.likes.toLocaleString()}</span>}
         </p>}
       </PublicPostLink>
-      <p className="public-card-byline" style={{ padding: "0 11px 11px" }}>{authorPage ? <Link prefetch={false} href={authorPage}>{author}</Link> : author}{posted && <time className="public-card-date" dateTime={posted.iso}>{posted.text}</time>}</p><FavoriteButton id={v.id} />
+      <p className="public-card-byline" style={{ padding: "0 11px 11px" }}>{ranked && <strong className="public-card-rank">{index + 1}位</strong>}{authorPage ? <Link prefetch={false} href={authorPage}>{author}</Link> : author}{posted && <time className="public-card-date" dateTime={posted.iso}>{posted.text}</time>}</p><FavoriteButton id={v.id} />
     </article>;
   })}</div>;
 }

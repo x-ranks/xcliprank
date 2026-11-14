@@ -21,6 +21,8 @@ const MENU_SECTIONS = [
     { href: "/accounts", label: "投稿者一覧" },
     { href: "/discover?mode=tier", label: "Tierで探す" },
     { href: "/ranking/weekly", label: "週間ランキング" },
+    { href: "/ranking/30days", label: "30日ランキング" },
+    { href: "/ranking/all", label: "全期間ランキング" },
     { href: "/months", label: "月別ランキング" },
     { href: "/reels", label: "リール" },
   ] },

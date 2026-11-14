@@ -244,6 +244,40 @@ export function createPublicVideoService(deps: PublicVideoDeps, options: { readO
       viewsTotal: byViews ? known.reduce((sum, v) => sum + (v.views as number), 0) : 0, ranked, prev: at > 0 ? listed[at - 1] : null, next: at >= 0 && at < listed.length - 1 ? listed[at + 1] : null,
       index: at >= 0, ...(modifiedAt ? { modifiedAt } : {}) };
   }
+  // Popular-video hubs: the site's own indexable posts, newest 30 days or all time, ordered by recorded X view counts.
+  const POPULAR_DAYS: Record<string, number | null> = { "30days": 30, all: null };
+  async function popular(range: string) {
+    if (!Object.prototype.hasOwnProperty.call(POPULAR_DAYS, range)) return null;
+    const days = POPULAR_DAYS[range], since = days === null ? null : Date.now() - days * 86400000;
+    const [catalog, rows] = await Promise.all([readCatalog(), deps.indexVideos ? deps.indexVideos() : deps.posts([])]);
+    const seen = new Set<string>(), pool: PublicVideo[] = [];
+    for (const video of rows) {
+      if (seen.has(video.id) || !authorHref(video) || !publicVideoIndexable(video, videoLabels(catalog, video))) continue;
+      seen.add(video.id);
+      if (since !== null) { const t = video.createdAt ? Date.parse(video.createdAt) : NaN; if (!Number.isFinite(t) || t < since) continue; }
+      pool.push(video);
+    }
+    const hasViews = (v: PublicVideo) => typeof v.views === "number" && Number.isFinite(v.views) && v.views >= 0;
+    const known = pool.filter(hasViews);
+    const ranked = [...known].sort((a, b) => (b.views as number) - (a.views as number) || b.id.localeCompare(a.id)).slice(0, 100);
+    const viewsTotal = known.reduce((sum, v) => sum + (v.views as number), 0);
+    const sortedViews = known.map(v => v.views as number).sort((a, b) => a - b);
+    const median = sortedViews.length ? sortedViews[Math.floor(sortedViews.length / 2)] : 0;
+    const authors = new Map<string, { key: string; name: string; count: number; views: number }>();
+    for (const v of pool) { const k = accountKey(v); if (!k) continue; const row = authors.get(k) ?? { key: k, name: v.authorName?.trim() || v.handle || k, count: 0, views: 0 }; row.count++; row.views += hasViews(v) ? (v.views as number) : 0; authors.set(k, row); }
+    const topAuthors = [...authors.values()].filter(a => a.views > 0).sort((a, b) => b.views - a.views || b.count - a.count || a.key.localeCompare(b.key)).slice(0, 10);
+    const byMonth = new Map<string, { month: string; count: number; views: number }>();
+    for (const v of pool) { const m = monthOf(v); if (!m) continue; const row = byMonth.get(m) ?? { month: m, count: 0, views: 0 }; row.count++; row.views += hasViews(v) ? (v.views as number) : 0; byMonth.set(m, row); }
+    // Only months that have their own page are listed, so every row can link to it.
+    const months = [...byMonth.values()].filter(m => isIndexable({ type: "month", permittedVideos: m.count })).sort((a, b) => b.month.localeCompare(a.month));
+    let firstAt: string | null = null, latestAt: string | null = null;
+    for (const v of pool) { if (!v.createdAt || !Number.isFinite(Date.parse(v.createdAt))) continue; if (!firstAt || v.createdAt < firstAt) firstAt = v.createdAt; if (!latestAt || v.createdAt > latestAt) latestAt = v.createdAt; }
+    let modifiedAt: string | undefined; for (const v of ranked) modifiedAt = newer(modifiedAt, videoModified(catalog, v));
+    return { range, total: pool.length, authorCount: authors.size, measured: known.length, viewsTotal, average: known.length ? Math.round(viewsTotal / known.length) : 0, median, ranked,
+      topAuthors: topAuthors.length >= 2 ? topAuthors : [], months: range === "all" && months.length >= 2 ? months : [], firstAt, latestAt,
+      // Needs enough measured posts to be a meaningful ranking.
+      index: known.length >= 10, ...(modifiedAt ? { modifiedAt } : {}) };
+  }
   async function browse(page = 1) {
     if (!Number.isSafeInteger(page) || page < 1) return null;
     const [catalog, indexedRows] = await Promise.all([readCatalog(), deps.indexVideos ? deps.indexVideos() : deps.posts([])]);
@@ -368,5 +402,5 @@ export function createPublicVideoService(deps: PublicVideoDeps, options: { readO
     if (!rows.some(video => video.id === input.id && video.eligible && video.sourceHash === input.sourceHash)) return { result: "unavailable" };
     await deps.catalog.technical(input.id, input.sourceHash, input.metadata, Date.now(), "mp4-range-v1"); return { result: "published" };
   }
-  return { technicalPage, technicalPublish, detailCore, detailRelated, detail, account, tag, activeLabels, indexable, accountCards, months, month, browse, discovery, personalVideos, followFeed, publish, saved, inspect, status, candidates, autoPage, autoPublish };
+  return { technicalPage, technicalPublish, detailCore, detailRelated, detail, account, tag, activeLabels, indexable, accountCards, months, month, popular, browse, discovery, personalVideos, followFeed, publish, saved, inspect, status, candidates, autoPage, autoPublish };
 }

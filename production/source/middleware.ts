@@ -25,6 +25,8 @@ const PUBLIC_EXACT_PATHS = new Set([
   "/",
   "/ranking/daily",
   "/ranking/weekly",
+  "/ranking/30days",
+  "/ranking/all",
   "/rising",
   "/reels",
   "/browse",

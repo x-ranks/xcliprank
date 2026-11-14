@@ -1,4 +1,4 @@
-import { readPublicIndex, readPublicMonths } from "../lib/public-video-server";
+import { readPublicIndex, readPublicMonths, readPublicPopular } from "../lib/public-video-server";
 export const dynamic = "force-dynamic";
 import type { MetadataRoute } from "next";
 import { SITE_URL } from "../lib/seo";
@@ -23,11 +23,13 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   // Fail visibly on a database error; an empty sitemap would falsely signal removals.
   // Newest pagination is linked from the listing. Building its ranking here
   // would make every sitemap fetch wait for a separate ranking hydration.
-  const [index, months] = await Promise.all([readPublicIndex(), readPublicMonths()]);
+  const [index, months, popular30, popularAll] = await Promise.all([readPublicIndex(), readPublicMonths(), readPublicPopular("30days"), readPublicPopular("all")]);
   return [
     { url: SITE_URL },
     { url: `${SITE_URL}/ranking/daily` },
     { url: `${SITE_URL}/ranking/weekly` },
+    ...(popular30?.index ? [{ url: `${SITE_URL}/ranking/30days`, ...lastmod(popular30.modifiedAt) }] : []),
+    ...(popularAll?.index ? [{ url: `${SITE_URL}/ranking/all`, ...lastmod(popularAll.modifiedAt) }] : []),
     { url: `${SITE_URL}/rising` },
     { url: `${SITE_URL}/download` },
     { url: `${SITE_URL}/download/iphone` },
