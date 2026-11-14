@@ -34,7 +34,7 @@ function newRoute(){return load('app/api/rankings/route.ts',n=>{
  if(n.endsWith('supabase-admin'))return {supabaseAdmin:()=>({from})};
  if(n.endsWith('content-filter'))return {classifyContent:text=>({category:text==='excluded'?'SAFETY_REVIEW':'PASS'})};
  if(n.endsWith('manual-ranking'))return {readManualState:async()=>({entries:[]}),applyManualPlacements:posts=>posts};
- if(n.endsWith('public-ranking-history'))return load('lib/public-ranking-history.ts',id=>id.endsWith('public-video-core')?load('lib/public-video-core.ts',n=>n.endsWith('indexability')?load('lib/indexability.ts'):require(n)):require(id));
+ if(n.endsWith('rank-history-store'))return {createRankHistoryStore:()=>({record:async()=>false,read:async()=>({days:[],day:()=>null,posts:new Map()})})};if(n.endsWith('public-ranking-history'))return load('lib/public-ranking-history.ts',id=>id.endsWith('public-video-core')?load('lib/public-video-core.ts',n=>n.endsWith('indexability')?load('lib/indexability.ts'):require(n)):require(id));
  if(n.endsWith('public-catalog-store'))return {createPublicCatalog:()=>({ranked:async()=>{}})};
  if(n.endsWith('public-save-secret'))return {publicCatalogDirectory:()=>'/isolated-mock-catalog'};
  throw Error('Unexpected module '+n);
