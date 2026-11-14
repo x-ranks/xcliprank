@@ -4,7 +4,7 @@ import { authorStateDirectory, readAuthorState } from "./author-status-store";
 import { scanAuthorStatuses } from "./author-status-scan";
 import { classifyPostResponse, postKey, type PostIdentity } from "./post-status";
 import { entryPost, readPostState, writePostState, POST_STATE_LIMIT, type PostEntry } from "./post-status-store";
-import { DAY, PRIORITY_RECHECK_INTERVAL, POST_RECHECK_INTERVAL, MISSING_CONFIRM_INTERVAL, BATCH_INTERVAL, POST_BATCH_LIMIT, pauseMonitorRequest, FAILURE_COOLDOWN, fetchMonitorJson } from "./availability-policy";
+import { DAY, PRIORITY_RECHECK_INTERVAL, POST_RECHECK_INTERVAL, MISSING_CONFIRM_INTERVAL, BATCH_INTERVAL, POST_BATCH_LIMIT, PRIORITY_BATCH_LIMIT, pauseMonitorRequest, FAILURE_COOLDOWN, fetchMonitorJson } from "./availability-policy";
 
 // CLI owns flock. Batch reservations are durable before DB reads or external requests.
 export async function scanAvailabilityStatuses(loadPage: (cursor: string | null) => Promise<PostIdentity[]>, options: {
@@ -85,7 +85,7 @@ export async function scanAvailabilityStatuses(loadPage: (cursor: string | null)
   }
   for (const id of retryIds) { await check(entryPost(id, state.entries[id]), "retry"); if (stats.stopped) break; }
   priority.sort((a, b) => (state.entries[String(a.x_post_id)]?.checkedAt ?? 0) - (state.entries[String(b.x_post_id)]?.checkedAt ?? 0));
-  const priorityBudget = POST_BATCH_LIMIT - 15; // due confirmations first, at least fifteen rotation slots
+  const priorityBudget = PRIORITY_BATCH_LIMIT; // due confirmations first; the rest of POST_BATCH_LIMIT is the full-catalog rotation
   for (const post of priority) {
     if (stats.stopped || stats.post_checked >= priorityBudget) break;
     await check(post, "priority");
