@@ -64,8 +64,6 @@ export default function DedicatedRankingPage({
       </header>
 
       <nav className="ranking-page-nav" aria-label="ランキングを選択">
-        <RankingNavLink href="/rising">急上昇</RankingNavLink>
-        <RankingNavLink href={rankingHref("trending")}>新着</RankingNavLink>
         <RankingNavLink
           href={rankingHref("daily")}
           className={range === "daily" ? "active" : undefined}
@@ -80,9 +78,6 @@ export default function DedicatedRankingPage({
         >
           週間
         </RankingNavLink>
-        <RankingNavLink href="/months">月別</RankingNavLink>
-        <RankingNavLink href="/reels">リール</RankingNavLink>
-        <RankingNavLink href="/download">動画保存</RankingNavLink>
       </nav>
 
       <NewSinceVisit ids={initialPosts.map(post => String(post.x_post_id))} />

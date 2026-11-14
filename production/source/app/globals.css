@@ -1685,12 +1685,12 @@ html[data-age-confirmed="yes"] body.age-gate-open { overflow:auto; }
 body.menu-open { overflow: hidden; }
 /* The header must be a direct child of <main> so it can stay pinned for the whole page. */
 .hero:has(> .site-brand-band), .ranking-page-header:has(> .site-brand-band) { display: contents; }
-.site-brand-band { position: sticky; top: 0; z-index: 35; display: flex; align-items: center; gap: 26px; min-height: 60px; margin: 0 0 22px; padding: 0; border: 0; border-radius: 0; background: rgba(9,12,16,.97); /* Full-width background by box-shadow: unlike a wide child box it never adds horizontal scroll on phones. */ box-shadow: 0 0 0 100vmax rgba(9,12,16,.97); clip-path: inset(0 -100vmax -1px 0); }
+.site-brand-band { position: sticky; top: 0; z-index: 35; display: flex; align-items: center; gap: 26px; min-height: 60px; margin: 0 0 22px; padding: 0; border: 0; border-radius: 0; background: rgba(9,12,16,.97); /* Full-width background by box-shadow: unlike a wide child box it never adds horizontal scroll on phones. */ box-shadow: 0 0 0 100vmax rgba(9,12,16,.97); clip-path: inset(0 -100vmax -1px -100vmax); }
 .site-brand-band::after { content: ""; position: absolute; left: 0; right: 0; bottom: -1px; height: 1px; background: #222a35; box-shadow: 0 0 0 100vmax #222a35; clip-path: inset(0 -100vmax); pointer-events: none; }
 .site-brand-link { min-height: 44px; gap: 9px; flex: none; }
 .site-brand-link img { width: 28px; height: 28px; }
 .site-brand-link span { font-size: 22px; font-weight: 900; letter-spacing: -.03em; }
-.site-brand-band .site-discovery-nav { display: flex; flex-wrap: nowrap; align-items: stretch; gap: 22px; margin: 0; min-width: 0; overflow-x: auto; scrollbar-width: none; grid-column: auto; grid-row: auto; }
+.site-brand-band .site-discovery-nav { display: flex; flex: 1 1 auto; flex-wrap: nowrap; align-items: stretch; gap: 22px; margin: 0; min-width: 0; overflow-x: auto; scrollbar-width: none; grid-column: auto; grid-row: auto; }
 .site-brand-band .site-discovery-nav a { position: relative; display: inline-flex; align-items: center; flex: none; min-height: 60px; padding: 0; border: 0; border-radius: 0; background: none; color: #9aa9b8; font-size: 14px; font-weight: 700; text-decoration: none; white-space: nowrap; }
 .site-brand-band .site-discovery-nav a:hover { color: #f1f4f8; border: 0; }
 .site-brand-band .site-discovery-nav a[aria-current="page"] { color: #f1f4f8; }
@@ -1704,7 +1704,19 @@ body.menu-open { overflow: hidden; }
 .site-brand-tools:not(:has(.site-search-form)) .site-search-icon { display: flex; align-items: center; justify-content: center; width: 38px; height: 38px; color: #9aa9b8; }
 .site-fav-link { color: #9aa9b8; font-size: 20px; line-height: 1; text-decoration: none; }
 .site-fav-link:hover, .site-brand-tools .site-x-link:hover { color: #f1f4f8; }
-.site-brand-tools .site-x-link { color: #9aa9b8; font-size: 13px; font-weight: 700; text-decoration: none; white-space: nowrap; }
+.site-brand-tools .site-x-link { display: none; color: #9aa9b8; font-size: 13px; font-weight: 700; text-decoration: none; white-space: nowrap; }
+.site-brand-tools .site-save-link { display: inline-flex; align-items: center; gap: 6px; min-height: 36px; padding: 0 14px; border-radius: 999px; background: #1d6fa5; color: #fff; font-size: 13px; font-weight: 800; text-decoration: none; white-space: nowrap; }
+.site-brand-tools .site-save-link:hover { background: #2780bb; }
+.site-menu-button { display: none; }
+@media (min-width: 1360px) { .site-brand-tools .site-x-link { display: inline; } }
+/* Medium PC widths: keep every menu item visible by folding the search box into an icon. */
+@media (min-width: 721px) and (max-width: 1179px) {
+  .site-brand-band { gap: 16px; }
+  .site-brand-band .site-discovery-nav { gap: 16px; }
+  .site-brand-band .site-search-form { display: none; }
+  .site-brand-tools .site-search-icon { display: flex; align-items: center; justify-content: center; width: 38px; height: 38px; color: #9aa9b8; }
+  .site-brand-tools { gap: 10px; }
+}
 .site-brand-band a:focus-visible, .site-brand-band button:focus-visible { outline: 3px solid #a8d4ff; outline-offset: -3px; }
 .site-brand-band + .ranking-page-title { margin-top: 30px; }
 .public-post-page .site-brand-band { padding-right: 0; }
@@ -1755,18 +1767,15 @@ body.menu-open { overflow: hidden; }
   .site-brand-link span { font-size: 20px; }
   .site-brand-link img { width: 26px; height: 26px; }
   .site-brand-band + .ranking-page-title { margin-top: 12px; }
-  .site-brand-band .site-discovery-nav, .site-brand-band .site-search-form, .site-brand-tools .site-fav-link, .site-brand-tools .site-x-link { display: none; }
-  .site-brand-tools { gap: 0; }
-  .site-search-icon { display: flex; align-items: center; justify-content: center; width: 44px; height: 44px; color: #cfdae6; }
-  .public-post-page .site-brand-band .site-brand-tools { margin-right: 52px; }
-  /* On phones the ranking switch lives in the bottom tabs and the MENU sheet, so the top tab strip is hidden. */
-  .ranking-page-nav[aria-label="ランキングを選択"] { display: none; }
+  .site-brand-band .site-discovery-nav, .site-brand-band .site-brand-tools { display: none; }
+  .site-menu-button { display: inline-flex; align-items: center; gap: 6px; min-height: 44px; margin-left: auto; padding: 0 6px; border: 0; background: transparent; color: #f1f4f8; font: inherit; font-size: 13px; font-weight: 800; cursor: pointer; }
+  .public-post-page .site-menu-button { margin-right: 52px; }
   .ranking-page-nav { gap: 18px; margin-bottom: 10px; }
   .ranking-page-nav a, .ranking-page-nav button { min-height: 42px; padding: 0 2px; font-size: 13px; }
-  .bottom-tabs a, .bottom-tabs button { position: relative; flex: 1 1 0; min-width: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 3px; min-height: 56px; padding: 0; border: 0; background: transparent; color: #a3afbb; font: inherit; font-size: 10px; font-weight: 700; text-decoration: none; cursor: pointer; }
-  .bottom-tabs a[aria-current="page"], .bottom-tabs button[aria-current="page"], .bottom-tabs button[aria-expanded="true"] { color: #fff; }
-  .bottom-tabs button[aria-current="page"]::before { content: ""; position: absolute; top: 0; width: 28px; height: 3px; border-radius: 0 0 3px 3px; background: #ff3347; }
-  .bottom-tabs button:focus-visible { outline: 3px solid #a8d4ff; outline-offset: -3px; }
+  .bottom-tabs a { position: relative; flex: 1 1 0; min-width: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 3px; min-height: 56px; padding: 0; border: 0; background: transparent; color: #a3afbb; font: inherit; font-size: 10px; font-weight: 700; text-decoration: none; cursor: pointer; }
+  .bottom-tabs a[aria-current="page"] { color: #fff; }
+  .author-head { flex-direction: column; align-items: flex-start; gap: 6px; }
+  .author-head-name { width: 100%; }
   .account-grid { grid-template-columns: 1fr; gap: 10px; }
   .account-card { grid-template-columns: minmax(0, 1fr) 132px; grid-template-areas: "meta thumbs" "stats thumbs"; align-items: center; gap: 4px 12px; }
   .account-thumbs { grid-area: thumbs; gap: 3px; }

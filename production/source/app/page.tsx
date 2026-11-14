@@ -1,8 +1,7 @@
-import RankingNavLink from "./components/RankingNavLink";
 import SiteBrand from "./components/SiteBrand";
 import type { Metadata } from "next";
 import { notFound, redirect } from "next/navigation";
-import { parseRankingPage, newestPageHref, rankingHref } from "../lib/ranking-pagination";
+import { parseRankingPage, newestPageHref } from "../lib/ranking-pagination";
 import Link from "next/link";
 import RankingClient from "./components/RankingClient";
 import NewSinceVisit from "./components/NewSinceVisit";
@@ -104,14 +103,6 @@ export default async function Home({ searchParams }: { searchParams: Search }) {
         <h1 className="ranking-page-title">新着ランキング</h1>
         <p>新着動画を紹介！</p>
       </header>
-      <nav className="ranking-page-nav" aria-label="ランキングを選択">
-        <RankingNavLink href="/rising">急上昇</RankingNavLink>
-        <RankingNavLink href={rankingHref("trending")} className="active" aria-current="page">新着</RankingNavLink>
-        <RankingNavLink href={rankingHref("daily")}>24時間</RankingNavLink>
-        <RankingNavLink href={rankingHref("weekly")}>週間</RankingNavLink>
-        <RankingNavLink href="/reels">リール</RankingNavLink>
-        <RankingNavLink href="/download">動画保存</RankingNavLink>
-      </nav>
       {page === 1 && <NewSinceVisit ids={initialPosts.map(post => String(post.x_post_id))} />}
       <RankingClient
         key={`${edition}:${page}`}

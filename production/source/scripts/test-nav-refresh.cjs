@@ -10,10 +10,12 @@ const Link = ({ children, href, prefetch, ...p }) => React.createElement('a', { 
   const Brand = loadTsx('app/components/SiteBrand.tsx', n => n === 'next/link' ? Link : undefined).default;
   const html = renderToStaticMarkup(React.createElement(Brand, { showSearch: true, active: 'accounts' }));
   const nav = html.match(/<nav class="site-discovery-nav"[^]*?<\/nav>/)[0];
-  assert.deepEqual([...nav.matchAll(/>([^<]+)<\/a>/g)].map(m => m[1]), ['急上昇', 'ランキング', '新着', '投稿者', '月別', 'Tier', 'ランダム', 'フォロー']);
+  assert.deepEqual([...nav.matchAll(/>([^<]+)<\/a>/g)].map(m => m[1]), ['急上昇', '新着', 'ランキング', '投稿者', '月別', 'Tier', 'ランダム', 'リール', 'フォロー']);
   assert.equal((nav.match(/aria-current="page"/g) || []).length, 1); assert(/href="\/accounts" aria-current="page">投稿者/.test(nav));
-  for (const href of ['/rising', '/ranking/daily', '/', '/accounts', '/months', '/discover?mode=tier', '/discover?mode=random', '/following']) assert(nav.includes(`href="${href}"`), href);
-  assert(html.includes('role="search"') && html.includes('class="site-search-icon"') && html.includes('href="/favorites"') && html.includes('Xで新着情報'));
+  for (const href of ['/rising', '/ranking/daily', '/', '/accounts', '/months', '/discover?mode=tier', '/discover?mode=random', '/reels', '/following']) assert(nav.includes(`href="${href}"`), href);
+  assert(html.includes('role="search"') && html.includes('class="site-search-icon"') && html.includes('href="/favorites"') && html.includes('twizou公式アカウント'));
+  assert(html.includes('class="site-save-link"') && html.includes('href="/download"'), 'prominent save button in the header');
+  assert(/<button[^>]*class="site-menu-button"[^>]*data-menu-toggle/.test(html), 'phone MENU button is in the header');
   assert.equal(renderToStaticMarkup(React.createElement(Brand)).includes('aria-current'), false);
 
   // Data: cards carry post count, total views and the three newest thumbnails; ordered by post count.
@@ -57,6 +59,7 @@ const Link = ({ children, href, prefetch, ...p }) => React.createElement('a', { 
   assert(/\.site-brand-band \{ position: sticky; top: 0;/.test(css) && /display: contents/.test(css) && /\.menu-sheet-backdrop \{ position: fixed/.test(css));
   // Phones: no wide child box (it caused sideways scrolling and pushed the layout past the phone breakpoint), top ranking tabs hidden.
   assert(!/\.site-brand-band::before/.test(css) && /\.site-brand-band \{[^}]*box-shadow: 0 0 0 100vmax/.test(css), 'full-width header background uses a shadow, not a wide box');
-  assert(/@media \(max-width: 720px\) \{[^]*\.ranking-page-nav\[aria-label="ランキングを選択"\] \{ display: none; \}/.test(css), 'phone hides the top ranking tabs');
+  assert(!/ranking-page-nav\[aria-label/.test(css), 'ranking 24h/weekly switch stays visible on phones');
+  assert(/clip-path: inset\(0 -100vmax -1px -100vmax\)/.test(css), 'header background reaches both screen edges');
   console.log('PASS NAV REFRESH: header links/current marker, author cards (thumbs, counts, sort, noindex), sticky/MENU CSS. Fixture only.');
 })().catch(e => { console.error(e); process.exit(1); });
