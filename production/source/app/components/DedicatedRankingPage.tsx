@@ -84,6 +84,8 @@ export default function DedicatedRankingPage({
         >
           週間
         </RankingNavLink>
+        <a href="/ranking/30days">30日</a>
+        <a href="/ranking/all">全期間</a>
       </nav>
 
       <NewSinceVisit ids={initialPosts.map(post => String(post.x_post_id))} />
@@ -129,6 +131,8 @@ export default function DedicatedRankingPage({
           ) : (
             <Link prefetch={false} href={rankingHref("daily")}>24時間ランキング</Link>
           )}
+          <Link prefetch={false} href="/ranking/30days">30日ランキング</Link>
+          <Link prefetch={false} href="/ranking/all">全期間ランキング</Link>
         </p>
       </section>
 
