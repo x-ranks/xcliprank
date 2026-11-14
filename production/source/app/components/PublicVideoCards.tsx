@@ -27,7 +27,7 @@ export default function PublicVideoCards({ videos, returnTo = "/", nativeNavigat
           {v.likes != null && <span className="public-card-x-likes">いいね {v.likes.toLocaleString()}</span>}
         </p>}
       </PublicPostLink>
-      <p className="public-card-byline" style={{ padding: "0 11px 11px" }}>{(ranked || ranks) && <strong className="public-card-rank">{ranks?.[index] ?? index + 1}位</strong>}{authorPage ? <Link prefetch={false} href={authorPage}>{author}</Link> : author}{posted && <time className="public-card-date" dateTime={posted.iso}>{posted.text}</time>}</p><FavoriteButton id={v.id} />
+      <p className="public-card-byline" style={{ padding: "0 11px 11px" }}>{(ranked || ranks) && (() => { const rank = ranks?.[index] ?? index + 1; return <b className={rank <= 5 ? "public-card-rank public-card-rank-top" : "public-card-rank"} data-rank={rank}>{rank === 1 ? <span className="public-card-crown" aria-hidden="true">👑</span> : null}{rank}位</b>; })()}{authorPage ? <Link prefetch={false} href={authorPage}>{author}</Link> : author}{posted && <time className="public-card-date" dateTime={posted.iso}>{posted.text}</time>}</p><FavoriteButton id={v.id} />
     </article>;
   })}</div>;
 }

@@ -1795,4 +1795,18 @@ body.menu-open { overflow: hidden; }
 .public-post-actions > a.post-report:focus-visible { outline:3px solid #a8d4ff; outline-offset:3px; }
 
 /* Popular-video ranking hubs: rank number in the card byline. */
-.public-card-rank { display:inline-block; margin-right:8px; color:#ffd666; font-weight:800; }
+.public-card-rank { flex:none; display:inline-flex; align-items:center; gap:2px; margin-right:6px; color:#ffd666; font-size:13px; font-weight:800; line-height:1.2; white-space:nowrap; }
+.public-card-rank-top { padding:1px 7px; border:1px solid #c9a227; border-radius:999px; background:#3a2f10; font-size:14px; font-weight:900; }
+.public-card-rank[data-rank="1"] { border-color:#ffd666; background:#5a4510; color:#ffe58a; }
+.public-card-crown { font-size:13px; line-height:1; }
+.author-row .public-card-rank { display:inline-flex; }
+.author-row .public-card-crown { display:inline; overflow:visible; color:inherit; font-size:13px; }
+/* Narrow phones: keep "1位" and the date on one line; only the author name shortens. */
+.public-card-byline { flex-wrap:nowrap; }
+.public-card-byline .public-card-date { flex:none; white-space:nowrap; }
+@media (max-width:600px) {
+  .public-card-rank { margin-right:4px; font-size:12px; }
+  .public-card-rank-top { padding:1px 5px; font-size:12px; }
+  .public-card-crown { font-size:11px; }
+  .public-card-byline { gap:5px; }
+}
