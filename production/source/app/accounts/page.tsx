@@ -27,8 +27,12 @@ const compact = (n: number) => n >= 10000 ? `${(n / 10000).toFixed(n >= 100000 ?
 export async function generateMetadata({ searchParams }: Props): Promise<Metadata> {
   const params = await searchParams, page = pageNumber(params.page), sort = sortKey(params.sort);
   const canonical = SITE_URL + accountListHref(page);
-  return { title: `投稿者一覧 ${page}ページ`, description: "twizouに掲載中の投稿者を全件たどれる一覧です。", alternates: { canonical },
-    robots: { index: sort === "count", follow: true }, openGraph: { title: `投稿者一覧 ${page}ページ｜twizou`, url: canonical } };
+  const heading = page === 1 ? "Twitter動画の投稿者一覧" : `Twitter動画の投稿者一覧 ${page}ページ`;
+  const description = "twizouに掲載中の投稿者を、投稿数の多い順にたどれる一覧です。各投稿者の動画一覧から、気になる動画の再生・保存や元投稿の確認ができます。";
+  return { title: heading, description, alternates: { canonical },
+    robots: { index: sort === "count", follow: true },
+    openGraph: { title: `${heading}｜twizou`, description, url: canonical, images: [SITE_URL + "/twizou-share.png"] },
+    twitter: { card: "summary_large_image", title: `${heading}｜twizou`, description, images: [SITE_URL + "/twizou-share.png"] } };
 }
 export default async function AccountListPage({ searchParams }: Props) {
   const params = await searchParams, page = pageNumber(params.page), sort = sortKey(params.sort);

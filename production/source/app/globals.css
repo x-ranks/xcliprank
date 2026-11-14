@@ -1783,6 +1783,12 @@ body.menu-open { overflow: hidden; }
   .account-stats { grid-area: stats; padding-left: 44px; }
 }
 
+/* Ranking page guide: short headings and native disclosure for the FAQ. */
+.seo-info h3 { margin: 14px 0 4px; color: #dce2e9; font-size: 13px; }
+.seo-faq details { border-top: 1px solid #202733; padding: 7px 0; }
+.seo-faq summary { cursor: pointer; color: #dce2e9; font-weight: 700; }
+.seo-faq details p { margin-top: 5px; }
+
 /* One-click report button in the video action bar (flag icon with a small caption). */
 .public-post-actions > a.post-report { flex:none; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:2px; width:52px; min-height:48px; padding:4px 0; border:1px solid #6b3340; border-radius:12px; background:#2a1a20; color:#ffb3c0; font-size:10px; font-weight:700; line-height:1.1; text-decoration:none; }
 .public-post-actions > a.post-report:hover { background:#3a2029; border-color:#9a4a5b; }

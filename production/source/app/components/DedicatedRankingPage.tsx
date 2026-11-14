@@ -20,7 +20,10 @@ const PAGE_COPY = {
       "直近24時間のX（Twitter）動画と、過去のおすすめを日替わりで紹介します。",
     seoTitle: "Twitter動画の24時間ランキング・保存",
     seoDescription:
-      "新着ランキングとはひと味違う動画を探したいときにどうぞ。"
+      "新着ランキングとはひと味違う動画を探したいときにどうぞ。",
+    reading:
+      "直近24時間のX（Twitter）動画と、過去のおすすめを日替わりで紹介しています。新着順の一覧とは違う動画に出会えます。",
+    other: "週間ランキングは、直近1週間の動画を中心に、人気やtwizouでの評価をもとに選んでいます。"
   },
   weekly: {
     eyebrow: "WEEKLY RANKING",
@@ -29,7 +32,10 @@ const PAGE_COPY = {
       "直近1週間のX（Twitter）動画を中心に、人気やtwizouでの評価をもとに選んでいます。",
     seoTitle: "Twitter動画の週間ランキング・保存",
     seoDescription:
-      "動画が少ないときは、過去のおすすめも加えています。"
+      "動画が少ないときは、過去のおすすめも加えています。",
+    reading:
+      "直近1週間のX（Twitter）動画を中心に、人気やtwizouでの評価をもとに選んでいます。動画が少ないときは、過去のおすすめも加えています。",
+    other: "24時間ランキングは、直近24時間の動画と、過去のおすすめを日替わりで紹介しています。"
   }
 } as const;
 
@@ -93,6 +99,29 @@ export default function DedicatedRankingPage({
       <section className="seo-info" aria-labelledby={`${range}-ranking-info`}>
         <h2 id={`${range}-ranking-info`}>{copy.seoTitle}</h2>
         <p>{copy.seoDescription}</p>
+        <h3>このランキングの見方</h3>
+        <p>{copy.reading}</p>
+        <h3>動画の見かた・使いかた</h3>
+        <p>動画をタップすると再生できます。動画ページでは、元投稿をXで開く、投稿者の動画一覧を見る、☆でお気に入りに入れる、動画を保存する、といった操作ができます。</p>
+        <h3>よくある質問</h3>
+        <div className="seo-faq">
+          <details>
+            <summary>24時間ランキングと週間ランキングの違いは？</summary>
+            <p>{copy.other}</p>
+          </details>
+          <details>
+            <summary>動画を保存できますか？</summary>
+            <p>権利者が保存を許可した動画だけを保存してください。手順は<Link prefetch={false} href="/download">動画保存のページ</Link>、条件は<Link prefetch={false} href="/download-policy">保存ポリシー</Link>で確認できます。</p>
+          </details>
+          <details>
+            <summary>見られなくなった動画があるのはなぜ？</summary>
+            <p>元の投稿が削除・非公開になった動画や、掲載の対象外になった動画は、表示されなくなることがあります。</p>
+          </details>
+          <details>
+            <summary>問題のある動画を見つけたら？</summary>
+            <p>動画ページの「報告」ボタンから、<Link prefetch={false} href="/removal-request">削除要請フォーム</Link>で知らせてください。</p>
+          </details>
+        </div>
         <p className="seo-related-links">
           <Link prefetch={false} href={rankingHref("trending")}>新着ランキング</Link>
           {range === "daily" ? (
